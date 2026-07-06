@@ -113,7 +113,7 @@ else
     cp "$BUSYBOX" rootfs/bin/busybox
     
     # Create symlinks for common commands
-    for cmd in sh ls cat echo id whoami mount mkdir chmod cp mv rm dmesg; do
+    for cmd in sh ls cat echo id whoami mount mkdir chmod cp mv rm dmesg uname; do
         ln -sf busybox "rootfs/bin/$cmd"
     done
     
@@ -132,8 +132,8 @@ echo "  Kernel: $(uname -r)"
 echo "  User: $(id)"
 echo "============================================"
 echo ""
-echo "Exploit is at /tmp/exploit (if injected)"
-echo "Run: /tmp/exploit"
+echo "Exploit is at /bin/exploit (if injected)"
+echo "Run: /bin/exploit"
 echo ""
 
 exec /bin/sh
