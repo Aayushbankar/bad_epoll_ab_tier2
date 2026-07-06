@@ -1,0 +1,84 @@
+# bad-epoll-lab
+
+> Hands-on recreation and analysis of CVE-2026-46242 ("Bad Epoll") — a race condition UAF in the Linux kernel's `epoll` subsystem that achieves local privilege escalation to root.
+
+## Project Goal
+
+Recreate the kernelCTF PoC locally, understand every stage of the exploit chain, test it on Android, and produce a professional write-up for Medium/LinkedIn.
+
+## Vulnerability Summary
+
+| Field | Value |
+|-------|-------|
+| **CVE** | CVE-2026-46242 |
+| **Nickname** | "Bad Epoll" |
+| **Type** | Race Condition → Use-After-Free (UAF) |
+| **Subsystem** | `fs/eventpoll.c` |
+| **Affected Kernels** | 6.4-rc1 through 7.0 (introduced by commit `58c9b016e128`) |
+| **Fix** | Commit `a6dc643c693` (mainline 2026-04-24) |
+| **Impact** | Local unprivileged user → root (uid=0) |
+| **Reliability** | ~99% on LTS, ~98% on COS |
+| **Android Impact** | Devices running kernel 6.6+ (Android 16+ flagships) |
+
+## Exploit Chain Overview
+
+```
+KASLR Leak (prefetch side-channel)
+  → Race Condition Trigger (close-vs-close on epoll fds)
+    → UAF Write-0 (zeroes offset 160 of freed kmalloc-192)
+      → Escalate to struct file UAF (dangling pointer)
+        → Cross-Cache Attack (reclaim filp slab as pipe_buffer)
+          → Constrained AAR (read kernel memory via /proc/self/fdinfo)
+            → Full AAR (walk task_struct tree)
+              → RIP Control + ROP (hijack f_op->poll, stack pivot)
+                → Root Shell (commit_creds(&init_cred), execve)
+```
+
+## Repository Structure
+
+```
+bad-epoll-lab/
+├── README.md                          # This file
+├── docs/
+│   ├── CONTEXT.md                     # AI agent context (read this first)
+│   ├── VULNERABILITY.md               # Root cause analysis
+│   ├── EXPLOIT_WALKTHROUGH.md         # Step-by-step exploit mechanics
+│   └── PROGRESS.md                    # Progress tracker
+├── exploit/
+│   ├── tier1-linux-vm/                # Tier 1: QEMU Linux VM setup
+│   ├── tier2-android-emulator/        # Tier 2: Android emulator setup
+│   └── tier3-selinux-analysis/        # Tier 3: SELinux bypass research
+├── scripts/
+│   ├── setup-tier1.sh                 # Automated Tier 1 setup script
+│   └── setup-tier2.sh                 # Automated Tier 2 setup script
+├── logs/                              # dmesg, logcat, exploit output logs
+└── article/
+    └── draft.md                       # Medium/LinkedIn article draft
+```
+
+## Three-Tier Approach
+
+| Tier | Environment | Goal | Est. Time |
+|------|-------------|------|-----------|
+| 🟢 Tier 1 | Linux VM (QEMU) | Learn exploit mechanics, get root | 1-2 days |
+| 🟡 Tier 2 | Android Emulator | Prove it works on Android | 2-3 days |
+| 🔴 Tier 3 | SELinux Analysis | Real-world severity assessment | 2-3 days |
+
+## Prerequisites
+
+- Linux host (Fedora/Ubuntu)
+- `build-essential`, `qemu-system-x86`, `busybox-static`, `cpio`
+- Android SDK (installed) + NDK (to be installed for Tier 2)
+- ~20GB free disk space for kernel compilation
+
+## References
+
+- [Original PoC (kernelCTF submission)](https://github.com/J-jaeyoung/security-research/tree/submit-cve-2026-46242/pocs/linux/kernelctf/CVE-2026-46242_lts_cos)
+- [Exploit writeup](https://github.com/J-jaeyoung/security-research/blob/submit-cve-2026-46242/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/docs/exploit.md)
+- [Vulnerability writeup](https://github.com/J-jaeyoung/security-research/blob/submit-cve-2026-46242/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/docs/vulnerability.md)
+- [Fix commit](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a6dc643c69311677c574a0f17a3f4d66a5f3744b)
+- [Introducing commit](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=58c9b016e12855286370dfb704c08498edbc857a)
+
+## License
+
+This repository is for educational and authorized security research purposes only. Do not use any code or techniques from this repository for unauthorized access to systems.

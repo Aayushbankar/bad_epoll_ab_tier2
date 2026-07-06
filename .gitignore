@@ -1,0 +1,32 @@
+# Build artifacts
+*.o
+*.ko
+*.mod
+*.mod.c
+*.cmd
+*.a
+modules.order
+Module.symvers
+
+# Kernel source (too large for git)
+exploit/tier1-linux-vm/linux-*/
+exploit/tier1-linux-vm/security-research/
+
+# Compiled binaries
+exploit/tier1-linux-vm/exploit
+exploit/tier2-android-emulator/exploit_android
+
+# Rootfs (generated)
+exploit/tier1-linux-vm/rootfs/
+exploit/tier1-linux-vm/initramfs.cpio
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
