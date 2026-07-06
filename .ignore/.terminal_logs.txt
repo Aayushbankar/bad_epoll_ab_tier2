@@ -1,0 +1,1305 @@
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab$ sudo dnf install -y flex bison elfutils-libelf-devel openssl-devel ncurses-devel
+[sudo] password for legion: 
+Updating and loading repositories:
+Repositories loaded.
+Package "openssl-devel-1:3.5.7-1.fc44.x86_64" is already installed.
+
+Package                                                                           Arch              Version                                                                           Repository                                          Size
+Installing:
+ bison                                                                            x86_64            0:3.8.2-15.fc44                                                                   fedora                                           3.5 MiB
+ elfutils-libelf-devel                                                            x86_64            0:0.195-1.fc44                                                                    updates                                        104.3 KiB
+ flex                                                                             x86_64            0:2.6.4-24.fc44                                                                   fedora                                         805.1 KiB
+ ncurses-devel                                                                    x86_64            0:6.6-1.fc44                                                                      fedora                                         895.6 KiB
+Installing dependencies:
+ libzstd-devel                                                                    x86_64            0:1.5.7-5.fc44                                                                    fedora                                         217.6 KiB
+ m4                                                                               x86_64            0:1.4.21-1.fc44                                                                   fedora                                         881.1 KiB
+ ncurses-c++-libs                                                                 x86_64            0:6.6-1.fc44                                                                      fedora                                         161.5 KiB
+
+Transaction Summary:
+ Installing:         7 packages
+
+Total size of inbound packages is 2 MiB. Need to download 2 MiB.
+After this operation, 6 MiB extra will be used (install 6 MiB, remove 0 B).
+[1/7] elfutils-libelf-devel-0:0.195-1.fc44.x86_64                                                                                                                                                     100% | 107.2 KiB/s | 124.0 KiB |  00m01s
+[2/7] ncurses-c++-libs-0:6.6-1.fc44.x86_64                                                                                                                                                            100% |  29.6 KiB/s |  39.5 KiB |  00m01s
+[3/7] libzstd-devel-0:1.5.7-5.fc44.x86_64                                                                                                                                                             100% |  38.3 KiB/s |  56.3 KiB |  00m01s
+[4/7] ncurses-devel-0:6.6-1.fc44.x86_64                                                                                                                                                               100% | 279.0 KiB/s | 591.2 KiB |  00m02s
+[5/7] m4-0:1.4.21-1.fc44.x86_64                                                                                                                                                                       100% | 102.8 KiB/s | 347.3 KiB |  00m03s
+[6/7] flex-0:2.6.4-24.fc44.x86_64                                                                                                                                                                     100% |  73.2 KiB/s | 299.3 KiB |  00m04s
+[7/7] bison-0:3.8.2-15.fc44.x86_64                                                                                                                                                                    100% | 143.7 KiB/s | 998.2 KiB |  00m07s
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+[7/7] Total                                                                                                                                                                                           100% | 296.3 KiB/s |   2.4 MiB |  00m08s
+Running transaction
+[1/9] Verify package files                                                                                                                                                                            100% | 194.0   B/s |   7.0   B |  00m00s
+[2/9] Prepare transaction                                                                                                                                                                             100% |  13.0   B/s |   7.0   B |  00m01s
+[3/9] Installing m4-0:1.4.21-1.fc44.x86_64                                                                                                                                                            100% |  14.7 MiB/s | 887.6 KiB |  00m00s
+[4/9] Installing libzstd-devel-0:1.5.7-5.fc44.x86_64                                                                                                                                                  100% |  30.6 MiB/s | 219.1 KiB |  00m00s
+[5/9] Installing ncurses-c++-libs-0:6.6-1.fc44.x86_64                                                                                                                                                 100% |  14.4 MiB/s | 162.6 KiB |  00m00s
+[6/9] Installing ncurses-devel-0:6.6-1.fc44.x86_64                                                                                                                                                    100% |   8.2 MiB/s |   1.0 MiB |  00m00s
+[7/9] Installing elfutils-libelf-devel-0:0.195-1.fc44.x86_64                                                                                                                                          100% |   9.1 MiB/s | 121.5 KiB |  00m00s
+[8/9] Installing flex-0:2.6.4-24.fc44.x86_64                                                                                                                                                          100% |  24.0 MiB/s | 811.1 KiB |  00m00s
+[9/9] Installing bison-0:3.8.2-15.fc44.x86_64                                                                                                                                                         100% |   4.4 MiB/s |   3.5 MiB |  00m01s
+Complete!
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab$ sudo dnf install -y busybox
+Updating and loading repositories:
+Repositories loaded.
+Package                                                                           Arch              Version                                                                           Repository                                          Size
+Installing:
+ busybox                                                                          x86_64            1:1.37.0-7.fc44                                                                   fedora                                           1.4 MiB
+
+Transaction Summary:
+ Installing:         1 package
+
+Total size of inbound packages is 790 KiB. Need to download 790 KiB.
+After this operation, 1 MiB extra will be used (install 1 MiB, remove 0 B).
+[1/1] busybox-1:1.37.0-7.fc44.x86_64                                                                                                                                                                  100% | 218.2 KiB/s | 790.2 KiB |  00m04s
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+[1/1] Total                                                                                                                                                                                           100% | 171.1 KiB/s | 790.2 KiB |  00m05s
+Running transaction
+[1/3] Verify package files                                                                                                                                                                            100% |  29.0   B/s |   1.0   B |  00m00s
+[2/3] Prepare transaction                                                                                                                                                                             100% |   1.0   B/s |   1.0   B |  00m01s
+[3/3] Installing busybox-1:1.37.0-7.fc44.x86_64                                                                                                                                                       100% |   1.6 MiB/s |   1.4 MiB |  00m01s
+Complete!
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab$ mkdir -p /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/rootfs/bin
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab$ 
+
+
+
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab$ ./scripts/setup-tier1.sh
+bash: ./scripts/setup-tier1.sh: Permission denied
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab$ chmod +x ./scripts/setup-tier1.sh
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab$ ./scripts/setup-tier1.sh
+============================================
+  bad-epoll-lab — Tier 1 Setup
+  Target Kernel: Linux 6.12.67 LTS
+============================================
+
+[1/7] Checking build dependencies...
+  ✓ All build dependencies found.
+
+[2/7] Downloading Linux kernel 6.12.67...
+Saving 'linux-6.12.67.tar.xz'
+HTTP response 200  [https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.12.67.tar.xz]
+linux-6.12.67.tar.xz 100% [===========================================================================================================================================================================================>]  141.34M  764.59KB/s
+                          [Files: 1  Bytes: 141.34M [704.59KB/s] Redirects: 0  Todo: 0  Errors: 0                                                                                                                      ]
+  ✓ Kernel source extracted.
+
+[3/7] Configuring kernel for QEMU...
+  HOSTCC  scripts/basic/fixdep
+  HOSTCC  scripts/kconfig/conf.o
+  HOSTCC  scripts/kconfig/confdata.o
+  HOSTCC  scripts/kconfig/expr.o
+  LEX     scripts/kconfig/lexer.lex.c
+  YACC    scripts/kconfig/parser.tab.[ch]
+  HOSTCC  scripts/kconfig/lexer.lex.o
+  HOSTCC  scripts/kconfig/menu.o
+  HOSTCC  scripts/kconfig/parser.tab.o
+  HOSTCC  scripts/kconfig/preprocess.o
+  HOSTCC  scripts/kconfig/symbol.o
+  HOSTCC  scripts/kconfig/util.o
+  HOSTLD  scripts/kconfig/conf
+*** Default configuration is based on 'x86_64_defconfig'
+#
+# configuration written to .config
+#
+#
+# configuration written to .config
+#
+  ✓ Kernel configured.
+
+[4/7] Compiling kernel (this may take 15-30 minutes)...
+  AS      arch/x86/boot/header.o
+  LD      arch/x86/boot/setup.elf
+  OBJCOPY arch/x86/boot/setup.bin
+  BUILD   arch/x86/boot/bzImage
+Kernel: arch/x86/boot/bzImage is ready  (#1)
+  ✓ Kernel compiled: arch/x86/boot/bzImage
+
+[5/7] Creating minimal rootfs...
+  ✓ rootfs created: initramfs.cpio
+
+[6/7] Cloning exploit source...
+Cloning into 'security-research'...
+remote: Enumerating objects: 2580, done.
+remote: Counting objects: 100% (2580/2580), done.
+remote: Compressing objects: 100% (1897/1897), done.
+remote: Total 2580 (delta 547), reused 2452 (delta 530), pack-reused 0 (from 0)
+Receiving objects: 100% (2580/2580), 220.02 MiB | 512.00 KiB/s, done.
+Resolving deltas: 100% (547/547), done.
+Updating files: 100% (2266/2266), done.
+  ✓ Exploit source cloned.
+
+============================================
+  Setup Complete!
+============================================
+
+Next steps:
+  1. cd /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm
+  2. Review the exploit source:
+     less security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/exploit.cpp
+  3. Compile the exploit:
+     g++ -static -O2 -o exploit exploit.cpp -lpthread
+     (Note: may need libxdk — check the source for dependencies)
+  4. Inject into rootfs:
+     cp exploit rootfs/tmp/ && cd rootfs && find . -print0 | cpio --null -ov --format=newc > ../initramfs.cpio
+  5. Boot QEMU:
+     qemu-system-x86_64 -kernel linux-6.12.67/arch/x86/boot/bzImage -initrd initramfs.cpio -append 'console=ttyS0 quiet' -nographic -smp 2 -m 2G -cpu kvm64,+smep,+smap
+
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab$ 
+
+
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab$ # 1. Install cmake on the host (required to compile libxdk)
+sudo dnf install -y cmake
+
+# 2. Go to the exploit build directory
+cd /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67
+
+# 3. Build the exploit statically using the Makefile
+make -j$(nproc)
+[sudo] password for legion: 
+Updating and loading repositories:
+Repositories loaded.
+Package "cmake-4.3.0-1.fc44.x86_64" is already installed.
+
+Nothing to do.
+wget -q -O target_db.kxdb https://storage.googleapis.com/kernelxdk/db/kernelctf.kxdb
+git clone --depth 1 https://github.com/google/kernel-research.git kernel-research
+Cloning into 'kernel-research'...
+remote: Enumerating objects: 329, done.
+remote: Counting objects: 100% (329/329), done.
+remote: Compressing objects: 100% (267/267), done.
+remote: Total 329 (delta 61), reused 148 (delta 19), pack-reused 0 (from 0)
+Receiving objects: 100% (329/329), 307.90 KiB | 611.00 KiB/s, done.
+Resolving deltas: 100% (61/61), done.
+cd kernel-research/libxdk && cmake -B build && cmake --build build --target kernelXDK -j$(nproc)
+-- The CXX compiler identification is GNU 16.1.1
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- The C compiler identification is GNU 16.1.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Downloading https://storage.googleapis.com/kernelxdk/db/kernelctf.kxdb to /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/test/artifacts/kernelctf.kxdb...
+-- Configuring done (2.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/build
+gmake[1]: Entering directory '/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/build'
+gmake[1]: warning: -j8 forced in submake: resetting jobserver mode.
+[ 13%] Building CXX object CMakeFiles/kernelXDK.dir/rip/RopUtils.cpp.o
+[ 13%] Building CXX object CMakeFiles/kernelXDK.dir/xdk_device/xdk_device.cpp.o
+[ 13%] Building CXX object CMakeFiles/kernelXDK.dir/target/BinaryReader.cpp.o
+[ 18%] Building CXX object CMakeFiles/kernelXDK.dir/target/KxdbParser.cpp.o
+[ 22%] Building CXX object CMakeFiles/kernelXDK.dir/target/TargetDb.cpp.o
+[ 27%] Building CXX object CMakeFiles/kernelXDK.dir/target/Target.cpp.o
+[ 31%] Building CXX object CMakeFiles/kernelXDK.dir/util/ArgumentParser.cpp.o
+[ 36%] Building CXX object CMakeFiles/kernelXDK.dir/util/HexDump.cpp.o
+In file included from /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:17:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/include/xdk/util/Syscalls.h:20:10: fatal error: keyutils.h: No such file or directory
+   20 | #include <keyutils.h>
+      |          ^~~~~~~~~~~~
+compilation terminated.
+gmake[4]: *** [CMakeFiles/kernelXDK.dir/build.make:79: CMakeFiles/kernelXDK.dir/xdk_device/xdk_device.cpp.o] Error 1
+gmake[4]: *** Waiting for unfinished jobs....
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/target/BinaryReader.cpp: In member function ‘void BinaryReader::SeekToItem(uint64_t, uint64_t)’:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/target/BinaryReader.cpp:83:8: warning: unused variable ‘hdr_offset’ [-Wunused-variable]
+   83 |   auto hdr_offset = offset_;
+      |        ^~~~~~~~~~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/target/KxdbParser.cpp: In member function ‘void KxdbParser::ParseHeader()’:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/target/KxdbParser.cpp:61:33: warning: C++ designated initializers only available with ‘-std=c++20’ or ‘-std=gnu++20’ [-Wc++20-extensions]
+   61 |     sections_[(Section) id] = { .offset = ReadU32(), .size = ReadU32() };
+      |                                 ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/target/KxdbParser.cpp:61:54: warning: C++ designated initializers only available with ‘-std=c++20’ or ‘-std=gnu++20’ [-Wc++20-extensions]
+   61 |     sections_[(Section) id] = { .offset = ReadU32(), .size = ReadU32() };
+      |                                                      ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/rip/RopUtils.cpp: In function ‘void segfault_handler(int, siginfo_t*, void*)’:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/rip/RopUtils.cpp:46:13: warning: ISO C++ forbids comparison between pointer of type ‘void *’ and pointer-to-function [-Wpedantic]
+   46 |     if (rip == g_after_lpe_func_addr) {
+      |         ~~~~^~~~~~~~~~~~~~~~~~~~~~~~
+gmake[3]: *** [CMakeFiles/Makefile2:109: CMakeFiles/kernelXDK.dir/all] Error 2
+gmake[2]: *** [CMakeFiles/Makefile2:116: CMakeFiles/kernelXDK.dir/rule] Error 2
+gmake[1]: *** [Makefile:179: kernelXDK] Error 2
+gmake[1]: Leaving directory '/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/build'
+make: *** [Makefile:49: kernel-research/libxdk/lib/libkernelXDK.a] Error 2
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67$ file exploit
+exploit: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), statically linked, BuildID[sha1]=4c20b87b78cded1d786a68a9f5149cd75993c510, for GNU/Linux 3.2.0, not stripped
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67$ 
+
+
+
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67$ # 1. Install keyutils-libs-devel
+sudo dnf install -y keyutils-libs-devel
+
+# 2. Go to the exploit build directory
+cd /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67
+
+# 3. Clean the old partial build
+make clean
+cd kernel-research/libxdk
+rm -rf build
+
+# 4. Try building again
+cd ../..
+make -j$(nproc)
+Updating and loading repositories:
+Repositories loaded.
+Package                                                                           Arch              Version                                                                           Repository                                          Size
+Installing:
+ keyutils-libs-devel                                                              x86_64            0:1.6.3-7.fc44                                                                    fedora                                          48.2 KiB
+
+Transaction Summary:
+ Installing:         1 package
+
+Total size of inbound packages is 60 KiB. Need to download 60 KiB.
+After this operation, 48 KiB extra will be used (install 48 KiB, remove 0 B).
+[1/1] keyutils-libs-devel-0:1.6.3-7.fc44.x86_64                                                                                                                                                       100% |  41.0 KiB/s |  59.7 KiB |  00m01s
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+[1/1] Total                                                                                                                                                                                           100% |  26.3 KiB/s |  59.7 KiB |  00m02s
+Running transaction
+[1/3] Verify package files                                                                                                                                                                            100% |  71.0   B/s |   1.0   B |  00m00s
+[2/3] Prepare transaction                                                                                                                                                                             100% |   3.0   B/s |   1.0   B |  00m00s
+[3/3] Installing keyutils-libs-devel-0:1.6.3-7.fc44.x86_64                                                                                                                                            100% |  52.3 KiB/s |  55.2 KiB |  00m01s
+Complete!
+rm -f exploit exploit_debug
+cd kernel-research/libxdk && cmake -B build && cmake --build build --target kernelXDK -j$(nproc)
+-- The CXX compiler identification is GNU 16.1.1
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- The C compiler identification is GNU 16.1.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Configuring done (0.5s)
+-- Generating done (0.0s)
+-- Build files have been written to: /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/build
+gmake[1]: Entering directory '/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/build'
+gmake[1]: warning: -j8 forced in submake: resetting jobserver mode.
+[  9%] Building CXX object CMakeFiles/kernelXDK.dir/target/KxdbParser.cpp.o
+[  9%] Building CXX object CMakeFiles/kernelXDK.dir/rip/RopUtils.cpp.o
+[ 13%] Building CXX object CMakeFiles/kernelXDK.dir/xdk_device/xdk_device.cpp.o
+[ 18%] Building CXX object CMakeFiles/kernelXDK.dir/target/BinaryReader.cpp.o
+[ 22%] Building CXX object CMakeFiles/kernelXDK.dir/target/Target.cpp.o
+[ 27%] Building CXX object CMakeFiles/kernelXDK.dir/util/ArgumentParser.cpp.o
+[ 36%] Building CXX object CMakeFiles/kernelXDK.dir/target/TargetDb.cpp.o
+[ 31%] Building CXX object CMakeFiles/kernelXDK.dir/util/HexDump.cpp.o
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/target/BinaryReader.cpp: In member function ‘void BinaryReader::SeekToItem(uint64_t, uint64_t)’:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/target/BinaryReader.cpp:83:8: warning: unused variable ‘hdr_offset’ [-Wunused-variable]
+   83 |   auto hdr_offset = offset_;
+      |        ^~~~~~~~~~
+In file included from /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/include/xdk/xdk_device/xdk_device.h:26,
+                 from /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:15:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/include/xdk/xdk_device/./include/xdk_device.h:113:22: warning: ISO C++ forbids flexible array member ‘entries’ [-Wpedantic]
+  113 |     kprobe_log_entry entries[];
+      |                      ^~~~~~~
+[ 40%] Building CXX object CMakeFiles/kernelXDK.dir/util/Register.cpp.o
+[ 45%] Building CXX object CMakeFiles/kernelXDK.dir/util/Syscalls.cpp.o
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp: In constructor ‘Kprobe::Kprobe(const char*, uint8_t, kprobe_log_mode, const char*)’:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:52:12: warning: C++ designated initializers only available with ‘-std=c++20’ or ‘-std=gnu++20’ [-Wc++20-extensions]
+   52 |   args_ = {.pid_filter = getpid(),
+      |            ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:53:12: warning: C++ designated initializers only available with ‘-std=c++20’ or ‘-std=gnu++20’ [-Wc++20-extensions]
+   53 |            .arg_count = arg_count,
+      |            ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:54:12: warning: C++ designated initializers only available with ‘-std=c++20’ or ‘-std=gnu++20’ [-Wc++20-extensions]
+   54 |            .log_mode = (uint8_t)log_mode,
+      |            ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:55:12: warning: C++ designated initializers only available with ‘-std=c++20’ or ‘-std=gnu++20’ [-Wc++20-extensions]
+   55 |            .logs = 0};
+      |            ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:55:21: warning: missing initializer for member ‘kprobe_args::function_name’ [-Wmissing-field-initializers]
+   55 |            .logs = 0};
+      |                     ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:55:21: warning: missing initializer for member ‘kprobe_args::log_call_stack_filter’ [-Wmissing-field-initializers]
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:55:21: warning: missing initializer for member ‘kprobe_args::installed_kprobe’ [-Wmissing-field-initializers]
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp: In member function ‘rip_control_args XdkDevice::ConvertRipArgs(RipAction, const std::map<Register, long unsigned int>&)’:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:115:29: warning: missing initializer for member ‘rip_control_args::rbx’ [-Wmissing-field-initializers]
+  115 |   rip_control_args args = {0};
+      |                             ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:115:29: warning: missing initializer for member ‘rip_control_args::rcx’ [-Wmissing-field-initializers]
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:115:29: warning: missing initializer for member ‘rip_control_args::rdx’ [-Wmissing-field-initializers]
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:115:29: warning: missing initializer for member ‘rip_control_args::rsi’ [-Wmissing-field-initializers]
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:115:29: warning: missing initializer for member ‘rip_control_args::rdi’ [-Wmissing-field-initializers]
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:115:29: warning: missing initializer for member ‘rip_control_args::rbp’ [-Wmissing-field-initializers]
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:115:29: warning: missing initializer for member ‘rip_control_args::rsp’ [-Wmissing-field-initializers]
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:115:29: warning: missing initializer for member ‘rip_control_args::r8’ [-Wmissing-field-initializers]
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:115:29: warning: missing initializer for member ‘rip_control_args::r9’ [-Wmissing-field-initializers]
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:115:29: warning: missing initializer for member ‘rip_control_args::r10’ [-Wmissing-field-initializers]
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:115:29: warning: missing initializer for member ‘rip_control_args::r11’ [-Wmissing-field-initializers]
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:115:29: warning: missing initializer for member ‘rip_control_args::r12’ [-Wmissing-field-initializers]
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:115:29: warning: missing initializer for member ‘rip_control_args::r13’ [-Wmissing-field-initializers]
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:115:29: warning: missing initializer for member ‘rip_control_args::r14’ [-Wmissing-field-initializers]
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:115:29: warning: missing initializer for member ‘rip_control_args::r15’ [-Wmissing-field-initializers]
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:115:29: warning: missing initializer for member ‘rip_control_args::rip’ [-Wmissing-field-initializers]
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:115:29: warning: missing initializer for member ‘rip_control_args::regs_to_set’ [-Wmissing-field-initializers]
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:115:29: warning: missing initializer for member ‘rip_control_args::action’ [-Wmissing-field-initializers]
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp: In member function ‘xdk_error XdkDevice::CallRaw(xdk_cmd, void*) const’:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:129:35: warning: suggest parentheses around ‘&&’ within ‘||’ [-Wparentheses]
+  129 |       ERROR_GENERIC <= error_code && error_code <= ERROR_UNKNOWN_SYMBOL)
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp: In member function ‘uint64_t XdkDevice::AllocBuffer(uint64_t, bool) const’:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:153:22: warning: C++ designated initializers only available with ‘-std=c++20’ or ‘-std=gnu++20’ [-Wc++20-extensions]
+  153 |   xdk_message msg = {.length = size, .gfp_account = gfp_account};
+      |                      ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:153:38: warning: C++ designated initializers only available with ‘-std=c++20’ or ‘-std=gnu++20’ [-Wc++20-extensions]
+  153 |   xdk_message msg = {.length = size, .gfp_account = gfp_account};
+      |                                      ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:153:64: warning: missing initializer for member ‘xdk_message::data’ [-Wmissing-field-initializers]
+  153 |   xdk_message msg = {.length = size, .gfp_account = gfp_account};
+      |                                                                ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:153:64: warning: missing initializer for member ‘xdk_message::<anonymous>’ [-Wmissing-field-initializers]
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp: In member function ‘uint64_t XdkDevice::AllocBuffer(const std::vector<unsigned char>&, bool) const’:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:160:22: warning: C++ designated initializers only available with ‘-std=c++20’ or ‘-std=gnu++20’ [-Wc++20-extensions]
+  160 |   xdk_message msg = {.length = data.size(),
+      |                      ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:161:23: warning: C++ designated initializers only available with ‘-std=c++20’ or ‘-std=gnu++20’ [-Wc++20-extensions]
+  161 |                       .data = (uint8_t*)data.data(),
+      |                       ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:162:23: warning: C++ designated initializers only available with ‘-std=c++20’ or ‘-std=gnu++20’ [-Wc++20-extensions]
+  162 |                       .gfp_account = gfp_account};
+      |                       ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:162:49: warning: missing initializer for member ‘xdk_message::<anonymous>’ [-Wmissing-field-initializers]
+  162 |                       .gfp_account = gfp_account};
+      |                                                 ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp: In member function ‘std::vector<unsigned char> XdkDevice::Read(uint64_t, uint64_t) const’:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:170:19: warning: C++ designated initializers only available with ‘-std=c++20’ or ‘-std=gnu++20’ [-Wc++20-extensions]
+  170 |   xdk_message msg{.length = size, .data = result.data(), .kernel_addr = ptr};
+      |                   ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:170:35: warning: C++ designated initializers only available with ‘-std=c++20’ or ‘-std=gnu++20’ [-Wc++20-extensions]
+  170 |   xdk_message msg{.length = size, .data = result.data(), .kernel_addr = ptr};
+      |                                   ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:170:58: warning: C++ designated initializers only available with ‘-std=c++20’ or ‘-std=gnu++20’ [-Wc++20-extensions]
+  170 |   xdk_message msg{.length = size, .data = result.data(), .kernel_addr = ptr};
+      |                                                          ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:170:76: warning: missing initializer for member ‘xdk_message::gfp_account’ [-Wmissing-field-initializers]
+  170 |   xdk_message msg{.length = size, .data = result.data(), .kernel_addr = ptr};
+      |                                                                            ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp: In member function ‘void XdkDevice::Write(uint64_t, const std::vector<unsigned char>&) const’:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:177:7: warning: C++ designated initializers only available with ‘-std=c++20’ or ‘-std=gnu++20’ [-Wc++20-extensions]
+  177 |       .length = data.size(), .data = (uint8_t*)data.data(), .kernel_addr = ptr};
+      |       ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:177:30: warning: C++ designated initializers only available with ‘-std=c++20’ or ‘-std=gnu++20’ [-Wc++20-extensions]
+  177 |       .length = data.size(), .data = (uint8_t*)data.data(), .kernel_addr = ptr};
+      |                              ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:177:61: warning: C++ designated initializers only available with ‘-std=c++20’ or ‘-std=gnu++20’ [-Wc++20-extensions]
+  177 |       .length = data.size(), .data = (uint8_t*)data.data(), .kernel_addr = ptr};
+      |                                                             ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/xdk_device/xdk_device.cpp:177:79: warning: missing initializer for member ‘xdk_message::gfp_account’ [-Wmissing-field-initializers]
+  177 |       .length = data.size(), .data = (uint8_t*)data.data(), .kernel_addr = ptr};
+      |                                                                               ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/target/KxdbParser.cpp: In member function ‘void KxdbParser::ParseHeader()’:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/target/KxdbParser.cpp:61:33: warning: C++ designated initializers only available with ‘-std=c++20’ or ‘-std=gnu++20’ [-Wc++20-extensions]
+   61 |     sections_[(Section) id] = { .offset = ReadU32(), .size = ReadU32() };
+      |                                 ^
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/target/KxdbParser.cpp:61:54: warning: C++ designated initializers only available with ‘-std=c++20’ or ‘-std=gnu++20’ [-Wc++20-extensions]
+   61 |     sections_[(Section) id] = { .offset = ReadU32(), .size = ReadU32() };
+      |                                                      ^
+[ 50%] Building CXX object CMakeFiles/kernelXDK.dir/util/error.cpp.o
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/rip/RopUtils.cpp: In function ‘void segfault_handler(int, siginfo_t*, void*)’:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/rip/RopUtils.cpp:46:13: warning: ISO C++ forbids comparison between pointer of type ‘void *’ and pointer-to-function [-Wpedantic]
+   46 |     if (rip == g_after_lpe_func_addr) {
+      |         ~~~~^~~~~~~~~~~~~~~~~~~~~~~~
+[ 54%] Building CXX object CMakeFiles/kernelXDK.dir/util/file.cpp.o
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/util/Syscalls.cpp: In static member function ‘static std::string Syscalls::readlink(const char*, size_t)’:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/util/Syscalls.cpp:77:11: warning: comparison of integer expressions of different signedness: ‘long int’ and ‘size_t’ {aka ‘long unsigned int’} [-Wsign-compare]
+   77 |   if (len == bufsize)
+      |       ~~~~^~~~~~~~~~
+[ 59%] Building CXX object CMakeFiles/kernelXDK.dir/util/pwn_utils.cpp.o
+[ 63%] Building CXX object CMakeFiles/kernelXDK.dir/util/str.cpp.o
+[ 68%] Building CXX object CMakeFiles/kernelXDK.dir/pivot/PivotFinder.cpp.o
+[ 72%] Building CXX object CMakeFiles/kernelXDK.dir/pivot/StackPivot.cpp.o
+[ 77%] Building CXX object CMakeFiles/kernelXDK.dir/pivot/StackShiftInfo.cpp.o
+[ 81%] Building CXX object CMakeFiles/kernelXDK.dir/payloads/Payload.cpp.o
+[ 86%] Building CXX object CMakeFiles/kernelXDK.dir/payloads/PayloadBuilder.cpp.o
+[ 90%] Building CXX object CMakeFiles/kernelXDK.dir/payloads/RopChain.cpp.o
+[ 95%] Building CXX object CMakeFiles/kernelXDK.dir/leak/LeakedBuffer.cpp.o
+In file included from /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/RopChain.cpp:15:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/include/xdk/payloads/RopChain.h: In constructor ‘RopChain::RopChain(Target&, uint64_t)’:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/include/xdk/payloads/RopChain.h:142:13: warning: ‘RopChain::target_’ will be initialized after [-Wreorder]
+  142 |     Target& target_;
+      |             ^~~~~~~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/include/xdk/payloads/RopChain.h:131:14: warning:   ‘uint64_t RopChain::kaslr_base_’ [-Wreorder]
+  131 |     uint64_t kaslr_base_;
+      |              ^~~~~~~~~~~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/RopChain.cpp:20:1: warning:   when initialized here [-Wreorder]
+   20 | RopChain::RopChain(Target &target, uint64_t kaslr_base) : target_(target), kaslr_base_(kaslr_base) {}
+      | ^~~~~~~~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp: In member function ‘bool PayloadBuilder::Build(bool)’:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:59:34: error: ‘ref’ is not a member of ‘std’
+   59 |         data_refs.push_back(std::ref(data));
+      |                                  ^~~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:67:33: error: invalid use of incomplete type ‘const class std::reference_wrapper<PayloadData>’
+   67 |             PayloadData &data = data_ref.get();
+      |                                 ^~~~~~~~
+In file included from /usr/include/c++/16/bits/cpp_type_traits.h:42,
+                 from /usr/include/c++/16/bits/stl_algobase.h:60,
+                 from /usr/include/c++/16/algorithm:62,
+                 from /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:15:
+/usr/include/c++/16/type_traits:78:11: note: declaration of ‘class std::reference_wrapper<PayloadData>’
+   78 |     class reference_wrapper;
+      |           ^~~~~~~~~~~~~~~~~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:79:29: error: invalid use of incomplete type ‘const class std::reference_wrapper<PayloadData>’
+   79 |         PayloadData &data = data_ref.get();
+      |                             ^~~~~~~~
+/usr/include/c++/16/type_traits:78:11: note: declaration of ‘class std::reference_wrapper<PayloadData>’
+   78 |     class reference_wrapper;
+      |           ^~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/16/bits/memory_resource.h:49,
+                 from /usr/include/c++/16/string:83,
+                 from /usr/include/c++/16/bits/locale_classes.h:43,
+                 from /usr/include/c++/16/bits/ios_base.h:43,
+                 from /usr/include/c++/16/iomanip:47,
+                 from /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:16:
+/usr/include/c++/16/tuple: In instantiation of ‘struct std::_Tuple_impl<0, std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>’:
+/usr/include/c++/16/tuple:833:11:   required from ‘class std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>’
+  833 |     class tuple : public _Tuple_impl<0, _Elements...>
+      |           ^~~~~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:87:28:   required from here
+   87 |             items.push_back(std::make_tuple(data_ref, pivot, estimated_size));
+      |             ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/tuple:82:23: error: invalid use of incomplete type ‘class std::reference_wrapper<PayloadData>’
+   82 |     = __conditional_t<__is_final(_Tp), false_type,
+      |                       ^~~~~~~~~~~~~~~
+/usr/include/c++/16/type_traits:78:11: note: declaration of ‘class std::reference_wrapper<PayloadData>’
+   78 |     class reference_wrapper;
+      |           ^~~~~~~~~~~~~~~~~
+/usr/include/c++/16/tuple:82:23: error: invalid use of incomplete type ‘class std::reference_wrapper<PayloadData>’
+   82 |     = __conditional_t<__is_final(_Tp), false_type,
+      |                       ^~~~~~~~~~~~~~~
+/usr/include/c++/16/type_traits:78:11: note: declaration of ‘class std::reference_wrapper<PayloadData>’
+   78 |     class reference_wrapper;
+      |           ^~~~~~~~~~~~~~~~~
+/usr/include/c++/16/type_traits: In substitution of ‘template<class _Tp, class _Up> using std::__is_assignable_impl = std::__bool_constant<__is_assignable(_Tp, _Up)> [with _Tp = std::reference_wrapper<PayloadData>&; _Up = std::reference_wrapper<PayloadData>]’:
+/usr/include/c++/16/type_traits:1360:12:   required from ‘struct std::is_assignable<std::reference_wrapper<PayloadData>&, std::reference_wrapper<PayloadData> >’
+ 1360 |     struct is_assignable
+      |            ^~~~~~~~~~~~~
+/usr/include/c++/16/type_traits:191:35:   required by substitution of ‘template<class ... _Bn> std::__detail::__first_t<std::integral_constant<bool, true>, typename std::enable_if<(bool)(_Bn::value), void>::type ...> std::__detail::__and_fn(int) [with _Bn = {std::is_assignable<std::reference_wrapper<PayloadData>&, std::reference_wrapper<PayloadData> >, std::is_assignable<StackPivot&, StackPivot>, std::is_assignable<long unsigned int&, long unsigned int>}]’
+  191 |                                       __enable_if_t<bool(_Bn::value)>...>;
+      |                                                               ^~~~~
+/usr/include/c++/16/type_traits:207:42:   required from ‘struct std::__and_<std::is_assignable<std::reference_wrapper<PayloadData>&, std::reference_wrapper<PayloadData> >, std::is_assignable<StackPivot&, StackPivot>, std::is_assignable<long unsigned int&, long unsigned int> >’
+  207 |     : decltype(__detail::__and_fn<_Bn...>(0))
+      |                ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+/usr/include/c++/16/tuple:1892:61:   required from ‘static constexpr std::__enable_if_t<(sizeof... (_UElements) == sizeof... (_Elements)), bool> std::tuple< <template-parameter-1-1> >::__assignable() [with _UElements = {std::reference_wrapper<PayloadData>, StackPivot, long unsigned int}; _Elements = {std::reference_wrapper<PayloadData>, StackPivot, long unsigned int}; std::__enable_if_t<(sizeof... (_UElements) == sizeof... (_Elements)), bool> = bool]’
+ 1892 |         { return __and_<is_assignable<_Elements&, _UElements>...>::value; }
+      |                                                                    ^~~~~
+/usr/include/c++/16/tuple:1917:59:   required from ‘class std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>’
+ 1917 |       operator=(__conditional_t<__assignable<_Elements...>(),
+      |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~^~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:87:28:   required from here
+   87 |             items.push_back(std::make_tuple(data_ref, pivot, estimated_size));
+      |             ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/type_traits:1355:50: error: invalid use of incomplete type ‘class std::reference_wrapper<PayloadData>’
+ 1355 |     using __is_assignable_impl = __bool_constant<__is_assignable(_Tp, _Up)>;
+      |                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/type_traits:78:11: note: declaration of ‘class std::reference_wrapper<PayloadData>’
+   78 |     class reference_wrapper;
+      |           ^~~~~~~~~~~~~~~~~
+/usr/include/c++/16/type_traits: In substitution of ‘template<class _Tp, class ... _Args> using std::__is_constructible_impl = std::__bool_constant<__is_constructible(_Tp, _Args ...)> [with _Tp = std::reference_wrapper<PayloadData>; _Args = {PayloadData&}]’:
+/usr/include/c++/16/type_traits:1241:12:   required from ‘struct std::is_constructible<std::reference_wrapper<PayloadData>, PayloadData&>’
+ 1241 |     struct is_constructible
+      |            ^~~~~~~~~~~~~~~~
+/usr/include/c++/16/type_traits:191:35:   required by substitution of ‘template<class ... _Bn> std::__detail::__first_t<std::integral_constant<bool, true>, typename std::enable_if<(bool)(_Bn::value), void>::type ...> std::__detail::__and_fn(int) [with _Bn = {std::is_constructible<std::reference_wrapper<PayloadData>, PayloadData&>, std::is_constructible<StackPivot, const StackPivot&>, std::is_constructible<long unsigned int, const long unsigned int&>}]’
+  191 |                                       __enable_if_t<bool(_Bn::value)>...>;
+      |                                                               ^~~~~
+/usr/include/c++/16/type_traits:207:42:   required from ‘struct std::__and_<std::is_constructible<std::reference_wrapper<PayloadData>, PayloadData&>, std::is_constructible<StackPivot, const StackPivot&>, std::is_constructible<long unsigned int, const long unsigned int&> >’
+  207 |     : decltype(__detail::__and_fn<_Bn...>(0))
+      |                ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+/usr/include/c++/16/type_traits:191:35:   required by substitution of ‘template<class ... _Bn> std::__detail::__first_t<std::integral_constant<bool, true>, typename std::enable_if<(bool)(_Bn::value), void>::type ...> std::__detail::__and_fn(int) [with _Bn = {std::__and_<std::is_constructible<std::reference_wrapper<PayloadData>, PayloadData&>, std::is_constructible<StackPivot, const StackPivot&>, std::is_constructible<long unsigned int, const long unsigned int&> >, std::__and_<std::is_convertible<PayloadData&, std::reference_wrapper<PayloadData> >, std::is_convertible<const StackPivot&, StackPivot>, std::is_convertible<const long unsigned int&, long unsigned int> >}]’
+  191 |                                       __enable_if_t<bool(_Bn::value)>...>;
+      |                                                               ^~~~~
+/usr/include/c++/16/type_traits:207:42:   required from ‘struct std::__and_<std::__and_<std::is_constructible<std::reference_wrapper<PayloadData>, PayloadData&>, std::is_constructible<StackPivot, const StackPivot&>, std::is_constructible<long unsigned int, const long unsigned int&> >, std::__and_<std::is_convertible<PayloadData&, std::reference_wrapper<PayloadData> >, std::is_convertible<const StackPivot&, StackPivot>, std::is_convertible<const long unsigned int&, long unsigned int> > >’
+  207 |     : decltype(__detail::__and_fn<_Bn...>(0))
+      |                ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+/usr/include/c++/16/tuple:787:7:   required from ‘static constexpr bool std::_TupleConstraints<<anonymous>, _Types>::__is_implicitly_constructible() [with _UTypes = {PayloadData&, const StackPivot&, const long unsigned int&}; bool <anonymous> = true; _Types = {std::reference_wrapper<PayloadData>, StackPivot, long unsigned int}]’
+  787 |                         >::value;
+      |                            ^~~~~
+/usr/include/c++/16/tuple:1370:65:   required by substitution of ‘template<class ... _UElements, bool _Valid, typename std::enable_if<std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>::_TCC<_Valid>::__is_implicitly_constructible<const _UElements& ...>(), bool>::type <anonymous> > constexpr std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>::tuple(const std::tuple<_Elements ...>&) [with _UElements = {PayloadData&, StackPivot, long unsigned int}; bool _Valid = true; typename std::enable_if<std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>::_TCC<_Valid>::__is_implicitly_constructible<const _UElements& ...>(), bool>::type <anonymous> = <missing>]’
+ 1370 |           _TCC<_Cond>::template __is_implicitly_constructible<_Args...>(),
+      |           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:87:28:   required from here
+   87 |             items.push_back(std::make_tuple(data_ref, pivot, estimated_size));
+      |             ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/type_traits:1236:25: error: invalid use of incomplete type ‘class std::reference_wrapper<PayloadData>’
+ 1236 |       = __bool_constant<__is_constructible(_Tp, _Args...)>;
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/type_traits:78:11: note: declaration of ‘class std::reference_wrapper<PayloadData>’
+   78 |     class reference_wrapper;
+      |           ^~~~~~~~~~~~~~~~~
+/usr/include/c++/16/type_traits: In instantiation of ‘struct std::is_constructible<std::reference_wrapper<PayloadData>, PayloadData&>’:
+/usr/include/c++/16/type_traits:191:35:   required by substitution of ‘template<class ... _Bn> std::__detail::__first_t<std::integral_constant<bool, true>, typename std::enable_if<(bool)(_Bn::value), void>::type ...> std::__detail::__and_fn(int) [with _Bn = {std::is_constructible<std::reference_wrapper<PayloadData>, PayloadData&>, std::is_constructible<StackPivot, const StackPivot&>, std::is_constructible<long unsigned int, const long unsigned int&>}]’
+  191 |                                       __enable_if_t<bool(_Bn::value)>...>;
+      |                                                               ^~~~~
+/usr/include/c++/16/type_traits:207:42:   required from ‘struct std::__and_<std::is_constructible<std::reference_wrapper<PayloadData>, PayloadData&>, std::is_constructible<StackPivot, const StackPivot&>, std::is_constructible<long unsigned int, const long unsigned int&> >’
+  207 |     : decltype(__detail::__and_fn<_Bn...>(0))
+      |                ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+/usr/include/c++/16/type_traits:191:35:   required by substitution of ‘template<class ... _Bn> std::__detail::__first_t<std::integral_constant<bool, true>, typename std::enable_if<(bool)(_Bn::value), void>::type ...> std::__detail::__and_fn(int) [with _Bn = {std::__and_<std::is_constructible<std::reference_wrapper<PayloadData>, PayloadData&>, std::is_constructible<StackPivot, const StackPivot&>, std::is_constructible<long unsigned int, const long unsigned int&> >, std::__and_<std::is_convertible<PayloadData&, std::reference_wrapper<PayloadData> >, std::is_convertible<const StackPivot&, StackPivot>, std::is_convertible<const long unsigned int&, long unsigned int> >}]’
+  191 |                                       __enable_if_t<bool(_Bn::value)>...>;
+      |                                                               ^~~~~
+/usr/include/c++/16/type_traits:207:42:   required from ‘struct std::__and_<std::__and_<std::is_constructible<std::reference_wrapper<PayloadData>, PayloadData&>, std::is_constructible<StackPivot, const StackPivot&>, std::is_constructible<long unsigned int, const long unsigned int&> >, std::__and_<std::is_convertible<PayloadData&, std::reference_wrapper<PayloadData> >, std::is_convertible<const StackPivot&, StackPivot>, std::is_convertible<const long unsigned int&, long unsigned int> > >’
+  207 |     : decltype(__detail::__and_fn<_Bn...>(0))
+      |                ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+/usr/include/c++/16/tuple:787:7:   required from ‘static constexpr bool std::_TupleConstraints<<anonymous>, _Types>::__is_implicitly_constructible() [with _UTypes = {PayloadData&, const StackPivot&, const long unsigned int&}; bool <anonymous> = true; _Types = {std::reference_wrapper<PayloadData>, StackPivot, long unsigned int}]’
+  787 |                         >::value;
+      |                            ^~~~~
+/usr/include/c++/16/tuple:1370:65:   required by substitution of ‘template<class ... _UElements, bool _Valid, typename std::enable_if<std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>::_TCC<_Valid>::__is_implicitly_constructible<const _UElements& ...>(), bool>::type <anonymous> > constexpr std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>::tuple(const std::tuple<_Elements ...>&) [with _UElements = {PayloadData&, StackPivot, long unsigned int}; bool _Valid = true; typename std::enable_if<std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>::_TCC<_Valid>::__is_implicitly_constructible<const _UElements& ...>(), bool>::type <anonymous> = <missing>]’
+ 1370 |           _TCC<_Cond>::template __is_implicitly_constructible<_Args...>(),
+      |           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:87:28:   required from here
+   87 |             items.push_back(std::make_tuple(data_ref, pivot, estimated_size));
+      |             ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/type_traits:1244:52: error: static assertion failed: template argument must be a complete class or an unbounded array
+ 1244 |       static_assert(std::__is_complete_or_unbounded(__type_identity<_Tp>{}),
+      |                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
+  • ‘std::__is_complete_or_unbounded<__type_identity<reference_wrapper<PayloadData> > >((std::__type_identity<std::reference_wrapper<PayloadData> >(), std::__type_identity<std::reference_wrapper<PayloadData> >()))’ evaluates to false
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:87:28: error: no matching function for call to ‘std::vector<std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int> >::push_back(std::tuple<PayloadData&, StackPivot, long unsigned int>)’
+   87 |             items.push_back(std::make_tuple(data_ref, pivot, estimated_size));
+      |             ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  • there are 2 candidates
+In file included from /usr/include/c++/16/vector:68,
+                 from /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/include/xdk/pivot/Pivots.h:20,
+                 from /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/include/xdk/pivot/PivotFinder.h:22,
+                 from /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:20:
+    • candidate 1: ‘void std::vector<_Tp, _Alloc>::push_back(const value_type&) [with _Tp = std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>; _Alloc = std::allocator<std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int> >; value_type = std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>]’
+      /usr/include/c++/16/bits/stl_vector.h:1406:7:
+       1406 |       push_back(const value_type& __x)
+            |       ^~~~~~~~~
+      • no known conversion for argument 1 from ‘std::tuple<PayloadData&, StackPivot, long unsigned int>’ to ‘const std::vector<std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int> >::value_type&’ {aka ‘const std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>&’}
+        /usr/include/c++/16/bits/stl_vector.h:1406:35:
+         1406 |       push_back(const value_type& __x)
+              |                 ~~~~~~~~~~~~~~~~~~^~~
+    • candidate 2: ‘void std::vector<_Tp, _Alloc>::push_back(value_type&&) [with _Tp = std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>; _Alloc = std::allocator<std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int> >; value_type = std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>]’
+      /usr/include/c++/16/bits/stl_vector.h:1423:7:
+       1423 |       push_back(value_type&& __x)
+            |       ^~~~~~~~~
+      • no known conversion for argument 1 from ‘std::tuple<PayloadData&, StackPivot, long unsigned int>’ to ‘std::vector<std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int> >::value_type&&’ {aka ‘std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>&&’}
+        /usr/include/c++/16/bits/stl_vector.h:1423:30:
+         1423 |       push_back(value_type&& __x)
+              |                 ~~~~~~~~~~~~~^~~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:99:39: error: invalid use of incomplete type ‘std::__tuple_element_t<0, std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int> >’ {aka ‘class std::reference_wrapper<PayloadData>’}
+   99 |         if(TryPayloadPivot(std::get<0>(item).get().payload, std::get<1>(item))) {
+      |                            ~~~~~~~~~~~^~~~~~
+/usr/include/c++/16/type_traits:78:11: note: declaration of ‘std::__tuple_element_t<0, std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int> >’ {aka ‘class std::reference_wrapper<PayloadData>’}
+   78 |     class reference_wrapper;
+      |           ^~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/16/bits/stl_algobase.h:66:
+/usr/include/c++/16/bits/stl_iterator.h: In instantiation of ‘constexpr __gnu_cxx::__normal_iterator<_Iterator, _Container>& __gnu_cxx::__normal_iterator<_Iterator, _Container>::operator++() [with _Iterator = std::reference_wrapper<PayloadData>*; _Container = std::vector<std::reference_wrapper<PayloadData> >]’:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:66:37:   required from here
+   66 |         for (const auto &data_ref : data_refs) {
+      |                                     ^~~~~~~~~
+/usr/include/c++/16/bits/stl_iterator.h:1103:11: error: cannot increment a pointer to incomplete type ‘std::reference_wrapper<PayloadData>’
+ 1103 |         ++_M_current;
+      |           ^~~~~~~~~~
+/usr/include/c++/16/bits/stl_vector.h: In instantiation of ‘std::_Vector_base<_Tp, _Alloc>::~_Vector_base() [with _Tp = std::reference_wrapper<PayloadData>; _Alloc = std::allocator<std::reference_wrapper<PayloadData> >]’:
+/usr/include/c++/16/bits/stl_vector.h:551:7:   required from here
+  551 |       vector() = default;
+      |       ^~~~~~
+/usr/include/c++/16/bits/stl_vector.h:375:51: error: invalid use of incomplete type ‘class std::reference_wrapper<PayloadData>’
+  375 |         ptrdiff_t __n = _M_impl._M_end_of_storage - _M_impl._M_start;
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/type_traits:78:11: note: declaration of ‘class std::reference_wrapper<PayloadData>’
+   78 |     class reference_wrapper;
+      |           ^~~~~~~~~~~~~~~~~
+/usr/include/c++/16/tuple: In instantiation of ‘constexpr std::tuple<typename std::__strip_reference_wrapper<typename std::decay<_Elements>::type>::__type ...> std::make_tuple(_Elements&& ...) [with _Elements = {const reference_wrapper<PayloadData>&, StackPivot&, long unsigned int&}]’:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:87:44:   required from here
+   87 |             items.push_back(std::make_tuple(data_ref, pivot, estimated_size));
+      |                             ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/tuple:2727:14: error: no matching function for call to ‘std::tuple<PayloadData&, StackPivot, long unsigned int>::tuple(const std::reference_wrapper<PayloadData>&, StackPivot&, long unsigned int&)’
+ 2727 |       return __result_type(std::forward<_Elements>(__args)...);
+      |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  • there are 24 candidates
+    • candidate 1: ‘template<class _Alloc, class ... _UElements, bool _Valid, typename std::enable_if<std::tuple<PayloadData&, StackPivot, long unsigned int>::_TCC<_Valid>::__is_explicitly_constructible<_UElements ...>(), bool>::type <anonymous> > std::tuple< <template-parameter-1-1> >::tuple(std::allocator_arg_t, const _Alloc&, std::tuple<_Args2 ...>&&) [with _UElements = _Alloc; bool _Valid = {_UElements ...}; typename std::enable_if<_TCC<_Valid>::__is_explicitly_constructible<_UElements ...>(), bool>::type <anonymous> = _Valid; _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1645:9:
+       1645 |         tuple(allocator_arg_t __tag, const _Alloc& __a,
+            |         ^~~~~
+      • template argument deduction/substitution failed:
+        •   mismatched types ‘std::tuple<_Elements ...>’ and ‘long unsigned int’
+          /usr/include/c++/16/tuple:2727:14:
+           2727 |       return __result_type(std::forward<_Elements>(__args)...);
+                |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    • candidate 2: ‘template<class _Alloc, class ... _UElements, bool _Valid, typename std::enable_if<std::tuple<PayloadData&, StackPivot, long unsigned int>::_TCC<_Valid>::__is_implicitly_constructible<_UElements ...>(), bool>::type <anonymous> > std::tuple< <template-parameter-1-1> >::tuple(std::allocator_arg_t, const _Alloc&, std::tuple<_Args2 ...>&&) [with _UElements = _Alloc; bool _Valid = {_UElements ...}; typename std::enable_if<_TCC<_Valid>::__is_implicitly_constructible<_UElements ...>(), bool>::type <anonymous> = _Valid; _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1633:9:
+       1633 |         tuple(allocator_arg_t __tag, const _Alloc& __a,
+            |         ^~~~~
+      • template argument deduction/substitution failed:
+        •   mismatched types ‘std::tuple<_Elements ...>’ and ‘long unsigned int’
+          /usr/include/c++/16/tuple:2727:14:
+           2727 |       return __result_type(std::forward<_Elements>(__args)...);
+                |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    • candidate 3: ‘template<class _Alloc, class ... _UElements, bool _Valid, typename std::enable_if<std::tuple<PayloadData&, StackPivot, long unsigned int>::_TCC<_Valid>::__is_explicitly_constructible<const _UElements& ...>(), bool>::type <anonymous> > std::tuple< <template-parameter-1-1> >::tuple(std::allocator_arg_t, const _Alloc&, const std::tuple<_Args2 ...>&) [with _UElements = _Alloc; bool _Valid = {_UElements ...}; typename std::enable_if<_TCC<_Valid>::__is_explicitly_constructible<const _UElements& ...>(), bool>::type <anonymous> = _Valid; _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1622:9:
+       1622 |         tuple(allocator_arg_t __tag, const _Alloc& __a,
+            |         ^~~~~
+      • template argument deduction/substitution failed:
+        •   mismatched types ‘const std::tuple<_Elements ...>’ and ‘long unsigned int’
+          /usr/include/c++/16/tuple:2727:14:
+           2727 |       return __result_type(std::forward<_Elements>(__args)...);
+                |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    • candidate 4: ‘template<class _Alloc, class ... _UElements, bool _Valid, typename std::enable_if<std::tuple<PayloadData&, StackPivot, long unsigned int>::_TCC<_Valid>::__is_implicitly_constructible<const _UElements& ...>(), bool>::type <anonymous> > std::tuple< <template-parameter-1-1> >::tuple(std::allocator_arg_t, const _Alloc&, const std::tuple<_Args2 ...>&) [with _UElements = _Alloc; bool _Valid = {_UElements ...}; typename std::enable_if<_TCC<_Valid>::__is_implicitly_constructible<const _UElements& ...>(), bool>::type <anonymous> = _Valid; _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1610:9:
+       1610 |         tuple(allocator_arg_t __tag, const _Alloc& __a,
+            |         ^~~~~
+      • template argument deduction/substitution failed:
+        •   mismatched types ‘const std::tuple<_Elements ...>’ and ‘long unsigned int’
+          /usr/include/c++/16/tuple:2727:14:
+           2727 |       return __result_type(std::forward<_Elements>(__args)...);
+                |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    • candidate 5: ‘template<class _Alloc> std::tuple< <template-parameter-1-1> >::tuple(std::allocator_arg_t, const _Alloc&, std::tuple< <template-parameter-1-1> >&&) [with _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1602:9:
+       1602 |         tuple(allocator_arg_t __tag, const _Alloc& __a, tuple&& __in)
+            |         ^~~~~
+      • template argument deduction/substitution failed:
+        •   cannot convert ‘std::forward<const reference_wrapper<PayloadData>&>((* & __args#0))’ (type ‘const std::reference_wrapper<PayloadData>’) to type ‘std::allocator_arg_t’
+          /usr/include/c++/16/tuple:2727:14:
+           2727 |       return __result_type(std::forward<_Elements>(__args)...);
+                |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    • candidate 6: ‘template<class _Alloc> std::tuple< <template-parameter-1-1> >::tuple(std::allocator_arg_t, const _Alloc&, const std::tuple< <template-parameter-1-1> >&) [with _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1597:9:
+       1597 |         tuple(allocator_arg_t __tag, const _Alloc& __a, const tuple& __in)
+            |         ^~~~~
+      • template argument deduction/substitution failed:
+        •   cannot convert ‘std::forward<const reference_wrapper<PayloadData>&>((* & __args#0))’ (type ‘const std::reference_wrapper<PayloadData>’) to type ‘std::allocator_arg_t’
+          /usr/include/c++/16/tuple:2727:14:
+           2727 |       return __result_type(std::forward<_Elements>(__args)...);
+                |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    • candidate 7: ‘template<class _Alloc, class ... _UElements, bool _Valid, typename std::enable_if<std::tuple<PayloadData&, StackPivot, long unsigned int>::_TCC<_Valid>::__is_explicitly_constructible<_UElements ...>(), bool>::type <anonymous> > std::tuple< <template-parameter-1-1> >::tuple(std::allocator_arg_t, const _Alloc&, _UElements&& ...) [with _UElements = _Alloc; bool _Valid = {_UElements ...}; typename std::enable_if<_TCC<_Valid>::__is_explicitly_constructible<_UElements ...>(), bool>::type <anonymous> = _Valid; _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1590:9:
+       1590 |         tuple(allocator_arg_t __tag, const _Alloc& __a,
+            |         ^~~~~
+      • template argument deduction/substitution failed:
+        • error: no type named ‘type’ in ‘struct std::enable_if<false, bool>’
+          /usr/include/c++/16/tuple:1587:55:
+           1587 |                _ExplicitCtor<_Valid, _UElements...> = false>
+                |                                                       ^~~~~
+    • candidate 8: ‘template<class _Alloc, class ... _UElements, bool _Valid, typename std::enable_if<std::tuple<PayloadData&, StackPivot, long unsigned int>::_TCC<_Valid>::__is_implicitly_constructible<_UElements ...>(), bool>::type <anonymous> > std::tuple< <template-parameter-1-1> >::tuple(std::allocator_arg_t, const _Alloc&, _UElements&& ...) [with _UElements = _Alloc; bool _Valid = {_UElements ...}; typename std::enable_if<_TCC<_Valid>::__is_implicitly_constructible<_UElements ...>(), bool>::type <anonymous> = _Valid; _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1580:9:
+       1580 |         tuple(allocator_arg_t __tag, const _Alloc& __a,
+            |         ^~~~~
+      • template argument deduction/substitution failed:
+        • error: no type named ‘type’ in ‘struct std::enable_if<false, bool>’
+          /usr/include/c++/16/tuple:1578:55:
+           1578 |                _ImplicitCtor<_Valid, _UElements...> = true>
+                |                                                       ^~~~
+    • candidate 9: ‘template<class _Alloc, bool _NotEmpty, typename std::enable_if<std::tuple<PayloadData&, StackPivot, long unsigned int>::_TCC<_Valid>::__is_explicitly_constructible<PayloadData&, const StackPivot&, const long unsigned int&>(), bool>::type <anonymous> > std::tuple< <template-parameter-1-1> >::tuple(std::allocator_arg_t, const _Alloc&, std::__type_identity_t<_Elements>& ...) [with bool _NotEmpty = _Alloc; typename std::enable_if<_TCC<_Valid>::__is_explicitly_constructible<const _Elements& ...>(), bool>::type <anonymous> = _NotEmpty; _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1572:9:
+       1572 |         tuple(allocator_arg_t __tag, const _Alloc& __a,
+            |         ^~~~~
+      • candidate expects 5 arguments, 3 provided
+    • candidate 10: ‘template<class _Alloc, bool _NotEmpty, typename std::enable_if<std::tuple<PayloadData&, StackPivot, long unsigned int>::_TCC<_Valid>::__is_implicitly_constructible<PayloadData&, const StackPivot&, const long unsigned int&>(), bool>::type <anonymous> > std::tuple< <template-parameter-1-1> >::tuple(std::allocator_arg_t, const _Alloc&, std::__type_identity_t<_Elements>& ...) [with bool _NotEmpty = _Alloc; typename std::enable_if<_TCC<_Valid>::__is_implicitly_constructible<const _Elements& ...>(), bool>::type <anonymous> = _NotEmpty; _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1564:9:
+       1564 |         tuple(allocator_arg_t __tag, const _Alloc& __a,
+            |         ^~~~~
+      • candidate expects 5 arguments, 3 provided
+    • candidate 11: ‘template<class _Alloc, typename std::enable_if<std::tuple<PayloadData&, StackPivot, long unsigned int>::_TCC<((bool)std::is_object<_Tp>::value)>::__is_explicitly_default_constructible(), bool>::type <anonymous> > std::tuple< <template-parameter-1-1> >::tuple(std::allocator_arg_t, const _Alloc&) [with typename std::enable_if<_TCC<((bool)std::is_object<_Alloc>::value)>::__is_explicitly_default_constructible(), bool>::type <anonymous> = _Alloc; _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1558:9:
+       1558 |         tuple(allocator_arg_t __tag, const _Alloc& __a)
+            |         ^~~~~
+      • candidate expects 2 arguments, 3 provided
+    • candidate 12: ‘template<class _Alloc, typename std::enable_if<std::tuple<PayloadData&, StackPivot, long unsigned int>::_TCC<((bool)std::is_object<_Tp>::value)>::__is_implicitly_default_constructible(), bool>::type <anonymous> > std::tuple< <template-parameter-1-1> >::tuple(std::allocator_arg_t, const _Alloc&) [with typename std::enable_if<_TCC<((bool)std::is_object<_Alloc>::value)>::__is_implicitly_default_constructible(), bool>::type <anonymous> = _Alloc; _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1551:9:
+       1551 |         tuple(allocator_arg_t __tag, const _Alloc& __a)
+            |         ^~~~~
+      • candidate expects 2 arguments, 3 provided
+    • candidate 13: ‘template<class ... _UElements, bool _Valid, typename std::enable_if<std::tuple<PayloadData&, StackPivot, long unsigned int>::_TCC<_Valid>::__is_explicitly_constructible<_UElements ...>(), bool>::type <anonymous> > constexpr std::tuple< <template-parameter-1-1> >::tuple(std::tuple<_Args1 ...>&&) [with _UElements = {_UElements ...}; bool _Valid = _Valid; typename std::enable_if<_TCC<_Valid>::__is_explicitly_constructible<_UElements ...>(), bool>::type <anonymous> = <anonymous>; _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1541:9:
+       1541 |         tuple(tuple<_UElements...>&& __in)
+            |         ^~~~~
+      • candidate expects 1 argument, 3 provided
+    • candidate 14: ‘template<class ... _UElements, bool _Valid, typename std::enable_if<std::tuple<PayloadData&, StackPivot, long unsigned int>::_TCC<_Valid>::__is_implicitly_constructible<_UElements ...>(), bool>::type <anonymous> > constexpr std::tuple< <template-parameter-1-1> >::tuple(std::tuple<_Args1 ...>&&) [with _UElements = {_UElements ...}; bool _Valid = _Valid; typename std::enable_if<_TCC<_Valid>::__is_implicitly_constructible<_UElements ...>(), bool>::type <anonymous> = <anonymous>; _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1531:9:
+       1531 |         tuple(tuple<_UElements...>&& __in)
+            |         ^~~~~
+      • candidate expects 1 argument, 3 provided
+    • candidate 15: ‘template<class ... _UElements, bool _Valid, typename std::enable_if<std::tuple<PayloadData&, StackPivot, long unsigned int>::_TCC<_Valid>::__is_explicitly_constructible<const _UElements& ...>(), bool>::type <anonymous> > constexpr std::tuple< <template-parameter-1-1> >::tuple(const std::tuple<_Args1 ...>&) [with _UElements = {_UElements ...}; bool _Valid = _Valid; typename std::enable_if<_TCC<_Valid>::__is_explicitly_constructible<const _UElements& ...>(), bool>::type <anonymous> = <anonymous>; _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1521:9:
+       1521 |         tuple(const tuple<_UElements...>& __in)
+            |         ^~~~~
+      • candidate expects 1 argument, 3 provided
+    • candidate 16: ‘template<class ... _UElements, bool _Valid, typename std::enable_if<std::tuple<PayloadData&, StackPivot, long unsigned int>::_TCC<_Valid>::__is_implicitly_constructible<const _UElements& ...>(), bool>::type <anonymous> > constexpr std::tuple< <template-parameter-1-1> >::tuple(const std::tuple<_Args1 ...>&) [with _UElements = {_UElements ...}; bool _Valid = _Valid; typename std::enable_if<_TCC<_Valid>::__is_implicitly_constructible<const _UElements& ...>(), bool>::type <anonymous> = <anonymous>; _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1511:9:
+       1511 |         tuple(const tuple<_UElements...>& __in)
+            |         ^~~~~
+      • candidate expects 1 argument, 3 provided
+    • candidate 17: ‘template<class ... _UElements, bool _Valid, typename std::enable_if<std::tuple<PayloadData&, StackPivot, long unsigned int>::_TCC<_Valid>::__is_explicitly_constructible<_UElements ...>(), bool>::type <anonymous> > constexpr std::tuple< <template-parameter-1-1> >::tuple(_UElements&& ...) [with _UElements = {_UElements ...}; bool _Valid = _Valid; typename std::enable_if<_TCC<_Valid>::__is_explicitly_constructible<_UElements ...>(), bool>::type <anonymous> = <anonymous>; _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1497:9:
+       1497 |         tuple(_UElements&&... __elements)
+            |         ^~~~~
+      • template argument deduction/substitution failed:
+        • error: no type named ‘type’ in ‘struct std::enable_if<false, bool>’
+          /usr/include/c++/16/tuple:1495:55:
+           1495 |                _ExplicitCtor<_Valid, _UElements...> = false>
+                |                                                       ^~~~~
+    • candidate 18: ‘template<class ... _UElements, bool _Valid, typename std::enable_if<std::tuple<PayloadData&, StackPivot, long unsigned int>::_TCC<_Valid>::__is_implicitly_constructible<_UElements ...>(), bool>::type <anonymous> > constexpr std::tuple< <template-parameter-1-1> >::tuple(_UElements&& ...) [with _UElements = {_UElements ...}; bool _Valid = _Valid; typename std::enable_if<_TCC<_Valid>::__is_implicitly_constructible<_UElements ...>(), bool>::type <anonymous> = <anonymous>; _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1488:9:
+       1488 |         tuple(_UElements&&... __elements)
+            |         ^~~~~
+      • template argument deduction/substitution failed:
+        • error: no type named ‘type’ in ‘struct std::enable_if<false, bool>’
+          /usr/include/c++/16/tuple:1486:55:
+           1486 |                _ImplicitCtor<_Valid, _UElements...> = true>
+                |                                                       ^~~~
+    • candidate 19: ‘template<bool _NotEmpty, typename std::enable_if<std::tuple<PayloadData&, StackPivot, long unsigned int>::_TCC<_Cond>::__is_explicitly_constructible<PayloadData&, const StackPivot&, const long unsigned int&>(), bool>::type <anonymous> > constexpr std::tuple< <template-parameter-1-1> >::tuple(std::__type_identity_t<_Elements>& ...) [with bool _NotEmpty = _NotEmpty; typename std::enable_if<_TCC<_Dummy>::__is_explicitly_constructible<const _Elements& ...>(), bool>::type <anonymous> = <anonymous>; _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1480:9:
+       1480 |         tuple(const __type_identity_t<_Elements>&... __elements)
+            |         ^~~~~
+      • template argument deduction/substitution failed:
+        • error: no type named ‘type’ in ‘struct std::enable_if<false, bool>’
+          /usr/include/c++/16/tuple:1478:64:
+           1478 |                _ExplicitCtor<_NotEmpty, const _Elements&...> = false>
+                |                                                                ^~~~~
+    • candidate 20: ‘template<bool _NotEmpty, typename std::enable_if<std::tuple<PayloadData&, StackPivot, long unsigned int>::_TCC<_Cond>::__is_implicitly_constructible<PayloadData&, const StackPivot&, const long unsigned int&>(), bool>::type <anonymous> > constexpr std::tuple< <template-parameter-1-1> >::tuple(std::__type_identity_t<_Elements>& ...) [with bool _NotEmpty = _NotEmpty; typename std::enable_if<_TCC<_Dummy>::__is_implicitly_constructible<const _Elements& ...>(), bool>::type <anonymous> = <anonymous>; _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1473:9:
+       1473 |         tuple(const __type_identity_t<_Elements>&... __elements)
+            |         ^~~~~
+      • template argument deduction/substitution failed:
+        •   cannot convert ‘std::forward<const reference_wrapper<PayloadData>&>((* & __args#0))’ (type ‘const std::reference_wrapper<PayloadData>’) to type ‘PayloadData&’
+          /usr/include/c++/16/tuple:2727:14:
+           2727 |       return __result_type(std::forward<_Elements>(__args)...);
+                |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    • candidate 21: ‘template<class _Dummy, typename std::enable_if<std::tuple<PayloadData&, StackPivot, long unsigned int>::_TCC<((bool)std::is_void<_Tp>::value)>::__is_explicitly_default_constructible(), bool>::type <anonymous> > constexpr std::tuple< <template-parameter-1-1> >::tuple() [with typename std::enable_if<_TCC<((bool)std::is_void<_Dummy>::value)>::__is_explicitly_default_constructible(), bool>::type <anonymous> = _Dummy; _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1466:9:
+       1466 |         tuple()
+            |         ^~~~~
+      • candidate expects 0 arguments, 3 provided
+    • candidate 22: ‘template<class _Dummy, typename std::enable_if<std::tuple<PayloadData&, StackPivot, long unsigned int>::_TCC<((bool)std::is_void<_Tp>::value)>::__is_implicitly_default_constructible(), bool>::type <anonymous> > constexpr std::tuple< <template-parameter-1-1> >::tuple() [with typename std::enable_if<_TCC<((bool)std::is_void<_Dummy>::value)>::__is_implicitly_default_constructible(), bool>::type <anonymous> = _Dummy; _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1459:9:
+       1459 |         tuple()
+            |         ^~~~~
+      • candidate expects 0 arguments, 3 provided
+    • candidate 23: ‘constexpr std::tuple< <template-parameter-1-1> >::tuple(std::tuple< <template-parameter-1-1> >&&) [with _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1504:17:
+       1504 |       constexpr tuple(tuple&&) = default;
+            |                 ^~~~~
+      • candidate expects 1 argument, 3 provided
+    • candidate 24: ‘constexpr std::tuple< <template-parameter-1-1> >::tuple(const std::tuple< <template-parameter-1-1> >&) [with _Elements = {PayloadData&, StackPivot, long unsigned int}]’
+      /usr/include/c++/16/tuple:1502:17:
+       1502 |       constexpr tuple(const tuple&) = default;
+            |                 ^~~~~
+      • candidate expects 1 argument, 3 provided
+/usr/include/c++/16/type_traits: In instantiation of ‘struct std::is_trivially_destructible<std::reference_wrapper<PayloadData> >’:
+/usr/include/c++/16/bits/stl_construct.h:224:62:   required from ‘void std::_Destroy(_ForwardIterator, _ForwardIterator) [with _ForwardIterator = reference_wrapper<PayloadData>*]’
+  224 |       if constexpr (!is_trivially_destructible<_Value_type>::value)
+      |                                                              ^~~~~
+/usr/include/c++/16/bits/alloc_traits.h:1085:20:   required from ‘void std::_Destroy(_ForwardIterator, _ForwardIterator, allocator<_T2>&) [with _ForwardIterator = reference_wrapper<PayloadData>*; _Tp = reference_wrapper<PayloadData>]’
+ 1085 |       std::_Destroy(__first, __last);
+      |       ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+/usr/include/c++/16/bits/stl_vector.h:792:15:   required from ‘std::vector<_Tp, _Alloc>::~vector() [with _Tp = std::reference_wrapper<PayloadData>; _Alloc = std::allocator<std::reference_wrapper<PayloadData> >]’
+  792 |         std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+      |         ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  793 |                       _M_get_Tp_allocator());
+      |                       ~~~~~~~~~~~~~~~~~~~~~~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:57:54:   required from here
+   57 |     std::vector<std::reference_wrapper<PayloadData>> data_refs;
+      |                                                      ^~~~~~~~~
+/usr/include/c++/16/type_traits:1543:30: error: invalid use of incomplete type ‘class std::reference_wrapper<PayloadData>’
+ 1543 |     : public __bool_constant<__is_trivially_destructible(_Tp)>
+      |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/type_traits:78:11: note: declaration of ‘class std::reference_wrapper<PayloadData>’
+   78 |     class reference_wrapper;
+      |           ^~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/16/bits/stl_tempbuf.h:61,
+                 from /usr/include/c++/16/bits/stl_algo.h:69,
+                 from /usr/include/c++/16/algorithm:63:
+/usr/include/c++/16/bits/stl_construct.h: In instantiation of ‘void std::_Destroy(_ForwardIterator, _ForwardIterator) [with _ForwardIterator = reference_wrapper<PayloadData>*]’:
+/usr/include/c++/16/bits/alloc_traits.h:1085:20:   required from ‘void std::_Destroy(_ForwardIterator, _ForwardIterator, allocator<_T2>&) [with _ForwardIterator = reference_wrapper<PayloadData>*; _Tp = reference_wrapper<PayloadData>]’
+ 1085 |       std::_Destroy(__first, __last);
+      |       ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+/usr/include/c++/16/bits/stl_vector.h:792:15:   required from ‘std::vector<_Tp, _Alloc>::~vector() [with _Tp = std::reference_wrapper<PayloadData>; _Alloc = std::allocator<std::reference_wrapper<PayloadData> >]’
+  792 |         std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+      |         ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  793 |                       _M_get_Tp_allocator());
+      |                       ~~~~~~~~~~~~~~~~~~~~~~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:57:54:   required from here
+   57 |     std::vector<std::reference_wrapper<PayloadData>> data_refs;
+      |                                                      ^~~~~~~~~
+/usr/include/c++/16/bits/stl_construct.h:224:62: error: ‘value’ is not a member of ‘std::is_trivially_destructible<std::reference_wrapper<PayloadData> >’
+  224 |       if constexpr (!is_trivially_destructible<_Value_type>::value)
+      |                                                              ^~~~~
+/usr/include/c++/16/bits/stl_construct.h:225:37: error: cannot increment a pointer to incomplete type ‘std::reference_wrapper<PayloadData>’
+  225 |         for (; __first != __last; ++__first)
+      |                                     ^~~~~~~
+/usr/include/c++/16/bits/stl_algo.h: In instantiation of ‘void std::__insertion_sort(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’:
+/usr/include/c++/16/bits/stl_algo.h:1821:25:   required from ‘void std::__final_insertion_sort(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 1821 |           std::__insertion_sort(__first, __first + __threshold, __comp);
+      |           ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:1916:31:   required from ‘void std::__sort(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 1916 |           std::__final_insertion_sort(__first, __last, __comp);
+      |           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:4849:18:   required from ‘void std::sort(_RAIter, _RAIter, _Compare) [with _RAIter = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 4849 |       std::__sort(__first, __last, __comp);
+      |       ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:92:14:   required from here
+   92 |     std::sort(items.begin(), items.end(),
+      |     ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   93 |             [](const auto& a, const auto& b) { //Use auto
+      |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   94 |                 return std::get<2>(a) > std::get<2>(b);
+      |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   95 |             });
+      |             ~~
+/usr/include/c++/16/bits/stl_algo.h:1785:24: error: use of deleted function ‘std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>& std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>::operator=(const std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>&)’
+ 1785 |               *__first = _GLIBCXX_MOVE(__val);
+      |                        ^
+/usr/include/c++/16/tuple:833:11: note: ‘std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>& std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>::operator=(const std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>&)’ is implicitly declared as deleted because ‘std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>’ declares a move constructor or move assignment operator
+  833 |     class tuple : public _Tuple_impl<0, _Elements...>
+      |           ^~~~~
+/usr/include/c++/16/bits/stl_algo.h:1785:24: note: use ‘-fdiagnostics-all-candidates’ to display considered candidates
+ 1785 |               *__first = _GLIBCXX_MOVE(__val);
+      |                        ^
+In file included from /usr/include/c++/16/bits/stl_algo.h:61:
+/usr/include/c++/16/bits/stl_heap.h: In instantiation of ‘void std::__pop_heap(_RandomAccessIterator, _RandomAccessIterator, _RandomAccessIterator, _Compare&) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’:
+/usr/include/c++/16/bits/stl_algo.h:1596:19:   required from ‘void std::__heap_select(_RandomAccessIterator, _RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 1596 |           std::__pop_heap(__first, __middle, __i, __comp);
+      |           ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:1876:25:   required from ‘void std::__partial_sort(_RandomAccessIterator, _RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 1876 |       std::__heap_select(__first, __middle, __last, __comp);
+      |       ~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:1892:27:   required from ‘void std::__introsort_loop(_RandomAccessIterator, _RandomAccessIterator, _Size, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Size = long int; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 1892 |               std::__partial_sort(__first, __last, __last, __comp);
+      |               ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:1913:25:   required from ‘void std::__sort(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 1913 |           std::__introsort_loop(__first, __last,
+      |           ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+ 1914 |                                 std::__lg(__last - __first) * 2,
+      |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1915 |                                 __comp);
+      |                                 ~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:4849:18:   required from ‘void std::sort(_RAIter, _RAIter, _Compare) [with _RAIter = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 4849 |       std::__sort(__first, __last, __comp);
+      |       ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:92:14:   required from here
+   92 |     std::sort(items.begin(), items.end(),
+      |     ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   93 |             [](const auto& a, const auto& b) { //Use auto
+      |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   94 |                 return std::get<2>(a) > std::get<2>(b);
+      |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   95 |             });
+      |             ~~
+/usr/include/c++/16/bits/stl_heap.h:265:17: error: use of deleted function ‘std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>& std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>::operator=(const std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>&)’
+  265 |       *__result = _GLIBCXX_MOVE(*__first);
+      |                 ^
+/usr/include/c++/16/bits/stl_heap.h:265:17: note: use ‘-fdiagnostics-all-candidates’ to display considered candidates
+/usr/include/c++/16/type_traits: In substitution of ‘template<class _Tp, class ... _Args> using std::__is_constructible_impl = std::__bool_constant<__is_constructible(_Tp, _Args ...)> [with _Tp = std::reference_wrapper<PayloadData>; _Args = {std::reference_wrapper<PayloadData>&&}]’:
+/usr/include/c++/16/type_traits:1304:12:   required from ‘struct std::is_move_constructible<std::reference_wrapper<PayloadData> >’
+ 1304 |     struct is_move_constructible
+      |            ^~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/type_traits:191:35:   required by substitution of ‘template<class ... _Bn> std::__detail::__first_t<std::integral_constant<bool, true>, typename std::enable_if<(bool)(_Bn::value), void>::type ...> std::__detail::__and_fn(int) [with _Bn = {std::__not_<std::__is_tuple_like<std::reference_wrapper<PayloadData> > >, std::is_move_constructible<std::reference_wrapper<PayloadData> >, std::is_move_assignable<std::reference_wrapper<PayloadData> >}]’
+  191 |                                       __enable_if_t<bool(_Bn::value)>...>;
+      |                                                               ^~~~~
+/usr/include/c++/16/type_traits:207:42:   required from ‘struct std::__and_<std::__not_<std::__is_tuple_like<std::reference_wrapper<PayloadData> > >, std::is_move_constructible<std::reference_wrapper<PayloadData> >, std::is_move_assignable<std::reference_wrapper<PayloadData> > >’
+  207 |     : decltype(__detail::__and_fn<_Bn...>(0))
+      |                ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+/usr/include/c++/16/type_traits:2558:54:   required by substitution of ‘template<class ... _Cond> using std::_Require = std::__enable_if_t<((bool)std::__and_<_Bn>::value)> [with _Cond = {std::__not_<std::__is_tuple_like<std::reference_wrapper<PayloadData> > >, std::is_move_constructible<std::reference_wrapper<PayloadData> >, std::is_move_assignable<std::reference_wrapper<PayloadData> >}]’
+ 2558 |     using _Require = __enable_if_t<__and_<_Cond...>::value>;
+      |                                                      ^~~~~
+/usr/include/c++/16/bits/move.h:230:5:   required by substitution of ‘template<class _Tp> std::_Require<std::__not_<std::__is_tuple_like<_Tp> >, std::is_move_constructible<_Tp>, std::is_move_assignable<_Tp> > std::swap(_Tp&, _Tp&) [with _Tp = std::reference_wrapper<PayloadData>]’
+  230 |     swap(_Tp& __a, _Tp& __b)
+      |     ^~~~
+/usr/include/c++/16/type_traits:3077:31:   [ skipping 7 instantiation contexts, use -ftemplate-backtrace-limit=0 to disable ]
+ 3077 |                = decltype(swap(std::declval<_Tp&>(), std::declval<_Tp&>()))>
+      |                           ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:94:20:   required from ‘void std::__move_median_to_first(_Iterator, _Iterator, _Iterator, _Iterator, _Compare) [with _Iterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+   94 |             std::iter_swap(__result, __b);
+      |             ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:1863:34:   required from ‘_RandomAccessIterator std::__unguarded_partition_pivot(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 1863 |       std::__move_median_to_first(__first, __second, __mid, __last - _Dist(1),
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1864 |                                   __comp);
+      |                                   ~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:1897:38:   required from ‘void std::__introsort_loop(_RandomAccessIterator, _RandomAccessIterator, _Size, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Size = long int; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 1897 |             std::__unguarded_partition_pivot(__first, __last, __comp);
+      |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:1913:25:   required from ‘void std::__sort(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 1913 |           std::__introsort_loop(__first, __last,
+      |           ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+ 1914 |                                 std::__lg(__last - __first) * 2,
+      |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1915 |                                 __comp);
+      |                                 ~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:4849:18:   required from ‘void std::sort(_RAIter, _RAIter, _Compare) [with _RAIter = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 4849 |       std::__sort(__first, __last, __comp);
+      |       ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:92:14:   required from here
+   92 |     std::sort(items.begin(), items.end(),
+      |     ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   93 |             [](const auto& a, const auto& b) { //Use auto
+      |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   94 |                 return std::get<2>(a) > std::get<2>(b);
+      |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   95 |             });
+      |             ~~
+/usr/include/c++/16/type_traits:1236:25: error: invalid use of incomplete type ‘class std::reference_wrapper<PayloadData>’
+ 1236 |       = __bool_constant<__is_constructible(_Tp, _Args...)>;
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/type_traits:78:11: note: declaration of ‘class std::reference_wrapper<PayloadData>’
+   78 |     class reference_wrapper;
+      |           ^~~~~~~~~~~~~~~~~
+/usr/include/c++/16/type_traits: In instantiation of ‘struct std::is_move_constructible<std::reference_wrapper<PayloadData> >’:
+/usr/include/c++/16/type_traits:191:35:   required by substitution of ‘template<class ... _Bn> std::__detail::__first_t<std::integral_constant<bool, true>, typename std::enable_if<(bool)(_Bn::value), void>::type ...> std::__detail::__and_fn(int) [with _Bn = {std::__not_<std::__is_tuple_like<std::reference_wrapper<PayloadData> > >, std::is_move_constructible<std::reference_wrapper<PayloadData> >, std::is_move_assignable<std::reference_wrapper<PayloadData> >}]’
+  191 |                                       __enable_if_t<bool(_Bn::value)>...>;
+      |                                                               ^~~~~
+/usr/include/c++/16/type_traits:207:42:   required from ‘struct std::__and_<std::__not_<std::__is_tuple_like<std::reference_wrapper<PayloadData> > >, std::is_move_constructible<std::reference_wrapper<PayloadData> >, std::is_move_assignable<std::reference_wrapper<PayloadData> > >’
+  207 |     : decltype(__detail::__and_fn<_Bn...>(0))
+      |                ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+/usr/include/c++/16/type_traits:2558:54:   required by substitution of ‘template<class ... _Cond> using std::_Require = std::__enable_if_t<((bool)std::__and_<_Bn>::value)> [with _Cond = {std::__not_<std::__is_tuple_like<std::reference_wrapper<PayloadData> > >, std::is_move_constructible<std::reference_wrapper<PayloadData> >, std::is_move_assignable<std::reference_wrapper<PayloadData> >}]’
+ 2558 |     using _Require = __enable_if_t<__and_<_Cond...>::value>;
+      |                                                      ^~~~~
+/usr/include/c++/16/bits/move.h:230:5:   required by substitution of ‘template<class _Tp> std::_Require<std::__not_<std::__is_tuple_like<_Tp> >, std::is_move_constructible<_Tp>, std::is_move_assignable<_Tp> > std::swap(_Tp&, _Tp&) [with _Tp = std::reference_wrapper<PayloadData>]’
+  230 |     swap(_Tp& __a, _Tp& __b)
+      |     ^~~~
+/usr/include/c++/16/type_traits:3077:31:   required by substitution of ‘template<class _Tp, class> static std::true_type std::__swappable_details::__do_is_swappable_impl::__test(int) [with _Tp = std::reference_wrapper<PayloadData>; <template-parameter-1-2> = <missing>]’
+ 3077 |                = decltype(swap(std::declval<_Tp&>(), std::declval<_Tp&>()))>
+      |                           ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/type_traits:3101:40:   [ skipping 6 instantiation contexts, use -ftemplate-backtrace-limit=0 to disable ]
+ 3101 |       using type = decltype(__test<_Tp>(0));
+      |                             ~~~~~~~~~~~^~~
+/usr/include/c++/16/bits/stl_algo.h:94:20:   required from ‘void std::__move_median_to_first(_Iterator, _Iterator, _Iterator, _Iterator, _Compare) [with _Iterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+   94 |             std::iter_swap(__result, __b);
+      |             ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:1863:34:   required from ‘_RandomAccessIterator std::__unguarded_partition_pivot(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 1863 |       std::__move_median_to_first(__first, __second, __mid, __last - _Dist(1),
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1864 |                                   __comp);
+      |                                   ~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:1897:38:   required from ‘void std::__introsort_loop(_RandomAccessIterator, _RandomAccessIterator, _Size, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Size = long int; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 1897 |             std::__unguarded_partition_pivot(__first, __last, __comp);
+      |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:1913:25:   required from ‘void std::__sort(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 1913 |           std::__introsort_loop(__first, __last,
+      |           ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+ 1914 |                                 std::__lg(__last - __first) * 2,
+      |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1915 |                                 __comp);
+      |                                 ~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:4849:18:   required from ‘void std::sort(_RAIter, _RAIter, _Compare) [with _RAIter = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 4849 |       std::__sort(__first, __last, __comp);
+      |       ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:92:14:   required from here
+   92 |     std::sort(items.begin(), items.end(),
+      |     ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   93 |             [](const auto& a, const auto& b) { //Use auto
+      |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   94 |                 return std::get<2>(a) > std::get<2>(b);
+      |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   95 |             });
+      |             ~~
+/usr/include/c++/16/type_traits:1307:52: error: static assertion failed: template argument must be a complete class or an unbounded array
+ 1307 |       static_assert(std::__is_complete_or_unbounded(__type_identity<_Tp>{}),
+      |                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
+  • ‘std::__is_complete_or_unbounded<__type_identity<reference_wrapper<PayloadData> > >((std::__type_identity<std::reference_wrapper<PayloadData> >(), std::__type_identity<std::reference_wrapper<PayloadData> >()))’ evaluates to false
+/usr/include/c++/16/bits/stl_algobase.h: In instantiation of ‘void std::iter_swap(_ForwardIterator1, _ForwardIterator2) [with _ForwardIterator1 = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _ForwardIterator2 = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >]’:
+/usr/include/c++/16/bits/stl_algo.h:94:20:   required from ‘void std::__move_median_to_first(_Iterator, _Iterator, _Iterator, _Iterator, _Compare) [with _Iterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+   94 |             std::iter_swap(__result, __b);
+      |             ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:1863:34:   required from ‘_RandomAccessIterator std::__unguarded_partition_pivot(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 1863 |       std::__move_median_to_first(__first, __second, __mid, __last - _Dist(1),
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1864 |                                   __comp);
+      |                                   ~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:1897:38:   required from ‘void std::__introsort_loop(_RandomAccessIterator, _RandomAccessIterator, _Size, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Size = long int; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 1897 |             std::__unguarded_partition_pivot(__first, __last, __comp);
+      |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:1913:25:   required from ‘void std::__sort(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 1913 |           std::__introsort_loop(__first, __last,
+      |           ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+ 1914 |                                 std::__lg(__last - __first) * 2,
+      |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1915 |                                 __comp);
+      |                                 ~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:4849:18:   required from ‘void std::sort(_RAIter, _RAIter, _Compare) [with _RAIter = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 4849 |       std::__sort(__first, __last, __comp);
+      |       ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:92:14:   required from here
+   92 |     std::sort(items.begin(), items.end(),
+      |     ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   93 |             [](const auto& a, const auto& b) { //Use auto
+      |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   94 |                 return std::get<2>(a) > std::get<2>(b);
+      |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   95 |             });
+      |             ~~
+/usr/include/c++/16/bits/stl_algobase.h:184:11: error: use of deleted function ‘typename std::enable_if<(! std::__and_<std::__is_swappable<_Elements>...>::value)>::type std::swap(tuple<_Elements ...>&, tuple<_Elements ...>&) [with _Elements = {reference_wrapper<PayloadData>, StackPivot, long unsigned int}; typename enable_if<(! __and_<__is_swappable<_Elements>...>::value)>::type = void]’
+  184 |       swap(*__a, *__b);
+      |       ~~~~^~~~~~~~~~~~
+/usr/include/c++/16/tuple:2907:5: note: declared here
+ 2907 |     swap(tuple<_Elements...>&, tuple<_Elements...>&) = delete;
+      |     ^~~~
+/usr/include/c++/16/bits/stl_algobase.h:184:11: note: use ‘-fdiagnostics-all-candidates’ to display considered candidates
+  184 |       swap(*__a, *__b);
+      |       ~~~~^~~~~~~~~~~~
+/usr/include/c++/16/bits/stl_heap.h: In instantiation of ‘void std::__adjust_heap(_RandomAccessIterator, _Distance, _Distance, _Tp, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Distance = long int; _Tp = tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’:
+/usr/include/c++/16/bits/stl_heap.h:356:22:   required from ‘void std::__make_heap(_RandomAccessIterator, _RandomAccessIterator, _Compare&) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+  356 |           std::__adjust_heap(__first, __parent, __len, _GLIBCXX_MOVE(__value),
+      |           ~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  357 |                              __comp);
+      |                              ~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:1593:23:   required from ‘void std::__heap_select(_RandomAccessIterator, _RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 1593 |       std::__make_heap(__first, __middle, __comp);
+      |       ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:1876:25:   required from ‘void std::__partial_sort(_RandomAccessIterator, _RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 1876 |       std::__heap_select(__first, __middle, __last, __comp);
+      |       ~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:1892:27:   required from ‘void std::__introsort_loop(_RandomAccessIterator, _RandomAccessIterator, _Size, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Size = long int; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 1892 |               std::__partial_sort(__first, __last, __last, __comp);
+      |               ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:1913:25:   required from ‘void std::__sort(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 1913 |           std::__introsort_loop(__first, __last,
+      |           ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+ 1914 |                                 std::__lg(__last - __first) * 2,
+      |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1915 |                                 __comp);
+      |                                 ~~~~~~~
+/usr/include/c++/16/bits/stl_algo.h:4849:18:   required from ‘void std::sort(_RAIter, _RAIter, _Compare) [with _RAIter = __gnu_cxx::__normal_iterator<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int>*, vector<tuple<reference_wrapper<PayloadData>, StackPivot, long unsigned int> > >; _Compare = PayloadBuilder::Build(bool)::<lambda(const auto:1&, const auto:2&)>]’
+ 4849 |       std::__sort(__first, __last, __comp);
+      |       ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:92:14:   required from here
+   92 |     std::sort(items.begin(), items.end(),
+      |     ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   93 |             [](const auto& a, const auto& b) { //Use auto
+      |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   94 |                 return std::get<2>(a) > std::get<2>(b);
+      |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   95 |             });
+      |             ~~
+/usr/include/c++/16/bits/stl_heap.h:239:36: error: use of deleted function ‘std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>& std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>::operator=(const std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>&)’
+  239 |           *(__first + __holeIndex) = _GLIBCXX_MOVE(*(__first + __secondChild));
+      |                                    ^
+/usr/include/c++/16/bits/stl_heap.h:239:36: note: use ‘-fdiagnostics-all-candidates’ to display considered candidates
+/usr/include/c++/16/bits/stl_heap.h:245:36: error: use of deleted function ‘std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>& std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>::operator=(const std::tuple<std::reference_wrapper<PayloadData>, StackPivot, long unsigned int>&)’
+  245 |           *(__first + __holeIndex) = _GLIBCXX_MOVE(*(__first
+      |                                    ^
+/usr/include/c++/16/bits/stl_heap.h:245:36: note: use ‘-fdiagnostics-all-candidates’ to display considered candidates
+gmake[4]: *** [CMakeFiles/kernelXDK.dir/build.make:331: CMakeFiles/kernelXDK.dir/payloads/PayloadBuilder.cpp.o] Error 1
+gmake[4]: *** Waiting for unfinished jobs....
+gmake[3]: *** [CMakeFiles/Makefile2:109: CMakeFiles/kernelXDK.dir/all] Error 2
+gmake[2]: *** [CMakeFiles/Makefile2:116: CMakeFiles/kernelXDK.dir/rule] Error 2
+gmake[1]: *** [Makefile:179: kernelXDK] Error 2
+gmake[1]: Leaving directory '/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/build'
+make: *** [Makefile:49: kernel-research/libxdk/lib/libkernelXDK.a] Error 2
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67$ 
+
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67$ cd /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67
+make -j$(nproc)
+cd kernel-research/libxdk && cmake -B build && cmake --build build --target kernelXDK -j$(nproc)
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/build
+gmake[1]: Entering directory '/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/build'
+gmake[1]: warning: -j8 forced in submake: resetting jobserver mode.
+[  4%] Building CXX object CMakeFiles/kernelXDK.dir/payloads/PayloadBuilder.cpp.o
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp: In member function ‘bool PayloadBuilder::Build(bool)’:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:59:34: error: ‘ref’ is not a member of ‘std’
+   59 |         data_refs.push_back(std::ref(data));
+      |                                  ^~~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:67:33: error: invalid use of incomplete type ‘const class std::reference_wrapper<PayloadData>’
+   67 |             PayloadData &data = data_ref.get();
+      |                                 ^~~~~~~~
+In file included from /usr/include/c++/16/bits/cpp_type_traits.h:42,
+                 from /usr/include/c++/16/bits/stl_algobase.h:60,
+                 from /usr/include/c++/16/algorithm:62,
+                 from /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:15:
+/usr/include/c++/16/type_traits:78:11: note: declaration of ‘class std::reference_wrapper<PayloadData>’
+   78 |     class reference_wrapper;
+      |           ^~~~~~~~~~~~~~~~~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:79:29: error: invalid use of incomplete type ‘const class std::reference_wrapper<PayloadData>’
+   79 |         PayloadData &data = data_ref.get();
+      |                             ^~~~~~~~
+/usr/include/c++/16/type_traits:78:11: note: declaration of ‘class std::reference_wrapper<PayloadData>’
+   78 |     class reference_wrapper;
+      |           ^~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/16/bits/stl_algobase.h:66:
+/usr/include/c++/16/bits/stl_iterator.h: In instantiation of ‘constexpr __gnu_cxx::__normal_iterator<_Iterator, _Container>& __gnu_cxx::__normal_iterator<_Iterator, _Container>::operator++() [with _Iterator = std::reference_wrapper<PayloadData>*; _Container = std::vector<std::reference_wrapper<PayloadData> >]’:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:66:37:   required from here
+   66 |         for (const auto &data_ref : data_refs) {
+      |                                     ^~~~~~~~~
+/usr/include/c++/16/bits/stl_iterator.h:1103:11: error: cannot increment a pointer to incomplete type ‘std::reference_wrapper<PayloadData>’
+ 1103 |         ++_M_current;
+      |           ^~~~~~~~~~
+In file included from /usr/include/c++/16/vector:68,
+                 from /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/include/xdk/pivot/Pivots.h:20,
+                 from /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/include/xdk/pivot/PivotFinder.h:22,
+                 from /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:20:
+/usr/include/c++/16/bits/stl_vector.h: In instantiation of ‘std::_Vector_base<_Tp, _Alloc>::~_Vector_base() [with _Tp = std::reference_wrapper<PayloadData>; _Alloc = std::allocator<std::reference_wrapper<PayloadData> >]’:
+/usr/include/c++/16/bits/stl_vector.h:551:7:   required from here
+  551 |       vector() = default;
+      |       ^~~~~~
+/usr/include/c++/16/bits/stl_vector.h:375:51: error: invalid use of incomplete type ‘class std::reference_wrapper<PayloadData>’
+  375 |         ptrdiff_t __n = _M_impl._M_end_of_storage - _M_impl._M_start;
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/type_traits:78:11: note: declaration of ‘class std::reference_wrapper<PayloadData>’
+   78 |     class reference_wrapper;
+      |           ^~~~~~~~~~~~~~~~~
+/usr/include/c++/16/type_traits: In instantiation of ‘struct std::is_trivially_destructible<std::reference_wrapper<PayloadData> >’:
+/usr/include/c++/16/bits/stl_construct.h:224:62:   required from ‘void std::_Destroy(_ForwardIterator, _ForwardIterator) [with _ForwardIterator = reference_wrapper<PayloadData>*]’
+  224 |       if constexpr (!is_trivially_destructible<_Value_type>::value)
+      |                                                              ^~~~~
+/usr/include/c++/16/bits/alloc_traits.h:1085:20:   required from ‘void std::_Destroy(_ForwardIterator, _ForwardIterator, allocator<_T2>&) [with _ForwardIterator = reference_wrapper<PayloadData>*; _Tp = reference_wrapper<PayloadData>]’
+ 1085 |       std::_Destroy(__first, __last);
+      |       ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+/usr/include/c++/16/bits/stl_vector.h:792:15:   required from ‘std::vector<_Tp, _Alloc>::~vector() [with _Tp = std::reference_wrapper<PayloadData>; _Alloc = std::allocator<std::reference_wrapper<PayloadData> >]’
+  792 |         std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+      |         ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  793 |                       _M_get_Tp_allocator());
+      |                       ~~~~~~~~~~~~~~~~~~~~~~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:57:54:   required from here
+   57 |     std::vector<std::reference_wrapper<PayloadData>> data_refs;
+      |                                                      ^~~~~~~~~
+/usr/include/c++/16/type_traits:1543:30: error: invalid use of incomplete type ‘class std::reference_wrapper<PayloadData>’
+ 1543 |     : public __bool_constant<__is_trivially_destructible(_Tp)>
+      |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/16/type_traits:78:11: note: declaration of ‘class std::reference_wrapper<PayloadData>’
+   78 |     class reference_wrapper;
+      |           ^~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/16/bits/stl_tempbuf.h:61,
+                 from /usr/include/c++/16/bits/stl_algo.h:69,
+                 from /usr/include/c++/16/algorithm:63:
+/usr/include/c++/16/bits/stl_construct.h: In instantiation of ‘void std::_Destroy(_ForwardIterator, _ForwardIterator) [with _ForwardIterator = reference_wrapper<PayloadData>*]’:
+/usr/include/c++/16/bits/alloc_traits.h:1085:20:   required from ‘void std::_Destroy(_ForwardIterator, _ForwardIterator, allocator<_T2>&) [with _ForwardIterator = reference_wrapper<PayloadData>*; _Tp = reference_wrapper<PayloadData>]’
+ 1085 |       std::_Destroy(__first, __last);
+      |       ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+/usr/include/c++/16/bits/stl_vector.h:792:15:   required from ‘std::vector<_Tp, _Alloc>::~vector() [with _Tp = std::reference_wrapper<PayloadData>; _Alloc = std::allocator<std::reference_wrapper<PayloadData> >]’
+  792 |         std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+      |         ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  793 |                       _M_get_Tp_allocator());
+      |                       ~~~~~~~~~~~~~~~~~~~~~~
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:57:54:   required from here
+   57 |     std::vector<std::reference_wrapper<PayloadData>> data_refs;
+      |                                                      ^~~~~~~~~
+/usr/include/c++/16/bits/stl_construct.h:224:62: error: ‘value’ is not a member of ‘std::is_trivially_destructible<std::reference_wrapper<PayloadData> >’
+  224 |       if constexpr (!is_trivially_destructible<_Value_type>::value)
+      |                                                              ^~~~~
+/usr/include/c++/16/bits/stl_construct.h:225:37: error: cannot increment a pointer to incomplete type ‘std::reference_wrapper<PayloadData>’
+  225 |         for (; __first != __last; ++__first)
+      |                                     ^~~~~~~
+gmake[4]: *** [CMakeFiles/kernelXDK.dir/build.make:331: CMakeFiles/kernelXDK.dir/payloads/PayloadBuilder.cpp.o] Error 1
+gmake[3]: *** [CMakeFiles/Makefile2:109: CMakeFiles/kernelXDK.dir/all] Error 2
+gmake[2]: *** [CMakeFiles/Makefile2:116: CMakeFiles/kernelXDK.dir/rule] Error 2
+gmake[1]: *** [Makefile:179: kernelXDK] Error 2
+gmake[1]: Leaving directory '/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/build'
+make: *** [Makefile:49: kernel-research/libxdk/lib/libkernelXDK.a] Error 2
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67$ 
+
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67$ cd /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67
+make -j$(nproc)
+cd kernel-research/libxdk && cmake -B build && cmake --build build --target kernelXDK -j$(nproc)
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/build
+gmake[1]: Entering directory '/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/build'
+gmake[1]: warning: -j8 forced in submake: resetting jobserver mode.
+[  4%] Building CXX object CMakeFiles/kernelXDK.dir/payloads/PayloadBuilder.cpp.o
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp: In member function ‘void PayloadBuilder::PrintDebugInfo() const’:
+/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/payloads/PayloadBuilder.cpp:138:18: warning: variable ‘num_actions’ set but not used [-Wunused-but-set-variable=]
+  138 |         uint64_t num_actions = 1;
+      |                  ^~~~~~~~~~~
+[  9%] Linking CXX static library libkernelXDK.a
+[100%] Built target kernelXDK
+gmake[1]: Leaving directory '/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/kernel-research/libxdk/build'
+g++ -isystem kernel-research/libxdk/include -DTARGET_LTS_6_12_67 -std=gnu++17 -static -O2 -Wall exploit.cpp -o exploit -static -Lkernel-research/libxdk/lib -lkernelXDK -lpthread
+exploit.cpp: In function ‘void rip_pivot_and_fire(Target&, int, u64, int*)’:
+exploit.cpp:1100:15: warning: argument 2 null where non-null expected [-Wnonnull]
+ 1100 |     epoll_wait(ep_uaf_waiter, NULL, 1, 1000);
+      |     ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from exploit.cpp:21:
+/usr/include/sys/epoll.h:138:12: note: in a call to function ‘int epoll_wait(int, epoll_event*, int, int)’ declared ‘nonnull’
+  138 | extern int epoll_wait (int __epfd, struct epoll_event *__events,
+      |            ^~~~~~~~~~
+/usr/bin/ld.bfd: cannot find -lstdc++: No such file or directory
+/usr/bin/ld.bfd: have you installed the static version of the stdc++ library ?
+/usr/bin/ld.bfd: cannot find -lm: No such file or directory
+/usr/bin/ld.bfd: have you installed the static version of the m library ?
+/usr/bin/ld.bfd: cannot find -lc: No such file or directory
+/usr/bin/ld.bfd: have you installed the static version of the c library ?
+collect2: error: ld returned 1 exit status
+make: *** [Makefile:34: exploit] Error 1
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67$ 
+
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67$ sudo dnf install -y libstdc++-static glibc-static
+Updating and loading repositories:
+Repositories loaded.
+Package                                                                           Arch              Version                                                                           Repository                                          Size
+Installing:
+ glibc-static                                                                     x86_64            0:2.43-6.fc44                                                                     updates                                         43.0 MiB
+ libstdc++-static                                                                 x86_64            0:16.1.1-2.fc44                                                                   updates                                         56.8 MiB
+Installing dependencies:
+ libxcrypt-static                                                                 x86_64            0:4.5.2-3.fc44                                                                    fedora                                           1.4 MiB
+
+Transaction Summary:
+ Installing:         3 packages
+
+Total size of inbound packages is 16 MiB. Need to download 16 MiB.
+After this operation, 101 MiB extra will be used (install 101 MiB, remove 0 B).
+[1/3] libxcrypt-static-0:4.5.2-3.fc44.x86_64                                                                                                                                                          100% |  57.7 KiB/s | 323.7 KiB |  00m06s
+[2/3] glibc-static-0:2.43-6.fc44.x86_64                                                                                                                                                               100% | 129.2 KiB/s |   6.8 MiB |  00m54s
+[3/3] libstdc++-static-0:16.1.1-2.fc44.x86_64                                                                                                                                                         100% | 146.3 KiB/s |   8.8 MiB |  01m01s
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+[3/3] Total                                                                                                                                                                                           100% | 256.3 KiB/s |  15.8 MiB |  01m03s
+Running transaction
+[1/5] Verify package files                                                                                                                                                                            100% |  20.0   B/s |   3.0   B |  00m00s
+[2/5] Prepare transaction                                                                                                                                                                             100% |  11.0   B/s |   3.0   B |  00m00s
+[3/5] Installing glibc-static-0:2.43-6.fc44.x86_64                                                                                                                                                    100% | 227.6 MiB/s |  43.0 MiB |  00m00s
+[4/5] Installing libxcrypt-static-0:4.5.2-3.fc44.x86_64                                                                                                                                               100% | 128.3 MiB/s |   1.4 MiB |  00m00s
+[5/5] Installing libstdc++-static-0:16.1.1-2.fc44.x86_64                                                                                                                                              100% |  62.3 MiB/s |  56.8 MiB |  00m01s
+Complete!
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67$ make -j$(nproc)
+g++ -isystem kernel-research/libxdk/include -DTARGET_LTS_6_12_67 -std=gnu++17 -static -O2 -Wall exploit.cpp -o exploit -static -Lkernel-research/libxdk/lib -lkernelXDK -lpthread
+exploit.cpp: In function ‘void rip_pivot_and_fire(Target&, int, u64, int*)’:
+exploit.cpp:1100:15: warning: argument 2 null where non-null expected [-Wnonnull]
+ 1100 |     epoll_wait(ep_uaf_waiter, NULL, 1, 1000);
+      |     ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from exploit.cpp:21:
+/usr/include/sys/epoll.h:138:12: note: in a call to function ‘int epoll_wait(int, epoll_event*, int, int)’ declared ‘nonnull’
+  138 | extern int epoll_wait (int __epfd, struct epoll_event *__events,
+      |            ^~~~~~~~~~
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67$ 
+# 1. Go to the Tier 1 workspace directory
+cd /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm
+
+# 2. Copy the compiled exploit to the rootfs temporary directory
+cp security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/exploit rootfs/tmp/
+
+# 3. Package the rootfs into initramfs.cpio
+cd rootfs
+find . -print0 | cpio --null -ov --format=newc > ../initramfs.cpio
+cd ..
+
+# 4. Boot the QEMU VM with the vulnerable kernel
+qemu-system-x86_64 \
+  -kernel linux-6.12.67/arch/x86/boot/bzImage \
+  -initrd initramfs.cpio \
+  -append "console=ttyS0 quiet" \
+  -nographic \
+  -smp 2 \
+  -m 2G \
+  -cpu kvm64,+smep,+smap
+
+
+============================================
+  bad-epoll-lab — Tier 1 VM
+/init: line 10: uname: not found
+  Kernel: 
+  User uid=0 gid=0
+============================================
+
+Exploit is at /tmp/exploit (if injected)
+Run: /tmp/exploit
+
+/bin/sh: can't access tty; job control turned off
+~ # /tmp/exploit
+/bin/sh: /tmp/exploit: not found
+~ # /tmp/exploit
+/bin/sh: /tmp/exploit: not found
+~ # ls
+bin   dev   etc   init  proc  root  sys   tmp
+~ # cd tmp/
+/tmp # ls
+/tmp # 
+

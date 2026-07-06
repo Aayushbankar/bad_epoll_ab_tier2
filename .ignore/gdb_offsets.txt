@@ -1,0 +1,599 @@
+/* offset      |    size */  type = struct file {
+/*      0      |       8 */    atomic_long_t f_count;
+/*      8      |       4 */    spinlock_t f_lock;
+/*     12      |       4 */    fmode_t f_mode;
+/*     16      |       8 */    const struct file_operations *f_op;
+/*     24      |       8 */    struct address_space *f_mapping;
+/*     32      |       8 */    void *private_data;
+/*     40      |       8 */    struct inode *f_inode;
+/*     48      |       4 */    unsigned int f_flags;
+/*     52      |       4 */    unsigned int f_iocb_flags;
+/*     56      |       8 */    const struct cred *f_cred;
+/*     64      |      16 */    struct path {
+/*     64      |       8 */        struct vfsmount *mnt;
+/*     72      |       8 */        struct dentry *dentry;
+
+                                   /* total size (bytes):   16 */
+                               } f_path;
+/*     80      |      32 */    union {
+/*                    32 */        struct mutex {
+/*     80      |       8 */            atomic_long_t owner;
+/*     88      |       4 */            raw_spinlock_t wait_lock;
+/*     92      |       4 */            struct optimistic_spin_queue {
+/*     92      |       4 */                atomic_t tail;
+
+                                           /* total size (bytes):    4 */
+                                       } osq;
+/*     96      |      16 */            struct list_head {
+/*     96      |       8 */                struct list_head *next;
+/*    104      |       8 */                struct list_head *prev;
+
+                                           /* total size (bytes):   16 */
+                                       } wait_list;
+
+                                       /* total size (bytes):   32 */
+                                   } f_pos_lock;
+/*                     8 */        u64 f_pipe;
+
+                                   /* total size (bytes):   32 */
+                               };
+/*    112      |       8 */    loff_t f_pos;
+/*    120      |       8 */    void *f_security;
+/*    128      |       8 */    struct fown_struct *f_owner;
+/*    136      |       4 */    errseq_t f_wb_err;
+/*    140      |       4 */    errseq_t f_sb_err;
+/*    144      |       8 */    struct hlist_head *f_ep;
+/*    152      |      32 */    union {
+/*                    16 */        struct callback_head {
+/*    152      |       8 */            struct callback_head *next;
+/*    160      |       8 */            void (*func)(struct callback_head *);
+
+                                       /* total size (bytes):   16 */
+                                   } f_task_work;
+/*                     8 */        struct llist_node {
+/*    152      |       8 */            struct llist_node *next;
+
+                                       /* total size (bytes):    8 */
+                                   } f_llist;
+/*                    32 */        struct file_ra_state {
+/*    152      |       8 */            unsigned long start;
+/*    160      |       4 */            unsigned int size;
+/*    164      |       4 */            unsigned int async_size;
+/*    168      |       4 */            unsigned int ra_pages;
+/*    172      |       4 */            unsigned int mmap_miss;
+/*    176      |       8 */            loff_t prev_pos;
+
+                                       /* total size (bytes):   32 */
+                                   } f_ra;
+/*                     8 */        freeptr_t f_freeptr;
+
+                                   /* total size (bytes):   32 */
+                               };
+
+                               /* total size (bytes):  184 */
+                             }
+type = struct task_struct {
+    struct thread_info thread_info;
+    unsigned int __state;
+    unsigned int saved_state;
+    void *stack;
+    refcount_t usage;
+    unsigned int flags;
+    unsigned int ptrace;
+    int on_cpu;
+    struct __call_single_node wake_entry;
+    unsigned int wakee_flips;
+    unsigned long wakee_flip_decay_ts;
+    struct task_struct *last_wakee;
+    int recent_used_cpu;
+    int wake_cpu;
+    int on_rq;
+    int prio;
+    int static_prio;
+    int normal_prio;
+    unsigned int rt_priority;
+    struct sched_entity se;
+    struct sched_rt_entity rt;
+    struct sched_dl_entity dl;
+    struct sched_dl_entity *dl_server;
+    const struct sched_class *sched_class;
+    struct task_group *sched_task_group;
+    struct sched_statistics stats;
+    unsigned int btrace_seq;
+    unsigned int policy;
+    unsigned long max_allowed_capacity;
+    int nr_cpus_allowed;
+    const cpumask_t *cpus_ptr;
+    cpumask_t *user_cpus_ptr;
+    cpumask_t cpus_mask;
+    void *migration_pending;
+    unsigned short migration_disabled;
+    unsigned short migration_flags;
+    int rcu_read_lock_nesting;
+    union rcu_special rcu_read_unlock_special;
+    struct list_head rcu_node_entry;
+    struct rcu_node *rcu_blocked_node;
+    unsigned long rcu_tasks_nvcsw;
+    u8 rcu_tasks_holdout;
+    u8 rcu_tasks_idx;
+    int rcu_tasks_idle_cpu;
+    struct list_head rcu_tasks_holdout_list;
+    int rcu_tasks_exit_cpu;
+    struct list_head rcu_tasks_exit_list;
+    struct sched_info sched_info;
+    struct list_head tasks;
+    struct plist_node pushable_tasks;
+    struct rb_node pushable_dl_tasks;
+    struct mm_struct *mm;
+    struct mm_struct *active_mm;
+    struct address_space *faults_disabled_mapping;
+    int exit_state;
+    int exit_code;
+    int exit_signal;
+    int pdeath_signal;
+    unsigned long jobctl;
+    unsigned int personality;
+    unsigned int sched_reset_on_fork : 1;
+    unsigned int sched_contributes_to_load : 1;
+    unsigned int sched_migrated : 1;
+    unsigned int sched_task_hot : 1;
+    unsigned int sched_remote_wakeup : 1;
+    unsigned int sched_rt_mutex : 1;
+    unsigned int in_execve : 1;
+    unsigned int in_iowait : 1;
+    unsigned int restore_sigmask : 1;
+    unsigned int no_cgroup_migration : 1;
+    unsigned int frozen : 1;
+    unsigned int use_memdelay : 1;
+    unsigned int in_eventfd : 1;
+    unsigned int pasid_activated : 1;
+    unsigned int reported_split_lock : 1;
+    unsigned int in_thrashing : 1;
+    unsigned long atomic_flags;
+    struct restart_block restart_block;
+    pid_t pid;
+    pid_t tgid;
+    unsigned long stack_canary;
+    struct task_struct *real_parent;
+    struct task_struct *parent;
+    struct list_head children;
+    struct list_head sibling;
+    struct task_struct *group_leader;
+    struct list_head ptraced;
+    struct list_head ptrace_entry;
+    struct pid *thread_pid;
+    struct hlist_node pid_links[4];
+    struct list_head thread_node;
+    struct completion *vfork_done;
+    int *set_child_tid;
+    int *clear_child_tid;
+    void *worker_private;
+    u64 utime;
+    u64 stime;
+    u64 gtime;
+    struct prev_cputime prev_cputime;
+    unsigned long nvcsw;
+    unsigned long nivcsw;
+    u64 start_time;
+    u64 start_boottime;
+    unsigned long min_flt;
+    unsigned long maj_flt;
+    struct posix_cputimers posix_cputimers;
+    struct posix_cputimers_work posix_cputimers_work;
+    const struct cred *ptracer_cred;
+    const struct cred *real_cred;
+    const struct cred *cred;
+    struct key *cached_requested_key;
+    char comm[16];
+    struct nameidata *nameidata;
+    struct sysv_sem sysvsem;
+    struct sysv_shm sysvshm;
+    struct fs_struct *fs;
+    struct files_struct *files;
+    struct io_uring_task *io_uring;
+    struct nsproxy *nsproxy;
+    struct signal_struct *signal;
+    struct sighand_struct *sighand;
+    sigset_t blocked;
+    sigset_t real_blocked;
+    sigset_t saved_sigmask;
+    struct sigpending pending;
+    unsigned long sas_ss_sp;
+    size_t sas_ss_size;
+    unsigned int sas_ss_flags;
+    struct callback_head *task_works;
+    struct audit_context *audit_context;
+    kuid_t loginuid;
+    unsigned int sessionid;
+    struct seccomp seccomp;
+    struct syscall_user_dispatch syscall_dispatch;
+    u64 parent_exec_id;
+    u64 self_exec_id;
+    spinlock_t alloc_lock;
+    raw_spinlock_t pi_lock;
+    struct wake_q_node wake_q;
+    struct rb_root_cached pi_waiters;
+    struct task_struct *pi_top_task;
+    struct rt_mutex_waiter *pi_blocked_on;
+    void *journal_info;
+    struct bio_list *bio_list;
+    struct blk_plug *plug;
+    struct reclaim_state *reclaim_state;
+    struct io_context *io_context;
+    struct capture_control *capture_control;
+    unsigned long ptrace_message;
+    kernel_siginfo_t *last_siginfo;
+    struct task_io_accounting ioac;
+    u64 acct_rss_mem1;
+    u64 acct_vm_mem1;
+    u64 acct_timexpd;
+    nodemask_t mems_allowed;
+    seqcount_spinlock_t mems_allowed_seq;
+    int cpuset_mem_spread_rotor;
+    struct css_set *cgroups;
+    struct list_head cg_list;
+    struct robust_list_head *robust_list;
+    struct compat_robust_list_head *compat_robust_list;
+    struct list_head pi_state_list;
+    struct futex_pi_state *pi_state_cache;
+    struct mutex futex_exit_mutex;
+    unsigned int futex_state;
+    u8 perf_recursion[4];
+    struct perf_event_context *perf_event_ctxp;
+    struct mutex perf_event_mutex;
+    struct list_head perf_event_list;
+    struct mempolicy *mempolicy;
+    short il_prev;
+    u8 il_weight;
+    short pref_node_fork;
+    struct rseq *rseq;
+    u32 rseq_len;
+    u32 rseq_sig;
+    unsigned long rseq_event_mask;
+    int mm_cid;
+    int last_mm_cid;
+    int migrate_from_cpu;
+    int mm_cid_active;
+    struct callback_head cid_work;
+    struct tlbflush_unmap_batch tlb_ubc;
+    struct pipe_inode_info *splice_pipe;
+    struct page_frag task_frag;
+    struct task_delay_info *delays;
+    int nr_dirtied;
+    int nr_dirtied_pause;
+    unsigned long dirty_paused_when;
+    u64 timer_slack_ns;
+    u64 default_timer_slack_ns;
+    unsigned long trace_recursion;
+    struct gendisk *throttle_disk;
+    struct uprobe_task *utask;
+    struct kmap_ctrl kmap_ctrl;
+    struct callback_head rcu;
+    refcount_t rcu_users;
+    int pagefault_disabled;
+    struct task_struct *oom_reaper_list;
+    struct timer_list oom_reaper_timer;
+    struct vm_struct *stack_vm_area;
+    refcount_t stack_refcount;
+    void *security;
+    struct bpf_net_context *bpf_net_context;
+    void *mce_vaddr;
+    __u64 mce_kflags;
+    u64 mce_addr;
+    __u64 mce_ripv : 1;
+    __u64 mce_whole_page : 1;
+    __u64 __mce_reserved : 62;
+    struct callback_head mce_kill_me;
+    int mce_count;
+    struct llist_head kretprobe_instances;
+    struct llist_head rethooks;
+    struct callback_head l1d_flush_kill;
+    struct thread_struct thread;
+}
+/* offset      |    size */  type = struct inode {
+/*      0      |       2 */    umode_t i_mode;
+/*      2      |       2 */    unsigned short i_opflags;
+/*      4      |       4 */    kuid_t i_uid;
+/*      8      |       4 */    kgid_t i_gid;
+/*     12      |       4 */    unsigned int i_flags;
+/*     16      |       8 */    struct posix_acl *i_acl;
+/*     24      |       8 */    struct posix_acl *i_default_acl;
+/*     32      |       8 */    const struct inode_operations *i_op;
+/*     40      |       8 */    struct super_block *i_sb;
+/*     48      |       8 */    struct address_space *i_mapping;
+/*     56      |       8 */    void *i_security;
+/*     64      |       8 */    unsigned long i_ino;
+/*     72      |       4 */    union {
+/*                     4 */        const unsigned int i_nlink;
+/*                     4 */        unsigned int __i_nlink;
+
+                                   /* total size (bytes):    4 */
+                               };
+/*     76      |       4 */    dev_t i_rdev;
+/*     80      |       8 */    loff_t i_size;
+/*     88      |       8 */    time64_t i_atime_sec;
+/*     96      |       8 */    time64_t i_mtime_sec;
+/*    104      |       8 */    time64_t i_ctime_sec;
+/*    112      |       4 */    u32 i_atime_nsec;
+/*    116      |       4 */    u32 i_mtime_nsec;
+/*    120      |       4 */    u32 i_ctime_nsec;
+/*    124      |       4 */    u32 i_generation;
+/*    128      |       4 */    spinlock_t i_lock;
+/*    132      |       2 */    unsigned short i_bytes;
+/*    134      |       1 */    u8 i_blkbits;
+/*    135      |       1 */    enum rw_hint i_write_hint;
+/*    136      |       8 */    blkcnt_t i_blocks;
+/*    144      |       4 */    u32 i_state;
+/* XXX  4-byte hole      */
+/*    152      |      40 */    struct rw_semaphore {
+/*    152      |       8 */        atomic_long_t count;
+/*    160      |       8 */        atomic_long_t owner;
+/*    168      |       4 */        struct optimistic_spin_queue {
+/*    168      |       4 */            atomic_t tail;
+
+                                       /* total size (bytes):    4 */
+                                   } osq;
+/*    172      |       4 */        raw_spinlock_t wait_lock;
+/*    176      |      16 */        struct list_head {
+/*    176      |       8 */            struct list_head *next;
+/*    184      |       8 */            struct list_head *prev;
+
+                                       /* total size (bytes):   16 */
+                                   } wait_list;
+
+                                   /* total size (bytes):   40 */
+                               } i_rwsem;
+/*    192      |       8 */    unsigned long dirtied_when;
+/*    200      |       8 */    unsigned long dirtied_time_when;
+/*    208      |      16 */    struct hlist_node {
+/*    208      |       8 */        struct hlist_node *next;
+/*    216      |       8 */        struct hlist_node **pprev;
+
+                                   /* total size (bytes):   16 */
+                               } i_hash;
+/*    224      |      16 */    struct list_head {
+/*    224      |       8 */        struct list_head *next;
+/*    232      |       8 */        struct list_head *prev;
+
+                                   /* total size (bytes):   16 */
+                               } i_io_list;
+/*    240      |      16 */    struct list_head {
+/*    240      |       8 */        struct list_head *next;
+/*    248      |       8 */        struct list_head *prev;
+
+                                   /* total size (bytes):   16 */
+                               } i_lru;
+/*    256      |      16 */    struct list_head {
+/*    256      |       8 */        struct list_head *next;
+/*    264      |       8 */        struct list_head *prev;
+
+                                   /* total size (bytes):   16 */
+                               } i_sb_list;
+/*    272      |      16 */    struct list_head {
+/*    272      |       8 */        struct list_head *next;
+/*    280      |       8 */        struct list_head *prev;
+
+                                   /* total size (bytes):   16 */
+                               } i_wb_list;
+/*    288      |      16 */    union {
+/*                     8 */        struct hlist_head {
+/*    288      |       8 */            struct hlist_node *first;
+
+                                       /* total size (bytes):    8 */
+                                   } i_dentry;
+/*                    16 */        struct callback_head {
+/*    288      |       8 */            struct callback_head *next;
+/*    296      |       8 */            void (*func)(struct callback_head *);
+
+                                       /* total size (bytes):   16 */
+                                   } i_rcu;
+
+                                   /* total size (bytes):   16 */
+                               };
+/*    304      |       8 */    atomic64_t i_version;
+/*    312      |       8 */    atomic64_t i_sequence;
+/*    320      |       4 */    atomic_t i_count;
+/*    324      |       4 */    atomic_t i_dio_count;
+/*    328      |       4 */    atomic_t i_writecount;
+/*    332      |       4 */    atomic_t i_readcount;
+/*    336      |       8 */    union {
+/*                     8 */        const struct file_operations *i_fop;
+/*                     8 */        void (*free_inode)(struct inode *);
+
+                                   /* total size (bytes):    8 */
+                               };
+/*    344      |       8 */    struct file_lock_context *i_flctx;
+/*    352      |     192 */    struct address_space {
+/*    352      |       8 */        struct inode *host;
+/*    360      |      16 */        struct xarray {
+/*    360      |       4 */            spinlock_t xa_lock;
+/*    364      |       4 */            gfp_t xa_flags;
+/*    368      |       8 */            void *xa_head;
+
+                                       /* total size (bytes):   16 */
+                                   } i_pages;
+/*    376      |      40 */        struct rw_semaphore {
+/*    376      |       8 */            atomic_long_t count;
+/*    384      |       8 */            atomic_long_t owner;
+/*    392      |       4 */            struct optimistic_spin_queue {
+/*    392      |       4 */                atomic_t tail;
+
+                                           /* total size (bytes):    4 */
+                                       } osq;
+/*    396      |       4 */            raw_spinlock_t wait_lock;
+/*    400      |      16 */            struct list_head {
+/*    400      |       8 */                struct list_head *next;
+/*    408      |       8 */                struct list_head *prev;
+
+                                           /* total size (bytes):   16 */
+                                       } wait_list;
+
+                                       /* total size (bytes):   40 */
+                                   } invalidate_lock;
+/*    416      |       4 */        gfp_t gfp_mask;
+/*    420      |       4 */        atomic_t i_mmap_writable;
+/*    424      |      16 */        struct rb_root_cached {
+/*    424      |       8 */            struct rb_root {
+/*    424      |       8 */                struct rb_node *rb_node;
+
+                                           /* total size (bytes):    8 */
+                                       } rb_root;
+/*    432      |       8 */            struct rb_node *rb_leftmost;
+
+                                       /* total size (bytes):   16 */
+                                   } i_mmap;
+/*    440      |       8 */        unsigned long nrpages;
+/*    448      |       8 */        unsigned long writeback_index;
+/*    456      |       8 */        const struct address_space_operations *a_ops;
+/*    464      |       8 */        unsigned long flags;
+/*    472      |       4 */        errseq_t wb_err;
+/*    476      |       4 */        spinlock_t i_private_lock;
+/*    480      |      16 */        struct list_head {
+/*    480      |       8 */            struct list_head *next;
+/*    488      |       8 */            struct list_head *prev;
+
+                                       /* total size (bytes):   16 */
+                                   } i_private_list;
+/*    496      |      40 */        struct rw_semaphore {
+/*    496      |       8 */            atomic_long_t count;
+/*    504      |       8 */            atomic_long_t owner;
+/*    512      |       4 */            struct optimistic_spin_queue {
+/*    512      |       4 */                atomic_t tail;
+
+                                           /* total size (bytes):    4 */
+                                       } osq;
+/*    516      |       4 */            raw_spinlock_t wait_lock;
+/*    520      |      16 */            struct list_head {
+/*    520      |       8 */                struct list_head *next;
+/*    528      |       8 */                struct list_head *prev;
+
+                                           /* total size (bytes):   16 */
+                                       } wait_list;
+
+                                       /* total size (bytes):   40 */
+                                   } i_mmap_rwsem;
+/*    536      |       8 */        void *i_private_data;
+
+                                   /* total size (bytes):  192 */
+                               } i_data;
+/*    544      |      16 */    struct list_head {
+/*    544      |       8 */        struct list_head *next;
+/*    552      |       8 */        struct list_head *prev;
+
+                                   /* total size (bytes):   16 */
+                               } i_devices;
+/*    560      |       8 */    union {
+/*                     8 */        struct pipe_inode_info *i_pipe;
+/*                     8 */        struct cdev *i_cdev;
+/*                     8 */        char *i_link;
+/*                     4 */        unsigned int i_dir_seq;
+
+                                   /* total size (bytes):    8 */
+                               };
+/*    568      |       4 */    __u32 i_fsnotify_mask;
+/* XXX  4-byte hole      */
+/*    576      |       8 */    struct fsnotify_mark_connector *i_fsnotify_marks;
+/*    584      |       8 */    void *i_private;
+
+                               /* total size (bytes):  592 */
+                             }
+/* offset      |    size */  type = struct files_struct {
+/*      0      |       4 */    atomic_t count;
+/*      4      |       1 */    bool resize_in_progress;
+/* XXX  3-byte hole      */
+/*      8      |      24 */    wait_queue_head_t resize_wait;
+/*     32      |       8 */    struct fdtable *fdt;
+/*     40      |      56 */    struct fdtable {
+/*     40      |       4 */        unsigned int max_fds;
+/* XXX  4-byte hole      */
+/*     48      |       8 */        struct file **fd;
+/*     56      |       8 */        unsigned long *close_on_exec;
+/*     64      |       8 */        unsigned long *open_fds;
+/*     72      |       8 */        unsigned long *full_fds_bits;
+/*     80      |      16 */        struct callback_head {
+/*     80      |       8 */            struct callback_head *next;
+/*     88      |       8 */            void (*func)(struct callback_head *);
+
+                                       /* total size (bytes):   16 */
+                                   } rcu;
+
+                                   /* total size (bytes):   56 */
+                               } fdtab;
+/* XXX 32-byte hole      */
+/*    128      |       4 */    spinlock_t file_lock;
+/*    132      |       4 */    unsigned int next_fd;
+/*    136      |       8 */    unsigned long close_on_exec_init[1];
+/*    144      |       8 */    unsigned long open_fds_init[1];
+/*    152      |       8 */    unsigned long full_fds_bits_init[1];
+/*    160      |     512 */    struct file *fd_array[64];
+/* XXX 32-byte padding   */
+
+                               /* total size (bytes):  704 */
+                             }
+/* offset      |    size */  type = struct fdtable {
+/*      0      |       4 */    unsigned int max_fds;
+/* XXX  4-byte hole      */
+/*      8      |       8 */    struct file **fd;
+/*     16      |       8 */    unsigned long *close_on_exec;
+/*     24      |       8 */    unsigned long *open_fds;
+/*     32      |       8 */    unsigned long *full_fds_bits;
+/*     40      |      16 */    struct callback_head {
+/*     40      |       8 */        struct callback_head *next;
+/*     48      |       8 */        void (*func)(struct callback_head *);
+
+                                   /* total size (bytes):   16 */
+                               } rcu;
+
+                               /* total size (bytes):   56 */
+                             }
+/* offset      |    size */  type = struct pipe_inode_info {
+/*      0      |      32 */    struct mutex {
+/*      0      |       8 */        atomic_long_t owner;
+/*      8      |       4 */        raw_spinlock_t wait_lock;
+/*     12      |       4 */        struct optimistic_spin_queue {
+/*     12      |       4 */            atomic_t tail;
+
+                                       /* total size (bytes):    4 */
+                                   } osq;
+/*     16      |      16 */        struct list_head {
+/*     16      |       8 */            struct list_head *next;
+/*     24      |       8 */            struct list_head *prev;
+
+                                       /* total size (bytes):   16 */
+                                   } wait_list;
+
+                                   /* total size (bytes):   32 */
+                               } mutex;
+/*     32      |      24 */    wait_queue_head_t rd_wait;
+/*     56      |      24 */    wait_queue_head_t wr_wait;
+/*     80      |       4 */    unsigned int head;
+/*     84      |       4 */    unsigned int tail;
+/*     88      |       4 */    unsigned int max_usage;
+/*     92      |       4 */    unsigned int ring_size;
+/*     96      |       4 */    unsigned int nr_accounted;
+/*    100      |       4 */    unsigned int readers;
+/*    104      |       4 */    unsigned int writers;
+/*    108      |       4 */    unsigned int files;
+/*    112      |       4 */    unsigned int r_counter;
+/*    116      |       4 */    unsigned int w_counter;
+/*    120      |       1 */    bool poll_usage;
+/* XXX  7-byte hole      */
+/*    128      |       8 */    struct page *tmp_page;
+/*    136      |       8 */    struct fasync_struct *fasync_readers;
+/*    144      |       8 */    struct fasync_struct *fasync_writers;
+/*    152      |       8 */    struct pipe_buffer *bufs;
+/*    160      |       8 */    struct user_struct *user;
+
+                               /* total size (bytes):  168 */
+                             }
+/* offset      |    size */  type = struct pipe_buffer {
+/*      0      |       8 */    struct page *page;
+/*      8      |       4 */    unsigned int offset;
+/*     12      |       4 */    unsigned int len;
+/*     16      |       8 */    const struct pipe_buf_operations *ops;
+/*     24      |       4 */    unsigned int flags;
+/* XXX  4-byte hole      */
+/*     32      |       8 */    unsigned long private;
+
+                               /* total size (bytes):   40 */
+                             }

