@@ -1,0 +1,93 @@
+####################################################
+SECTION: Dependency Installation
+####################################################
+
+sudo dnf install -y flex bison elfutils-libelf-devel openssl-devel ncurses-devel
+
+sudo dnf install -y busybox
+
+# These commands install the prerequisites necessary to build the Linux kernel and the minimal rootfs on the Fedora host machine.
+
+####################################################
+SECTION: Repository Setup & Base Environment
+####################################################
+
+mkdir -p /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/rootfs/bin
+
+./scripts/setup-tier1.sh
+
+chmod +x ./scripts/setup-tier1.sh
+
+./scripts/setup-tier1.sh
+
+# The script was executed to download and build the Linux 6.12.67 kernel and rootfs. The first execution likely failed due to missing execution permissions, prompting the chmod command and re-execution.
+# Dependency note: Depends on the successful installation of flex, bison, and elfutils-libelf-devel from the previous section.
+
+####################################################
+SECTION: Build Steps (Exploit Compilation)
+####################################################
+
+# 1. Install cmake on the host (required to compile libxdk)
+
+file exploit
+
+# 1. Install keyutils-libs-devel
+
+cd /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67
+
+sudo dnf install -y libstdc++-static glibc-static
+
+make -j$(nproc)
+
+# These commands attempt to compile the exploit and its libxdk dependency. Note that actual commands to install cmake or keyutils-libs-devel were typed as shell comments rather than active commands in the log.
+# Dependency note: The `make` command depends on the successful installation of `libstdc++-static` and `glibc-static`.
+
+####################################################
+SECTION: Execution & Debugging (QEMU Initial Run)
+####################################################
+
+/tmp/exploit
+
+ls
+
+cd tmp/
+
+ls
+
+exit
+
+# These commands were executed inside the QEMU guest environment. The user attempted to execute the payload at `/tmp/exploit`, but the `init` script mounted an empty `tmpfs` over `/tmp`, hiding the payload. The user verified this with `ls` and `exit`ed the VM.
+
+####################################################
+SECTION: Execution & Debugging (QEMU Secondary Run)
+####################################################
+
+qemu-system-x86_64 \
+  -kernel linux-6.12.67/arch/x86/boot/bzImage \
+  -initrd initramfs.cpio \
+  -append "console=ttyS0 quiet" \
+  -nographic \
+  -smp 2 \
+  -m 2G \
+  -enable-kvm \
+  -cpu host
+
+/bin/exploit
+
+# The user rebooted QEMU with `-cpu host` (to bypass the `kvm64` SIGILL on the `rdtscp` instruction) and repeatedly executed `/bin/exploit` inside the VM to test race condition tuning and memory corruption stages.
+
+####################################################
+SECTION: Gadget Hunting & Reverse Engineering
+####################################################
+
+python3 /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/find_gadgets.py \
+  /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/linux-6.12.67/vmlinux
+
+python3 /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/find_gadgets_objdump.py \
+  /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1-linux-vm/linux-6.12.67/vmlinux
+
+# Incomplete in original terminal log
+cd /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier7
+
+# These commands were executed on the host to parse the compiled `vmlinux` binary and hunt for functional stack pivot (ROP) gadgets, responding to the panic at the indirect call thunk. The final `cd` command was truncated in the logs.
+# Dependency note: Depends on the successful kernel build from the Repository Setup phase yielding the `vmlinux` binary.

@@ -43,7 +43,11 @@ bad-epoll-lab/
 │   ├── CONTEXT.md                     # AI agent context (read this first)
 │   ├── VULNERABILITY.md               # Root cause analysis
 │   ├── EXPLOIT_WALKTHROUGH.md         # Step-by-step exploit mechanics
-│   └── PROGRESS.md                    # Progress tracker
+│   ├── PROGRESS.md                    # Progress tracker
+│   ├── REPRODUCIBILITY_REPORT.md      # Static analysis of repo reproducibility
+│   ├── ENVIRONMENT_REBUILD_GUIDE.md   # How to rebuild the environment from scratch
+│   ├── MENTOR_STATUS_REPORT.md        # High-level technical status report
+│   └── ENVIRONMENT_CONSTANTS.md       # Custom kernel layout and struct offsets
 ├── exploit/
 │   ├── tier1-linux-vm/                # Tier 1: QEMU Linux VM setup
 │   ├── tier2-android-emulator/        # Tier 2: Android emulator setup
@@ -56,13 +60,33 @@ bad-epoll-lab/
     └── draft.md                       # Medium/LinkedIn article draft
 ```
 
+## Current Status & Accomplishments (As of July 2026)
+
+**Accomplished (Tier 1):**
+* Compiled Linux Kernel 6.12.67 from source and built a QEMU test environment.
+* Ported the Google kernelCTF exploit to our custom environment, fixing modern C++ compilation errors in `libxdk`.
+* Achieved a highly reliable Use-After-Free (UAF) trigger by dynamically recalibrating the `epoll` race condition thresholds for nested virtualization overhead.
+* Bypassed KASLR and achieved Arbitrary Address Read (AAR) by reverse-engineering our custom `task_struct` offsets.
+
+**Unresolved / Current Blocker:**
+* The exploit panics at the final RIP hijack stage (`__x86_indirect_call_thunk_rdi+0x5`). 
+* The selected stack pivot gadget was misinterpreted (AT&T syntax confusion), resulting in a supervisor write fault. A new, true stack pivot gadget must be found in `vmlinux` and patched into the exploit to achieve the final root shell.
+* Exploit compilation relies on manual source code patches and is not yet fully automated.
+
+## Rebuilding the Environment
+
+If you need to rebuild the environment from scratch on an empty Linux machine, refer to our comprehensive guide:
+👉 **[ENVIRONMENT_REBUILD_GUIDE.md](docs/ENVIRONMENT_REBUILD_GUIDE.md)**
+
+For a static analysis of the repository's reproducibility state, see the **[REPRODUCIBILITY_REPORT.md](docs/REPRODUCIBILITY_REPORT.md)**.
+
 ## Three-Tier Approach
 
 | Tier | Environment | Goal | Est. Time |
 |------|-------------|------|-----------|
-| 🟢 Tier 1 | Linux VM (QEMU) | Learn exploit mechanics, get root | 1-2 days |
-| 🟡 Tier 2 | Android Emulator | Prove it works on Android | 2-3 days |
-| 🔴 Tier 3 | SELinux Analysis | Real-world severity assessment | 2-3 days |
+| 🟢 Tier 1 | Linux VM (QEMU) | Learn exploit mechanics, get root | **Paused (Blocked)** |
+| 🟡 Tier 2 | Android Emulator | Prove it works on Android | Pending |
+| 🔴 Tier 3 | SELinux Analysis | Real-world severity assessment | Pending |
 
 ## Prerequisites
 
