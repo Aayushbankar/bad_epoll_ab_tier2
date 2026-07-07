@@ -1,0 +1,86 @@
+============================================
+  bad-epoll-lab — Tier 1.5 Setup (Baseline)
+  Target Kernel: KernelCTF lts-6.12.67
+============================================
+
+[1/5] Creating Tier 1.5 workspace...
+  ✓ Workspace created at /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1_5-kernelctf-env
+
+[2/5] Downloading pre-compiled KernelCTF bzImage...
+
+
+7[1A[1G[27G[Files: 0  Bytes: 0  []87[2A[1G[27G[https://storage.googl]87[1A[1G[27G[Files: 0  Bytes: 0  []87[1S[3A[1G[0JSaving 'bzImage'
+87[1A[1G[27G[Files: 0  Bytes: 0  []87[2A[1GbzImage                0% [>                    ]  257.06K    --.-KB/s87[1A[1G[27G[Files: 0  Bytes: 0  []87[2A[1GbzImage               12% [=>                   ]    3.32M    3.07MB/s87[1A[1G[27G[Files: 0  Bytes: 0  []87[2A[1GbzImage               34% [======>              ]    9.48M    4.61MB/s87[1A[1G[27G[Files: 0  Bytes: 0  []87[2A[1GbzImage               49% [=========>           ]   13.57M    4.44MB/s87[1A[1G[27G[Files: 0  Bytes: 0  []87[2A[1GbzImage               67% [=============>       ]   18.48M    4.55MB/s87[1A[1G[27G[Files: 0  Bytes: 0  []87[2A[1GbzImage               88% [=================>   ]   24.23M    4.79MB/s87[2A[1GbzImage              100% [====================>]   27.42M    4.77MB/s87[1S[3A[1G[0JHTTP response 200  [https://storage.googleapis.com/kernelctf-build/releases/lts-6.12.67/bzImage]
+87[2A[1GbzImage              100% [====================>]   27.42M    4.77MB/s87[1A[1G[27G[Files: 1  Bytes: 27.4]8  ✓ bzImage downloaded.
+
+[3/5] Cloning clean, unmodified exploit PoC...
+Cloning into 'security-research'...
+Updating files:  77% (1750/2266)
+Updating files:  78% (1768/2266)
+Updating files:  79% (1791/2266)
+Updating files:  80% (1813/2266)
+Updating files:  81% (1836/2266)
+Updating files:  82% (1859/2266)
+Updating files:  83% (1881/2266)
+Updating files:  84% (1904/2266)
+Updating files:  85% (1927/2266)
+Updating files:  86% (1949/2266)
+Updating files:  87% (1972/2266)
+Updating files:  88% (1995/2266)
+Updating files:  89% (2017/2266)
+Updating files:  90% (2040/2266)
+Updating files:  91% (2063/2266)
+Updating files:  92% (2085/2266)
+Updating files:  93% (2108/2266)
+Updating files:  94% (2131/2266)
+Updating files:  95% (2153/2266)
+Updating files:  96% (2176/2266)
+Updating files:  97% (2199/2266)
+Updating files:  98% (2221/2266)
+Updating files:  99% (2244/2266)
+Updating files: 100% (2266/2266)
+Updating files: 100% (2266/2266), done.
+  ✓ Exploit source cloned.
+
+[4/5] Compiling the original exploit...
+  ✗ Error: Exploit source not found at security-research/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/exploit/lts-6.12.67/exploit.c. Did the repo structure change?
+
+
+
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab$ cd /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/
+./scripts/setup-tier1_5.sh 
+============================================
+  bad-epoll-lab — Tier 1.5 Setup (Baseline)
+  Target Kernel: KernelCTF lts-6.12.67
+============================================
+
+[1/5] Creating Tier 1.5 workspace...
+  ✓ Workspace created at /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1_5-kernelctf-env
+
+[2/5] Downloading pre-compiled KernelCTF bzImage...
+  ✓ bzImage already exists, skipping download.
+
+[3/5] Cloning clean, unmodified exploit PoC...
+  ✓ Exploit source already cloned, skipping.
+
+[4/5] Compiling the original exploit...
+  ✓ Exploit already compiled, skipping.
+
+[5/5] Creating minimal rootfs and injecting exploit...
+  ✓ rootfs created and exploit injected: initramfs.cpio
+
+============================================
+  Tier 1.5 Setup Complete!
+============================================
+
+To boot the KernelCTF environment and test the unmodified exploit, run:
+
+qemu-system-x86_64 \
+  -kernel /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1_5-kernelctf-env/bzImage \
+  -initrd /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1_5-kernelctf-env/initramfs.cpio \
+  -append 'console=ttyS0 quiet kaslr' \
+  -nographic -smp 2 -m 2G -cpu kvm64,+smep,+smap
+
+Note: If the exploit crashes due to KASLR bypass (rdtscp) SIGILL on kvm64,
+you may need to append 'nokaslr' to the append string, or boot with '-cpu host'.
+legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab$ 

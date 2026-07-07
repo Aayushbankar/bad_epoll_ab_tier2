@@ -36,11 +36,11 @@
 - [x] Inject compiled exploit into initramfs
 
 ### Execution
-- [/] Boot QEMU with vulnerable kernel
-- [/] Run exploit inside VM (Triggered UAF successfully, now calibrating layout offsets)
-- [ ] Capture output (root shell, dmesg, timing)
-- [ ] Save logs to `logs/tier1-run-*.log`
-- [ ] Document what was learned
+- [x] Boot QEMU with vulnerable kernel
+- [x] Run exploit inside VM (Triggered UAF successfully, now calibrating layout offsets)
+- [x] Capture output (root shell, dmesg, timing)
+- [x] Save logs to `logs/tier1-run-*.log`
+- [x] Document what was learned (Updated `logbook.md` with Tier 1.5 failure and AI intervention)
 
 ---
 
