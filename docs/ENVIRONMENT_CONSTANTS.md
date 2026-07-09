@@ -23,7 +23,41 @@ Google's default offsets did not match our local build. These are the reversed o
 | `children` | 1472 | **1384** | Walking the process tree |
 | `sibling` | 1488 | **1400** | Walking the process tree |
 
-## 4. Race Condition Calibration Constants
+## 4. Gadget Research Findings (2026-07-09 Session)
+
+### Kernel Config Flags Affecting ROP
+* **CONFIG_RETPOLINE**: **ENABLED** — All `ret` replaced by `jmp __x86_return_thunk`
+* **`__x86_return_thunk`** address: `0xffffffff820d6e70` (starts with `c3` = `ret`)
+* **Indirect call thunk**: `__x86_indirect_thunk_array` at `0xffffffff820d6240`
+
+### Verified Gadgets (use these in exploit.cpp)
+| Define | Offset | Absolute Addr | Instruction | Status |
+|--------|--------|---------------|-------------|--------|
+| `POP_RDI_RET` | `0x1600ea0` | `0xffffffff81600ea0` | `pop rdi ; jmp __x86_return_thunk` | ✅ VALID |
+| `POP_RET` | `0x42010` | `0xffffffff81042010` | `ret` (bare c3) | ✅ VALID |
+| (Alt pop rdi) | `0x106114e` | `0xffffffff8206114e` | `pop rdi ; jmp __x86_return_thunk` | ✅ VALID |
+
+### PIVOT1 Research — What Does NOT Exist in This Kernel
+All of the following were searched with boundary-aligned Python script (8.5M lines of objdump output):
+* `mov rsp, rdi` (any suffix) → **NONE**
+* `mov rsp, rdx` (any suffix) → **NONE**  
+* `xchg rsp, rdi` or `xchg rsp, rdx` → **NONE**
+* `push rdi ; pop rsp` → **NONE**
+* `push rdx ; pop rsp` → **NONE**
+* `mov rsp, [rdi+X]` or `mov rsp, [rdx+X]` → **NONE**
+* `mov rax,[rdx+X] ; mov rdi,rdx ; jmp rax` (COS JOP style) → **NONE**
+* `mov rax,[rdx+X] ; ... ; jmp rax` (within 5 instructions) → **NONE**
+
+### PIVOT1 Research — What to Try Next
+* `push rdi ; jmp __x86_return_thunk` — **NOT YET SEARCHED** (most promising)
+* `sub rsp, 0xXXX` gadgets — **NOT YET SEARCHED**  
+* See `exploit/tier1-linux-vm/AI_HANDOFF.md` for exact search commands.
+
+### Failed Gadget
+* `PIVOT1 = 0x10d6525` (`0xffffffff820d6525`) → actual instruction: `mov QWORD PTR [rsp],rdi`
+  This WRITES to memory at rsp — it's a store instruction, NOT a stack pivot.
+
+## 5. Race Condition Calibration Constants
 The nested QEMU environment required custom time threshold constants for the `epoll` vs `timerfd` race condition.
 
 * **`RACE_DUP_CLOSE_ITERS` (Cache Bouncing Delay):** **20** (Original: 250)
