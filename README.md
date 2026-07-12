@@ -40,7 +40,8 @@ KASLR Leak (prefetch side-channel)
 bad-epoll-lab/
 ├── README.md                          # This file
 ├── docs/
-│   ├── CONTEXT.md                     # AI agent context (read this first)
+│   ├── ENGINEERING_KT.md              # Definitive Engineering Knowledge Transfer (Read this first)
+│   ├── CONTEXT.md                     # AI agent context
 │   ├── VULNERABILITY.md               # Root cause analysis
 │   ├── EXPLOIT_WALKTHROUGH.md         # Step-by-step exploit mechanics
 │   ├── PROGRESS.md                    # Progress tracker
@@ -69,9 +70,9 @@ bad-epoll-lab/
 * Bypassed KASLR and achieved Arbitrary Address Read (AAR) by reverse-engineering our custom `task_struct` offsets.
 
 **Unresolved / Current Blocker:**
-* The exploit panics at the final RIP hijack stage (`__x86_indirect_call_thunk_rdi+0x5`). 
-* The selected stack pivot gadget was misinterpreted (AT&T syntax confusion), resulting in a supervisor write fault. A new, true stack pivot gadget must be found in `vmlinux` and patched into the exploit to achieve the final root shell.
-* Exploit compilation relies on manual source code patches and is not yet fully automated.
+* The exploit panics on the very first instruction of the ROP payload (`0xffffffff810001bd`), which incorrectly resolves to `sldt (%rax)`.
+* **Root Cause Verified**: A definitive forensic provenance audit proved that the `libxdk` payload parser and the JOP stack pivot bridge are fundamentally flawless. The crash is exclusively caused by an incompatible, pre-compiled `target_db.kxdb` database which was generated for the official kernelCTF image rather than our locally compiled kernel.
+* **Next Steps**: Regenerate `target_db.kxdb` using the repository's `angrop` generation pipeline against the local `vmlinux` binary to correct the ROP offsets.
 
 ## Rebuilding the Environment
 
