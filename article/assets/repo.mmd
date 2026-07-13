@@ -1,0 +1,16 @@
+graph LR
+    Root[bad-epoll-lab/]
+    Root --> TP[third_party/]
+    Root --> EXP[exploit/]
+    Root --> ART[artifacts/]
+    Root --> ARC[archive/]
+
+    TP --> LK[linux-6.12.67/]
+    TP --> SR[security-research/]
+
+    EXP --> T1[tier1/]
+    T1 --> SQ[start_qemu.sh]
+    T1 --> CP[initramfs_exploit_debug.cpio]
+
+    ART --> DB[databases/]
+    ART --> SC[screenshots/]

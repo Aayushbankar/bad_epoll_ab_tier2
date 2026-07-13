@@ -1,0 +1,17 @@
+graph TD
+    subgraph User Space
+        E[exploit.cpp]
+        L[libxdk]
+        K[target_db.kxdb]
+    end
+    subgraph Kernel Space
+        EP[epoll subsystem]
+        UAF[UAF / Memory Corruption]
+        PE[Privilege Escalation]
+    end
+
+    E -->|"Orchestrates timing"| EP
+    EP -->|"close-vs-close race"| UAF
+    UAF -->|"Cross-cache"| L
+    L -->|"Memory Primitives"| K
+    K -->|"Gadget Resolution"| PE

