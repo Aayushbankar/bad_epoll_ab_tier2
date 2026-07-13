@@ -1,109 +1,35 @@
-# bad-epoll-lab
+# CVE-2026-46242: Bad Epoll
 
-> Hands-on recreation and analysis of CVE-2026-46242 ("Bad Epoll") — a race condition UAF in the Linux kernel's `epoll` subsystem that achieves local privilege escalation to root.
+Welcome to the internal engineering repository for the "Bad Epoll" vulnerability (CVE-2026-46242). This repository houses the complete documentation, research, and functional exploits targeting this specific Linux kernel Use-After-Free condition.
 
-## Project Goal
+## Project Overview
+This project successfully ports the official kernelCTF exploit to a localized Fedora GCC-compiled `linux-6.12.67` environment. It provides a robust Jump-Oriented Programming (JOP) and Return-Oriented Programming (ROP) payload capable of fully bypassing KASLR and KPTI to achieve unprivileged root execution. 
 
-Recreate the kernelCTF PoC locally, understand every stage of the exploit chain, test it on Android, and produce a professional write-up for Medium/LinkedIn.
+## Repository Layout
+This repository has been strictly engineered to provide a self-contained, reproducible artifact for long-term archival and further Tier 2 (Android) development. 
 
-## Vulnerability Summary
+- **`docs/`**: The master repository for all technical reports, timelines, architectural diagrams, and engineering checklists. 
+- **`exploit/`**: The tiered structure housing the localized exploit environments (Tier 1 through Tier 3).
+- **`artifacts/`**: The frozen archival collection containing every generated database, binary, memory dump, and system trace collected during development.
+- **`scripts/`**: Setup, utility, and build automation scripts.
+- **`research/`**: Validated debugging tools, tracers, and memory extraction utilities.
+- **`third_party/`**: External dependencies, including the raw `linux-6.12.67` kernel source tree and the upstream `security-research` generators.
+- **`archive/`**: Deprecated scripts and redundant file copies retained strictly for historical preservation.
 
-| Field | Value |
-|-------|-------|
-| **CVE** | CVE-2026-46242 |
-| **Nickname** | "Bad Epoll" |
-| **Type** | Race Condition → Use-After-Free (UAF) |
-| **Subsystem** | `fs/eventpoll.c` |
-| **Affected Kernels** | 6.4-rc1 through 7.0 (introduced by commit `58c9b016e128`) |
-| **Fix** | Commit `a6dc643c693` (mainline 2026-04-24) |
-| **Impact** | Local unprivileged user → root (uid=0) |
-| **Reliability** | ~99% on LTS, ~98% on COS |
-| **Android Impact** | Devices running kernel 6.6+ (Android 16+ flagships) |
+## Tier Overview
+- **`exploit/tier1/`**: The primary localized Linux VM environment. Verified, stable, and completely self-contained. 
+- **`exploit/tier1.5/`**: The kernelCTF recreation environment for upstream synchronization.
+- **`exploit/tier2/`**: Prepared environment for Android ARM64 kernel porting.
+- **`exploit/tier3/`**: Prepared environment for advanced SELinux enforcement analysis.
 
-## Exploit Chain Overview
+## Quick Start & Reproduction
+To fully reproduce the Tier 1 environment from a fresh installation, consult the comprehensive [Reproduction Guide](docs/checkpoints/tier1_complete/AUDIT_REPRODUCTION.md). It details dependency installation, `target_db` regeneration, and VM execution.
 
-```
-KASLR Leak (prefetch side-channel)
-  → Race Condition Trigger (close-vs-close on epoll fds)
-    → UAF Write-0 (zeroes offset 160 of freed kmalloc-192)
-      → Escalate to struct file UAF (dangling pointer)
-        → Cross-Cache Attack (reclaim filp slab as pipe_buffer)
-          → Constrained AAR (read kernel memory via /proc/self/fdinfo)
-            → Full AAR (walk task_struct tree)
-              → RIP Control + ROP (hijack f_op->poll, stack pivot)
-                → Root Shell (commit_creds(&init_cred), execve)
-```
+## Evidence & Verification
+The success of this port is backed by concrete runtime evidence (memory dumps, live GDB instruction traces, QEMU console outputs). A complete index is available in the [Runtime Evidence Index](docs/checkpoints/tier1_complete/AUDIT_EVIDENCE.md).
 
-## Repository Structure
+## Documentation Index
+For a complete listing of all internal engineering reports, historical timelines, and vulnerability analyses, please see the [Master Index](docs/MASTER_INDEX.md).
 
-```
-bad-epoll-lab/
-├── README.md                          # This file
-├── docs/
-│   ├── ENGINEERING_KT.md              # Definitive Engineering Knowledge Transfer (Read this first)
-│   ├── CONTEXT.md                     # AI agent context
-│   ├── VULNERABILITY.md               # Root cause analysis
-│   ├── EXPLOIT_WALKTHROUGH.md         # Step-by-step exploit mechanics
-│   ├── PROGRESS.md                    # Progress tracker
-│   ├── REPRODUCIBILITY_REPORT.md      # Static analysis of repo reproducibility
-│   ├── ENVIRONMENT_REBUILD_GUIDE.md   # How to rebuild the environment from scratch
-│   ├── MENTOR_STATUS_REPORT.md        # High-level technical status report
-│   └── ENVIRONMENT_CONSTANTS.md       # Custom kernel layout and struct offsets
-├── exploit/
-│   ├── tier1-linux-vm/                # Tier 1: QEMU Linux VM setup
-│   ├── tier2-android-emulator/        # Tier 2: Android emulator setup
-│   └── tier3-selinux-analysis/        # Tier 3: SELinux bypass research
-├── scripts/
-│   ├── setup-tier1.sh                 # Automated Tier 1 setup script
-│   └── setup-tier2.sh                 # Automated Tier 2 setup script
-├── logs/                              # dmesg, logcat, exploit output logs
-└── article/
-    └── draft.md                       # Medium/LinkedIn article draft
-```
-
-## Current Status & Accomplishments (As of July 2026)
-
-**Accomplished (Tier 1):**
-* Compiled Linux Kernel 6.12.67 from source and built a QEMU test environment.
-* Ported the Google kernelCTF exploit to our custom environment, fixing modern C++ compilation errors in `libxdk`.
-* Achieved a highly reliable Use-After-Free (UAF) trigger by dynamically recalibrating the `epoll` race condition thresholds for nested virtualization overhead.
-* Bypassed KASLR and achieved Arbitrary Address Read (AAR) by reverse-engineering our custom `task_struct` offsets.
-
-**Unresolved / Current Blocker:**
-* The exploit panics on the very first instruction of the ROP payload (`0xffffffff810001bd`), which incorrectly resolves to `sldt (%rax)`.
-* **Root Cause Verified**: A definitive forensic provenance audit proved that the `libxdk` payload parser and the JOP stack pivot bridge are fundamentally flawless. The crash is exclusively caused by an incompatible, pre-compiled `target_db.kxdb` database which was generated for the official kernelCTF image rather than our locally compiled kernel.
-* **Next Steps**: Regenerate `target_db.kxdb` using the repository's `angrop` generation pipeline against the local `vmlinux` binary to correct the ROP offsets.
-
-## Rebuilding the Environment
-
-If you need to rebuild the environment from scratch on an empty Linux machine, refer to our comprehensive guide:
-👉 **[ENVIRONMENT_REBUILD_GUIDE.md](docs/ENVIRONMENT_REBUILD_GUIDE.md)**
-
-For a static analysis of the repository's reproducibility state, see the **[REPRODUCIBILITY_REPORT.md](docs/REPRODUCIBILITY_REPORT.md)**.
-
-## Three-Tier Approach
-
-| Tier | Environment | Goal | Est. Time |
-|------|-------------|------|-----------|
-| 🟢 Tier 1 | Linux VM (QEMU) | Learn exploit mechanics, get root | **Paused (Blocked)** |
-| 🟡 Tier 2 | Android Emulator | Prove it works on Android | Pending |
-| 🔴 Tier 3 | SELinux Analysis | Real-world severity assessment | Pending |
-
-## Prerequisites
-
-- Linux host (Fedora/Ubuntu)
-- `build-essential`, `qemu-system-x86`, `busybox-static`, `cpio`
-- Android SDK (installed) + NDK (to be installed for Tier 2)
-- ~20GB free disk space for kernel compilation
-
-## References
-
-- [Original PoC (kernelCTF submission)](https://github.com/J-jaeyoung/security-research/tree/submit-cve-2026-46242/pocs/linux/kernelctf/CVE-2026-46242_lts_cos)
-- [Exploit writeup](https://github.com/J-jaeyoung/security-research/blob/submit-cve-2026-46242/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/docs/exploit.md)
-- [Vulnerability writeup](https://github.com/J-jaeyoung/security-research/blob/submit-cve-2026-46242/pocs/linux/kernelctf/CVE-2026-46242_lts_cos/docs/vulnerability.md)
-- [Fix commit](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a6dc643c69311677c574a0f17a3f4d66a5f3744b)
-- [Introducing commit](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=58c9b016e12855286370dfb704c08498edbc857a)
-
-## License
-
-This repository is for educational and authorized security research purposes only. Do not use any code or techniques from this repository for unauthorized access to systems.
+## Future Work
+The repository is frozen at the successful Tier 1 boundary. The next phase transitions into `exploit/tier2/` to evaluate the feasibility of porting the `epoll` Use-After-Free timing constraints to the Android Generic Kernel Image (GKI) utilizing ARM64 EL1 -> EL0 transition paradigms.
