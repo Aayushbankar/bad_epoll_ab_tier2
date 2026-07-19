@@ -1,0 +1,4 @@
+=== Launch Configuration ===
+CPUS: 2
+RAM: 2048
+CMDLINE: console=ttyAMA0 root=/dev/ram0 kasan=off earlycon=pl011,0x09000000 printk.devkmsg=on rw

@@ -1,0 +1,10 @@
+#!/usr/bin/expect -f
+set timeout 30
+spawn bash tier2/scripts/run_qemu.sh
+expect "/ #"
+send "dmesg | grep -i 'kasan\\|kaslr'\r"
+expect "/ #"
+send "cat /proc/kallsyms | grep ' eventpoll_release_file'\r"
+expect "/ #"
+send "poweroff -f\r"
+expect eof

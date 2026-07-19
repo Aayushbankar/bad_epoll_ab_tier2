@@ -1,0 +1,112 @@
+== SANITY CHECKS ==
+
+[adb]
+/home/legion/.local/bin/adb
+Android Debug Bridge version 1.0.41
+Version 37.0.0-14910828
+Installed as /home/legion/.local/bin/adb
+Running on Linux 7.0.13-200.fc44.x86_64 (x86_64)
+
+[fastboot]
+/home/legion/.local/bin/fastboot
+fastboot version 37.0.0-14910828
+Installed as /home/legion/.local/bin/fastboot
+
+[sdkmanager]
+/home/legion/.local/android/cmdline-tools/latest/bin/sdkmanager
+12.0
+
+
+[avdmanager]
+/home/legion/.local/android/cmdline-tools/latest/bin/avdmanager
+Error: Flag '--version' is not a valid global flag. Did you mean to specify it after the verb/object name?
+
+Usage:
+      avdmanager [global options] [action] [action options]
+      Global options:
+  -s --silent     : Silent mode, shows errors only.
+  -v --verbose    : Verbose mode, shows errors, warnings and all messages.
+     --clear-cache: Clear the SDK Manager repository manifest cache.
+  -h --help       : Help on a specific command.
+
+Valid actions are composed of a verb and an optional direct object:
+-   list              : Lists existing targets or virtual devices.
+-   list avd          : Lists existing Android Virtual Devices.
+-   list target       : Lists existing targets.
+-   list device       : Lists existing devices.
+- create avd          : Creates a new Android Virtual Device.
+-   move avd          : Moves or renames an Android Virtual Device.
+- delete avd          : Deletes an Android Virtual Device.
+
+[emulator]
+which: no emulator in (/home/legion/.local/android/cmdline-tools/latest/bin:/home/legion/.local/android/emulator:/home/legion/.local/android/platform-tools:/home/legion/.local/bin:/home/legion/.local/java/jdk-21.0.2/bin:/home/legion/.local/lib/flutter/bin:/home/legion/.opencode/bin:/home/legion/.local/lib/flutter/bin:/home/legion/.opencode/bin:/home/legion/.local/bin:/home/legion/bin:/usr/local/bin:/usr/bin:/home/legion/.local/lib/flutter/bin:/home/legion/.local/lib/flutter/bin)
+bash: line 1: emulator: command not found
+
+[qemu-system-aarch64]
+/usr/bin/qemu-system-aarch64
+QEMU emulator version 10.2.2 (qemu-10.2.2-1.fc44)
+Copyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers
+
+[gdb]
+/usr/bin/gdb
+GNU gdb (Fedora Linux) 17.1-6.fc44
+Copyright (C) 2025 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+[clang]
+/usr/bin/clang
+clang version 22.1.8 (Fedora 22.1.8-1.fc44)
+Target: x86_64-redhat-linux-gnu
+Thread model: posix
+InstalledDir: /usr/bin
+Configuration file: /etc/clang/x86_64-redhat-linux-gnu-clang.cfg
+
+[java]
+/home/legion/.local/java/jdk-21.0.2/bin/java
+openjdk 21.0.2 2024-01-16
+OpenJDK Runtime Environment (build 21.0.2+13-58)
+OpenJDK 64-Bit Server VM (build 21.0.2+13-58, mixed mode, sharing)
+
+[repo]
+/home/legion/.local/bin/repo
+<repo not installed>
+repo launcher version 2.65
+       (from /home/legion/.local/bin/repo)
+git 2.54.0
+Python 3.14.6 (main, Jun 11 2026, 00:00:00) [GCC 16.1.1 20260515 (Red Hat 16.1.1-2)]
+OS Linux 7.0.13-200.fc44.x86_64 (#1 SMP PREEMPT_DYNAMIC Fri Jun 19 22:51:30 UTC 2026)
+CPU x86_64 (unknown)
+Bug reports: https://issues.gerritcodereview.com/issues/new?component=1370071
+
+[mkbootimg]
+/home/legion/.local/bin/mkbootimg
+/home/legion/.local/bin/mkbootimg: line 1: 404:: command not found
+
+[unpackbootimg]
+/home/legion/.local/bin/unpackbootimg
+/home/legion/.local/bin/unpackbootimg: line 1: 404:: command not found
+
+[avbtool]
+/home/legion/.local/bin/avbtool
+usage: avbtool [-h]
+               {generate_test_image,version,extract_public_key,extract_public_key_digest,make_vbmeta_image,add_hash_footer,append_vbmeta_image,add_hashtree_footer,erase_footer,zero_hashtree,extract_vbmeta_image,resize_image,info_image,verify_image,print_partition_digests,calculate_vbmeta_digest,calculate_kernel_cmdline,set_ab_metadata,make_certificate,make_atx_certificate,make_cert_permanent_attributes,make_atx_permanent_attributes,make_cert_metadata,make_atx_metadata,make_cert_unlock_credential,make_atx_unlock_credential} ...
+avbtool: error: unrecognized arguments: --version
+
+[dtc]
+/usr/bin/dtc
+Version: DTC 1.7.2
+
+[llvm-config]
+/usr/bin/llvm-config
+22.1.8
+
+[cargo]
+/usr/bin/cargo
+cargo 1.96.0 (30a34c682 2026-05-25) (Fedora 1.96.0-1.fc44)
+
+[python]
+/usr/bin/python
+Python 3.14.6
+

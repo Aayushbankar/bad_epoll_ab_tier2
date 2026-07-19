@@ -8,18 +8,28 @@
 modules.order
 Module.symvers
 
-# Kernel source (too large for git)
-exploit/tier1-linux-vm/linux-*/
-exploit/tier1-linux-vm/security-research/
+# Kernel source and third party repos (too large for git)
+third_party/linux-*/
+third_party/security-research/
 
 # Compiled binaries
-exploit/tier1-linux-vm/exploit
-exploit/tier2-android-emulator/exploit_android
+exploit/tier1/exploit
+exploit/tier2/exploit_android
 
 # Rootfs (generated)
-exploit/tier1-linux-vm/rootfs/
-exploit/tier1-linux-vm/initramfs.cpio
+exploit/tier1/rootfs/
+exploit/tier1/initramfs.cpio
 
+# Tier 2 Android Artifacts and Tooling
+tier2/android/source/
+tier2/android/images/
+tier2/android/symbols/
+tier2/android/boot/
+tier2/android/kernel/
+tier2/tooling/pwndbg/
+tier2/artifacts/*.json
+tier2/artifacts/emulator_boot.log
+tier2/aarch64-linux-musl-cross
 # OS files
 .DS_Store
 Thumbs.db
@@ -42,3 +52,32 @@ exploit/**/*.cpio
 exploit/**/bzImage
 exploit/**/exploit
 exploit/**/bin/exploit
+
+# Temporary files and test outputs
+qemu_output*.txt
+qemu_stack_test.txt
+test_output.txt
+test_asm.c
+test_asm.o
+test_strtol.c
+test_strtol.o
+trigger.asm
+tier2/qemu.log
+tier2/qemu.pid
+tier2/qemu_verify.log
+tier2/scripts/emulator.log
+tier2/scripts/emulator.pid
+tier2/scripts/qemu.log
+tier2/scripts/__pycache__/
+.gdb_history
+tier2/docs/gdb_pointer_proof.log
+tier2/docs/implementation_plan.md
+
+# Large toolchains and built binaries
+tier2/aarch64-linux-musl-cross.tgz
+tier2/scripts/aarch64-linux-musl-cross/
+tier2/initramfs.cpio
+tier2/rootfs/
+
+# Ignore the tier2/android kernel source tree entirely
+tier2/android/

@@ -1,0 +1,19 @@
+BUILD START: 2026-07-16T11:18:50Z
+Loading: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //common:kernel_aarch64 (0 packages loaded, 0 targets configured)
+ERROR: no such package 'prebuilts/clang/host/linux-x86/clang-r487747': BUILD file not found in any of the following directories. Add a BUILD file to a directory to mark it as a package.
+ - /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/android/source/prebuilts/clang/host/linux-x86/clang-r487747
+ERROR: /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/android/source/build/kernel/BUILD.bazel:31:15: no such package 'prebuilts/clang/host/linux-x86/clang-r487747': BUILD file not found in any of the following directories. Add a BUILD file to a directory to mark it as a package.
+ - /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/android/source/prebuilts/clang/host/linux-x86/clang-r487747 and referenced by '//build/kernel:hermetic-tools'
+ERROR: Analysis of target '//common:kernel_aarch64' failed; build aborted: Analysis failed
+INFO: Elapsed time: 1.514s
+INFO: 0 processes.
+ERROR: Build did NOT complete successfully
+
+real	0m1.660s
+user	0m0.092s
+sys	0m0.024s
+BUILD EXIT CODE: 1
+BUILD FINISH: 2026-07-16T11:18:51Z

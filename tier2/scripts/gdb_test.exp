@@ -1,0 +1,16 @@
+#!/usr/bin/expect -f
+set timeout 15
+spawn gdb tier2/android/artifacts/vmlinux
+expect "(gdb)"
+send "target remote localhost:1234\r"
+expect "(gdb)"
+send "b ep_remove\r"
+expect "(gdb)"
+send "b eventpoll_release_file\r"
+expect "(gdb)"
+send "c\r"
+expect {
+    "Breakpoint 1, ep_remove" { exit 0 }
+    "Breakpoint 2, eventpoll_release_file" { exit 0 }
+    timeout { exit 1 }
+}
