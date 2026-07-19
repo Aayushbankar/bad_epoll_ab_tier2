@@ -58,6 +58,26 @@
 - [x] Capture `logcat` and `dmesg` output
 - [x] Document kCFI/PAC mitigations and how data-only attack evades them
 
+### Precise Technical Checkpoint (2026-07-20)
+1. **Exact kernel source commit and vulnerability-bearing modifications**: Base Android Common Kernel 6.1.23 (commit `7e35917775b8`). Vulnerability introduced by cherry-picking/backporting commit `a1f93804449d`. Current tree HEAD is `0329e37631ce`.
+2. **Exact reproducer execution path**: `tier2/reproducers/cve_2026_46242_trigger.c` executed via `test_gdb.sh` using QEMU with HW_TAGS MTE enabled and GDB instruction-patching orchestration.
+3. **Exact Thread A and Thread B call paths**: 
+   - **Thread A**: `close(outer_epoll)` -> `__fput()` -> `ep_eventpoll_release()` -> `ep_clear_and_put()` -> `__ep_remove()` -> traps at `file->f_ep = NULL`.
+   - **Thread B**: `close(inner_epoll)` -> `__fput()` -> `eventpoll_release()` (lockless `f_ep == NULL` fast path) -> `ep_eventpoll_release()` -> `ep_clear_and_put()` -> `kfree(inner_epoll)`.
+4. **Exact point where the object is released**: Thread B executes `kfree(ep)` (the inner eventpoll object) at the end of `ep_clear_and_put()`.
+5. **Exact stale access that KASAN detects**: Thread A resumes and executes `hlist_del_rcu(&epi->fllink)`, which attempts a doubly-linked list removal write on the freed memory space.
+6. **Exact allocation cache, object size, and stale-access offset supported by existing evidence**: The `eventpoll` struct (176 bytes) is allocated in the `kmalloc-192` cache. KASAN confirms the stale write is exactly 160 bytes (`0xa0`) into the 192-byte region, perfectly aligning with the `refs` list head.
+7. **All existing KASAN evidence**: A synchronous HW_TAGS MTE KASAN report is captured confirming an invalid-access write at `[fc]` vs freed memory tag `[fe]` on the `kmalloc-192` object by `cve_2026_46242_` (PID 63) on CPU 0.
+8. **Every claim that is verified**: 
+   - The UAF race window exists in `__ep_remove` between `f_ep = NULL` and `hlist_del_rcu`.
+   - The lockless fast-path in `eventpoll_release` is reachable and allows Thread B to bypass locks.
+   - The UAF write deterministically targets the freed `inner_epoll` memory region.
+9. **Every claim that is not verified**: 
+   - Exploitability beyond the UAF write.
+   - Arbitrary memory read/write, code execution, or privilege escalation.
+   - Ability to reliably groom/reallocate the `kmalloc-192` object concurrently outside of a mechanically paused GDB state.
+10. **The exact current project stopping point**: Trigger-only race validation is complete. The KASAN UAF write is mechanically confirmed. The project is currently halted at the transition to Tier 2 (data-only exploitation payload engineering / weaponization) without any exploit execution having occurred.
+
 ---
 
 ## Tier 3: SELinux Analysis
