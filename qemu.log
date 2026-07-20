@@ -1,0 +1,1257 @@
+[*] Packaging initramfs from /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/rootfs
+.
+./sys
+./cve_2026_46242_trigger
+./trigger
+./proc
+./bin
+./bin/busybox
+./bin/cve_trigger
+./test_print
+./init
+./dev
+./etc
+./cve_trigger
+6493 blocks
+[*] Ramdisk generated at: /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/initramfs.cpio
+[*] Success.
+[*] Starting QEMU with GDB stub on :1234 (frozen at start)
+[*] Connect with: /usr/libexec/gdb -x tier2/scripts/gdb_race_commands.gdb
+[*] QEMU PID: 31577
+[*] Waiting for GDB stub to be ready...
+[    0.000000][    T0] Booting Linux on physical CPU 0x0000000000 [0x000f0510]
+[    0.000000][    T0] Linux version 6.1.23-00258-g0329e37631ce-dirty (legion@fedora) (aarch64-linux-gnu-gcc (GCC) 16.1.1 20260501 (Red Hat Cross 16.1.1-1), GNU ld version 2.46-1.fc44) #1 SMP PREEMPT Sun Jul 19 23:33:30 IST 2026
+[    0.000000][    T0] random: crng init done
+[    0.000000][    T0] Machine model: linux,dummy-virt
+[    0.000000][    T0] Stack Depot is disabled
+[    0.000000][    T0] KVM is not available. Ignoring kvm-arm.mode
+[    0.000000][    T0] earlycon: pl11 at MMIO 0x0000000009000000 (options '')
+[    0.000000][    T0] printk: bootconsole [pl11] enabled
+[    0.000000][    T0] efi: UEFI not found.
+[    0.000000][    T0] Zone ranges:
+[    0.000000][    T0]   DMA32    [mem 0x0000000040000000-0x00000000bfffffff]
+[    0.000000][    T0]   Normal   empty
+[    0.000000][    T0]   Device   empty
+[    0.000000][    T0] Movable zone start for each node
+[    0.000000][    T0] Early memory node ranges
+[    0.000000][    T0]   node   0: [mem 0x0000000040000000-0x00000000bfffffff]
+[    0.000000][    T0] Initmem setup node 0 [mem 0x0000000040000000-0x00000000bfffffff]
+[    0.000000][    T0] cma: Reserved 16 MiB at 0x00000000bc800000
+[    0.000000][    T0] psci: probing for conduit method from DT.
+[    0.000000][    T0] psci: PSCIv1.1 detected in firmware.
+[    0.000000][    T0] psci: Using standard PSCI v0.2 function IDs
+[    0.000000][    T0] psci: Trusted OS migration not required
+[    0.000000][    T0] psci: SMC Calling Convention v1.0
+[    0.000000][    T0] 'bootconfig' found on command line, but no bootconfig found
+[    0.000000][    T0] percpu: Embedded 29 pages/cpu s80872 r8192 d29720 u118784
+[    0.000000][    T0] Detected PIPT I-cache on CPU0
+[    0.000000][    T0] CPU features: SYS_ID_AA64MMFR1_EL1[11:8]: forced to 0
+[    0.000000][    T0] CPU features: detected: Address authentication (IMP DEF algorithm)
+[    0.000000][    T0] CPU features: detected: Hardware dirty bit management
+[    0.000000][    T0] CPU features: detected: Memory Tagging Extension
+[    0.000000][    T0] CPU features: detected: Asymmetric MTE Tag Check Fault
+[    0.000000][    T0] CPU features: detected: Spectre-v4
+[    0.000000][    T0] MTE: enabled in synchronous mode at EL1
+[    0.000000][    T0] alternatives: applying boot alternatives
+[    0.000000][    T0] kasan: KernelAddressSanitizer initialized (hw-tags, mode=sync, vmalloc=on, stacktrace=off)
+[    0.000000][    T0] Built 1 zonelists, mobility grouping on.  Total pages: 516096
+[    0.000000][    T0] Kernel command line: console=ttynull stack_depot_disable=on cgroup_disable=pressure kasan.page_alloc.sample=10 kasan.stacktrace=off kvm-arm.mode=protected bootconfig ioremap_guard console=ttyAMA0 root=/dev/ram0 kasan=on nokaslr earlycon=pl011,0x09000000 printk.devkmsg=on rw
+[    0.000000][    T0] cgroup: Disabling pressure control group feature
+[    0.000000][    T0] Unknown kernel command line parameters "nokaslr", will be passed to user space.
+[    0.000000][    T0] Dentry cache hash table entries: 262144 (order: 9, 2097152 bytes, linear)
+[    0.000000][    T0] Inode-cache hash table entries: 131072 (order: 8, 1048576 bytes, linear)
+[    0.000000][    T0] mem auto-init: stack:all(zero), heap alloc:on, heap free:off
+[    0.000000][    T0] Memory: 2005432K/2097152K available (15872K kernel code, 1854K rwdata, 8828K rodata, 2944K init, 599K bss, 75336K reserved, 16384K cma-reserved)
+[    0.000000][    T0] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=2, Nodes=1
+[    0.000000][    T0] trace event string verifier disabled
+[    0.000000][    T0] rcu: Preemptible hierarchical RCU implementation.
+[    0.000000][    T0] rcu: 	RCU event tracing is enabled.
+[    0.000000][    T0] rcu: 	RCU restricting CPUs from NR_CPUS=32 to nr_cpu_ids=2.
+[    0.000000][    T0] rcu: 	RCU priority boosting: priority 1 delay 500 ms.
+[    0.000000][    T0] 	Trampoline variant of Tasks RCU enabled.
+[    0.000000][    T0] 	Tracing variant of Tasks RCU enabled.
+[    0.000000][    T0] rcu: RCU calculated value of scheduler-enlistment delay is 25 jiffies.
+[    0.000000][    T0] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=2
+[    0.000000][    T0] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+[    0.000000][    T0] Root IRQ handler: gic_handle_irq
+[    0.000000][    T0] GICv2m: range[mem 0x08020000-0x08020fff], SPI[80:143]
+[    0.000000][    T0] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[    0.000000][    T0] arch_timer: cp15 timer(s) running at 1000.00MHz (virt).
+[    0.000000][    T0] clocksource: arch_sys_counter: mask: 0x1fffffffffffffff max_cycles: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
+[    0.000092][    T0] sched_clock: 61 bits at 1000MHz, resolution 1ns, wraps every 4398046511103ns
+[    0.003673][    T0] kfence: initialized - using 524288 bytes for 63 objects at 0x(____ptrval____)-0x(____ptrval____)
+[    0.026129][    T0] Calibrating delay loop (skipped), value calculated using timer frequency.. 2000.00 BogoMIPS (lpj=4000000)
+[    0.033739][    T0] pid_max: default: 32768 minimum: 301
+[    0.040263][    T0] LSM: Security Framework initializing
+[    0.043514][    T0] SELinux:  Initializing.
+[    0.052430][    T0] Mount-cache hash table entries: 4096 (order: 3, 32768 bytes, linear)
+[    0.053051][    T0] Mountpoint-cache hash table entries: 4096 (order: 3, 32768 bytes, linear)
+[    0.125995][    T1] cacheinfo: Unable to detect cache hierarchy for CPU 0
+[    0.149619][    T1] cblist_init_generic: Setting adjustable number of callback queues.
+[    0.150221][    T1] cblist_init_generic: Setting shift to 1 and lim to 1.
+[    0.153947][    T1] cblist_init_generic: Setting shift to 1 and lim to 1.
+[    0.159044][    T1] rcu: Hierarchical SRCU implementation.
+[    0.159379][    T1] rcu: 	Max phase no-delay instances is 1000.
+[    0.187303][    T1] dyndbg: Ignore empty _ddebug table in a CONFIG_DYNAMIC_DEBUG_CORE build
+[    0.189211][    T1] EFI services will not be available.
+[    0.196082][    T1] smp: Bringing up secondary CPUs ...
+[    0.212143][    T0] Detected PIPT I-cache on CPU1
+[    0.219217][    T0] cacheinfo: Unable to detect cache hierarchy for CPU 1
+[    0.222902][    T0] CPU1: Booted secondary processor 0x0000000001 [0x000f0510]
+[    0.228775][    T1] smp: Brought up 1 node, 2 CPUs
+[    0.230029][    T1] SMP: Total of 2 processors activated.
+[    0.230571][    T1] CPU features: detected: Branch Target Identification
+[    0.230977][    T1] CPU features: detected: 32-bit EL0 Support
+[    0.231263][    T1] CPU features: detected: 32-bit EL1 Support
+[    0.231554][    T1] CPU features: detected: ARMv8.4 Translation Table Level
+[    0.231975][    T1] CPU features: detected: Instruction cache invalidation not required for I/D coherence
+[    0.232764][    T1] CPU features: detected: Data cache clean to the PoU not required for I/D coherence
+[    0.233201][    T1] CPU features: detected: Common not Private translations
+[    0.233519][    T1] CPU features: detected: CRC32 instructions
+[    0.233757][    T1] CPU features: detected: E0PD
+[    0.233943][    T1] CPU features: detected: Enhanced Counter Virtualization
+[    0.234323][    T1] CPU features: detected: Enhanced Privileged Access Never
+[    0.234811][    T1] CPU features: detected: Generic authentication (IMP DEF algorithm)
+[    0.235204][    T1] CPU features: detected: RCpc load-acquire (LDAPR)
+[    0.235614][    T1] CPU features: detected: LSE atomic instructions
+[    0.235882][    T1] CPU features: detected: Privileged Access Never
+[    0.236171][    T1] CPU features: detected: RAS Extension Support
+[    0.236758][    T1] CPU features: detected: Random Number Generator
+[    0.236998][    T1] CPU features: detected: Speculation barrier (SB)
+[    0.237308][    T1] CPU features: detected: Stage-2 Force Write-Back
+[    0.237564][    T1] CPU features: detected: Trap EL0 IMPLEMENTATION DEFINED functionality
+[    0.237896][    T1] CPU features: detected: TLB range maintenance instructions
+[    0.238240][    T1] CPU features: detected: WFx with timeout
+[    0.238628][    T1] CPU features: detected: Scalable Matrix Extension
+[    0.238908][    T1] CPU features: detected: FA64
+[    0.239164][    T1] CPU features: detected: Speculative Store Bypassing Safe (SSBS)
+[    0.239502][    T1] CPU features: detected: Scalable Vector Extension
+[    0.266668][    T1] SVE: maximum available vector length 256 bytes per vector
+[    0.272816][    T1] SVE: default vector length 64 bytes per vector
+[    0.275938][    T1] SME: minimum available vector length 16 bytes per vector
+[    0.276277][    T1] SME: maximum available vector length 256 bytes per vector
+[    0.276575][    T1] SME: default vector length 32 bytes per vector
+[    0.277255][    T1] CPU: All CPU(s) started at EL1
+[    0.277897][    T1] alternatives: applying system-wide alternatives
+[    0.447553][    T1] Registered cp15_barrier emulation handler
+[    0.448189][    T1] Registered setend emulation handler
+[    0.452723][    T1] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+[    0.454400][    T1] futex hash table entries: 512 (order: 3, 32768 bytes, linear)
+[    0.581891][    T1] pinctrl core: initialized pinctrl subsystem
+[    0.621212][    T1] NET: Registered PF_NETLINK/PF_ROUTE protocol family
+[    0.665337][    T1] DMA: preallocated 256 KiB GFP_KERNEL pool for atomic allocations
+[    0.668299][    T1] DMA: preallocated 256 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
+[    0.669708][    T1] audit: initializing netlink subsys (disabled)
+[    0.676421][   T27] audit: type=2000 audit(0.564:1): state=initialized audit_enabled=0 res=1
+[    0.690239][    T1] thermal_sys: Registered thermal governor 'step_wise'
+[    0.690401][    T1] thermal_sys: Registered thermal governor 'user_space'
+[    0.690692][    T1] thermal_sys: Registered thermal governor 'power_allocator'
+[    0.692665][    T1] cpuidle: using governor menu
+[    0.699494][    T1] hw-breakpoint: found 6 breakpoint and 4 watchpoint registers.
+[    0.702484][    T1] ASID allocator initialised with 65536 entries
+[    0.705986][    T1] Serial: AMBA PL011 UART driver
+[    0.810239][    T1] 9000000.pl011: ttyAMA0 at MMIO 0x9000000 (irq = 13, base_baud = 0) is a PL011 rev1
+[    0.812948][    T1] printk: console [ttyAMA0] enabled
+[    0.812948][    T1] printk: console [ttyAMA0] enabled
+[    0.814103][    T1] printk: bootconsole [pl11] disabled
+[    0.814103][    T1] printk: bootconsole [pl11] disabled
+[    0.836228][    T1] KASLR disabled on command line
+[    1.043963][    T1] iommu: Default domain type: Translated 
+[    1.044439][    T1] iommu: DMA domain TLB invalidation policy: strict mode 
+[    1.056154][    T1] SCSI subsystem initialized
+[    1.060168][    T1] usbcore: registered new interface driver usbfs
+[    1.061516][    T1] usbcore: registered new interface driver hub
+[    1.062847][    T1] usbcore: registered new device driver usb
+[    1.066864][    T1] mc: Linux media interface: v0.10
+[    1.068045][    T1] videodev: Linux video capture interface: v2.00
+[    1.070716][    T1] pps_core: LinuxPPS API ver. 1 registered
+[    1.071256][    T1] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    1.072359][    T1] PTP clock support registered
+[    1.073461][    T1] EDAC MC: Ver: 3.0.0
+[    1.089968][    T1] Advanced Linux Sound Architecture Driver Initialized.
+[    1.118964][    T1] clocksource: Switched to clocksource arch_sys_counter
+[    1.133017][    T1] VFS: Disk quotas dquot_6.6.0
+[    1.133889][    T1] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+[    1.156641][    T1] NET: Registered PF_INET protocol family
+[    1.161118][    T1] IP idents hash table entries: 32768 (order: 6, 262144 bytes, linear)
+[    1.183000][    T1] tcp_listen_portaddr_hash hash table entries: 1024 (order: 2, 16384 bytes, linear)
+[    1.184735][    T1] Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[    1.186117][    T1] TCP established hash table entries: 16384 (order: 5, 131072 bytes, linear)
+[    1.191198][    T1] TCP bind hash table entries: 16384 (order: 7, 524288 bytes, linear)
+[    1.193656][    T1] TCP: Hash tables configured (established 16384 bind 16384)
+[    1.197591][    T1] UDP hash table entries: 1024 (order: 3, 32768 bytes, linear)
+[    1.198986][    T1] UDP-Lite hash table entries: 1024 (order: 3, 32768 bytes, linear)
+[    1.203196][    T1] NET: Registered PF_UNIX/PF_LOCAL protocol family
+[    1.204852][    T1] NET: Registered PF_XDP protocol family
+[    1.205799][    T1] PCI: CLS 0 bytes, default 64
+[    1.238145][    T8] Trying to unpack rootfs image as initramfs...
+[    1.280133][    T1] hw perfevents: enabled with armv8_pmuv3 PMU driver, 7 counters available
+[    1.288854][    T1] kvm [1]: HYP mode not available
+[    1.344757][    T1] Initialise system trusted keyrings
+[    1.357426][    T1] workingset: timestamp_bits=46 max_order=19 bucket_order=0
+[*] QEMU started. Now run the GDB script.
+[    1.481679][    T8] Freeing initrd memory: 3244K
+[    1.623818][    T1] fuse: init (API version 7.37)
+[    1.749372][    T1] Key type asymmetric registered
+[    1.750483][    T1] Asymmetric key parser 'x509' registered
+[    1.752887][    T1] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 239)
+[    1.757157][    T1] io scheduler mq-deadline registered
+[    1.757840][    T1] io scheduler kyber registered
+[    1.761291][    T1] io scheduler bfq registered
+[    1.787363][    T1] pl061_gpio 9030000.pl061: PL061 GPIO chip registered
+[    1.794374][    T1] pci-host-generic 4010000000.pcie: host bridge /pcie@10000000 ranges:
+[    1.797511][    T1] pci-host-generic 4010000000.pcie:       IO 0x003eff0000..0x003effffff -> 0x0000000000
+[    1.799820][    T1] pci-host-generic 4010000000.pcie:      MEM 0x0010000000..0x003efeffff -> 0x0010000000
+[    1.800889][    T1] pci-host-generic 4010000000.pcie:      MEM 0x8000000000..0xffffffffff -> 0x8000000000
+[    1.803093][    T1] pci-host-generic 4010000000.pcie: Memory resource size exceeds max for 32 bits
+[    1.805420][    T1] pci-host-generic 4010000000.pcie: ECAM at [mem 0x4010000000-0x401fffffff] for [bus 00-ff]
+[    1.812693][    T1] pci-host-generic 4010000000.pcie: PCI host bridge to bus 0000:00
+[    1.814777][    T1] pci_bus 0000:00: root bus resource [bus 00-ff]
+[    1.815820][    T1] pci_bus 0000:00: root bus resource [io  0x0000-0xffff]
+[    1.816739][    T1] pci_bus 0000:00: root bus resource [mem 0x10000000-0x3efeffff]
+[    1.817585][    T1] pci_bus 0000:00: root bus resource [mem 0x8000000000-0xffffffffff]
+[    1.823628][    T1] pci 0000:00:00.0: [1b36:0008] type 00 class 0x060000
+[    1.839638][    T1] pci 0000:00:01.0: [1af4:1000] type 00 class 0x020000
+[    1.841200][    T1] pci 0000:00:01.0: reg 0x10: [io  0x0000-0x001f]
+[    1.842112][    T1] pci 0000:00:01.0: reg 0x14: [mem 0x00000000-0x00000fff]
+[    1.843408][    T1] pci 0000:00:01.0: reg 0x20: [mem 0x00000000-0x00003fff 64bit pref]
+[    1.844498][    T1] pci 0000:00:01.0: reg 0x30: [mem 0x00000000-0x0003ffff pref]
+[    1.854643][    T1] pci 0000:00:01.0: BAR 6: assigned [mem 0x10000000-0x1003ffff pref]
+[    1.855821][    T1] pci 0000:00:01.0: BAR 4: assigned [mem 0x8000000000-0x8000003fff 64bit pref]
+[    1.856875][    T1] pci 0000:00:01.0: BAR 1: assigned [mem 0x10040000-0x10040fff]
+[    1.857568][    T1] pci 0000:00:01.0: BAR 0: assigned [io  0x1000-0x101f]
+[    1.887087][    T1] printk: console [ttynull0] enabled
+[    1.893703][   T20] cacheinfo: Unable to detect cache hierarchy for CPU 0
+[    2.031624][    T1] brd: module loaded
+[    2.240194][    T1] loop: module loaded
+[    2.274611][    T1] wireguard: WireGuard 1.0.0 loaded. See www.wireguard.com for information.
+[    2.275036][    T1] wireguard: Copyright (C) 2015-2019 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
+[    2.285371][    T1] MACsec IEEE 802.1AE
+[    2.300931][    T1] tun: Universal TUN/TAP device driver, 1.6
+[    2.303112][    T1] usbcore: registered new interface driver rtl8150
+[    2.304163][    T1] usbcore: registered new interface driver r8152
+[    2.304973][    T1] usbcore: registered new interface driver asix
+[    2.305751][    T1] usbcore: registered new interface driver ax88179_178a
+[    2.306929][    T1] usbcore: registered new interface driver cdc_ether
+[    2.307697][    T1] usbcore: registered new interface driver cdc_eem
+[    2.308699][    T1] usbcore: registered new interface driver cdc_ncm
+[    2.309502][    T1] usbcore: registered new interface driver aqc111
+[    2.310480][    T1] usbcore: registered new interface driver r8153_ecm
+[    2.320286][    T1] usbcore: registered new interface driver uas
+[    2.321495][    T1] usbcore: registered new interface driver usb-storage
+[    2.330325][    T1] usbcore: registered new interface driver xpad
+[    2.343007][    T1] rtc-pl031 9010000.pl031: registered as rtc0
+[    2.345192][    T1] rtc-pl031 9010000.pl031: setting system clock to 2026-07-20T08:56:26 UTC (1784537786)
+[    2.349165][    T1] gspca_main: v2.14.0 registered
+[    2.350748][    T1] usbcore: registered new interface driver uvcvideo
+[    2.354792][    T1] device-mapper: uevent: version 1.0.3
+[    2.358997][    T1] device-mapper: ioctl: 4.47.0-ioctl (2022-07-28) initialised: dm-devel@redhat.com
+[    2.373676][    T1] sdhci: Secure Digital Host Controller Interface driver
+[    2.374049][    T1] sdhci: Copyright(c) Pierre Ossman
+[    2.374611][    T1] sdhci-pltfm: SDHCI platform and OF driver helper
+[    2.379825][    T1] hid: raw HID events driver (C) Jiri Kosina
+[    2.400009][    T1] usbcore: registered new interface driver usbhid
+[    2.400396][    T1] usbhid: USB HID core driver
+[    2.404639][    T1] ashmem: initialized
+[    2.409417][    T1] gnss: GNSS driver registered with major 506
+[    2.415787][    T1] usbcore: registered new interface driver snd-usb-audio
+[    2.422497][    T1] GACT probability NOT on
+[    2.423320][    T1] Mirror/redirect action on
+[    2.425139][    T1] netem: version 1.3
+[    2.427340][    T1] u32 classifier
+[    2.427739][    T1]     input device check on
+[    2.428203][    T1]     Actions configured
+[    2.453261][    T1] xt_time: kernel timezone is -0000
+[    2.455342][    T1] ipip: IPv4 and MPLS over IPv4 tunneling driver
+[    2.465463][    T1] gre: GRE over IPv4 demultiplexor driver
+[    2.466096][    T1] ip_gre: GRE over IPv4 tunneling driver
+[    2.483590][    T1] IPv4 over IPsec tunneling driver
+[    2.493820][    T1] Initializing XFRM netlink socket
+[    2.495036][    T1] IPsec XFRM device driver
+[    2.504346][    T1] NET: Registered PF_INET6 protocol family
+[    2.541374][    T1] Segment Routing with IPv6
+[    2.542324][    T1] In-situ OAM (IOAM) with IPv6
+[    2.545962][    T1] mip6: Mobile IPv6
+[    2.557335][    T1] sit: IPv6, IPv4 and MPLS over IPv4 tunneling driver
+[    2.573186][    T1] ip6_gre: GRE over IPv6 tunneling driver
+[    2.582436][    T1] NET: Registered PF_PACKET protocol family
+[    2.583325][    T1] NET: Registered PF_KEY protocol family
+[    2.587607][    T1] NET: Registered PF_VSOCK protocol family
+[    2.603258][    T1] registered taskstats version 1
+[    2.604340][    T1] Loading compiled-in X.509 certificates
+[    2.607679][    T1] page_owner is disabled
+[    2.610833][    T1] Key type .fscrypt registered
+[    2.611299][    T1] Key type fscrypt-provisioning registered
+[    2.649918][    T1] input: gpio-keys as /devices/platform/gpio-keys/input/input0
+[    2.671050][    T1] ALSA device list:
+[    2.671450][    T1]   No soundcards found.
+[    2.678943][    T1] uart-pl011 9000000.pl011: no DMA platform data
+[    2.754329][    T1] Freeing unused kernel memory: 2944K
+[    2.756817][    T1] Run /init as init process
+[    2.874156][   T54] busybox (54) used greatest stack depth: 13584 bytes left
+[    2.922069][   T56] busybox (56) used greatest stack depth: 13040 bytes left
+=====================================
+Executing CVE-2026-46242 Trigger Harness...
+[*] Starting CVE-2026-46242 trigger-only reproducer loop...
+[*] Sleeping for 5 seconds to let GDB attach...
+[   36.295001][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for 26s! [cve_2026_46242_:63]
+[   36.300129][    C0] Modules linked in:
+[   36.302162][    C0] CPU: 0 PID: 63 Comm: cve_2026_46242_ Not tainted 6.1.23-00258-g0329e37631ce-dirty #1
+[   36.302820][    C0] Hardware name: linux,dummy-virt (DT)
+[   36.303306][    C0] pstate: 60402005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   36.303841][    C0] pc : __ep_remove+0x1b4/0x23c
+[   36.304992][    C0] lr : __ep_remove+0x80/0x23c
+[   36.305270][    C0] sp : ffffffc00a0d3c20
+[   36.305527][    C0] x29: ffffffc00a0d3c20 x28: f2ffff80037d3540 x27: 0000000000000000
+[   36.306360][    C0] x26: 0000000000000000 x25: 0000000000000004 x24: f9ffff8002913500
+[   36.306852][    C0] x23: 0000000000000000 x22: ffffff807fa24000 x21: f9ffff8002913530
+[   36.307329][    C0] x20: fdffff8003da5b80 x19: 0000000000000001 x18: ffffffc00a0cb048
+[   36.307812][    C0] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[   36.308293][    C0] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[   36.308767][    C0] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[   36.309278][    C0] x8 : 0000000000000040 x7 : ffffff8003da4a80 x6 : 0000000000000020
+[   36.309766][    C0] x5 : 0000000000ff0000 x4 : 0000000000000000 x3 : f9ffff8002913530
+[   36.310276][    C0] x2 : ffffffc009397b78 x1 : f6ffff80037a1fa0 x0 : ffffffc009397b60
+[   36.311018][    C0] Call trace:
+[   36.311344][    C0]  __ep_remove+0x1b4/0x23c
+[   36.311851][    C0]  ep_clear_and_put+0xc8/0x138
+[   36.312176][    C0]  ep_eventpoll_release+0x1c/0x40
+[   36.312485][    C0]  __fput+0xbc/0x260
+[   36.312734][    C0]  ____fput+0x14/0x24
+[   36.312959][    C0]  task_work_run+0x78/0xe0
+[   36.313217][    C0]  do_notify_resume+0x220/0x1320
+[   36.313487][    C0]  el0_svc+0xbc/0xc0
+[   36.313841][    C0]  el0t_64_sync_handler+0x11c/0x128
+[   36.314349][    C0]  el0t_64_sync+0x1a0/0x1a4
+[   60.294243][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for 49s! [cve_2026_46242_:63]
+[   60.294944][    C0] Modules linked in:
+[   60.295461][    C0] CPU: 0 PID: 63 Comm: cve_2026_46242_ Tainted: G             L     6.1.23-00258-g0329e37631ce-dirty #1
+[   60.296329][    C0] Hardware name: linux,dummy-virt (DT)
+[   60.296828][    C0] pstate: 60402005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   60.297442][    C0] pc : __ep_remove+0x1b4/0x23c
+[   60.297877][    C0] lr : __ep_remove+0x80/0x23c
+[   60.298301][    C0] sp : ffffffc00a0d3c20
+[   60.298650][    C0] x29: ffffffc00a0d3c20 x28: f2ffff80037d3540 x27: 0000000000000000
+[   60.299386][    C0] x26: 0000000000000000 x25: 0000000000000004 x24: f9ffff8002913500
+[   60.300121][    C0] x23: 0000000000000000 x22: ffffff807fa24000 x21: f9ffff8002913530
+[   60.300936][    C0] x20: fdffff8003da5b80 x19: 0000000000000001 x18: ffffffc00a0cb048
+[   60.301742][    C0] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[   60.302660][    C0] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[   60.303499][    C0] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[   60.304340][    C0] x8 : 0000000000000040 x7 : ffffff8003da4a80 x6 : 0000000000000020
+[   60.305093][    C0] x5 : 0000000000ff0000 x4 : 0000000000000000 x3 : f9ffff8002913530
+[   60.305922][    C0] x2 : ffffffc009397b78 x1 : f6ffff80037a1fa0 x0 : ffffffc009397b60
+[   60.306849][    C0] Call trace:
+[   60.307196][    C0]  __ep_remove+0x1b4/0x23c
+[   60.307619][    C0]  ep_clear_and_put+0xc8/0x138
+[   60.308133][    C0]  ep_eventpoll_release+0x1c/0x40
+[   60.308627][    C0]  __fput+0xbc/0x260
+[   60.309079][    C0]  ____fput+0x14/0x24
+[   60.309541][    C0]  task_work_run+0x78/0xe0
+[   60.310022][    C0]  do_notify_resume+0x220/0x1320
+[   60.310588][    C0]  el0_svc+0xbc/0xc0
+[   60.311107][    C0]  el0t_64_sync_handler+0x11c/0x128
+[   60.311635][    C0]  el0t_64_sync+0x1a0/0x1a4
+[   62.566452][    C0] BUG: workqueue lockup - pool cpus=0 node=0 flags=0x0 nice=0 stuck for 53s!
+[   62.567716][    C0] Showing busy workqueues and worker pools:
+[   62.568142][    C0] workqueue events: flags=0x0
+[   62.568659][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=2/256 refcnt=3
+[   62.569066][    C0]     pending: vmstat_shepherd, psi_avgs_work
+[   62.569469][    C0] workqueue events_unbound: flags=0x2
+[   62.570771][    C0]   pwq 4: cpus=0-1 flags=0x4 nice=0 active=1/512 refcnt=3
+[   62.570976][    C0]     in-flight: 10:toggle_allocation_gate
+[   62.571184][    C0] workqueue events_power_efficient: flags=0x80
+[   62.572118][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=2/256 refcnt=3
+[   62.572271][    C0]     pending: neigh_managed_work, neigh_periodic_work
+[   62.572409][    C0] workqueue dm_bufio_cache: flags=0x8
+[   62.573523][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+[   62.573647][    C0]     pending: work_fn
+[   62.573896][    C0] pool 4: cpus=0-1 flags=0x4 nice=0 hung=0s workers=4 idle: 8 41 38
+[   88.294231][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for 75s! [cve_2026_46242_:63]
+[   88.294743][    C0] Modules linked in:
+[   88.295015][    C0] CPU: 0 PID: 63 Comm: cve_2026_46242_ Tainted: G             L     6.1.23-00258-g0329e37631ce-dirty #1
+[   88.295547][    C0] Hardware name: linux,dummy-virt (DT)
+[   88.295831][    C0] pstate: 60402005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   88.296222][    C0] pc : __ep_remove+0x1b4/0x23c
+[   88.296525][    C0] lr : __ep_remove+0x80/0x23c
+[   88.296789][    C0] sp : ffffffc00a0d3c20
+[   88.297031][    C0] x29: ffffffc00a0d3c20 x28: f2ffff80037d3540 x27: 0000000000000000
+[   88.297503][    C0] x26: 0000000000000000 x25: 0000000000000004 x24: f9ffff8002913500
+[   88.297977][    C0] x23: 0000000000000000 x22: ffffff807fa24000 x21: f9ffff8002913530
+[   88.298607][    C0] x20: fdffff8003da5b80 x19: 0000000000000001 x18: ffffffc00a0cb048
+[   88.299110][    C0] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[   88.299599][    C0] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[   88.300083][    C0] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[   88.300588][    C0] x8 : 0000000000000040 x7 : ffffff8003da4a80 x6 : 0000000000000020
+[   88.301071][    C0] x5 : 0000000000ff0000 x4 : 0000000000000000 x3 : f9ffff8002913530
+[   88.301555][    C0] x2 : ffffffc009397b78 x1 : f6ffff80037a1fa0 x0 : ffffffc009397b60
+[   88.302045][    C0] Call trace:
+[   88.302406][    C0]  __ep_remove+0x1b4/0x23c
+[   88.302712][    C0]  ep_clear_and_put+0xc8/0x138
+[   88.303003][    C0]  ep_eventpoll_release+0x1c/0x40
+[   88.303298][    C0]  __fput+0xbc/0x260
+[   88.303559][    C0]  ____fput+0x14/0x24
+[   88.303811][    C0]  task_work_run+0x78/0xe0
+[   88.304089][    C0]  do_notify_resume+0x220/0x1320
+[   88.304378][    C0]  el0_svc+0xbc/0xc0
+[   88.304641][    C0]  el0t_64_sync_handler+0x11c/0x128
+[   88.304943][    C0]  el0t_64_sync+0x1a0/0x1a4
+[   93.286458][    C0] BUG: workqueue lockup - pool cpus=0 node=0 flags=0x0 nice=0 stuck for 84s!
+[   93.287338][    C0] Showing busy workqueues and worker pools:
+[   93.287782][    C0] workqueue events: flags=0x0
+[   93.288122][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=2/256 refcnt=3
+[   93.288263][    C0]     pending: vmstat_shepherd, psi_avgs_work
+[   93.288394][    C0] workqueue events_unbound: flags=0x2
+[   93.289556][    C0]   pwq 4: cpus=0-1 flags=0x4 nice=0 active=1/512 refcnt=3
+[   93.289681][    C0]     in-flight: 10:toggle_allocation_gate
+[   93.289779][    C0] workqueue events_power_efficient: flags=0x80
+[   93.291226][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=3/256 refcnt=4
+[   93.291360][    C0]     pending: neigh_managed_work, neigh_periodic_work, gc_worker
+[   93.291568][    C0] workqueue dm_bufio_cache: flags=0x8
+[   93.292713][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+[   93.292890][    C0]     pending: work_fn
+[   93.292999][    C0] pool 4: cpus=0-1 flags=0x4 nice=0 hung=1s workers=4 idle: 8 41 38
+[  120.294258][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for 105s! [cve_2026_46242_:63]
+[  120.294730][    C0] Modules linked in:
+[  120.294989][    C0] CPU: 0 PID: 63 Comm: cve_2026_46242_ Tainted: G             L     6.1.23-00258-g0329e37631ce-dirty #1
+[  120.295491][    C0] Hardware name: linux,dummy-virt (DT)
+[  120.295768][    C0] pstate: 60402005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  120.296153][    C0] pc : __ep_remove+0x1b4/0x23c
+[  120.296439][    C0] lr : __ep_remove+0x80/0x23c
+[  120.296708][    C0] sp : ffffffc00a0d3c20
+[  120.296933][    C0] x29: ffffffc00a0d3c20 x28: f2ffff80037d3540 x27: 0000000000000000
+[  120.297420][    C0] x26: 0000000000000000 x25: 0000000000000004 x24: f9ffff8002913500
+[  120.297893][    C0] x23: 0000000000000000 x22: ffffff807fa24000 x21: f9ffff8002913530
+[  120.298418][    C0] x20: fdffff8003da5b80 x19: 0000000000000001 x18: ffffffc00a0cb048
+[  120.298887][    C0] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[  120.299357][    C0] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[  120.299835][    C0] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[  120.300307][    C0] x8 : 0000000000000040 x7 : ffffff8003da4a80 x6 : 0000000000000020
+[  120.300788][    C0] x5 : 0000000000ff0000 x4 : 0000000000000000 x3 : f9ffff8002913530
+[  120.301277][    C0] x2 : ffffffc009397b78 x1 : f6ffff80037a1fa0 x0 : ffffffc009397b60
+[  120.301768][    C0] Call trace:
+[  120.301976][    C0]  __ep_remove+0x1b4/0x23c
+[  120.302305][    C0]  ep_clear_and_put+0xc8/0x138
+[  120.302598][    C0]  ep_eventpoll_release+0x1c/0x40
+[  120.302891][    C0]  __fput+0xbc/0x260
+[  120.303144][    C0]  ____fput+0x14/0x24
+[  120.303393][    C0]  task_work_run+0x78/0xe0
+[  120.303679][    C0]  do_notify_resume+0x220/0x1320
+[  120.303972][    C0]  el0_svc+0xbc/0xc0
+[  120.304224][    C0]  el0t_64_sync_handler+0x11c/0x128
+[  120.304535][    C0]  el0t_64_sync+0x1a0/0x1a4
+[  124.006332][    C0] BUG: workqueue lockup - pool cpus=0 node=0 flags=0x0 nice=0 stuck for 115s!
+[  124.007107][    C0] Showing busy workqueues and worker pools:
+[  124.007559][    C0] workqueue events: flags=0x0
+[  124.007956][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=2/256 refcnt=3
+[  124.008079][    C0]     pending: vmstat_shepherd, psi_avgs_work
+[  124.008199][    C0] workqueue events_unbound: flags=0x2
+[  124.009530][    C0]   pwq 4: cpus=0-1 flags=0x4 nice=0 active=1/512 refcnt=3
+[  124.009631][    C0]     in-flight: 10:toggle_allocation_gate
+[  124.009711][    C0] workqueue events_power_efficient: flags=0x80
+[  124.011324][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=3/256 refcnt=4
+[  124.011446][    C0]     pending: neigh_managed_work, neigh_periodic_work, gc_worker
+[  124.011620][    C0] workqueue dm_bufio_cache: flags=0x8
+[  124.013261][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+[  124.013459][    C0]     pending: work_fn
+[  124.013593][    C0] pool 4: cpus=0-1 flags=0x4 nice=0 hung=1s workers=4 idle: 8 41 38
+[  148.294262][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for 131s! [cve_2026_46242_:63]
+[  148.294822][    C0] Modules linked in:
+[  148.295271][    C0] CPU: 0 PID: 63 Comm: cve_2026_46242_ Tainted: G             L     6.1.23-00258-g0329e37631ce-dirty #1
+[  148.296345][    C0] Hardware name: linux,dummy-virt (DT)
+[  148.296906][    C0] pstate: 60402005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  148.297644][    C0] pc : __ep_remove+0x1b4/0x23c
+[  148.298064][    C0] lr : __ep_remove+0x80/0x23c
+[  148.298573][    C0] sp : ffffffc00a0d3c20
+[  148.298953][    C0] x29: ffffffc00a0d3c20 x28: f2ffff80037d3540 x27: 0000000000000000
+[  148.299822][    C0] x26: 0000000000000000 x25: 0000000000000004 x24: f9ffff8002913500
+[  148.300653][    C0] x23: 0000000000000000 x22: ffffff807fa24000 x21: f9ffff8002913530
+[  148.301507][    C0] x20: fdffff8003da5b80 x19: 0000000000000001 x18: ffffffc00a0cb048
+[  148.302466][    C0] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[  148.303327][    C0] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[  148.304254][    C0] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[  148.305180][    C0] x8 : 0000000000000040 x7 : ffffff8003da4a80 x6 : 0000000000000020
+[  148.306103][    C0] x5 : 0000000000ff0000 x4 : 0000000000000000 x3 : f9ffff8002913530
+[  148.307028][    C0] x2 : ffffffc009397b78 x1 : f6ffff80037a1fa0 x0 : ffffffc009397b60
+[  148.307883][    C0] Call trace:
+[  148.308272][    C0]  __ep_remove+0x1b4/0x23c
+[  148.308798][    C0]  ep_clear_and_put+0xc8/0x138
+[  148.309327][    C0]  ep_eventpoll_release+0x1c/0x40
+[  148.309900][    C0]  __fput+0xbc/0x260
+[  148.310432][    C0]  ____fput+0x14/0x24
+[  148.310826][    C0]  task_work_run+0x78/0xe0
+[  148.311128][    C0]  do_notify_resume+0x220/0x1320
+[  148.311439][    C0]  el0_svc+0xbc/0xc0
+[  148.311720][    C0]  el0t_64_sync_handler+0x11c/0x128
+[  148.312051][    C0]  el0t_64_sync+0x1a0/0x1a4
+[  154.726341][    C0] BUG: workqueue lockup - pool cpus=0 node=0 flags=0x0 nice=0 stuck for 145s!
+[  154.727028][    C0] Showing busy workqueues and worker pools:
+[  154.727344][    C0] workqueue events: flags=0x0
+[  154.727641][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=2/256 refcnt=3
+[  154.727758][    C0]     pending: vmstat_shepherd, psi_avgs_work
+[  154.727873][    C0] workqueue events_unbound: flags=0x2
+[  154.728823][    C0]   pwq 4: cpus=0-1 flags=0x4 nice=0 active=1/512 refcnt=3
+[  154.728919][    C0]     in-flight: 10:toggle_allocation_gate
+[  154.728997][    C0] workqueue events_power_efficient: flags=0x80
+[  154.729963][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=3/256 refcnt=4
+[  154.730071][    C0]     pending: neigh_managed_work, neigh_periodic_work, gc_worker
+[  154.731142][    C0] workqueue dm_bufio_cache: flags=0x8
+[  154.731459][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+[  154.731582][    C0]     pending: work_fn
+[  154.731655][    C0] workqueue ipv6_addrconf: flags=0x40008
+[  154.732554][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/1 refcnt=2
+[  154.732664][    C0]     pending: addrconf_verify_work
+[  154.732755][    C0] pool 4: cpus=0-1 flags=0x4 nice=0 hung=0s workers=4 idle: 8 41 38
+[  180.294259][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for 160s! [cve_2026_46242_:63]
+[  180.294916][    C0] Modules linked in:
+[  180.295296][    C0] CPU: 0 PID: 63 Comm: cve_2026_46242_ Tainted: G             L     6.1.23-00258-g0329e37631ce-dirty #1
+[  180.296180][    C0] Hardware name: linux,dummy-virt (DT)
+[  180.296650][    C0] pstate: 60402005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  180.297317][    C0] pc : __ep_remove+0x1b4/0x23c
+[  180.297626][    C0] lr : __ep_remove+0x80/0x23c
+[  180.297919][    C0] sp : ffffffc00a0d3c20
+[  180.298163][    C0] x29: ffffffc00a0d3c20 x28: f2ffff80037d3540 x27: 0000000000000000
+[  180.298702][    C0] x26: 0000000000000000 x25: 0000000000000004 x24: f9ffff8002913500
+[  180.299294][    C0] x23: 0000000000000000 x22: ffffff807fa24000 x21: f9ffff8002913530
+[  180.299783][    C0] x20: fdffff8003da5b80 x19: 0000000000000001 x18: ffffffc00a0cb048
+[  180.300262][    C0] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[  180.300749][    C0] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[  180.301234][    C0] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[  180.301732][    C0] x8 : 0000000000000040 x7 : ffffff8003da4a80 x6 : 0000000000000020
+[  180.302227][    C0] x5 : 0000000000ff0000 x4 : 0000000000000000 x3 : f9ffff8002913530
+[  180.302712][    C0] x2 : ffffffc009397b78 x1 : f6ffff80037a1fa0 x0 : ffffffc009397b60
+[  180.303183][    C0] Call trace:
+[  180.303376][    C0]  __ep_remove+0x1b4/0x23c
+[  180.303659][    C0]  ep_clear_and_put+0xc8/0x138
+[  180.303939][    C0]  ep_eventpoll_release+0x1c/0x40
+[  180.304223][    C0]  __fput+0xbc/0x260
+[  180.304468][    C0]  ____fput+0x14/0x24
+[  180.304721][    C0]  task_work_run+0x78/0xe0
+[  180.304986][    C0]  do_notify_resume+0x220/0x1320
+[  180.305264][    C0]  el0_svc+0xbc/0xc0
+[  180.305502][    C0]  el0t_64_sync_handler+0x11c/0x128
+[  180.305802][    C0]  el0t_64_sync+0x1a0/0x1a4
+[  185.446370][    C0] BUG: workqueue lockup - pool cpus=0 node=0 flags=0x0 nice=0 stuck for 176s!
+[  185.447237][    C0] Showing busy workqueues and worker pools:
+[  185.447523][    C0] workqueue events: flags=0x0
+[  185.447748][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=2/256 refcnt=3
+[  185.447862][    C0]     pending: vmstat_shepherd, psi_avgs_work
+[  185.447977][    C0] workqueue events_unbound: flags=0x2
+[  185.448897][    C0]   pwq 4: cpus=0-1 flags=0x4 nice=0 active=1/512 refcnt=3
+[  185.449007][    C0]     in-flight: 10:toggle_allocation_gate
+[  185.449096][    C0] workqueue events_power_efficient: flags=0x80
+[  185.450631][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=3/256 refcnt=4
+[  185.450772][    C0]     pending: neigh_managed_work, neigh_periodic_work, gc_worker
+[  185.450942][    C0] workqueue dm_bufio_cache: flags=0x8
+[  185.452059][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+[  185.452176][    C0]     pending: work_fn
+[  185.452251][    C0] workqueue ipv6_addrconf: flags=0x40008
+[  185.453390][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/1 refcnt=2
+[  185.453525][    C0]     pending: addrconf_verify_work
+[  185.453618][    C0] pool 4: cpus=0-1 flags=0x4 nice=0 hung=0s workers=4 idle: 8 41 38
+[  212.294232][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for 190s! [cve_2026_46242_:63]
+[  212.295001][    C0] Modules linked in:
+[  212.295427][    C0] CPU: 0 PID: 63 Comm: cve_2026_46242_ Tainted: G             L     6.1.23-00258-g0329e37631ce-dirty #1
+[  212.296344][    C0] Hardware name: linux,dummy-virt (DT)
+[  212.296835][    C0] pstate: 60402005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  212.297619][    C0] pc : __ep_remove+0x1b4/0x23c
+[  212.298116][    C0] lr : __ep_remove+0x80/0x23c
+[  212.298632][    C0] sp : ffffffc00a0d3c20
+[  212.299054][    C0] x29: ffffffc00a0d3c20 x28: f2ffff80037d3540 x27: 0000000000000000
+[  212.299842][    C0] x26: 0000000000000000 x25: 0000000000000004 x24: f9ffff8002913500
+[  212.300613][    C0] x23: 0000000000000000 x22: ffffff807fa24000 x21: f9ffff8002913530
+[  212.301373][    C0] x20: fdffff8003da5b80 x19: 0000000000000001 x18: ffffffc00a0cb048
+[  212.302208][    C0] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[  212.303038][    C0] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[  212.303854][    C0] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[  212.304760][    C0] x8 : 0000000000000040 x7 : ffffff8003da4a80 x6 : 0000000000000020
+[  212.305582][    C0] x5 : 0000000000ff0000 x4 : 0000000000000000 x3 : f9ffff8002913530
+[  212.306504][    C0] x2 : ffffffc009397b78 x1 : f6ffff80037a1fa0 x0 : ffffffc009397b60
+[  212.307301][    C0] Call trace:
+[  212.307634][    C0]  __ep_remove+0x1b4/0x23c
+[  212.308081][    C0]  ep_clear_and_put+0xc8/0x138
+[  212.308553][    C0]  ep_eventpoll_release+0x1c/0x40
+[  212.309059][    C0]  __fput+0xbc/0x260
+[  212.309486][    C0]  ____fput+0x14/0x24
+[  212.309933][    C0]  task_work_run+0x78/0xe0
+[  212.310492][    C0]  do_notify_resume+0x220/0x1320
+[  212.311020][    C0]  el0_svc+0xbc/0xc0
+[  212.311573][    C0]  el0t_64_sync_handler+0x11c/0x128
+[  212.312066][    C0]  el0t_64_sync+0x1a0/0x1a4
+[  216.166559][    C0] BUG: workqueue lockup - pool cpus=0 node=0 flags=0x0 nice=0 stuck for 207s!
+[  216.167642][    C0] Showing busy workqueues and worker pools:
+[  216.168135][    C0] workqueue events: flags=0x0
+[  216.168603][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=2/256 refcnt=3
+[  216.168831][    C0]     pending: vmstat_shepherd, psi_avgs_work
+[  216.169054][    C0] workqueue events_unbound: flags=0x2
+[  216.171567][    C0]   pwq 4: cpus=0-1 flags=0x4 nice=0 active=1/512 refcnt=3
+[  216.171776][    C0]     in-flight: 10:toggle_allocation_gate
+[  216.171881][    C0] workqueue events_power_efficient: flags=0x80
+[  216.172924][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=3/256 refcnt=4
+[  216.173056][    C0]     pending: neigh_managed_work, neigh_periodic_work, gc_worker
+[  216.173215][    C0] workqueue dm_bufio_cache: flags=0x8
+[  216.174450][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+[  216.174592][    C0]     pending: work_fn
+[  216.174665][    C0] workqueue ipv6_addrconf: flags=0x40008
+[  216.175578][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/1 refcnt=2
+[  216.175697][    C0]     pending: addrconf_verify_work
+[  216.175782][    C0] pool 4: cpus=0-1 flags=0x4 nice=0 hung=0s workers=4 idle: 8 41 38
+[  240.294190][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for 216s! [cve_2026_46242_:63]
+[  240.294692][    C0] Modules linked in:
+[  240.294946][    C0] CPU: 0 PID: 63 Comm: cve_2026_46242_ Tainted: G             L     6.1.23-00258-g0329e37631ce-dirty #1
+[  240.295468][    C0] Hardware name: linux,dummy-virt (DT)
+[  240.295737][    C0] pstate: 60402005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  240.296111][    C0] pc : __ep_remove+0x1b4/0x23c
+[  240.296391][    C0] lr : __ep_remove+0x80/0x23c
+[  240.296658][    C0] sp : ffffffc00a0d3c20
+[  240.296874][    C0] x29: ffffffc00a0d3c20 x28: f2ffff80037d3540 x27: 0000000000000000
+[  240.297339][    C0] x26: 0000000000000000 x25: 0000000000000004 x24: f9ffff8002913500
+[  240.297799][    C0] x23: 0000000000000000 x22: ffffff807fa24000 x21: f9ffff8002913530
+[  240.298306][    C0] x20: fdffff8003da5b80 x19: 0000000000000001 x18: ffffffc00a0cb048
+[  240.298774][    C0] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[  240.299226][    C0] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[  240.299731][    C0] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[  240.300212][    C0] x8 : 0000000000000040 x7 : ffffff8003da4a80 x6 : 0000000000000020
+[  240.300706][    C0] x5 : 0000000000ff0000 x4 : 0000000000000000 x3 : f9ffff8002913530
+[  240.301186][    C0] x2 : ffffffc009397b78 x1 : f6ffff80037a1fa0 x0 : ffffffc009397b60
+[  240.301683][    C0] Call trace:
+[  240.301884][    C0]  __ep_remove+0x1b4/0x23c
+[  240.302164][    C0]  ep_clear_and_put+0xc8/0x138
+[  240.302485][    C0]  ep_eventpoll_release+0x1c/0x40
+[  240.302792][    C0]  __fput+0xbc/0x260
+[  240.303046][    C0]  ____fput+0x14/0x24
+[  240.303303][    C0]  task_work_run+0x78/0xe0
+[  240.303589][    C0]  do_notify_resume+0x220/0x1320
+[  240.303886][    C0]  el0_svc+0xbc/0xc0
+[  240.304138][    C0]  el0t_64_sync_handler+0x11c/0x128
+[  240.304449][    C0]  el0t_64_sync+0x1a0/0x1a4
+[  246.886341][    C0] BUG: workqueue lockup - pool cpus=0 node=0 flags=0x0 nice=0 stuck for 237s!
+[  246.887299][    C0] Showing busy workqueues and worker pools:
+[  246.887681][    C0] workqueue events: flags=0x0
+[  246.888005][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=2/256 refcnt=3
+[  246.888164][    C0]     pending: vmstat_shepherd, psi_avgs_work
+[  246.888349][    C0] workqueue events_unbound: flags=0x2
+[  246.889960][    C0]   pwq 4: cpus=0-1 flags=0x4 nice=0 active=1/512 refcnt=3
+[  246.890078][    C0]     in-flight: 10:toggle_allocation_gate
+[  246.891507][    C0] workqueue events_power_efficient: flags=0x80
+[  246.892149][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=3/256 refcnt=4
+[  246.892290][    C0]     pending: neigh_managed_work, neigh_periodic_work, gc_worker
+[  246.892486][    C0] workqueue dm_bufio_cache: flags=0x8
+[  246.893731][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+[  246.893860][    C0]     pending: work_fn
+[  246.893943][    C0] workqueue ipv6_addrconf: flags=0x40008
+[  246.895107][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/1 refcnt=2
+[  246.895244][    C0]     pending: addrconf_verify_work
+[  246.895341][    C0] pool 4: cpus=0-1 flags=0x4 nice=0 hung=1s workers=4 idle: 8 41 38
+[  272.294245][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for 246s! [cve_2026_46242_:63]
+[  272.294995][    C0] Modules linked in:
+[  272.295359][    C0] CPU: 0 PID: 63 Comm: cve_2026_46242_ Tainted: G             L     6.1.23-00258-g0329e37631ce-dirty #1
+[  272.296217][    C0] Hardware name: linux,dummy-virt (DT)
+[  272.296693][    C0] pstate: 60402005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  272.297359][    C0] pc : __ep_remove+0x1b4/0x23c
+[  272.297830][    C0] lr : __ep_remove+0x80/0x23c
+[  272.298293][    C0] sp : ffffffc00a0d3c20
+[  272.298679][    C0] x29: ffffffc00a0d3c20 x28: f2ffff80037d3540 x27: 0000000000000000
+[  272.299430][    C0] x26: 0000000000000000 x25: 0000000000000004 x24: f9ffff8002913500
+[  272.300192][    C0] x23: 0000000000000000 x22: ffffff807fa24000 x21: f9ffff8002913530
+[  272.300946][    C0] x20: fdffff8003da5b80 x19: 0000000000000001 x18: ffffffc00a0cb048
+[  272.301700][    C0] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[  272.302454][    C0] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[  272.302949][    C0] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[  272.303411][    C0] x8 : 0000000000000040 x7 : ffffff8003da4a80 x6 : 0000000000000020
+[  272.303884][    C0] x5 : 0000000000ff0000 x4 : 0000000000000000 x3 : f9ffff8002913530
+[  272.304360][    C0] x2 : ffffffc009397b78 x1 : f6ffff80037a1fa0 x0 : ffffffc009397b60
+[  272.304937][    C0] Call trace:
+[  272.305128][    C0]  __ep_remove+0x1b4/0x23c
+[  272.305396][    C0]  ep_clear_and_put+0xc8/0x138
+[  272.305679][    C0]  ep_eventpoll_release+0x1c/0x40
+[  272.305959][    C0]  __fput+0xbc/0x260
+[  272.306239][    C0]  ____fput+0x14/0x24
+[  272.306568][    C0]  task_work_run+0x78/0xe0
+[  272.306834][    C0]  do_notify_resume+0x220/0x1320
+[  272.307111][    C0]  el0_svc+0xbc/0xc0
+[  272.307353][    C0]  el0t_64_sync_handler+0x11c/0x128
+[  272.307661][    C0]  el0t_64_sync+0x1a0/0x1a4
+[  277.606412][    C0] BUG: workqueue lockup - pool cpus=0 node=0 flags=0x0 nice=0 stuck for 268s!
+[  277.607223][    C0] Showing busy workqueues and worker pools:
+[  277.607496][    C0] workqueue events: flags=0x0
+[  277.607735][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=2/256 refcnt=3
+[  277.607849][    C0]     pending: vmstat_shepherd, psi_avgs_work
+[  277.607963][    C0] workqueue events_unbound: flags=0x2
+[  277.608766][    C0]   pwq 4: cpus=0-1 flags=0x4 nice=0 active=1/512 refcnt=3
+[  277.608862][    C0]     in-flight: 10:toggle_allocation_gate
+[  277.608941][    C0] workqueue events_power_efficient: flags=0x80
+[  277.609776][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=3/256 refcnt=4
+[  277.609882][    C0]     pending: neigh_managed_work, neigh_periodic_work, gc_worker
+[  277.610034][    C0] workqueue dm_bufio_cache: flags=0x8
+[  277.611226][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+[  277.611339][    C0]     pending: work_fn
+[  277.611412][    C0] workqueue ipv6_addrconf: flags=0x40008
+[  277.612236][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/1 refcnt=2
+[  277.612344][    C0]     pending: addrconf_verify_work
+[  277.612433][    C0] pool 4: cpus=0-1 flags=0x4 nice=0 hung=1s workers=4 idle: 8 41 38
+[  304.294249][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for 276s! [cve_2026_46242_:63]
+[  304.294738][    C0] Modules linked in:
+[  304.294995][    C0] CPU: 0 PID: 63 Comm: cve_2026_46242_ Tainted: G             L     6.1.23-00258-g0329e37631ce-dirty #1
+[  304.295496][    C0] Hardware name: linux,dummy-virt (DT)
+[  304.295787][    C0] pstate: 60402005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  304.296172][    C0] pc : __ep_remove+0x1b4/0x23c
+[  304.296447][    C0] lr : __ep_remove+0x80/0x23c
+[  304.296716][    C0] sp : ffffffc00a0d3c20
+[  304.296960][    C0] x29: ffffffc00a0d3c20 x28: f2ffff80037d3540 x27: 0000000000000000
+[  304.297430][    C0] x26: 0000000000000000 x25: 0000000000000004 x24: f9ffff8002913500
+[  304.297907][    C0] x23: 0000000000000000 x22: ffffff807fa24000 x21: f9ffff8002913530
+[  304.298681][    C0] x20: fdffff8003da5b80 x19: 0000000000000001 x18: ffffffc00a0cb048
+[  304.299417][    C0] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[  304.300159][    C0] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[  304.300868][    C0] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[  304.301600][    C0] x8 : 0000000000000040 x7 : ffffff8003da4a80 x6 : 0000000000000020
+[  304.302205][    C0] x5 : 0000000000ff0000 x4 : 0000000000000000 x3 : f9ffff8002913530
+[  304.302774][    C0] x2 : ffffffc009397b78 x1 : f6ffff80037a1fa0 x0 : ffffffc009397b60
+[  304.303300][    C0] Call trace:
+[  304.303528][    C0]  __ep_remove+0x1b4/0x23c
+[  304.303825][    C0]  ep_clear_and_put+0xc8/0x138
+[  304.304139][    C0]  ep_eventpoll_release+0x1c/0x40
+[  304.304456][    C0]  __fput+0xbc/0x260
+[  304.304772][    C0]  ____fput+0x14/0x24
+[  304.305057][    C0]  task_work_run+0x78/0xe0
+[  304.305324][    C0]  do_notify_resume+0x220/0x1320
+[  304.305619][    C0]  el0_svc+0xbc/0xc0
+[  304.305870][    C0]  el0t_64_sync_handler+0x11c/0x128
+[  304.306299][    C0]  el0t_64_sync+0x1a0/0x1a4
+[  308.326329][    C0] BUG: workqueue lockup - pool cpus=0 node=0 flags=0x0 nice=0 stuck for 299s!
+[  308.327125][    C0] Showing busy workqueues and worker pools:
+[  308.327588][    C0] workqueue events: flags=0x0
+[  308.327961][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=2/256 refcnt=3
+[  308.328078][    C0]     pending: vmstat_shepherd, psi_avgs_work
+[  308.328190][    C0] workqueue events_unbound: flags=0x2
+[  308.329575][    C0]   pwq 4: cpus=0-1 flags=0x4 nice=0 active=1/512 refcnt=3
+[  308.329675][    C0]     in-flight: 10:toggle_allocation_gate
+[  308.329756][    C0] workqueue events_power_efficient: flags=0x80
+[  308.331404][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=3/256 refcnt=4
+[  308.331530][    C0]     pending: neigh_managed_work, neigh_periodic_work, gc_worker
+[  308.331689][    C0] workqueue dm_bufio_cache: flags=0x8
+[  308.333163][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+[  308.333281][    C0]     pending: work_fn
+[  308.333355][    C0] workqueue ipv6_addrconf: flags=0x40008
+[  308.334809][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/1 refcnt=2
+[  308.334923][    C0]     pending: addrconf_verify_work
+[  308.335014][    C0] pool 4: cpus=0-1 flags=0x4 nice=0 hung=0s workers=4 idle: 8 41 38
+[  336.294267][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for 306s! [cve_2026_46242_:63]
+[  336.294986][    C0] Modules linked in:
+[  336.295378][    C0] CPU: 0 PID: 63 Comm: cve_2026_46242_ Tainted: G             L     6.1.23-00258-g0329e37631ce-dirty #1
+[  336.296213][    C0] Hardware name: linux,dummy-virt (DT)
+[  336.296705][    C0] pstate: 60402005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  336.297325][    C0] pc : __ep_remove+0x1b4/0x23c
+[  336.297788][    C0] lr : __ep_remove+0x80/0x23c
+[  336.298312][    C0] sp : ffffffc00a0d3c20
+[  336.298594][    C0] x29: ffffffc00a0d3c20 x28: f2ffff80037d3540 x27: 0000000000000000
+[  336.299112][    C0] x26: 0000000000000000 x25: 0000000000000004 x24: f9ffff8002913500
+[  336.299609][    C0] x23: 0000000000000000 x22: ffffff807fa24000 x21: f9ffff8002913530
+[  336.300204][    C0] x20: fdffff8003da5b80 x19: 0000000000000001 x18: ffffffc00a0cb048
+[  336.300742][    C0] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[  336.301274][    C0] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[  336.301798][    C0] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[  336.302479][    C0] x8 : 0000000000000040 x7 : ffffff8003da4a80 x6 : 0000000000000020
+[  336.303030][    C0] x5 : 0000000000ff0000 x4 : 0000000000000000 x3 : f9ffff8002913530
+[  336.303520][    C0] x2 : ffffffc009397b78 x1 : f6ffff80037a1fa0 x0 : ffffffc009397b60
+[  336.304042][    C0] Call trace:
+[  336.304265][    C0]  __ep_remove+0x1b4/0x23c
+[  336.304580][    C0]  ep_clear_and_put+0xc8/0x138
+[  336.304886][    C0]  ep_eventpoll_release+0x1c/0x40
+[  336.305212][    C0]  __fput+0xbc/0x260
+[  336.305475][    C0]  ____fput+0x14/0x24
+[  336.305744][    C0]  task_work_run+0x78/0xe0
+[  336.306028][    C0]  do_notify_resume+0x220/0x1320
+[  336.306435][    C0]  el0_svc+0xbc/0xc0
+[  336.306707][    C0]  el0t_64_sync_handler+0x11c/0x128
+[  336.307019][    C0]  el0t_64_sync+0x1a0/0x1a4
+[  339.046423][    C0] BUG: workqueue lockup - pool cpus=0 node=0 flags=0x0 nice=0 stuck for 330s!
+[  339.047227][    C0] Showing busy workqueues and worker pools:
+[  339.047542][    C0] workqueue events: flags=0x0
+[  339.047793][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=2/256 refcnt=3
+[  339.047913][    C0]     pending: vmstat_shepherd, psi_avgs_work
+[  339.048055][    C0] workqueue events_unbound: flags=0x2
+[  339.048923][    C0]   pwq 4: cpus=0-1 flags=0x4 nice=0 active=1/512 refcnt=3
+[  339.049035][    C0]     in-flight: 65:toggle_allocation_gate
+[  339.049117][    C0] workqueue events_power_efficient: flags=0x80
+[  339.050023][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=3/256 refcnt=4
+[  339.050157][    C0]     pending: neigh_managed_work, neigh_periodic_work, gc_worker
+[  339.051215][    C0] workqueue dm_bufio_cache: flags=0x8
+[  339.051502][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+[  339.051624][    C0]     pending: work_fn
+[  339.051697][    C0] workqueue ipv6_addrconf: flags=0x40008
+[  339.052549][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/1 refcnt=2
+[  339.052661][    C0]     pending: addrconf_verify_work
+[  339.052754][    C0] pool 4: cpus=0-1 flags=0x4 nice=0 hung=0s workers=3 idle: 8 10
+[  364.294276][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for 332s! [cve_2026_46242_:63]
+[  364.295089][    C0] Modules linked in:
+[  364.295485][    C0] CPU: 0 PID: 63 Comm: cve_2026_46242_ Tainted: G             L     6.1.23-00258-g0329e37631ce-dirty #1
+[  364.296388][    C0] Hardware name: linux,dummy-virt (DT)
+[  364.296867][    C0] pstate: 60402005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  364.297555][    C0] pc : __ep_remove+0x1b4/0x23c
+[  364.298015][    C0] lr : __ep_remove+0x80/0x23c
+[  364.298535][    C0] sp : ffffffc00a0d3c20
+[  364.298916][    C0] x29: ffffffc00a0d3c20 x28: f2ffff80037d3540 x27: 0000000000000000
+[  364.299723][    C0] x26: 0000000000000000 x25: 0000000000000004 x24: f9ffff8002913500
+[  364.300522][    C0] x23: 0000000000000000 x22: ffffff807fa24000 x21: f9ffff8002913530
+[  364.301340][    C0] x20: fdffff8003da5b80 x19: 0000000000000001 x18: ffffffc00a0cb048
+[  364.302141][    C0] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[  364.302977][    C0] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[  364.303779][    C0] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[  364.304569][    C0] x8 : 0000000000000040 x7 : ffffff8003da4a80 x6 : 0000000000000020
+[  364.305350][    C0] x5 : 0000000000ff0000 x4 : 0000000000000000 x3 : f9ffff8002913530
+[  364.306163][    C0] x2 : ffffffc009397b78 x1 : f6ffff80037a1fa0 x0 : ffffffc009397b60
+[  364.306999][    C0] Call trace:
+[  364.307352][    C0]  __ep_remove+0x1b4/0x23c
+[  364.307836][    C0]  ep_clear_and_put+0xc8/0x138
+[  364.308340][    C0]  ep_eventpoll_release+0x1c/0x40
+[  364.308839][    C0]  __fput+0xbc/0x260
+[  364.309265][    C0]  ____fput+0x14/0x24
+[  364.309695][    C0]  task_work_run+0x78/0xe0
+[  364.310178][    C0]  do_notify_resume+0x220/0x1320
+[  364.310716][    C0]  el0_svc+0xbc/0xc0
+[  364.311128][    C0]  el0t_64_sync_handler+0x11c/0x128
+[  364.311660][    C0]  el0t_64_sync+0x1a0/0x1a4
+[  369.766375][    C0] BUG: workqueue lockup - pool cpus=0 node=0 flags=0x0 nice=0 stuck for 360s!
+[  369.767051][    C0] Showing busy workqueues and worker pools:
+[  369.767360][    C0] workqueue events: flags=0x0
+[  369.767638][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=2/256 refcnt=3
+[  369.767760][    C0]     pending: vmstat_shepherd, psi_avgs_work
+[  369.767883][    C0] workqueue events_unbound: flags=0x2
+[  369.768807][    C0]   pwq 4: cpus=0-1 flags=0x4 nice=0 active=1/512 refcnt=3
+[  369.768908][    C0]     in-flight: 65:toggle_allocation_gate
+[  369.768992][    C0] workqueue events_power_efficient: flags=0x80
+[  369.769952][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=3/256 refcnt=4
+[  369.770068][    C0]     pending: neigh_managed_work, neigh_periodic_work, gc_worker
+[  369.771531][    C0] workqueue dm_bufio_cache: flags=0x8
+[  369.771920][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+[  369.772058][    C0]     pending: work_fn
+[  369.772144][    C0] workqueue ipv6_addrconf: flags=0x40008
+[  369.773227][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/1 refcnt=2
+[  369.773354][    C0]     pending: addrconf_verify_work
+[  369.773453][    C0] pool 4: cpus=0-1 flags=0x4 nice=0 hung=1s workers=3 idle: 8 10
+[  396.294180][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for 362s! [cve_2026_46242_:63]
+[  396.294909][    C0] Modules linked in:
+[  396.295316][    C0] CPU: 0 PID: 63 Comm: cve_2026_46242_ Tainted: G             L     6.1.23-00258-g0329e37631ce-dirty #1
+[  396.296317][    C0] Hardware name: linux,dummy-virt (DT)
+[  396.296825][    C0] pstate: 60402005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  396.297542][    C0] pc : __ep_remove+0x1b4/0x23c
+[  396.298055][    C0] lr : __ep_remove+0x80/0x23c
+[  396.298673][    C0] sp : ffffffc00a0d3c20
+[  396.299098][    C0] x29: ffffffc00a0d3c20 x28: f2ffff80037d3540 x27: 0000000000000000
+[  396.299973][    C0] x26: 0000000000000000 x25: 0000000000000004 x24: f9ffff8002913500
+[  396.300855][    C0] x23: 0000000000000000 x22: ffffff807fa24000 x21: f9ffff8002913530
+[  396.301766][    C0] x20: fdffff8003da5b80 x19: 0000000000000001 x18: ffffffc00a0cb048
+[  396.302736][    C0] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[  396.303610][    C0] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[  396.304510][    C0] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[  396.305368][    C0] x8 : 0000000000000040 x7 : ffffff8003da4a80 x6 : 0000000000000020
+[  396.306316][    C0] x5 : 0000000000ff0000 x4 : 0000000000000000 x3 : f9ffff8002913530
+[  396.306998][    C0] x2 : ffffffc009397b78 x1 : f6ffff80037a1fa0 x0 : ffffffc009397b60
+[  396.307583][    C0] Call trace:
+[  396.307805][    C0]  __ep_remove+0x1b4/0x23c
+[  396.308113][    C0]  ep_clear_and_put+0xc8/0x138
+[  396.308449][    C0]  ep_eventpoll_release+0x1c/0x40
+[  396.308766][    C0]  __fput+0xbc/0x260
+[  396.309037][    C0]  ____fput+0x14/0x24
+[  396.309311][    C0]  task_work_run+0x78/0xe0
+[  396.309646][    C0]  do_notify_resume+0x220/0x1320
+[  396.309956][    C0]  el0_svc+0xbc/0xc0
+[  396.310356][    C0]  el0t_64_sync_handler+0x11c/0x128
+[  396.310858][    C0]  el0t_64_sync+0x1a0/0x1a4
+[  400.486507][    C0] BUG: workqueue lockup - pool cpus=0 node=0 flags=0x0 nice=0 stuck for 391s!
+[  400.487540][    C0] Showing busy workqueues and worker pools:
+[  400.487885][    C0] workqueue events: flags=0x0
+[  400.488160][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=2/256 refcnt=3
+[  400.488294][    C0]     pending: vmstat_shepherd, psi_avgs_work
+[  400.488414][    C0] workqueue events_unbound: flags=0x2
+[  400.489317][    C0]   pwq 4: cpus=0-1 flags=0x4 nice=0 active=1/512 refcnt=3
+[  400.489421][    C0]     in-flight: 65:toggle_allocation_gate
+[  400.489504][    C0] workqueue events_power_efficient: flags=0x80
+[  400.490866][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=3/256 refcnt=4
+[  400.490986][    C0]     pending: neigh_managed_work, neigh_periodic_work, gc_worker
+[  400.491149][    C0] workqueue dm_bufio_cache: flags=0x8
+[  400.492759][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+[  400.492875][    C0]     pending: work_fn
+[  400.492950][    C0] workqueue ipv6_addrconf: flags=0x40008
+[  400.494585][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/1 refcnt=2
+[  400.494700][    C0]     pending: addrconf_verify_work
+[  400.494807][    C0] pool 4: cpus=0-1 flags=0x4 nice=0 hung=1s workers=3 idle: 8 10
+[  428.294251][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for 391s! [cve_2026_46242_:63]
+[  428.295036][    C0] Modules linked in:
+[  428.295406][    C0] CPU: 0 PID: 63 Comm: cve_2026_46242_ Tainted: G             L     6.1.23-00258-g0329e37631ce-dirty #1
+[  428.296212][    C0] Hardware name: linux,dummy-virt (DT)
+[  428.296678][    C0] pstate: 60402005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  428.297324][    C0] pc : __ep_remove+0x1b4/0x23c
+[  428.297666][    C0] lr : __ep_remove+0x80/0x23c
+[  428.297969][    C0] sp : ffffffc00a0d3c20
+[  428.298334][    C0] x29: ffffffc00a0d3c20 x28: f2ffff80037d3540 x27: 0000000000000000
+[  428.298907][    C0] x26: 0000000000000000 x25: 0000000000000004 x24: f9ffff8002913500
+[  428.299404][    C0] x23: 0000000000000000 x22: ffffff807fa24000 x21: f9ffff8002913530
+[  428.299911][    C0] x20: fdffff8003da5b80 x19: 0000000000000001 x18: ffffffc00a0cb048
+[  428.300426][    C0] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[  428.300946][    C0] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[  428.301438][    C0] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[  428.301981][    C0] x8 : 0000000000000040 x7 : ffffff8003da4a80 x6 : 0000000000000020
+[  428.302649][    C0] x5 : 0000000000ff0000 x4 : 0000000000000000 x3 : f9ffff8002913530
+[  428.303148][    C0] x2 : ffffffc009397b78 x1 : f6ffff80037a1fa0 x0 : ffffffc009397b60
+[  428.303655][    C0] Call trace:
+[  428.303862][    C0]  __ep_remove+0x1b4/0x23c
+[  428.304148][    C0]  ep_clear_and_put+0xc8/0x138
+[  428.304438][    C0]  ep_eventpoll_release+0x1c/0x40
+[  428.304745][    C0]  __fput+0xbc/0x260
+[  428.305005][    C0]  ____fput+0x14/0x24
+[  428.305264][    C0]  task_work_run+0x78/0xe0
+[  428.305555][    C0]  do_notify_resume+0x220/0x1320
+[  428.305855][    C0]  el0_svc+0xbc/0xc0
+[  428.306112][    C0]  el0t_64_sync_handler+0x11c/0x128
+[  428.306540][    C0]  el0t_64_sync+0x1a0/0x1a4
+[  431.206301][    C0] BUG: workqueue lockup - pool cpus=0 node=0 flags=0x0 nice=0 stuck for 422s!
+[  431.207162][    C0] Showing busy workqueues and worker pools:
+[  431.207530][    C0] workqueue events: flags=0x0
+[  431.207809][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=2/256 refcnt=3
+[  431.207937][    C0]     pending: vmstat_shepherd, psi_avgs_work
+[  431.208059][    C0] workqueue events_unbound: flags=0x2
+[  431.209028][    C0]   pwq 4: cpus=0-1 flags=0x4 nice=0 active=1/512 refcnt=3
+[  431.209133][    C0]     in-flight: 65:toggle_allocation_gate
+[  431.209220][    C0] workqueue events_power_efficient: flags=0x80
+[  431.210420][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=3/256 refcnt=4
+[  431.210557][    C0]     pending: neigh_managed_work, neigh_periodic_work, gc_worker
+[  431.210724][    C0] workqueue dm_bufio_cache: flags=0x8
+[  431.211733][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+[  431.211847][    C0]     pending: work_fn
+[  431.211921][    C0] workqueue ipv6_addrconf: flags=0x40008
+[  431.213057][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/1 refcnt=2
+[  431.213222][    C0]     pending: addrconf_verify_work
+[  431.213328][    C0] pool 4: cpus=0-1 flags=0x4 nice=0 hung=0s workers=3 idle: 8 10
+[  456.294228][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for 417s! [cve_2026_46242_:63]
+[  456.294962][    C0] Modules linked in:
+[  456.295262][    C0] CPU: 0 PID: 63 Comm: cve_2026_46242_ Tainted: G             L     6.1.23-00258-g0329e37631ce-dirty #1
+[  456.295882][    C0] Hardware name: linux,dummy-virt (DT)
+[  456.296178][    C0] pstate: 60402005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  456.296619][    C0] pc : __ep_remove+0x1b4/0x23c
+[  456.296978][    C0] lr : __ep_remove+0x80/0x23c
+[  456.297282][    C0] sp : ffffffc00a0d3c20
+[  456.297535][    C0] x29: ffffffc00a0d3c20 x28: f2ffff80037d3540 x27: 0000000000000000
+[  456.298070][    C0] x26: 0000000000000000 x25: 0000000000000004 x24: f9ffff8002913500
+[  456.298890][    C0] x23: 0000000000000000 x22: ffffff807fa24000 x21: f9ffff8002913530
+[  456.299689][    C0] x20: fdffff8003da5b80 x19: 0000000000000001 x18: ffffffc00a0cb048
+[  456.300449][    C0] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[  456.301216][    C0] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[  456.301977][    C0] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[  456.302808][    C0] x8 : 0000000000000040 x7 : ffffff8003da4a80 x6 : 0000000000000020
+[  456.303579][    C0] x5 : 0000000000ff0000 x4 : 0000000000000000 x3 : f9ffff8002913530
+[  456.304329][    C0] x2 : ffffffc009397b78 x1 : f6ffff80037a1fa0 x0 : ffffffc009397b60
+[  456.305088][    C0] Call trace:
+[  456.305427][    C0]  __ep_remove+0x1b4/0x23c
+[  456.305873][    C0]  ep_clear_and_put+0xc8/0x138
+[  456.306352][    C0]  ep_eventpoll_release+0x1c/0x40
+[  456.306655][    C0]  __fput+0xbc/0x260
+[  456.306911][    C0]  ____fput+0x14/0x24
+[  456.307166][    C0]  task_work_run+0x78/0xe0
+[  456.307439][    C0]  do_notify_resume+0x220/0x1320
+[  456.307736][    C0]  el0_svc+0xbc/0xc0
+[  456.307988][    C0]  el0t_64_sync_handler+0x11c/0x128
+[  456.308286][    C0]  el0t_64_sync+0x1a0/0x1a4
+[  461.926397][    C0] BUG: workqueue lockup - pool cpus=0 node=0 flags=0x0 nice=0 stuck for 452s!
+[  461.927488][    C0] Showing busy workqueues and worker pools:
+[  461.927886][    C0] workqueue events: flags=0x0
+[  461.928442][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=2/256 refcnt=3
+[  461.928614][    C0]     pending: vmstat_shepherd, psi_avgs_work
+[  461.928742][    C0] workqueue events_unbound: flags=0x2
+[  461.929758][    C0]   pwq 4: cpus=0-1 flags=0x4 nice=0 active=1/512 refcnt=3
+[  461.929863][    C0]     in-flight: 65:toggle_allocation_gate
+[  461.929949][    C0] workqueue events_power_efficient: flags=0x80
+[  461.931577][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=3/256 refcnt=4
+[  461.931752][    C0]     pending: neigh_managed_work, neigh_periodic_work, gc_worker
+[  461.931952][    C0] workqueue dm_bufio_cache: flags=0x8
+[  461.933497][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+[  461.933622][    C0]     pending: work_fn
+[  461.933698][    C0] workqueue ipv6_addrconf: flags=0x40008
+[  461.935035][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/1 refcnt=2
+[  461.935154][    C0]     pending: addrconf_verify_work
+[  461.935247][    C0] pool 4: cpus=0-1 flags=0x4 nice=0 hung=0s workers=3 idle: 8 10
+[  488.294258][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for 447s! [cve_2026_46242_:63]
+[  488.295148][    C0] Modules linked in:
+[  488.295621][    C0] CPU: 0 PID: 63 Comm: cve_2026_46242_ Tainted: G             L     6.1.23-00258-g0329e37631ce-dirty #1
+[  488.296709][    C0] Hardware name: linux,dummy-virt (DT)
+[  488.297252][    C0] pstate: 60402005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  488.298013][    C0] pc : __ep_remove+0x1b4/0x23c
+[  488.298611][    C0] lr : __ep_remove+0x80/0x23c
+[  488.299076][    C0] sp : ffffffc00a0d3c20
+[  488.299508][    C0] x29: ffffffc00a0d3c20 x28: f2ffff80037d3540 x27: 0000000000000000
+[  488.300365][    C0] x26: 0000000000000000 x25: 0000000000000004 x24: f9ffff8002913500
+[  488.301199][    C0] x23: 0000000000000000 x22: ffffff807fa24000 x21: f9ffff8002913530
+[  488.302060][    C0] x20: fdffff8003da5b80 x19: 0000000000000001 x18: ffffffc00a0cb048
+[  488.302937][    C0] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[  488.303781][    C0] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[  488.304596][    C0] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[  488.305429][    C0] x8 : 0000000000000040 x7 : ffffff8003da4a80 x6 : 0000000000000020
+[  488.306276][    C0] x5 : 0000000000ff0000 x4 : 0000000000000000 x3 : f9ffff8002913530
+[  488.306998][    C0] x2 : ffffffc009397b78 x1 : f6ffff80037a1fa0 x0 : ffffffc009397b60
+[  488.307512][    C0] Call trace:
+[  488.307732][    C0]  __ep_remove+0x1b4/0x23c
+[  488.308023][    C0]  ep_clear_and_put+0xc8/0x138
+[  488.308314][    C0]  ep_eventpoll_release+0x1c/0x40
+[  488.308626][    C0]  __fput+0xbc/0x260
+[  488.308893][    C0]  ____fput+0x14/0x24
+[  488.309154][    C0]  task_work_run+0x78/0xe0
+[  488.309435][    C0]  do_notify_resume+0x220/0x1320
+[  488.309975][    C0]  el0_svc+0xbc/0xc0
+[  488.310556][    C0]  el0t_64_sync_handler+0x11c/0x128
+[  488.311088][    C0]  el0t_64_sync+0x1a0/0x1a4
+[  492.646484][    C0] BUG: workqueue lockup - pool cpus=0 node=0 flags=0x0 nice=0 stuck for 483s!
+[  492.647436][    C0] Showing busy workqueues and worker pools:
+[  492.647878][    C0] workqueue events: flags=0x0
+[  492.648342][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=2/256 refcnt=3
+[  492.648476][    C0]     pending: vmstat_shepherd, psi_avgs_work
+[  492.648636][    C0] workqueue events_unbound: flags=0x2
+[  492.650642][    C0]   pwq 4: cpus=0-1 flags=0x4 nice=0 active=1/512 refcnt=3
+[  492.650774][    C0]     in-flight: 65:toggle_allocation_gate
+[  492.650872][    C0] workqueue events_power_efficient: flags=0x80
+[  492.651906][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=3/256 refcnt=4
+[  492.652051][    C0]     pending: neigh_managed_work, neigh_periodic_work, gc_worker
+[  492.652257][    C0] workqueue dm_bufio_cache: flags=0x8
+[  492.653538][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+[  492.653680][    C0]     pending: work_fn
+[  492.653782][    C0] workqueue ipv6_addrconf: flags=0x40008
+[  492.655408][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/1 refcnt=2
+[  492.655715][    C0]     pending: addrconf_verify_work
+[  492.657589][    C0] pool 4: cpus=0-1 flags=0x4 nice=0 hung=1s workers=3 idle: 8 10
+[  520.294255][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for 477s! [cve_2026_46242_:63]
+[  520.295071][    C0] Modules linked in:
+[  520.295482][    C0] CPU: 0 PID: 63 Comm: cve_2026_46242_ Tainted: G             L     6.1.23-00258-g0329e37631ce-dirty #1
+[  520.296436][    C0] Hardware name: linux,dummy-virt (DT)
+[  520.296978][    C0] pstate: 60402005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  520.297710][    C0] pc : __ep_remove+0x1b4/0x23c
+[  520.298243][    C0] lr : __ep_remove+0x80/0x23c
+[  520.298641][    C0] sp : ffffffc00a0d3c20
+[  520.298889][    C0] x29: ffffffc00a0d3c20 x28: f2ffff80037d3540 x27: 0000000000000000
+[  520.299411][    C0] x26: 0000000000000000 x25: 0000000000000004 x24: f9ffff8002913500
+[  520.299938][    C0] x23: 0000000000000000 x22: ffffff807fa24000 x21: f9ffff8002913530
+[  520.300533][    C0] x20: fdffff8003da5b80 x19: 0000000000000001 x18: ffffffc00a0cb048
+[  520.301098][    C0] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[  520.301681][    C0] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[  520.302362][    C0] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[  520.302903][    C0] x8 : 0000000000000040 x7 : ffffff8003da4a80 x6 : 0000000000000020
+[  520.303423][    C0] x5 : 0000000000ff0000 x4 : 0000000000000000 x3 : f9ffff8002913530
+[  520.304059][    C0] x2 : ffffffc009397b78 x1 : f6ffff80037a1fa0 x0 : ffffffc009397b60
+[  520.304832][    C0] Call trace:
+[  520.305186][    C0]  __ep_remove+0x1b4/0x23c
+[  520.305700][    C0]  ep_clear_and_put+0xc8/0x138
+[  520.306242][    C0]  ep_eventpoll_release+0x1c/0x40
+[  520.306796][    C0]  __fput+0xbc/0x260
+[  520.307225][    C0]  ____fput+0x14/0x24
+[  520.307655][    C0]  task_work_run+0x78/0xe0
+[  520.308121][    C0]  do_notify_resume+0x220/0x1320
+[  520.308658][    C0]  el0_svc+0xbc/0xc0
+[  520.309054][    C0]  el0t_64_sync_handler+0x11c/0x128
+[  520.309588][    C0]  el0t_64_sync+0x1a0/0x1a4
+[  523.366352][    C0] BUG: workqueue lockup - pool cpus=0 node=0 flags=0x0 nice=0 stuck for 514s!
+[  523.367025][    C0] Showing busy workqueues and worker pools:
+[  523.367358][    C0] workqueue events: flags=0x0
+[  523.367646][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=2/256 refcnt=3
+[  523.367763][    C0]     pending: vmstat_shepherd, psi_avgs_work
+[  523.367882][    C0] workqueue events_unbound: flags=0x2
+[  523.368837][    C0]   pwq 4: cpus=0-1 flags=0x4 nice=0 active=1/512 refcnt=3
+[  523.368933][    C0]     in-flight: 65:toggle_allocation_gate
+[  523.369014][    C0] workqueue events_power_efficient: flags=0x80
+[  523.370598][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=3/256 refcnt=4
+[  523.370756][    C0]     pending: neigh_managed_work, neigh_periodic_work, gc_worker
+[  523.370932][    C0] workqueue dm_bufio_cache: flags=0x8
+[  523.371909][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+[  523.372025][    C0]     pending: work_fn
+[  523.372101][    C0] workqueue ipv6_addrconf: flags=0x40008
+[  523.372922][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/1 refcnt=2
+[  523.373032][    C0]     pending: addrconf_verify_work
+[  523.373124][    C0] pool 4: cpus=0-1 flags=0x4 nice=0 hung=1s workers=3 idle: 8 10
+[  548.294211][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for 503s! [cve_2026_46242_:63]
+[  548.294726][    C0] Modules linked in:
+[  548.295030][    C0] CPU: 0 PID: 63 Comm: cve_2026_46242_ Tainted: G             L     6.1.23-00258-g0329e37631ce-dirty #1
+[  548.295737][    C0] Hardware name: linux,dummy-virt (DT)
+[  548.296048][    C0] pstate: 60402005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  548.296499][    C0] pc : __ep_remove+0x1b4/0x23c
+[  548.296832][    C0] lr : __ep_remove+0x80/0x23c
+[  548.297125][    C0] sp : ffffffc00a0d3c20
+[  548.297377][    C0] x29: ffffffc00a0d3c20 x28: f2ffff80037d3540 x27: 0000000000000000
+[  548.297929][    C0] x26: 0000000000000000 x25: 0000000000000004 x24: f9ffff8002913500
+[  548.298587][    C0] x23: 0000000000000000 x22: ffffff807fa24000 x21: f9ffff8002913530
+[  548.299090][    C0] x20: fdffff8003da5b80 x19: 0000000000000001 x18: ffffffc00a0cb048
+[  548.299641][    C0] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[  548.300370][    C0] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[  548.300970][    C0] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[  548.301507][    C0] x8 : 0000000000000040 x7 : ffffff8003da4a80 x6 : 0000000000000020
+[  548.302042][    C0] x5 : 0000000000ff0000 x4 : 0000000000000000 x3 : f9ffff8002913530
+[  548.302658][    C0] x2 : ffffffc009397b78 x1 : f6ffff80037a1fa0 x0 : ffffffc009397b60
+[  548.303146][    C0] Call trace:
+[  548.303346][    C0]  __ep_remove+0x1b4/0x23c
+[  548.303703][    C0]  ep_clear_and_put+0xc8/0x138
+[  548.304157][    C0]  ep_eventpoll_release+0x1c/0x40
+[  548.304658][    C0]  __fput+0xbc/0x260
+[  548.305002][    C0]  ____fput+0x14/0x24
+[  548.305449][    C0]  task_work_run+0x78/0xe0
+[  548.305895][    C0]  do_notify_resume+0x220/0x1320
+[  548.306343][    C0]  el0_svc+0xbc/0xc0
+[  548.306669][    C0]  el0t_64_sync_handler+0x11c/0x128
+[  548.306986][    C0]  el0t_64_sync+0x1a0/0x1a4
+[  554.086414][    C0] BUG: workqueue lockup - pool cpus=0 node=0 flags=0x0 nice=0 stuck for 545s!
+[  554.087149][    C0] Showing busy workqueues and worker pools:
+[  554.087680][    C0] workqueue events: flags=0x0
+[  554.088108][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=2/256 refcnt=3
+[  554.088264][    C0]     pending: vmstat_shepherd, psi_avgs_work
+[  554.088400][    C0] workqueue events_unbound: flags=0x2
+[  554.090029][    C0]   pwq 4: cpus=0-1 flags=0x4 nice=0 active=1/512 refcnt=3
+[  554.090218][    C0]     in-flight: 65:toggle_allocation_gate
+[  554.091631][    C0] workqueue events_power_efficient: flags=0x80
+[  554.092217][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=3/256 refcnt=4
+[  554.092391][    C0]     pending: neigh_managed_work, neigh_periodic_work, gc_worker
+[  554.092606][    C0] workqueue dm_bufio_cache: flags=0x8
+[  554.093855][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+[  554.093995][    C0]     pending: work_fn
+[  554.094086][    C0] workqueue ipv6_addrconf: flags=0x40008
+[  554.096189][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/1 refcnt=2
+[  554.096442][    C0]     pending: addrconf_verify_work
+[  554.096648][    C0] pool 4: cpus=0-1 flags=0x4 nice=0 hung=0s workers=3 idle: 8 10
+[  580.294261][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for 533s! [cve_2026_46242_:63]
+[  580.294793][    C0] Modules linked in:
+[  580.295051][    C0] CPU: 0 PID: 63 Comm: cve_2026_46242_ Tainted: G             L     6.1.23-00258-g0329e37631ce-dirty #1
+[  580.295592][    C0] Hardware name: linux,dummy-virt (DT)
+[  580.295886][    C0] pstate: 60402005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  580.296531][    C0] pc : __ep_remove+0x1b4/0x23c
+[  580.296998][    C0] lr : __ep_remove+0x80/0x23c
+[  580.297323][    C0] sp : ffffffc00a0d3c20
+[  580.297573][    C0] x29: ffffffc00a0d3c20 x28: f2ffff80037d3540 x27: 0000000000000000
+[  580.298068][    C0] x26: 0000000000000000 x25: 0000000000000004 x24: f9ffff8002913500
+[  580.298910][    C0] x23: 0000000000000000 x22: ffffff807fa24000 x21: f9ffff8002913530
+[  580.299615][    C0] x20: fdffff8003da5b80 x19: 0000000000000001 x18: ffffffc00a0cb048
+[  580.300251][    C0] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[  580.300973][    C0] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[  580.301687][    C0] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[  580.302349][    C0] x8 : 0000000000000040 x7 : ffffff8003da4a80 x6 : 0000000000000020
+[  580.303119][    C0] x5 : 0000000000ff0000 x4 : 0000000000000000 x3 : f9ffff8002913530
+[  580.303812][    C0] x2 : ffffffc009397b78 x1 : f6ffff80037a1fa0 x0 : ffffffc009397b60
+[  580.304476][    C0] Call trace:
+[  580.304691][    C0]  __ep_remove+0x1b4/0x23c
+[  580.305034][    C0]  ep_clear_and_put+0xc8/0x138
+[  580.305467][    C0]  ep_eventpoll_release+0x1c/0x40
+[  580.305875][    C0]  __fput+0xbc/0x260
+[  580.306237][    C0]  ____fput+0x14/0x24
+[  580.306591][    C0]  task_work_run+0x78/0xe0
+[  580.307016][    C0]  do_notify_resume+0x220/0x1320
+[  580.307414][    C0]  el0_svc+0xbc/0xc0
+[  580.307765][    C0]  el0t_64_sync_handler+0x11c/0x128
+[  580.308162][    C0]  el0t_64_sync+0x1a0/0x1a4
+[  584.806448][    C0] BUG: workqueue lockup - pool cpus=0 node=0 flags=0x0 nice=0 stuck for 575s!
+[  584.807269][    C0] Showing busy workqueues and worker pools:
+[  584.807645][    C0] workqueue events: flags=0x0
+[  584.807966][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=2/256 refcnt=3
+[  584.808116][    C0]     pending: vmstat_shepherd, psi_avgs_work
+[  584.808265][    C0] workqueue events_unbound: flags=0x2
+[  584.809735][    C0]   pwq 4: cpus=0-1 flags=0x4 nice=0 active=1/512 refcnt=3
+[  584.809867][    C0]     in-flight: 65:toggle_allocation_gate
+[  584.810029][    C0] workqueue events_power_efficient: flags=0x80
+[  584.811633][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=3/256 refcnt=4
+[  584.811873][    C0]     pending: neigh_managed_work, neigh_periodic_work, gc_worker
+[  584.812164][    C0] workqueue dm_bufio_cache: flags=0x8
+[  584.813880][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+[  584.814045][    C0]     pending: work_fn
+[  584.815507][    C0] workqueue ipv6_addrconf: flags=0x40008
+[  584.816065][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/1 refcnt=2
+[  584.816215][    C0]     pending: addrconf_verify_work
+[  584.816335][    C0] pool 4: cpus=0-1 flags=0x4 nice=0 hung=0s workers=3 idle: 8 10
+[  612.294291][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for 563s! [cve_2026_46242_:63]
+[  612.295010][    C0] Modules linked in:
+[  612.295371][    C0] CPU: 0 PID: 63 Comm: cve_2026_46242_ Tainted: G             L     6.1.23-00258-g0329e37631ce-dirty #1
+[  612.296108][    C0] Hardware name: linux,dummy-virt (DT)
+[  612.296511][    C0] pstate: 60402005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  612.297096][    C0] pc : __ep_remove+0x1b4/0x23c
+[  612.297494][    C0] lr : __ep_remove+0x80/0x23c
+[  612.297919][    C0] sp : ffffffc00a0d3c20
+[  612.298376][    C0] x29: ffffffc00a0d3c20 x28: f2ffff80037d3540 x27: 0000000000000000
+[  612.299289][    C0] x26: 0000000000000000 x25: 0000000000000004 x24: f9ffff8002913500
+[  612.300193][    C0] x23: 0000000000000000 x22: ffffff807fa24000 x21: f9ffff8002913530
+[  612.301001][    C0] x20: fdffff8003da5b80 x19: 0000000000000001 x18: ffffffc00a0cb048
+[  612.301873][    C0] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[  612.302927][    C0] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[  612.303937][    C0] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[  612.304604][    C0] x8 : 0000000000000040 x7 : ffffff8003da4a80 x6 : 0000000000000020
+[  612.305424][    C0] x5 : 0000000000ff0000 x4 : 0000000000000000 x3 : f9ffff8002913530
+[  612.306383][    C0] x2 : ffffffc009397b78 x1 : f6ffff80037a1fa0 x0 : ffffffc009397b60
+[  612.307254][    C0] Call trace:
+[  612.307612][    C0]  __ep_remove+0x1b4/0x23c
+[  612.307980][    C0]  ep_clear_and_put+0xc8/0x138
+[  612.308339][    C0]  ep_eventpoll_release+0x1c/0x40
+[  612.308725][    C0]  __fput+0xbc/0x260
+[  612.309143][    C0]  ____fput+0x14/0x24
+[  612.309614][    C0]  task_work_run+0x78/0xe0
+[  612.310160][    C0]  do_notify_resume+0x220/0x1320
+[  612.310620][    C0]  el0_svc+0xbc/0xc0
+[  612.310990][    C0]  el0t_64_sync_handler+0x11c/0x128
+[  612.311368][    C0]  el0t_64_sync+0x1a0/0x1a4
+[  615.526548][    C0] BUG: workqueue lockup - pool cpus=0 node=0 flags=0x0 nice=0 stuck for 606s!
+[  615.527811][    C0] Showing busy workqueues and worker pools:
+[  615.528437][    C0] workqueue events: flags=0x0
+[  615.528978][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=2/256 refcnt=3
+[  615.529209][    C0]     pending: vmstat_shepherd, psi_avgs_work
+[  615.529450][    C0] workqueue events_unbound: flags=0x2
+[  615.531551][    C0]   pwq 4: cpus=0-1 flags=0x4 nice=0 active=1/512 refcnt=3
+[  615.531693][    C0]     in-flight: 65:toggle_allocation_gate
+[  615.531807][    C0] workqueue events_power_efficient: flags=0x80
+[  615.533366][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=3/256 refcnt=4
+[  615.533621][    C0]     pending: neigh_managed_work, neigh_periodic_work, gc_worker
+[  615.533811][    C0] workqueue dm_bufio_cache: flags=0x8
+[  615.535247][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+[  615.535387][    C0]     pending: work_fn
+[  615.535473][    C0] workqueue ipv6_addrconf: flags=0x40008
+[  615.536447][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/1 refcnt=2
+[  615.536588][    C0]     pending: addrconf_verify_work
+[  615.536692][    C0] pool 4: cpus=0-1 flags=0x4 nice=0 hung=1s workers=3 idle: 8 10
+[  640.294242][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for 589s! [cve_2026_46242_:63]
+[  640.294935][    C0] Modules linked in:
+[  640.295205][    C0] CPU: 0 PID: 63 Comm: cve_2026_46242_ Tainted: G             L     6.1.23-00258-g0329e37631ce-dirty #1
+[  640.295729][    C0] Hardware name: linux,dummy-virt (DT)
+[  640.296002][    C0] pstate: 60402005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  640.296378][    C0] pc : __ep_remove+0x1b4/0x23c
+[  640.296667][    C0] lr : __ep_remove+0x80/0x23c
+[  640.296936][    C0] sp : ffffffc00a0d3c20
+[  640.297158][    C0] x29: ffffffc00a0d3c20 x28: f2ffff80037d3540 x27: 0000000000000000
+[  640.297663][    C0] x26: 0000000000000000 x25: 0000000000000004 x24: f9ffff8002913500
+[  640.298152][    C0] x23: 0000000000000000 x22: ffffff807fa24000 x21: f9ffff8002913530
+[  640.298954][    C0] x20: fdffff8003da5b80 x19: 0000000000000001 x18: ffffffc00a0cb048
+[  640.299677][    C0] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[  640.300471][    C0] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[  640.301282][    C0] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[  640.302099][    C0] x8 : 0000000000000040 x7 : ffffff8003da4a80 x6 : 0000000000000020
+[  640.302965][    C0] x5 : 0000000000ff0000 x4 : 0000000000000000 x3 : f9ffff8002913530
+[  640.303775][    C0] x2 : ffffffc009397b78 x1 : f6ffff80037a1fa0 x0 : ffffffc009397b60
+[  640.304608][    C0] Call trace:
+[  640.304892][    C0]  __ep_remove+0x1b4/0x23c
+[  640.305430][    C0]  ep_clear_and_put+0xc8/0x138
+[  640.305927][    C0]  ep_eventpoll_release+0x1c/0x40
+[  640.306646][    C0]  __fput+0xbc/0x260
+[  640.307160][    C0]  ____fput+0x14/0x24
+[  640.307712][    C0]  task_work_run+0x78/0xe0
+[  640.308290][    C0]  do_notify_resume+0x220/0x1320
+[  640.308920][    C0]  el0_svc+0xbc/0xc0
+[  640.309465][    C0]  el0t_64_sync_handler+0x11c/0x128
+[  640.310048][    C0]  el0t_64_sync+0x1a0/0x1a4
+[  646.246473][    C0] BUG: workqueue lockup - pool cpus=0 node=0 flags=0x0 nice=0 stuck for 637s!
+[  646.247681][    C0] Showing busy workqueues and worker pools:
+[  646.248351][    C0] workqueue events: flags=0x0
+[  646.248926][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=2/256 refcnt=3
+[  646.249088][    C0]     pending: vmstat_shepherd, psi_avgs_work
+[  646.249241][    C0] workqueue events_unbound: flags=0x2
+[  646.251684][    C0]   pwq 4: cpus=0-1 flags=0x4 nice=0 active=1/512 refcnt=3
+[  646.251828][    C0]     in-flight: 65:toggle_allocation_gate
+[  646.251939][    C0] workqueue events_power_efficient: flags=0x80
+[  646.254008][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=3/256 refcnt=4
+[  646.254186][    C0]     pending: neigh_managed_work, neigh_periodic_work, gc_worker
+[  646.256384][    C0] workqueue dm_bufio_cache: flags=0x8
+[  646.257017][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+[  646.257177][    C0]     pending: work_fn
+[  646.257276][    C0] workqueue ipv6_addrconf: flags=0x40008
+[  646.259183][    C0]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/1 refcnt=2
+[  646.259396][    C0]     pending: addrconf_verify_work
+[  646.259538][    C0] pool 4: cpus=0-1 flags=0x4 nice=0 hung=1s workers=3 idle: 8 10
+[  657.839647][    C0] hrtimer: interrupt took 480541050 ns

