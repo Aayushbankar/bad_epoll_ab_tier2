@@ -103,9 +103,20 @@ Cross: aarch64 (kernel)
 | 20 | 4 | `euid` |
 | 24 | 4 | `egid` |
 
+### struct snd_timer_user — 176 bytes (kmalloc-192)
+
+| Offset | Size | Field | Notes |
+|---|---|---|---|
+| 0x00 | 8 | `timeri` | Pointer to `struct snd_timer_instance` |
+| 0x90 | 32 | `ioctl_lock` | `struct mutex` controlling timer ioctls |
+| 0xa0 | 8 | `ioctl_lock.wait_list.next` | **STALE STORE TARGET ADDRESS** (`+0xa0`) |
+| 0xa8 | 8 | `ioctl_lock.wait_list.prev` | `struct list_head` prev pointer (`+0xa8`) |
+
 ## Slab Cache Details
 
 - `eventpoll_epi`: dedicated cache, 120 bytes, `SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT`
 - `eventpoll_pwq`: dedicated cache, `sizeof(struct eppoll_entry)`, `SLAB_PANIC|SLAB_ACCOUNT`
 - `ep_head`: dedicated cache, 16 bytes, `SLAB_PANIC|SLAB_ACCOUNT`
+- `kmalloc-192`: generic slab cache holding both `struct eventpoll` (192B) and `struct snd_timer_user` (176B).
 - Cross-cache exploitation would be needed to replace a freed epitem with a different object type.
+

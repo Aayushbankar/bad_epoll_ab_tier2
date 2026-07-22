@@ -36,6 +36,7 @@ QEMU_ARGS=(
     -nographic
     -no-reboot
     -gdb tcp::1234
+    -S
 )
 
 qemu-system-aarch64 "${QEMU_ARGS[@]}" 2>&1 | tee /tmp/qemu_gdb_session.log &

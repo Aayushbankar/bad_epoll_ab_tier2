@@ -41,15 +41,23 @@ MILESTONE STATUS
 4. **Vulnerability Analysis:** Investigated `ep_remove` UAF race in CVE-2026-46242 on the compiled Android kernel.
 5. **Runtime Boot:** Created minimal ARM64 BusyBox `initramfs.cpio` and successfully booted `Image` using `qemu-system-aarch64`.
 6. **Passive Validation:** Statically mapped target symbols `eventpoll_release_file` and `ep_remove` from `vmlinux`.
+7. **Reclaim Verification:** Empirically verified `snd_timer_user` reclaims freed `inner_epoll` allocation at identical address (`0xffffff8003beb480`).
+8. **Dual-Watch Topology Verification:** Verified that adding `inner_epoll` to two outer epolls produces a valid non-NULL kernel pointer (`epi1->fllink`) in register `x2`.
+9. **Stale Store Verification:** Observed direct store `str x2, [x0]` at `0xffffffc0083bcedc` targeting `snd_timer_user + 0xa0`.
+10. **Wait_List Corruption Verification:** Confirmed state transition of `snd_timer_user->ioctl_lock.wait_list.next` from `0x0` to live `epitem` address while `prev` remains `0x0`.
+11. **Mutex Slowpath Analysis:** Traced `__mutex_lock_common()` -> `list_add_tail()` -> `__list_add()` in kernel source, confirming lack of `wait_list` repair logic.
 
 ## Current Blocker
-- **None.** The custom kernel is fully compiled and bootable in QEMU.
+- **None.** All target observables and source call paths verified.
 
 ## Next Action
-- Ensure all historical documentation is accurate and aligned with the current verified runtime state.
+- Execute Milestone 1: Runtime Observation of Mutex Slowpath Dereference.
 
 ## Latest Findings
-- The Android emulator (`~/.local/android/emulator/emulator`) does not support running an ARM64 system image on this x86_64 host without KVM cross-arch acceleration, which is no longer supported in the new QEMU2 emulator backend. We pivoted to raw `qemu-system-aarch64` combined with a custom `initramfs` (BusyBox-based) which successfully booted the kernel and provided a `/ #` shell.er.
+- Dual-outer-epoll topology produces a non-NULL `x2` heap pointer (`0xffffff800419d250`) during `__ep_remove()`.
+- The stale store at `0xffffffc0083bcedc` writes `x2` into `snd_timer_user + 0xa0` (`ioctl_lock.wait_list.next`), creating an asymmetric/corrupted `list_head`.
+- Source analysis confirms that contended acquisition of `ioctl_lock` enters `__list_add()`, which attempts `WRITE_ONCE(prev->next, new)` where `prev == 0x0`.
+- Engineering Readiness Assessment identifies "Runtime Observation of Mutex Slowpath Dereference" as the critical path milestone to unblock AVD PoC.
 
 --------------------------------------------------
 STUCK PROCESSES
@@ -113,5 +121,10 @@ The Android kernel has been successfully built.
 DOCUMENTATION HEALTH
 --------------------------------------------------
 
-- Missing critical documents: `RESEARCH_GRAPH.md`, `DOCUMENTATION_MAP.md`, `BUILD_DECISIONS.md`, and the deep-dive reverse engineering hubs (`EPOLL_INTERNALS.md`, etc.). These cannot be created accurately until the source tree is downloaded.
-- Incomplete documents: `PROJECT_STATE.md` correctly indicates waiting on `repo sync`.
+- Architecture Fully Mapped: `DOCUMENTATION_MAP.md` outlines the 15-domain documentation structure.
+- SSOT Established: Legacy state trackers (`01_ROADMAP.md`, `02_CHECKLIST.md`, `PROJECT_STATE.md`, `REPRODUCTION_STATUS.md`) now redirect strictly to `CURRENT_PROGRESS.md`.
+- Active Ledgers:
+  - `VERIFICATION_LEDGER.md`: SSOT mapping verifiable claims to raw execution logs.
+  - `EXPERIMENT_INDEX.md`: Maps test reproducers and launch scripts.
+  - `KNOWLEDGE_EVOLUTION.md`: Tracks history of technical pivots and insights.
+- Strategy and Assessment: `ENGINEERING_READINESS_ASSESSMENT.md` identifies remaining path to Goal 2.

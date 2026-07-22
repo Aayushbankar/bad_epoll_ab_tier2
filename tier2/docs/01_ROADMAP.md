@@ -1,4 +1,13 @@
-# Tier 2 Engineering Roadmap
+# REDIRECT: Single Source of Truth (SSOT)
+
+> [!IMPORTANT]
+> This document has been consolidated into the project Single Source of Truth (SSOT).
+> For current progress, milestone tracking, and status, refer to:
+> **[CURRENT_PROGRESS.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/CURRENT_PROGRESS.md)**
+
+---
+
+# Roadmap (Archived Snapshot)
 
 ## Phase 1: Environment & Tooling Scaffold
 **Goal**: Establish a reproducible local development and debugging environment targeting an Android ARM64 kernel.

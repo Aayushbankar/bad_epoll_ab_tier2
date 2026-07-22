@@ -73,8 +73,15 @@ This document tracks the conceptual dependencies required to complete Tier 2, me
 - **Resources**: [Placeholder]
 - **Notes**: [Placeholder]
 
-### Kernel Debugging (GDB on ARM64)
-- **Current understanding**: Proficient on x86_64.
-- **Target understanding**: Proficient on ARM64 (Translating `info registers` and utilizing `pwndbg` ARM features).
-- **Resources**: [Placeholder]
-- **Notes**: [Placeholder]
+## Learned Operational Patterns & Techniques
+### ARM64 Android Kernel Reproducer Compilation
+- **Compiler Path**: Use `tier2/android/source/prebuilts/ndk-r23/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android31-clang -static`.
+- **Bionic Constraints**: Bionic's static libc does not export `pthread_setaffinity_np()`. Use POSIX `sched_setaffinity(0, sizeof(cpu_set_t), &cpuset)` for CPU affinity pinning.
+
+### Non-Destructive GDB Race Instrumentation
+- **Pattern**:
+  1. Break Thread A at store instruction (e.g., `f_ep = NULL`).
+  2. Dynamically patch next instructions to `dmb sy` (`0xd5033fbf`) and `b .` (`0x14000000`) to hold Thread A in a spin loop.
+  3. Let Thread B execute allocation/free steps and record addresses/offsets.
+  4. Restore Thread A's original opcodes and set `$pc` back to continue step-by-step UAF write observation.
+

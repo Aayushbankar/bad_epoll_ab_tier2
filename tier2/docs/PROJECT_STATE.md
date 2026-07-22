@@ -1,4 +1,13 @@
-# Canonical Project State
+# REDIRECT: Single Source of Truth (SSOT)
+
+> [!IMPORTANT]
+> This document has been consolidated into the project Single Source of Truth (SSOT).
+> For current project status, phase tracking, and blockers, refer to:
+> **[CURRENT_PROGRESS.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/CURRENT_PROGRESS.md)**
+
+---
+
+# Canonical Project State (Archived Snapshot)
 
 **Current Phase**: Phase 3 (Runtime Validation & Vulnerability Reproduction)
 **Current Branch**: `tier2-android-port`

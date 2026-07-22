@@ -27,3 +27,14 @@ The primary goal of Tier 2 is to successfully port the `CVE-2026-46242` Bad Epol
 - Execution of a privilege escalation payload leading to a root shell (`UID 0`).
 - Preservation of system stability (no kernel panics upon returning to user space).
 - Comprehensive documentation and reproducibility of the exploit pipeline.
+
+## Key Documentation & Index Ledger Navigation
+
+| Navigation Category | Authoritative Document | Purpose |
+|---|---|---|
+| **Project Progress** | [CURRENT_PROGRESS.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/CURRENT_PROGRESS.md) | Single Source of Truth for milestone status |
+| **Verification Ledger** | [VERIFICATION_LEDGER.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/VERIFICATION_LEDGER.md) | Machine-parseable matrix mapping claims to raw evidence |
+| **Experiment Index** | [EXPERIMENT_INDEX.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/EXPERIMENT_INDEX.md) | Registry of reproducers, GDB scripts, and shell runners |
+| **Knowledge Evolution** | [KNOWLEDGE_EVOLUTION.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/KNOWLEDGE_EVOLUTION.md) | Historical tracking of assumptions, discoveries, and lessons |
+| **Documentation Map** | [DOCUMENTATION_MAP.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/DOCUMENTATION_MAP.md) | Complete 15-domain architectural sitemap |
+
