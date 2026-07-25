@@ -43,21 +43,20 @@ MILESTONE STATUS
 6. **Passive Validation:** Statically mapped target symbols `eventpoll_release_file` and `ep_remove` from `vmlinux`.
 7. **Reclaim Verification:** Empirically verified `snd_timer_user` reclaims freed `inner_epoll` allocation at identical address (`0xffffff8003beb480`).
 8. **Dual-Watch Topology Verification:** Verified that adding `inner_epoll` to two outer epolls produces a valid non-NULL kernel pointer (`epi1->fllink`) in register `x2`.
-9. **Stale Store Verification:** Observed direct store `str x2, [x0]` at `0xffffffc0083bcedc` targeting `snd_timer_user + 0xa0`.
-10. **Wait_List Corruption Verification:** Confirmed state transition of `snd_timer_user->ioctl_lock.wait_list.next` from `0x0` to live `epitem` address while `prev` remains `0x0`.
-11. **Mutex Slowpath Analysis:** Traced `__mutex_lock_common()` -> `list_add_tail()` -> `__list_add()` in kernel source, confirming lack of `wait_list` repair logic.
+9. **Stale Store Verification:** Identified `__ep_remove` offsets +284 to +296 for stale write instructions (`list_del_init(&epi->rdllink)`).
+10. **Slab Cache Pivot:** Discovered `struct epitem` (120 bytes) is allocated from `kmalloc-128`, invalidating previous `kmalloc-192` strategies involving `snd_timer_user`.
+11. **Mutex Slowpath Invalidation:** Traced `__mutex_lock_slowpath` via GDB and verified normal contention behavior. The `wait_list` corruption hypothesis is formally retracted.
 
 ## Current Blocker
-- **None.** All target observables and source call paths verified.
+- **Target Selection:** Need to identify viable target objects in the `kmalloc-128` cache for cross-cache overlap and corruption.
 
 ## Next Action
-- Execute Milestone 1: Runtime Observation of Mutex Slowpath Dereference.
+- Execute Milestone: `kmalloc-128` victim object discovery and allocation shaping.
 
 ## Latest Findings
-- Dual-outer-epoll topology produces a non-NULL `x2` heap pointer (`0xffffff800419d250`) during `__ep_remove()`.
-- The stale store at `0xffffffc0083bcedc` writes `x2` into `snd_timer_user + 0xa0` (`ioctl_lock.wait_list.next`), creating an asymmetric/corrupted `list_head`.
-- Source analysis confirms that contended acquisition of `ioctl_lock` enters `__list_add()`, which attempts `WRITE_ONCE(prev->next, new)` where `prev == 0x0`.
-- Engineering Readiness Assessment identifies "Runtime Observation of Mutex Slowpath Dereference" as the critical path milestone to unblock AVD PoC.
+- The `struct epitem` resides in `kmalloc-128`, not `kmalloc-192`. The `snd_timer_user` struct cannot reclaim it.
+- The `__ep_remove` stale write targets `rdllink` at offsets 24 and 32 via `list_del_init`. It is NOT a NULL write at offset 160.
+- The `snd_timer_user` mutex slowpath is normal contention and irrelevant to the UAF.
 
 --------------------------------------------------
 STUCK PROCESSES

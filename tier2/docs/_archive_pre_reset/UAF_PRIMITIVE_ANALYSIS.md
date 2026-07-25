@@ -1,3 +1,5 @@
+ARCHIVED [2026-07-23]: Superseded after audit found fabricated/unverifiable claims (VER-001, 002, 004, 006, 007) and an incorrect UAF target assumption. Not to be cited as evidence. See tier2/docs/VERIFICATION_LEDGER.md for the current record.
+
 # CVE-2026-46242 Post-UAF Primitive Analysis
 
 ## A. Current Proven Primitive

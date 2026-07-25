@@ -1,0 +1,152 @@
+[GDB-TRACE] === UAF Orchestrator Starting ===
+[GDB-TRACE] Connecting to QEMU GDB stub on :1234...
+[GDB-TRACE] Connected.
+[GDB-TRACE] Setting breakpoint on __ep_remove...
+[GDB-TRACE] Setting breakpoint on __mutex_lock_slowpath...
+[GDB-TRACE] Continuing execution (waiting for init to reach the race)...
+[GDB-TRACE] Breakpoint hit. Thread: 1
+[GDB-TRACE] === Backtrace ===
+[GDB-TRACE] #0  __ep_remove (ep=ep@entry=0xffffff807fa1e000, epi=0xffffff800438ef00, force=force@entry=0x0) at fs/eventpoll.c:723
+#1  0xffffffc0083bd170 in ep_remove_safe (ep=0xffffff807fa1e000, epi=<optimized out>) at fs/eventpoll.c:782
+#2  ep_clear_and_put (ep=0xffffff807fa1e000) at fs/eventpoll.c:818
+#3  0xffffffc0083bd1fc in ep_eventpoll_release (inode=<optimized out>, file=<optimized out>) at fs/eventpoll.c:834
+#4  0xffffffc00835c65c in __fput (file=0xffffff8002887300) at fs/file_table.c:320
+#5  0xffffffc00835c8a0 in ____fput (work=<optimized out>) at fs/file_table.c:348
+#6  0xffffffc0080ce198 in task_work_run () at kernel/task_work.c:179
+#7  0xffffffc00801fca0 in resume_user_mode_work (regs=0xffffffc00a0dbeb0) at ./include/linux/resume_user_mode.h:49
+#8  do_notify_resume (regs=regs@entry=0xffffffc00a0dbeb0, thread_flags=0x4) at arch/arm64/kernel/signal.c:1132
+#9  0xffffffc008f56adc in prepare_exit_to_user_mode (regs=0xffffffc00a0dbeb0) at arch/arm64/kernel/entry-common.c:139
+
+[GDB-TRACE] === Registers at __ep_remove entry ===
+[GDB-TRACE] x0             0xffffff807fa1e000  0xffffff807fa1e000
+x1             0xffffff800438ef00  0xffffff800438ef00
+x2             0x0                 0x0
+x3             0x1                 0x1
+
+[GDB-TRACE] === Disassembly of __ep_remove (first 60 instructions) ===
+[GDB-TRACE] Dump of assembler code from 0xffffffc0083bce2c to 0xffffffc0083bcf1c:
+=> 0xffffffc0083bce2c <__ep_remove+0>:	d503233f	paciasp
+   0xffffffc0083bce30 <__ep_remove+4>:	f800865e	str	x30, [x18], #8
+   0xffffffc0083bce34 <__ep_remove+8>:	a9bb7bfd	stp	x29, x30, [sp, #-80]!
+   0xffffffc0083bce38 <__ep_remove+12>:	910003fd	mov	x29, sp
+   0xffffffc0083bce3c <__ep_remove+16>:	a90153f3	stp	x19, x20, [sp, #16]
+   0xffffffc0083bce40 <__ep_remove+20>:	aa0103f4	mov	x20, x1
+   0xffffffc0083bce44 <__ep_remove+24>:	a9025bf5	stp	x21, x22, [sp, #32]
+   0xffffffc0083bce48 <__ep_remove+28>:	aa0003f6	mov	x22, x0
+   0xffffffc0083bce4c <__ep_remove+32>:	a90363f7	stp	x23, x24, [sp, #48]
+   0xffffffc0083bce50 <__ep_remove+36>:	2a0203f7	mov	w23, w2
+   0xffffffc0083bce54 <__ep_remove+40>:	f9402033	ldr	x19, [x1, #64]
+   0xffffffc0083bce58 <__ep_remove+44>:	f9401838	ldr	x24, [x1, #48]
+   0xffffffc0083bce5c <__ep_remove+48>:	b4000233	cbz	x19, 0xffffffc0083bcea0 <__ep_remove+116>
+   0xffffffc0083bce60 <__ep_remove+52>:	9000bb95	adrp	x21, 0xffffffc009b2c000 <mm_slots_hash+5672>
+   0xffffffc0083bce64 <__ep_remove+56>:	913482b5	add	x21, x21, #0xd20
+   0xffffffc0083bce68 <__ep_remove+60>:	f9400261	ldr	x1, [x19]
+   0xffffffc0083bce6c <__ep_remove+64>:	f9002281	str	x1, [x20, #64]
+   0xffffffc0083bce70 <__ep_remove+68>:	97f615dc	bl	0xffffffc0081425e0 <__rcu_read_lock>
+   0xffffffc0083bce74 <__ep_remove+72>:	9100e260	add	x0, x19, #0x38
+   0xffffffc0083bce78 <__ep_remove+76>:	c8dffc00	ldar	x0, [x0]
+   0xffffffc0083bce7c <__ep_remove+80>:	b4000060	cbz	x0, 0xffffffc0083bce88 <__ep_remove+92>
+   0xffffffc0083bce80 <__ep_remove+84>:	91004261	add	x1, x19, #0x10
+   0xffffffc0083bce84 <__ep_remove+88>:	97f52ffb	bl	0xffffffc008108e70 <remove_wait_queue>
+   0xffffffc0083bce88 <__ep_remove+92>:	97f62fc6	bl	0xffffffc008148da0 <__rcu_read_unlock>
+   0xffffffc0083bce8c <__ep_remove+96>:	f94006a0	ldr	x0, [x21, #8]
+   0xffffffc0083bce90 <__ep_remove+100>:	aa1303e1	mov	x1, x19
+   0xffffffc0083bce94 <__ep_remove+104>:	97fd9eab	bl	0xffffffc008324940 <kmem_cache_free>
+   0xffffffc0083bce98 <__ep_remove+108>:	f9402293	ldr	x19, [x20, #64]
+   0xffffffc0083bce9c <__ep_remove+112>:	b5fffe73	cbnz	x19, 0xffffffc0083bce68 <__ep_remove+60>
+   0xffffffc0083bcea0 <__ep_remove+116>:	9100c315	add	x21, x24, #0x30
+   0xffffffc0083bcea4 <__ep_remove+120>:	aa1503e0	mov	x0, x21
+   0xffffffc0083bcea8 <__ep_remove+124>:	942ea576	bl	0xffffffc008f66480 <_raw_spin_lock>
+   0xffffffc0083bceac <__ep_remove+128>:	3940f281	ldrb	w1, [x20, #60]
+   0xffffffc0083bceb0 <__ep_remove+132>:	52000021	eor	w1, w1, #0x1
+   0xffffffc0083bceb4 <__ep_remove+136>:	2a0102e2	orr	w2, w23, w1
+   0xffffffc0083bceb8 <__ep_remove+140>:	12001c53	and	w19, w2, #0xff
+   0xffffffc0083bcebc <__ep_remove+144>:	36000be2	tbz	w2, #0, 0xffffffc0083bd038 <__ep_remove+524>
+   0xffffffc0083bcec0 <__ep_remove+148>:	f9406b01	ldr	x1, [x24, #208]
+   0xffffffc0083bcec4 <__ep_remove+152>:	91014282	add	x2, x20, #0x50
+   0xffffffc0083bcec8 <__ep_remove+156>:	f9400020	ldr	x0, [x1]
+   0xffffffc0083bcecc <__ep_remove+160>:	eb02001f	cmp	x0, x2
+   0xffffffc0083bced0 <__ep_remove+164>:	f9402a82	ldr	x2, [x20, #80]
+   0xffffffc0083bced4 <__ep_remove+168>:	54000740	b.eq	0xffffffc0083bcfbc <__ep_remove+400>  // b.none
+   0xffffffc0083bced8 <__ep_remove+172>:	f9402e80	ldr	x0, [x20, #88]
+   0xffffffc0083bcedc <__ep_remove+176>:	f9000002	str	x2, [x0]
+   0xffffffc0083bcee0 <__ep_remove+180>:	b4000042	cbz	x2, 0xffffffc0083bcee8 <__ep_remove+188>
+   0xffffffc0083bcee4 <__ep_remove+184>:	f9000440	str	x0, [x2, #8]
+   0xffffffc0083bcee8 <__ep_remove+188>:	d2802440	mov	x0, #0x122                 	// #290
+   0xffffffc0083bceec <__ep_remove+192>:	f2fbd5a0	movk	x0, #0xdead, lsl #48
+   0xffffffc0083bcef0 <__ep_remove+196>:	f9002e80	str	x0, [x20, #88]
+   0xffffffc0083bcef4 <__ep_remove+200>:	aa1503e0	mov	x0, x21
+   0xffffffc0083bcef8 <__ep_remove+204>:	942ea4a2	bl	0xffffffc008f66180 <_raw_spin_unlock>
+   0xffffffc0083bcefc <__ep_remove+208>:	f9403ac0	ldr	x0, [x22, #112]
+   0xffffffc0083bcf00 <__ep_remove+212>:	eb00029f	cmp	x20, x0
+   0xffffffc0083bcf04 <__ep_remove+216>:	54000081	b.ne	0xffffffc0083bcf14 <__ep_remove+232>  // b.any
+   0xffffffc0083bcf08 <__ep_remove+220>:	aa1403e0	mov	x0, x20
+   0xffffffc0083bcf0c <__ep_remove+224>:	942ddfc5	bl	0xffffffc008f34e20 <rb_next>
+   0xffffffc0083bcf10 <__ep_remove+228>:	f9003ac0	str	x0, [x22, #112]
+   0xffffffc0083bcf14 <__ep_remove+232>:	9101a2c1	add	x1, x22, #0x68
+   0xffffffc0083bcf18 <__ep_remove+236>:	aa1403e0	mov	x0, x20
+End of assembler dump.
+
+[GDB-TRACE] === Stepping through __ep_remove ===
+[GDB-TRACE] Step 0: PC=0xffffffc0083bce2c <__ep_remove> => => 0xffffffc0083bce2c <__ep_remove>:	paciasp
+[GDB-TRACE] Step 1: PC=0xffffffc0083bce30 <__ep_remove+4> => => 0xffffffc0083bce30 <__ep_remove+4>:	str	x30, [x18], #8
+[GDB-TRACE] Step 2: PC=0xffffffc0083bce34 <__ep_remove+8> => => 0xffffffc0083bce34 <__ep_remove+8>:	stp	x29, x30, [sp, #-80]!
+[GDB-TRACE] Step 3: PC=0xffffffc0083bce38 <__ep_remove+12> => => 0xffffffc0083bce38 <__ep_remove+12>:	mov	x29, sp
+[GDB-TRACE] Step 4: PC=0xffffffc0083bce3c <__ep_remove+16> => => 0xffffffc0083bce3c <__ep_remove+16>:	stp	x19, x20, [sp, #16]
+[GDB-TRACE] Step 5: PC=0xffffffc0083bce40 <__ep_remove+20> => => 0xffffffc0083bce40 <__ep_remove+20>:	mov	x20, x1
+[GDB-TRACE] Step 6: PC=0xffffffc0083bce44 <__ep_remove+24> => => 0xffffffc0083bce44 <__ep_remove+24>:	stp	x21, x22, [sp, #32]
+[GDB-TRACE] Step 7: PC=0xffffffc0083bce48 <__ep_remove+28> => => 0xffffffc0083bce48 <__ep_remove+28>:	mov	x22, x0
+[GDB-TRACE] Step 8: PC=0xffffffc0083bce4c <__ep_remove+32> => => 0xffffffc0083bce4c <__ep_remove+32>:	stp	x23, x24, [sp, #48]
+[GDB-TRACE] Step 9: PC=0xffffffc0083bce50 <__ep_remove+36> => => 0xffffffc0083bce50 <__ep_remove+36>:	mov	w23, w2
+[GDB-TRACE] Step 10: PC=0xffffffc0083bce54 <__ep_remove+40> => => 0xffffffc0083bce54 <__ep_remove+40>:	ldr	x19, [x1, #64]
+[GDB-TRACE] Step 11: PC=0xffffffc0083bce58 <__ep_remove+44> => => 0xffffffc0083bce58 <__ep_remove+44>:	ldr	x24, [x1, #48]
+[GDB-TRACE] Step 12: PC=0xffffffc0083bce5c <__ep_remove+48> => => 0xffffffc0083bce5c <__ep_remove+48>:	cbz	x19, 0xffffffc0083bcea0 <__ep_remove+116>
+[GDB-TRACE] Step 13: PC=0xffffffc0083bcea0 <__ep_remove+116> => => 0xffffffc0083bcea0 <__ep_remove+116>:	add	x21, x24, #0x30
+[GDB-TRACE] Step 14: PC=0xffffffc0083bcea4 <__ep_remove+120> => => 0xffffffc0083bcea4 <__ep_remove+120>:	mov	x0, x21
+[GDB-TRACE] Step 15: PC=0xffffffc0083bcea8 <__ep_remove+124> => => 0xffffffc0083bcea8 <__ep_remove+124>:	bl	0xffffffc008f66480 <_raw_spin_lock>
+[GDB-TRACE] Step 16: PC=0xffffffc008f66480 <_raw_spin_lock> => => 0xffffffc008f66480 <_raw_spin_lock>:	mrs	x1, sp_el0
+[GDB-TRACE] Step 17: PC=0xffffffc008f66484 <_raw_spin_lock+4> => => 0xffffffc008f66484 <_raw_spin_lock+4>:	mov	x3, x0
+[GDB-TRACE] Step 18: PC=0xffffffc008f66488 <_raw_spin_lock+8> => => 0xffffffc008f66488 <_raw_spin_lock+8>:	ldr	w0, [x1, #16]
+[GDB-TRACE] Step 19: PC=0xffffffc008f6648c <_raw_spin_lock+12> => => 0xffffffc008f6648c <_raw_spin_lock+12>:	add	w0, w0, #0x1
+[GDB-TRACE] Step 20: PC=0xffffffc008f66490 <_raw_spin_lock+16> => => 0xffffffc008f66490 <_raw_spin_lock+16>:	str	w0, [x1, #16]
+[GDB-TRACE] Step 21: PC=0xffffffc008f66494 <_raw_spin_lock+20> => => 0xffffffc008f66494 <_raw_spin_lock+20>:	b	0xffffffc008f664b8 <_raw_spin_lock+56>
+[GDB-TRACE] Step 22: PC=0xffffffc008f664b8 <_raw_spin_lock+56> => => 0xffffffc008f664b8 <_raw_spin_lock+56>:	mov	x1, #0x0                   	// #0
+[GDB-TRACE] Step 23: PC=0xffffffc008f664bc <_raw_spin_lock+60> => => 0xffffffc008f664bc <_raw_spin_lock+60>:	mov	w2, #0x1                   	// #1
+[GDB-TRACE] Step 24: PC=0xffffffc008f664c0 <_raw_spin_lock+64> => => 0xffffffc008f664c0 <_raw_spin_lock+64>:	prfm	pstl1strm, [x3]
+[GDB-TRACE] Step 25: PC=0xffffffc008f664c4 <_raw_spin_lock+68> => => 0xffffffc008f664c4 <_raw_spin_lock+68>:	ldaxr	w0, [x3]
+[GDB-TRACE] Step 26: PC=0xffffffc008f664d4 <_raw_spin_lock+84> => => 0xffffffc008f664d4 <_raw_spin_lock+84>:	cbnz	w4, 0xffffffc008f664c4 <_raw_spin_lock+68>
+[GDB-TRACE] Step 27: PC=0xffffffc008f664d8 <_raw_spin_lock+88> => => 0xffffffc008f664d8 <_raw_spin_lock+88>:	cbz	w0, 0xffffffc008f664b4 <_raw_spin_lock+52>
+[GDB-TRACE] Step 28: PC=0xffffffc008f664b4 <_raw_spin_lock+52> => => 0xffffffc008f664b4 <_raw_spin_lock+52>:	ret
+[GDB-TRACE] Step 29: PC=0xffffffc0080dbcec <raw_spin_rq_lock_nested+40> => => 0xffffffc0080dbcec <raw_spin_rq_lock_nested+40>:	ldr	w0, [x19, #16]
+[GDB-TRACE] Step 30: PC=0xffffffc0080dbcf0 <raw_spin_rq_lock_nested+44> => => 0xffffffc0080dbcf0 <raw_spin_rq_lock_nested+44>:	sub	w0, w0, #0x1
+[GDB-TRACE] Step 31: PC=0xffffffc0080dbcf4 <raw_spin_rq_lock_nested+48> => => 0xffffffc0080dbcf4 <raw_spin_rq_lock_nested+48>:	str	w0, [x19, #16]
+[GDB-TRACE] Step 32: PC=0xffffffc0080dbcf8 <raw_spin_rq_lock_nested+52> => => 0xffffffc0080dbcf8 <raw_spin_rq_lock_nested+52>:	ldr	x30, [x18, #-8]!
+[GDB-TRACE] Step 33: PC=0xffffffc0080dbcfc <raw_spin_rq_lock_nested+56> => => 0xffffffc0080dbcfc <raw_spin_rq_lock_nested+56>:	ldr	x19, [sp, #16]
+[GDB-TRACE] Step 34: PC=0xffffffc0080dbd00 <raw_spin_rq_lock_nested+60> => => 0xffffffc0080dbd00 <raw_spin_rq_lock_nested+60>:	ldr	x29, [sp], #32
+[GDB-TRACE] Step 35: PC=0xffffffc0080dbd04 <raw_spin_rq_lock_nested+64> => => 0xffffffc0080dbd04 <raw_spin_rq_lock_nested+64>:	autiasp
+[GDB-TRACE] Step 36: PC=0xffffffc0080dbd08 <raw_spin_rq_lock_nested+68> => => 0xffffffc0080dbd08 <raw_spin_rq_lock_nested+68>:	ret
+[GDB-TRACE] Step 37: PC=0xffffffc0080e8dfc <scheduler_tick+120> => => 0xffffffc0080e8dfc <scheduler_tick+120>:	ldr	w0, [x19, #2760]
+[GDB-TRACE] Step 38: PC=0xffffffc0080e8e00 <scheduler_tick+124> => => 0xffffffc0080e8e00 <scheduler_tick+124>:	ldr	x1, [x19, #2920]
+[GDB-TRACE] Step 39: PC=0xffffffc0080e8e04 <scheduler_tick+128> => => 0xffffffc0080e8e04 <scheduler_tick+128>:	and	w0, w0, #0x3
+[GDB-TRACE] Continuing to check for mutex slowpath...
+[GDB-TRACE] Hit breakpoint. Thread: 1
+[GDB-TRACE] #0  __mutex_lock_slowpath (lock=lock@entry=0xffffff8004221150) at kernel/locking/mutex.c:1041
+#1  0xffffffc008f609cc in mutex_lock (lock=lock@entry=0xffffff8004221150) at kernel/locking/mutex.c:289
+#2  0xffffffc008c16a30 in snd_timer_user_ioctl (file=0xffffff8002887e00, cmd=0x40345410, arg=0x7fa4bf6ea8) at sound/core/timer.c:2128
+#3  0xffffffc008375ed4 in vfs_ioctl (filp=0xffffff8002887e00, cmd=0x40345410, arg=0x7fa4bf6ea8) at fs/ioctl.c:51
+#4  __do_sys_ioctl (fd=0x3, cmd=0x40345410, arg=0x7fa4bf6ea8) at fs/ioctl.c:870
+#5  __se_sys_ioctl (fd=<optimized out>, cmd=<optimized out>, arg=0x7fa4bf6ea8) at fs/ioctl.c:856
+#6  __arm64_sys_ioctl (regs=<optimized out>) at fs/ioctl.c:856
+#7  0xffffffc008029ce4 in __invoke_syscall (regs=0xffffffc00a0d3eb0, syscall_fn=<optimized out>) at arch/arm64/kernel/syscall.c:38
+#8  invoke_syscall (regs=regs@entry=0xffffffc00a0d3eb0, scno=<optimized out>, syscall_table=<optimized out>, sc_nr=0x1c3) at arch/arm64/kernel/syscall.c:52
+#9  0xffffffc008029de4 in el0_svc_common (regs=regs@entry=0xffffffc00a0d3eb0, scno=<optimized out>, syscall_table=<optimized out>, sc_nr=0x1c3) at arch/arm64/kernel/syscall.c:142
+
+[GDB-TRACE] x0             0xffffff8004221150  0xffffff8004221150
+x1             0x0                 0x0
+x2             0xffffff8004144700  0xffffff8004144700
+x3             0xffffff8004221150  0xffffff8004221150
+
+[GDB-TRACE] Mutex pointer: 0xffffff8004221150
+[GDB-TRACE] wait_list.next = 0xffffff8004221160
+[GDB-TRACE] wait_list.next = 0xffffff8004221160 (not NULL — this may be a normal mutex call)
+[GDB-TRACE] === UAF Orchestrator Complete ===

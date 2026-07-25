@@ -13,8 +13,8 @@ This sitemap organizes the 54 documentation files in `tier2/docs/` into 15 autho
 
 ## 2. Machine-Parseable Ledgers & Indexes
 - [VERIFICATION_LEDGER.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/VERIFICATION_LEDGER.md): Single Source of Truth mapping claims to raw log evidence.
-- [EXPERIMENT_INDEX.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/EXPERIMENT_INDEX.md): Index of test reproducers, GDB scripts, and shell launchers.
-- [KNOWLEDGE_EVOLUTION.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/KNOWLEDGE_EVOLUTION.md): Tracking assumptions, discoveries, and lessons learned.
+- [EXPERIMENT_INDEX.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/_archive_pre_reset/EXPERIMENT_INDEX.md): Index of test reproducers, GDB scripts, and shell launchers.
+- [KNOWLEDGE_EVOLUTION.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/_archive_pre_reset/KNOWLEDGE_EVOLUTION.md): Tracking assumptions, discoveries, and lessons learned.
 
 ---
 
@@ -35,8 +35,8 @@ This sitemap organizes the 54 documentation files in `tier2/docs/` into 15 autho
 ---
 
 ## 5. Research & Kernel Source Analysis
-- [KERNEL_RESEARCH_DB.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/KERNEL_RESEARCH_DB.md): **SSOT** for kernel offsets, struct layouts, and symbol maps.
-- [UAF_PRIMITIVE_ANALYSIS.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/UAF_PRIMITIVE_ANALYSIS.md): Source breakdown of eventpoll UAF, dual-watch topology, and stale write.
+- [KERNEL_RESEARCH_DB.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/_archive_pre_reset/KERNEL_RESEARCH_DB.md): **SSOT** for kernel offsets, struct layouts, and symbol maps.
+- [UAF_PRIMITIVE_ANALYSIS.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/_archive_pre_reset/UAF_PRIMITIVE_ANALYSIS.md): Source breakdown of eventpoll UAF, dual-watch topology, and stale write.
 - [KERNEL_EXECUTION_FLOW.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/KERNEL_EXECUTION_FLOW.md): Call graph mappings (`__mutex_lock_common`, `__ep_remove`).
 - [SUBSYSTEM_DEPENDENCIES.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/SUBSYSTEM_DEPENDENCIES.md): Inter-subsystem map between eventpoll, slab, and sound timer.
 
@@ -44,7 +44,7 @@ This sitemap organizes the 54 documentation files in `tier2/docs/` into 15 autho
 
 ## 6. Experiments & Execution Guides
 - [03_RESEARCH_LOG.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/03_RESEARCH_LOG.md): Daily research log.
-- [gdb_race_experiment.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/gdb_race_experiment.md): GDB race experiment setup and spin patching guide.
+- [gdb_race_experiment.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/_archive_pre_reset/gdb_race_experiment.md): GDB race experiment setup and spin patching guide.
 - [MANUAL_EXECUTION_GUIDE.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/MANUAL_EXECUTION_GUIDE.md): Interactive debugging guide.
 - [RUNTIME_WORKFLOW.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/RUNTIME_WORKFLOW.md): Execution loop workflow.
 

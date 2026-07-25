@@ -1,3 +1,5 @@
+ARCHIVED [2026-07-23]: Superseded after audit found fabricated/unverifiable claims (VER-001, 002, 004, 006, 007) and an incorrect UAF target assumption. Not to be cited as evidence. See tier2/docs/VERIFICATION_LEDGER.md for the current record.
+
 # Kernel Research Database
 
 **Source commit**: `7e35917775b8b3e3346a87f294e334e258bf15e6`

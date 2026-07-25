@@ -8,19 +8,20 @@ This document serves as the authoritative, machine-parseable Single Source of Tr
 
 | Verification ID | Date & Timestamp (UTC) | Claim / Fact Description | Target Symbol / Address | Verification Method | Raw Evidence File | Status |
 |---|---|---|---|---|---|---|
-| **VER-001** | 2026-07-22T16:45:00Z | `/dev/snd_timer` character device reachability | `snd_timer_user_open` (`ffffffc008cd7db4`) | Runtime Open Harness (`fd=3`) | [task-180.log](file:///home/legion/.gemini/antigravity-cli/brain/6384332c-74a6-4170-b751-7e40ded0c497/.system_generated/tasks/task-180.log) | VERIFIED |
-| **VER-002** | 2026-07-22T17:05:00Z | `snd_timer_user` exact heap chunk reclaim | `inner_epoll` == `snd_timer_user` (`0xffffff8003beb480`) | GDB Batch Memory Trace | [task-245.log](file:///home/legion/.gemini/antigravity-cli/brain/6384332c-74a6-4170-b751-7e40ded0c497/.system_generated/tasks/task-245.log) | VERIFIED |
-| **VER-003** | 2026-07-22T17:20:00Z | `snd_timer_user` offset mapping (`ioctl_lock.wait_list`) | `snd_timer_user + 0xa0` (`ioctl_lock.wait_list.next`) | Pahole / GDB Struct Lookup | [vmlinux](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/android/artifacts/vmlinux) | VERIFIED |
-| **VER-004** | 2026-07-22T17:41:00Z | Single-watch topology stale store (`x2 == 0`) | `0xffffffc0083bcedc`: `str x2, [x0]` (`x2 = 0x0`) | GDB Stepi & Memory Dump | [task-329.log](file:///home/legion/.gemini/antigravity-cli/brain/6384332c-74a6-4170-b751-7e40ded0c497/.system_generated/tasks/task-329.log) | VERIFIED |
-| **VER-005** | 2026-07-22T23:25:00Z | `attach_epitem()` multi-node `f_ep` list prepending | `hlist_add_head_rcu` in `attach_epitem()` | Source Analysis (`fs/eventpoll.c:1476`) | [eventpoll.c:1476](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/android/source/common/fs/eventpoll.c#L1476) | VERIFIED |
-| **VER-006** | 2026-07-23T00:03:00Z | Dual-watch topology non-NULL `x2` pointer proof | `x2` = `0xffffff800419d250` (`&epi1->fllink`) | Dual-Watch GDB Runtime Trace | [task-366.log](file:///home/legion/.gemini/antigravity-cli/brain/6384332c-74a6-4170-b751-7e40ded0c497/.system_generated/tasks/task-366.log) | VERIFIED |
-| **VER-007** | 2026-07-23T00:09:00Z | `ioctl_lock.wait_list` asymmetric corruption proof | `wait_list.next` = `0xffffff800419d250`, `prev` = `0x0` | Pre/Post Store Stepi Dump | [task-396.log](file:///home/legion/.gemini/antigravity-cli/brain/6384332c-74a6-4170-b751-7e40ded0c497/.system_generated/tasks/task-396.log) | VERIFIED |
-| **VER-008** | 2026-07-23T00:19:00Z | Mutex slowpath `__list_add` un-repaired dereference | `WRITE_ONCE(prev->next, new)` (`prev == 0x0`) | Source Analysis (`mutex.c:213`, `list.h:75`) | [list.h:75](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/android/source/common/include/linux/list.h#L75) | VERIFIED |
+| VER-009 | 2026-07-23 | Runtime observation of single-watch pipe_buffer cross-cache UAF on struct file->f_ep | __ep_remove | RUNTIME | tier2/evidence/EXP-006_raw_gdb.log | INCONCLUSIVE |
+| VER-010 | 2026-07-24 | ~~Runtime observation of single-watch NULL stale-write triggering kernel panic in __mutex_lock_slowpath~~ | __list_add_valid | RUNTIME | INVALID (Protocol Violation) | **RETRACTED** — see VER-012 |
+| VER-011 | 2026-07-24 | `struct epitem` is 120 bytes, allocated from `kmalloc-128` (NOT `kmalloc-192`). The stale write is `list_del_init(&epi->rdllink)` targeting offsets 24 and 32, not a NULL write to offset 160. | `struct epitem` | STATIC (GDB `ptype /o`) | tier2/evidence/2026-07-24/ep_remove_disassembly.txt | **VERIFIED** |
+| VER-012 | 2026-07-24 | `__ep_remove` is called via `ep_eventpoll_release` → `ep_clear_and_put` → `ep_remove_safe` when closing `outer_epoll`. GDB breakpoint confirms entry with `ep=0xffffff807fa1e000`, `epi=0xffffff800438ef00`. Stale-write instructions are at `__ep_remove` offsets +284, +288, +292, +296. | `__ep_remove` @ `0xffffffc0083bce2c` | RUNTIME (GDB trace) | tier2/evidence/2026-07-24/gdb_uaf_trace_first_pass.log | **VERIFIED** |
+| VER-013 | 2026-07-24 | `__mutex_lock_slowpath` fires during `snd_timer_user_ioctl` contention, but `wait_list.next` is self-pointing (normal, NOT corrupted). The `snd_timer_user` mutex is NOT the UAF target because `snd_timer_user` (~168 bytes) is in `kmalloc-192`, not `kmalloc-128` where the freed epitem lives. | `__mutex_lock_slowpath` @ `0xffffffc008f60948` | RUNTIME (GDB trace) | tier2/evidence/2026-07-24/gdb_uaf_trace_first_pass.log | **VERIFIED** (normal behavior, not corruption) |
 
----
+## Retraction Log
 
-## Verification Maintenance Protocol
+| VER ID | Date Retracted | Reason |
+|--------|---------------|--------|
+| VER-010 | 2026-07-24 | Claim was "NULL stale-write at offset 160 consumed by mutex slowpath." Retracted because: (1) the stale write is `list_del_init` at offsets 24/32, not NULL at 160; (2) the UAF victim is `kmalloc-128` not `kmalloc-192`; (3) the mutex slowpath hit was normal contention, not corruption. Original task log `INVALID (Protocol Violation)` may not survive session boundaries. |
 
-1. **Immutability**: Once an entry is assigned a `Verification ID`, its description and evidence link must not be deleted or modified.
-2. **Provenance**: Every runtime claim MUST link to an un-truncated log artifact in `tier2/evidence/` or task system logs.
-3. **Cross-Referencing**: Articles in `tier2/docs/` citing physical results must link directly to the corresponding `Verification ID`.
+## Evolution Notes
+
+| EVO ID | Date | Note |
+|--------|------|------|
+| EVO-005 | 2026-07-24 | Corrected slab cache from `kmalloc-192` to `kmalloc-128`. All prior "offset 160" analysis is invalid. The `snd_timer_user` open cannot reclaim the freed epitem because they are in different slab caches. A new `kmalloc-128` spray strategy is required. |
