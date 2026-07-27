@@ -1,0 +1,148 @@
+[*] Building EXP-007 test binary...
+[*] Packaging rootfs...
+.
+./sys
+./test_pipe_reclaim
+./cve_2026_46242_trigger
+./trigger
+./proc
+./bin
+./bin/busybox
+./bin/test_timer_write
+./bin/cve_trigger
+./test_print
+./test_snd_timer
+./test_reuse
+./init
+./dev
+./etc
+./test_timer_write
+./cve_trigger
+27398 blocks
+[*] Launching QEMU in background...
+[*] Launching GDB automation...
+pwndbg: loaded 199 pwndbg commands. Type pwndbg [filter] for a list.
+pwndbg: created 12 GDB functions (can be used with print/break). Type help function to see them.
+Reading symbols from ./android/artifacts/vmlinux...
+
+=== STARTING EXP-007 SAME-CACHE RECLAIM EXPERIMENT ===
+
+0x0000000040000000 in ?? ()
+Breakpoint 1 at 0xffffffc0083bcf74: file fs/eventpoll.c, line 771.
+Breakpoint 2 at 0xffffffc0083be4d8: file ./include/linux/slab.h, line 679.
+[*] Breakpoints set on __ep_remove's call_rcu and do_epoll_ctl's kmem_cache_alloc return. Continuing...
+[Switching to Thread 1.2]
+
+Thread 2 hit Breakpoint 2, 0xffffffc0083be4d8 in kmem_cache_zalloc (
+    k=<optimized out>, flags=0xcc0) at ./include/linux/slab.h:679
+679		return kmem_cache_alloc(k, flags | __GFP_ZERO);
+
+Thread 2 hit Breakpoint 1, 0xffffffc0083bcf74 in __ep_remove (
+    ep=ep@entry=0xffffff80043c9d80, epi=0xffffff80043cb400, 
+    force=force@entry=0x0) at fs/eventpoll.c:771
+771		call_rcu(&epi->rcu, epi_rcu_free);
+[EVIDENCE 1] Breakpoint hit at __ep_remove call_rcu(epi, ...)
+             Freed epitem address: 0xffffff80043cb400
+
+Thread 2 hit Breakpoint 2, 0xffffffc0083be4d8 in kmem_cache_zalloc (
+    k=<optimized out>, flags=0xcc0) at ./include/linux/slab.h:679
+679		return kmem_cache_alloc(k, flags | __GFP_ZERO);
+
+Thread 2 hit Breakpoint 2, 0xffffffc0083be4d8 in kmem_cache_zalloc (
+    k=<optimized out>, flags=0xcc0) at ./include/linux/slab.h:679
+679		return kmem_cache_alloc(k, flags | __GFP_ZERO);
+
+[MATCH] EXACT POINTER REUSE CONFIRMED!
+        Freed epitem:     0xffffff80043cb400
+        Allocated epitem: 0xffffff80043cb400
+        Reclaim occurred on allocation #2
+
+=== EXPERIMENT COMPLETE ===
+RESULT: PASSED (Same-cache reclaim verified)
+------- tip of the day (disable with set show-tips off) -------
+If you have debugging symbols the info args command shows current frame's function arguments (use up and down to switch between frames)
+LEGEND: STACK | HEAP | CODE | DATA | WX | RODATA
+─────────────[ REGISTERS / show-flags off / show-compact-regs off ]─────────────
+ X0   0xffffff80043cb400 ◂— 0
+ X1   0
+ X2   0
+ X3   1
+ X4   0xffffffc009d9bcb0 —▸ 0xffffff80043cb400 ◂— 0
+ X5   0x38
+ X6   2
+ X7   0
+ X8   0xffffff80043cb478 ◂— 0
+ X9   0
+ X10  0
+ X11  0
+ X12  0
+ X13  0
+ X14  0
+ X15  0x7fe52aae00
+ X16  0
+ X17  0
+ X18  0xffffffc009d93038 —▸ 0xffffffc0083be4d8 (do_epoll_ctl+812) ◂— mov x24, x0
+ X19  7
+ X20  0xffffff8004307600 ◂— 0
+ X21  0xffffff8004307400 ◂— 0
+ X22  0xffffffc009d9bdd8 ◂— 0x19
+ X23  0xffffff8004307600 ◂— 0
+ X24  0
+ X25  1
+ X26  0xffffff8004195840 —▸ 0xffffff800211a380 ◂— 0
+ X27  0xffffff8004307400 ◂— 0
+ X28  0
+ X29  0xffffffc009d9bd60 —▸ 0xffffffc009d9bdf0 —▸ 0xffffffc009d9be20 —▸ 0xffffffc009d9be40 —▸ 0xffffffc009d9be70 ◂— ...
+ SP   0xffffffc009d9bd20 ◂— 0xffffffc000000000
+ LR   0xffffffc0083be4d8 (do_epoll_ctl+812) ◂— mov x24, x0
+ PC   0xffffffc0083be4d8 (do_epoll_ctl+812) ◂— mov x24, x0
+─────────────────────[ DISASM / aarch64 / set emulate on ]──────────────────────
+b► 0xffffffc0083be4d8 <do_epoll_ctl+812>    mov    x24, x0          X24 => 0xffffff80043cb400 ◂— 0
+   0xffffffc0083be4dc <do_epoll_ctl+816>    ldr    x4, [sp, #8]     X4, [0xffffffc009d9bd28] => 0xffffffc009397b60 (path_limits) ◂— 0x1f4000003e8
+   0xffffffc0083be4e0 <do_epoll_ctl+820>  ✘ cbz    x0, 0xffffffc0083becac      <do_epoll_ctl+2816>
+ 
+   0xffffffc0083be4e4 <do_epoll_ctl+824>    add    x25, x24, #0x30       X25 => 0xffffff80043cb430 (0xffffff80043cb400 + 0x30)
+   0xffffffc0083be4e8 <do_epoll_ctl+828>    add    x0, x0, #0x18         X0 => 0xffffff80043cb418 (0xffffff80043cb400 + 0x18)
+   0xffffffc0083be4ec <do_epoll_ctl+832>    str    x0, [x24, #0x18]      [0xffffff80043cb418] <= 0xffffff80043cb418 ◂— 0xffffff80043cb418
+   0xffffffc0083be4f0 <do_epoll_ctl+836>    str    x0, [x24, #0x20]      [0xffffff80043cb420] <= 0xffffff80043cb418 ◂— 0xffffff80043cb418
+   0xffffffc0083be4f4 <do_epoll_ctl+840>    str    x27, [x24, #0x30]     [0xffffff80043cb430] <= 0xffffff8004307400 ◂— 0
+   0xffffffc0083be4f8 <do_epoll_ctl+844>    str    x26, [x24, #0x48]     [0xffffff80043cb448] <= 0xffffff8004195840 —▸ 0xffffff800211a380 ◂— 0
+   0xffffffc0083be4fc <do_epoll_ctl+848>    str    w19, [x25, #8]        [0xffffff80043cb438] <= 7
+   0xffffffc0083be500 <do_epoll_ctl+852>    str    x0, [sp, #0x10]       [0xffffffc009d9bd30] <= 0xffffff80043cb418 ◂— 0xffffff80043cb418
+───────────────────────────────[ SOURCE (CODE) ]────────────────────────────────
+In file: /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/android/source/common/include/linux/slab.h:679
+   673 
+   674 /*
+   675  * Shortcuts
+   676  */
+   677 static inline void *kmem_cache_zalloc(struct kmem_cache *k, gfp_t flags)
+   678 {
+ ► 679         return kmem_cache_alloc(k, flags | __GFP_ZERO);
+   680 }
+   681 
+   682 /**
+   683  * kzalloc - allocate memory. The memory is set to zero.
+   684  * @size: how many bytes of memory are required.
+   685  * @flags: the type of memory to allocate (see kmalloc).
+   686  */
+───────────────────────────────────[ STACK ]────────────────────────────────────
+00:0000│  sp 0xffffffc009d9bd20 ◂— 0xffffffc000000000
+01:0008│-038 0xffffffc009d9bd28 —▸ 0xffffffc009397b60 (path_limits) ◂— 0x1f4000003e8
+02:0010│-030 0xffffffc009d9bd30 —▸ 0xffffff807fa1e018 ◂— 0xffffff807fa1e018
+03:0018│-028 0xffffffc009d9bd38 ◂— 0
+... ↓       3 skipped
+07:0038│-008 0xffffffc009d9bd58 ◂— 0xae3f3a47551e7500
+─────────────────────────────────[ BACKTRACE ]──────────────────────────────────
+ ► 0 0xffffffc0083be4d8 do_epoll_ctl+812
+   1 0xffffffc0083be4d8 do_epoll_ctl+812
+   2 0xffffffc0083be4d8 do_epoll_ctl+812
+   3 0xffffffc0083bef20 __arm64_sys_epoll_ctl+288
+   4 0xffffffc0083bef20 __arm64_sys_epoll_ctl+288
+   5 0xffffffc0083bef20 __arm64_sys_epoll_ctl+288
+   6 0xffffffc008029ce4 invoke_syscall.constprop+68
+   7 0xffffffc008029ce4 invoke_syscall.constprop+68
+─────────────────────────────[ THREADS (2 TOTAL) ]──────────────────────────────
+  ► 2   "" stopped: 0xffffffc0083be4d8 <do_epoll_ctl+812> 
+    1   "" stopped: 0xffffffc008f5792c <cpu_do_idle+12> 
+────────────────────────────────────────────────────────────────────────────────
+[32m[1mpwndbg> [0m[32m[0m

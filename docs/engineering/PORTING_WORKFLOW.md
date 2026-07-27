@@ -1,3 +1,6 @@
+> [!WARNING]
+> This document describes the original Tier 1 x86 exploit model. For the corrected Tier 2 Android aarch64 analysis, the UAF victim is `struct epitem` (120 bytes) in `eventpoll_epi` cache, not `struct eventpoll` in `kmalloc-192`. See EVO-005 in VERIFICATION_LEDGER.md.
+
 # Kernel Exploit Porting Workflow & CVE-2026-46242 FAQ
 
 This document outlines a structured, 8-phase workflow for porting public kernel exploits (like kernelCTF submissions) to custom or updated targets. It also provides a core FAQ for CVE-2026-46242 (Bad Epoll) to serve as a baseline understanding before applying the workflow.
@@ -12,6 +15,7 @@ This document outlines a structured, 8-phase workflow for porting public kernel 
     A race condition occurs between `__ep_remove()` and the lockless fast-path in `eventpoll_release()`. A concurrent close operation allows `eventpoll_release` to see a NULL pointer and skip cleanup, leading to the memory being freed while `__ep_remove` still holds a reference.
 *   **What object is freed?**
     Initially, a `struct eventpoll` (kmalloc-192). Ultimately, this leads to a dangling pointer to a freed `struct file`.
+    [Corrected 2026-07-24, see EVO-005 in VERIFICATION_LEDGER.md: For Tier 2 Android aarch64 (kernel 6.1.23), the UAF victim is `struct epitem` (120 bytes) in the dedicated `eventpoll_epi` cache, not `struct eventpoll` in `kmalloc-192`.]
 *   **What object replaces it?**
     The exploit uses a **Cross-Cache Attack** to reclaim the freed `struct file`'s slab page as a **pipe buffer page** (`pipe_buffer`), giving the attacker arbitrary write control over the forged file object.
 *   **How is AAR (Arbitrary Address Read) achieved?**

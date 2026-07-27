@@ -41,20 +41,20 @@ MILESTONE STATUS
 4. **Vulnerability Analysis:** Investigated `ep_remove` UAF race in CVE-2026-46242 on the compiled Android kernel.
 5. **Runtime Boot:** Created minimal ARM64 BusyBox `initramfs.cpio` and successfully booted `Image` using `qemu-system-aarch64`.
 6. **Passive Validation:** Statically mapped target symbols `eventpoll_release_file` and `ep_remove` from `vmlinux`.
-7. **Reclaim Verification:** Empirically verified `snd_timer_user` reclaims freed `inner_epoll` allocation at identical address (`0xffffff8003beb480`).
+7. **Reclaim Verification:** ~~Empirically verified `snd_timer_user` reclaims freed `inner_epoll` allocation at identical address (`0xffffff8003beb480`).~~ [Corrected 2026-07-24, see EVO-005 in VERIFICATION_LEDGER.md: This observation was misleading. `snd_timer_user` (~168 bytes) allocates from `kmalloc-192`, while the freed `epitem` (120 bytes) is in the dedicated `eventpoll_epi` cache. They are in different slab caches and cannot reclaim each other's slots.]
 8. **Dual-Watch Topology Verification:** Verified that adding `inner_epoll` to two outer epolls produces a valid non-NULL kernel pointer (`epi1->fllink`) in register `x2`.
 9. **Stale Store Verification:** Identified `__ep_remove` offsets +284 to +296 for stale write instructions (`list_del_init(&epi->rdllink)`).
-10. **Slab Cache Pivot:** Discovered `struct epitem` (120 bytes) is allocated from `kmalloc-128`, invalidating previous `kmalloc-192` strategies involving `snd_timer_user`.
+10. **Slab Cache Pivot:** Discovered `struct epitem` (120 bytes) is allocated from the dedicated `eventpoll_epi` slab cache (created with `SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT` at `eventpoll.c:2555`), invalidating previous `kmalloc-192` strategies involving `snd_timer_user`. [Note: previously described as `kmalloc-128` — it is actually a dedicated cache that does NOT merge into `kmalloc-128` because `CONFIG_MEMCG` is disabled in this kernel config.]
 11. **Mutex Slowpath Invalidation:** Traced `__mutex_lock_slowpath` via GDB and verified normal contention behavior. The `wait_list` corruption hypothesis is formally retracted.
 
 ## Current Blocker
-- **Target Selection:** Need to identify viable target objects in the `kmalloc-128` cache for cross-cache overlap and corruption.
+- **Target Selection:** Need to validate same-cache reclaim within the dedicated `eventpoll_epi` slab cache (or confirm whether it merges with `kmalloc-128` under this kernel config). [Corrected 2026-07-24, see EVO-005 in VERIFICATION_LEDGER.md]
 
 ## Next Action
-- Execute Milestone: `kmalloc-128` victim object discovery and allocation shaping.
+- Execute Milestone: same-cache (`eventpoll_epi`) reclaim validation via `epoll_ctl(EPOLL_CTL_ADD)` epitem spray. [Corrected 2026-07-24, see EVO-005 in VERIFICATION_LEDGER.md]
 
 ## Latest Findings
-- The `struct epitem` resides in `kmalloc-128`, not `kmalloc-192`. The `snd_timer_user` struct cannot reclaim it.
+- The `struct epitem` (120 bytes) resides in the dedicated `eventpoll_epi` slab cache (NOT generic `kmalloc-128` or `kmalloc-192`). The `snd_timer_user` struct cannot reclaim it. [Corrected 2026-07-24, see EVO-005 in VERIFICATION_LEDGER.md]
 - The `__ep_remove` stale write targets `rdllink` at offsets 24 and 32 via `list_del_init`. It is NOT a NULL write at offset 160.
 - The `snd_timer_user` mutex slowpath is normal contention and irrelevant to the UAF.
 

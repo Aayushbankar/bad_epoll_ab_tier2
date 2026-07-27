@@ -19,6 +19,7 @@ This document categorizes the lessons learned during Tier 1, explaining why each
 
 ## Cross-Cache Attacks
 **Why it matters here:** The `eventpoll` object belongs to a specific cache. To gain control over its contents after it is freed, we must force the memory allocator to release the entire SLAB page back to the kernel, and then reclaim it using a generic allocator (like `kmalloc` via pipe buffers). This is the only way to forge the `struct file` safely.
+[Corrected 2026-07-24, see EVO-005 in VERIFICATION_LEDGER.md: For Tier 2 Android aarch64 (kernel 6.1.23), the UAF victim object is `struct epitem` (120 bytes) in the dedicated `eventpoll_epi` cache, not the `struct eventpoll` object described here.]
 
 ## Assembly and Calling Conventions
 **Why it matters here:** We are hijacking the instruction pointer (`RIP`). To safely pivot the stack pointer (`RSP`) into our controlled memory without crashing the kernel, we must understand x86_64 calling conventions and register states at the exact moment of execution flow hijacking.

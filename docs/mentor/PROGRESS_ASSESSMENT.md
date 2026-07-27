@@ -57,7 +57,9 @@ The following stages were genuinely accomplished and verified:
 
 * **Linux Kernel Internals:** Learned how deeply proprietary `.config` flags (like those used by Google for COS) alter the size and alignment of core structures, breaking "universal" exploits.
 * **SLUB Allocator:** Practical understanding of how freeing a `kmalloc-192` slab and reclaiming it as a `pipe_buffer` (Cross-Cache Attack) grants kernel read primitives.
+  [Corrected 2026-07-24, see EVO-005 in VERIFICATION_LEDGER.md: For Tier 2 Android aarch64 (kernel 6.1.23), the UAF victim is `struct epitem` (120 bytes) in the dedicated `eventpoll_epi` cache, not `struct eventpoll` in `kmalloc-192`.]
 * **epoll Internals:** Understanding the `close-vs-close` false-sharing race condition that zeroes out offset 160 of the `epitem`.
+  [Corrected 2026-07-24, see EVO-005 in VERIFICATION_LEDGER.md: For Tier 2 Android aarch64 (kernel 6.1.23), the stale write is `list_del_init(&epi->rdllink)` at offsets 24/32, not offset 160.]
 * **Use-After-Free Mechanics:** Witnessed how a dangling pointer to a freed structure can be escalated into a `struct file` UAF.
 * **Arbitrary Address Read:** Leveraged the `/proc/self/fdinfo` `seq_file` interface to leak kernel memory safely.
 * **KASLR & Hardware Emulation:** Learned that specific CPU instructions used for timing side-channels (`rdtscp`) are dropped by default in virtualized environments like QEMU `kvm64`.

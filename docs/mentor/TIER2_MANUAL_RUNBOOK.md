@@ -9,7 +9,7 @@ This demonstration explicitly establishes the runtime presence of CVE-2026-46242
 - **Vulnerability**: The trigger binary executes and deterministically reaches the `ep_remove()` UAF race path.
 - **Race Condition**: The inner eventpoll object is successfully freed by Thread B while Thread A is suspended.
 - **Memory Violation**: Stale access by Thread A is detected and confirmed by HW_TAGS MTE/KASAN.
-- **Allocator State**: The freed `kmalloc-192` victim-slot reuse has been observed being immediately reclaimed by subsequent Thread B allocations.
+- **Allocator State**: The freed ~~`kmalloc-192`~~ victim-slot reuse has been observed being immediately reclaimed by subsequent Thread B allocations. [Corrected 2026-07-24, see EVO-005 in VERIFICATION_LEDGER.md: the freed object is a `struct epitem` (120 bytes) in the dedicated `eventpoll_epi` slab cache, not a generic `kmalloc-192` slot.]
 - **Payload Subsystem**: `sys_add_key()` spray calls succeed entirely (returning positive key IDs without `-EDQUOT` or `-EPERM`).
 - **Lifecycle Tracing**: Temporary versus persistent key payload allocations have been distinguished conceptually and through source analysis (temporary buffer is allocated first and unconditionally freed; `user_preparse` persistent allocation occurs second).
 
@@ -92,7 +92,7 @@ This sequence executes the mechanically controlled GDB procedure to demonstrate 
 - **Trap**: GDB sets a breakpoint just before `file->f_ep = NULL` inside `__ep_remove()`.
 - **Intervention**: Upon hitting the trap, GDB sets `sync_flag = 1`, releasing Thread B.
 - **Thread B**: Closes the inner epoll, hitting the fast-path release, freeing the `inner_epoll` memory slot (confirmed by SLUB). Thread B then initiates the `sys_add_key` loop.
-- **Stale Access**: GDB resumes Thread A, which proceeds to `hlist_del_rcu()`, writing into the now-freed `inner_epoll` memory slot (`victim + 0xa0`).
+- **Stale Access**: GDB resumes Thread A, which proceeds to ~~`hlist_del_rcu()`~~ ~~writing into the now-freed `inner_epoll` memory slot (`victim + 0xa0`)~~ `list_del_init(&epi->rdllink)`, writing into the now-freed `epitem` memory slot at offsets 24 and 32. [Corrected 2026-07-24, see EVO-005 in VERIFICATION_LEDGER.md: the stale write is `list_del_init(&epi->rdllink)` at offsets 24/32, not `hlist_del_rcu` at offset 0xa0.]
 - **KASAN Report**: A `BUG: KASAN: use-after-free in __ep_remove+...` stack trace appears in the QEMU serial output.
 
 ## 6. Expected Evidence
@@ -106,7 +106,7 @@ Capture these specific data points during the meeting to validate the current Ti
 
 ## 7. What To Say To The Mentor
 
-> "The Tier 2 work is currently at the point where the UAF race is mechanically reproduced on an Android Common Kernel ARM64 target. We have confirmed the freed eventpoll object and the stale write using HW_TAGS MTE/KASAN. We have also confirmed that the relevant `kmalloc-192` slot can be reclaimed. The current investigation is distinguishing the temporary copy-in allocation performed by `sys_add_key` from the persistent `user_key_payload` allocation. The next experiment is intended to prove whether the persistent replacement object can occupy and remain in the victim slot. That has not yet been claimed as achieved."
+> "The Tier 2 work is currently at the point where the UAF race is mechanically reproduced on an Android Common Kernel ARM64 target. We have confirmed the freed ~~eventpoll object~~ `epitem` object and the stale write using HW_TAGS MTE/KASAN. We have also confirmed that the relevant ~~`kmalloc-192`~~ `eventpoll_epi` slot can be reclaimed. The current investigation is distinguishing the temporary copy-in allocation performed by `sys_add_key` from the persistent `user_key_payload` allocation. The next experiment is intended to prove whether the persistent replacement object can occupy and remain in the victim slot. That has not yet been claimed as achieved." [Corrected 2026-07-24, see EVO-005 in VERIFICATION_LEDGER.md: victim is `struct epitem` in the `eventpoll_epi` cache, not `struct eventpoll` in `kmalloc-192`.]
 
 ## 8. Live Demo Failure Recovery
 
@@ -126,7 +126,7 @@ Capture these specific data points during the meeting to validate the current Ti
 - Proved Thread B frees the `inner_epoll` object.
 - Proved Thread A commits a stale UAF write upon resuming.
 - Proved HW_TAGS KASAN detects the exact memory violation.
-- Proved `kmalloc-192` slot can be reclaimed by subsequent allocations.
+- Proved ~~`kmalloc-192`~~ `eventpoll_epi` slot can be reclaimed by subsequent allocations. [Corrected 2026-07-24, see EVO-005 in VERIFICATION_LEDGER.md: freed object is in the `eventpoll_epi` dedicated slab cache, not `kmalloc-192`.]
 - Proved `sys_add_key` succeeds and does not fail due to API quotas.
 - Identified that `sys_add_key` uses an unconditionally freed temporary buffer, resolving false-positive "syscall failure" observations.
 
@@ -139,7 +139,7 @@ The investigation has isolated why previous allocation tracing observed the vict
 - Demonstrating the persistent replacement object successfully anchoring the victim slot.
 
 **NEXT PLANNED MICRO-STEP:**
-(PLANNED ONLY): Modify `cve_2026_46242_trigger.c` to use a payload size of 128 bytes so that the temporary `payload` buffer routes to `kmalloc-128`, forcing the persistent `upayload` buffer (152 bytes) to exclusively route to the victim `kmalloc-192` cache. Run the controlled GDB trace tracing `user_preparse` to prove the persistent object anchors the victim slot.
+~~(PLANNED ONLY): Modify `cve_2026_46242_trigger.c` to use a payload size of 128 bytes so that the temporary `payload` buffer routes to `kmalloc-128`, forcing the persistent `upayload` buffer (152 bytes) to exclusively route to the victim `kmalloc-192` cache. Run the controlled GDB trace tracing `user_preparse` to prove the persistent object anchors the victim slot.~~ [Corrected 2026-07-24, see EVO-005 in VERIFICATION_LEDGER.md: this entire cache-splitting strategy is obsolete. The victim is a `struct epitem` (120 bytes) in the dedicated `eventpoll_epi` slab cache, not in `kmalloc-192`. The spray object must target the `eventpoll_epi` cache instead.]
 
 ## 10. Two-Minute Mentor Demonstration Path
 
@@ -156,7 +156,7 @@ The investigation has isolated why previous allocation tracing observed the vict
 2. Open `tier2/android/source/common/security/keys/keyctl.c` and point to line 147 (`kvfree_sensitive(payload, plen);`).
 3. Explain the diagnostic breakthrough: the previous observation of "repetitive victim slot reuse" was an artifact of tracing this temporary copy-in buffer which is always freed, rather than a syscall error.
 4. Open `tier2/android/source/common/security/keys/user_defined.c` and point to line 67 (`kmalloc(sizeof(*upayload) + datalen, GFP_KERNEL);`).
-5. Explain the mathematical path forward: `sizeof(user_key_payload)` is 24 bytes. By passing a 128-byte payload, the temporary buffer occupies `kmalloc-128`, bypassing the victim slot, while the persistent `user_preparse` allocation occupies `152` bytes, landing perfectly in the `kmalloc-192` victim slot.
+5. ~~Explain the mathematical path forward: `sizeof(user_key_payload)` is 24 bytes. By passing a 128-byte payload, the temporary buffer occupies `kmalloc-128`, bypassing the victim slot, while the persistent `user_preparse` allocation occupies `152` bytes, landing perfectly in the `kmalloc-192` victim slot.~~ [Corrected 2026-07-24, see EVO-005 in VERIFICATION_LEDGER.md: this entire `kmalloc-192` cache-splitting strategy is obsolete. The victim is a `struct epitem` (120 bytes) in the dedicated `eventpoll_epi` slab cache. The spray strategy must be redesigned to target that cache.]
 
 ## 12. Mentor Questions and Exact Answers
 
@@ -170,10 +170,10 @@ The investigation has isolated why previous allocation tracing observed the vict
   "No. We have not established any control-flow hijacking or privilege escalation primitives."
 
 - **"Why is this exploitable?"**
-  "It allows a UAF write into a widely accessible kernel heap cache (`kmalloc-192`). If an attacker can reliably place a carefully crafted replacement object (such as a key payload) in the freed slot before the stale write occurs, they may corrupt kernel metadata."
+  "It allows a UAF write into ~~a widely accessible kernel heap cache (`kmalloc-192`)~~ the dedicated `eventpoll_epi` slab cache. If an attacker can reliably place a carefully crafted replacement object (such as a key payload) in the freed slot before the stale write occurs, they may corrupt kernel metadata." [Corrected 2026-07-24, see EVO-005 in VERIFICATION_LEDGER.md: the freed object is in the `eventpoll_epi` dedicated cache, not `kmalloc-192`.]
 
 - **"What does KASAN prove?"**
-  "It proves the hardware tags mismatch during Thread A's `hlist_del_rcu` operation, irrefutably confirming that the memory chunk was freed by Thread B before Thread A could access it."
+  "It proves the hardware tags mismatch during Thread A's ~~`hlist_del_rcu`~~ `list_del_init(&epi->rdllink)` operation, irrefutably confirming that the memory chunk was freed by Thread B before Thread A could access it." [Corrected 2026-07-24, see EVO-005 in VERIFICATION_LEDGER.md: the stale write is `list_del_init(&epi->rdllink)` at offsets 24/32, not `hlist_del_rcu` at offset 0xa0.]
 
 - **"Why did the same address appear repeatedly in your earlier tests?"**
   "Our GDB instrumentation was tracking the return value of `kvmalloc_node` in `sys_add_key`. This targets a temporary buffer used for `copy_from_user` that the kernel unconditionally frees a few lines later. Because it was freed every iteration, it kept reclaiming the same SLUB slot."

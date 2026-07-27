@@ -1,5 +1,7 @@
 # Bad Epoll (CVE-2026-46242) Engineering Knowledge Transfer
 
+> This document describes the **Tier 1 x86 Linux 6.12.67** exploit model. For the corrected Tier 2 Android aarch64 analysis, the UAF victim is `struct epitem` (120 bytes) in the dedicated `eventpoll_epi` cache, not `struct eventpoll` in `kmalloc-192`. See EVO-005 in VERIFICATION_LEDGER.md.
+
 Welcome to the `bad-epoll-lab`. This document is the definitive engineering knowledge transfer (KT) guide for the Tier 1 Linux 6.12.67 exploit port. It serves as an onboarding manual, historical timeline, and forensic record of the project.
 
 ---
