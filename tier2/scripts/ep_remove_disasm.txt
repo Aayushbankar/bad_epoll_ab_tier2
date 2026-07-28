@@ -1,0 +1,147 @@
+[31m[1mpwndbg: [0m[31m[0m[91mloaded 199 pwndbg commands. Type [35mpwndbg [filter][0m[91m for a list.[0m
+[31m[1mpwndbg: [0m[31m[0m[91mcreated 12 GDB functions (can be used with print/break). Type [35mhelp function[0m[91m to see them.[0m
+Dump of assembler code for function __ep_remove:
+   0xffffffc0083bce2c <+0>:	paciasp
+   0xffffffc0083bce30 <+4>:	str	x30, [x18], #8
+   0xffffffc0083bce34 <+8>:	stp	x29, x30, [sp, #-80]!
+   0xffffffc0083bce38 <+12>:	mov	x29, sp
+   0xffffffc0083bce3c <+16>:	stp	x19, x20, [sp, #16]
+   0xffffffc0083bce40 <+20>:	mov	x20, x1
+   0xffffffc0083bce44 <+24>:	stp	x21, x22, [sp, #32]
+   0xffffffc0083bce48 <+28>:	mov	x22, x0
+   0xffffffc0083bce4c <+32>:	stp	x23, x24, [sp, #48]
+   0xffffffc0083bce50 <+36>:	mov	w23, w2
+   0xffffffc0083bce54 <+40>:	ldr	x19, [x1, #64]
+   0xffffffc0083bce58 <+44>:	ldr	x24, [x1, #48]
+   0xffffffc0083bce5c <+48>:	cbz	x19, 0xffffffc0083bcea0 <__ep_remove+116>
+   0xffffffc0083bce60 <+52>:	adrp	x21, 0xffffffc009b2c000 <mm_slots_hash+5672>
+   0xffffffc0083bce64 <+56>:	add	x21, x21, #0xd20
+   0xffffffc0083bce68 <+60>:	ldr	x1, [x19]
+   0xffffffc0083bce6c <+64>:	str	x1, [x20, #64]
+   0xffffffc0083bce70 <+68>:	bl	0xffffffc0081425e0 <__rcu_read_lock>
+   0xffffffc0083bce74 <+72>:	add	x0, x19, #0x38
+   0xffffffc0083bce78 <+76>:	ldar	x0, [x0]
+   0xffffffc0083bce7c <+80>:	cbz	x0, 0xffffffc0083bce88 <__ep_remove+92>
+   0xffffffc0083bce80 <+84>:	add	x1, x19, #0x10
+   0xffffffc0083bce84 <+88>:	bl	0xffffffc008108e70 <remove_wait_queue>
+   0xffffffc0083bce88 <+92>:	bl	0xffffffc008148da0 <__rcu_read_unlock>
+   0xffffffc0083bce8c <+96>:	ldr	x0, [x21, #8]
+   0xffffffc0083bce90 <+100>:	mov	x1, x19
+   0xffffffc0083bce94 <+104>:	bl	0xffffffc008324940 <kmem_cache_free>
+   0xffffffc0083bce98 <+108>:	ldr	x19, [x20, #64]
+   0xffffffc0083bce9c <+112>:	cbnz	x19, 0xffffffc0083bce68 <__ep_remove+60>
+   0xffffffc0083bcea0 <+116>:	add	x21, x24, #0x30
+   0xffffffc0083bcea4 <+120>:	mov	x0, x21
+   0xffffffc0083bcea8 <+124>:	bl	0xffffffc008f66480 <_raw_spin_lock>
+   0xffffffc0083bceac <+128>:	ldrb	w1, [x20, #60]
+   0xffffffc0083bceb0 <+132>:	eor	w1, w1, #0x1
+   0xffffffc0083bceb4 <+136>:	orr	w2, w23, w1
+   0xffffffc0083bceb8 <+140>:	and	w19, w2, #0xff
+   0xffffffc0083bcebc <+144>:	tbz	w2, #0, 0xffffffc0083bd038 <__ep_remove+524>
+   0xffffffc0083bcec0 <+148>:	ldr	x1, [x24, #208]
+   0xffffffc0083bcec4 <+152>:	add	x2, x20, #0x50
+   0xffffffc0083bcec8 <+156>:	ldr	x0, [x1]
+   0xffffffc0083bcecc <+160>:	cmp	x0, x2
+   0xffffffc0083bced0 <+164>:	ldr	x2, [x20, #80]
+   0xffffffc0083bced4 <+168>:	b.eq	0xffffffc0083bcfbc <__ep_remove+400>  // b.none
+   0xffffffc0083bced8 <+172>:	ldr	x0, [x20, #88]
+   0xffffffc0083bcedc <+176>:	str	x2, [x0]
+   0xffffffc0083bcee0 <+180>:	cbz	x2, 0xffffffc0083bcee8 <__ep_remove+188>
+   0xffffffc0083bcee4 <+184>:	str	x0, [x2, #8]
+   0xffffffc0083bcee8 <+188>:	mov	x0, #0x122                 	// #290
+   0xffffffc0083bceec <+192>:	movk	x0, #0xdead, lsl #48
+   0xffffffc0083bcef0 <+196>:	str	x0, [x20, #88]
+   0xffffffc0083bcef4 <+200>:	mov	x0, x21
+   0xffffffc0083bcef8 <+204>:	bl	0xffffffc008f66180 <_raw_spin_unlock>
+   0xffffffc0083bcefc <+208>:	ldr	x0, [x22, #112]
+   0xffffffc0083bcf00 <+212>:	cmp	x20, x0
+   0xffffffc0083bcf04 <+216>:	b.ne	0xffffffc0083bcf14 <__ep_remove+232>  // b.any
+   0xffffffc0083bcf08 <+220>:	mov	x0, x20
+   0xffffffc0083bcf0c <+224>:	bl	0xffffffc008f34e20 <rb_next>
+   0xffffffc0083bcf10 <+228>:	str	x0, [x22, #112]
+   0xffffffc0083bcf14 <+232>:	add	x1, x22, #0x68
+   0xffffffc0083bcf18 <+236>:	mov	x0, x20
+   0xffffffc0083bcf1c <+240>:	bl	0xffffffc008f34590 <rb_erase>
+   0xffffffc0083bcf20 <+244>:	add	x19, x20, #0x18
+   0xffffffc0083bcf24 <+248>:	add	x0, x22, #0x60
+   0xffffffc0083bcf28 <+252>:	bl	0xffffffc008f66b80 <_raw_write_lock_irq>
+   0xffffffc0083bcf2c <+256>:	ldr	x0, [x20, #24]
+   0xffffffc0083bcf30 <+260>:	cmp	x19, x0
+   0xffffffc0083bcf34 <+264>:	b.eq	0xffffffc0083bcf58 <__ep_remove+300>  // b.none
+   0xffffffc0083bcf38 <+268>:	mov	x0, x19
+   0xffffffc0083bcf3c <+272>:	bl	0xffffffc008690d00 <__list_del_entry_valid>
+   0xffffffc0083bcf40 <+276>:	tbz	w0, #0, 0xffffffc0083bcf50 <__ep_remove+292>
+   0xffffffc0083bcf44 <+280>:	ldp	x1, x0, [x20, #24]
+   0xffffffc0083bcf48 <+284>:	str	x0, [x1, #8]
+   0xffffffc0083bcf4c <+288>:	str	x1, [x0]
+   0xffffffc0083bcf50 <+292>:	str	x19, [x20, #24]
+   0xffffffc0083bcf54 <+296>:	str	x19, [x20, #32]
+   0xffffffc0083bcf58 <+300>:	add	x0, x22, #0x60
+   0xffffffc0083bcf5c <+304>:	bl	0xffffffc008f665e0 <_raw_write_unlock_irq>
+   0xffffffc0083bcf60 <+308>:	ldr	x0, [x20, #96]
+   0xffffffc0083bcf64 <+312>:	bl	0xffffffc008876dc0 <wakeup_source_unregister>
+   0xffffffc0083bcf68 <+316>:	mov	x0, x20
+   0xffffffc0083bcf6c <+320>:	adrp	x1, 0xffffffc0083bc000 <__arm64_sys_inotify_add_watch+544>
+   0xffffffc0083bcf70 <+324>:	add	x1, x1, #0x540
+   0xffffffc0083bcf74 <+328>:	bl	0xffffffc00814be10 <call_rcu>
+   0xffffffc0083bcf78 <+332>:	adrp	x1, 0xffffffc009b2c000 <mm_slots_hash+5672>
+   0xffffffc0083bcf7c <+336>:	ldr	x0, [x22, #136]
+   0xffffffc0083bcf80 <+340>:	ldr	w2, [x1, #3976]
+   0xffffffc0083bcf84 <+344>:	mov	x1, #0xffffffffffffffff    	// #-1
+   0xffffffc0083bcf88 <+348>:	add	x0, x0, #0x8
+   0xffffffc0083bcf8c <+352>:	bl	0xffffffc0086eaae4 <percpu_counter_add_batch>
+   0xffffffc0083bcf90 <+356>:	mov	x0, x22
+   0xffffffc0083bcf94 <+360>:	bl	0xffffffc0083bc980 <ep_refcount_dec_and_test>
+   0xffffffc0083bcf98 <+364>:	mov	w19, w0
+   0xffffffc0083bcf9c <+368>:	ldp	x21, x22, [sp, #32]
+   0xffffffc0083bcfa0 <+372>:	mov	w0, w19
+   0xffffffc0083bcfa4 <+376>:	ldp	x19, x20, [sp, #16]
+   0xffffffc0083bcfa8 <+380>:	ldp	x23, x24, [sp, #48]
+   0xffffffc0083bcfac <+384>:	ldr	x30, [x18, #-8]!
+   0xffffffc0083bcfb0 <+388>:	ldr	x29, [sp], #80
+   0xffffffc0083bcfb4 <+392>:	autiasp
+   0xffffffc0083bcfb8 <+396>:	ret
+   0xffffffc0083bcfbc <+400>:	cbz	x2, 0xffffffc0083bcfcc <__ep_remove+416>
+   0xffffffc0083bcfc0 <+404>:	ldr	x0, [x20, #88]
+   0xffffffc0083bcfc4 <+408>:	str	x2, [x0]
+   0xffffffc0083bcfc8 <+412>:	b	0xffffffc0083bcee4 <__ep_remove+184>
+   0xffffffc0083bcfcc <+416>:	ldr	x2, [x24, #40]
+   0xffffffc0083bcfd0 <+420>:	adrp	x0, 0xffffffc009397000 <symbols.3+96>
+   0xffffffc0083bcfd4 <+424>:	add	x0, x0, #0xb60
+   0xffffffc0083bcfd8 <+428>:	str	xzr, [x24, #208]
+   0xffffffc0083bcfdc <+432>:	add	x0, x0, #0x18
+   0xffffffc0083bcfe0 <+436>:	cmp	x2, x0
+   0xffffffc0083bcfe4 <+440>:	b.eq	0xffffffc0083bd060 <__ep_remove+564>  // b.none
+   0xffffffc0083bcfe8 <+444>:	add	x0, x1, #0x8
+   0xffffffc0083bcfec <+448>:	ldar	x0, [x0]
+   0xffffffc0083bcff0 <+452>:	ldr	x2, [x20, #80]
+   0xffffffc0083bcff4 <+456>:	cbnz	x0, 0xffffffc0083bced8 <__ep_remove+172>
+   0xffffffc0083bcff8 <+460>:	ldr	x0, [x20, #88]
+   0xffffffc0083bcffc <+464>:	str	x2, [x0]
+   0xffffffc0083bd000 <+468>:	cbz	x2, 0xffffffc0083bd008 <__ep_remove+476>
+   0xffffffc0083bd004 <+472>:	str	x0, [x2, #8]
+   0xffffffc0083bd008 <+476>:	mov	x0, #0x122                 	// #290
+   0xffffffc0083bd00c <+480>:	str	x1, [sp, #72]
+   0xffffffc0083bd010 <+484>:	movk	x0, #0xdead, lsl #48
+   0xffffffc0083bd014 <+488>:	str	x0, [x20, #88]
+   0xffffffc0083bd018 <+492>:	mov	x0, x21
+   0xffffffc0083bd01c <+496>:	bl	0xffffffc008f66180 <_raw_spin_unlock>
+   0xffffffc0083bd020 <+500>:	ldr	x1, [sp, #72]
+   0xffffffc0083bd024 <+504>:	cbz	x1, 0xffffffc0083bcefc <__ep_remove+208>
+   0xffffffc0083bd028 <+508>:	adrp	x0, 0xffffffc009b2c000 <mm_slots_hash+5672>
+   0xffffffc0083bd02c <+512>:	ldr	x0, [x0, #3384]
+   0xffffffc0083bd030 <+516>:	bl	0xffffffc008324940 <kmem_cache_free>
+   0xffffffc0083bd034 <+520>:	b	0xffffffc0083bcefc <__ep_remove+208>
+   0xffffffc0083bd038 <+524>:	mov	x0, x21
+   0xffffffc0083bd03c <+528>:	bl	0xffffffc008f66180 <_raw_spin_unlock>
+   0xffffffc0083bd040 <+532>:	mov	w0, w19
+   0xffffffc0083bd044 <+536>:	ldp	x19, x20, [sp, #16]
+   0xffffffc0083bd048 <+540>:	ldp	x21, x22, [sp, #32]
+   0xffffffc0083bd04c <+544>:	ldp	x23, x24, [sp, #48]
+   0xffffffc0083bd050 <+548>:	ldr	x30, [x18, #-8]!
+   0xffffffc0083bd054 <+552>:	ldr	x29, [sp], #80
+   0xffffffc0083bd058 <+556>:	autiasp
+   0xffffffc0083bd05c <+560>:	ret
+   0xffffffc0083bd060 <+564>:	ldr	x2, [x20, #80]
+   0xffffffc0083bd064 <+568>:	b	0xffffffc0083bced8 <__ep_remove+172>
+End of assembler dump.

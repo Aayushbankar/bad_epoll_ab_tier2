@@ -1,0 +1,61 @@
+[31m[1mpwndbg: [0m[31m[0m[91mloaded 199 pwndbg commands. Type [35mpwndbg [filter][0m[91m for a list.[0m
+[31m[1mpwndbg: [0m[31m[0m[91mcreated 12 GDB functions (can be used with print/break). Type [35mhelp function[0m[91m to see them.[0m
+
+=== STARTING EXP-008 TIMING ANALYSIS ===
+
+0x0000000040000000 in ?? ()
+Breakpoint 1 at 0xffffffc0083bce2c: file fs/eventpoll.c, line 723.
+Breakpoint 2 at 0xffffffc0083bcf50: file ./include/linux/list.h, line 37.
+Breakpoint 3 at 0xffffffc0083bcf74: file fs/eventpoll.c, line 771.
+Breakpoint 4 at 0xffffffc0083be4d8: file ./include/linux/slab.h, line 679.
+[*] Breakpoints set. Continuing to first __ep_remove entry...
+[Switching to Thread 1.2]
+
+Thread 2 hit Breakpoint 4, 0xffffffc0083be4d8 in kmem_cache_zalloc (k=<optimized out>, flags=0xcc0) at ./include/linux/slab.h:679
+679		return kmem_cache_alloc(k, flags | __GFP_ZERO);
+[SEQ-001] kmem_cache_alloc RETURN: new_epi=0xffffff8005521f00
+
+Thread 2 hit Breakpoint 4, 0xffffffc0083be4d8 in kmem_cache_zalloc (k=<optimized out>, flags=0xcc0) at ./include/linux/slab.h:679
+679		return kmem_cache_alloc(k, flags | __GFP_ZERO);
+[SEQ-002] kmem_cache_alloc RETURN: new_epi=0xffffff8005521000
+
+Thread 2 hit Breakpoint 1, __ep_remove (ep=ep@entry=0xffffff800551eb40, epi=0xffffff8005521000, force=force@entry=0x0) at fs/eventpoll.c:723
+723		struct file *file = epi->ffd.file;
+[SEQ-003] __ep_remove ENTRY: ep=0xffffff800551eb40, epi=0xffffff8005521000
+
+Thread 2 hit Breakpoint 2, INIT_LIST_HEAD (list=0xffffff8005521018) at ./include/linux/list.h:37
+37		WRITE_ONCE(list->next, list);
+[SEQ-004] list_del_init WRITE rdllink.next: epi=0xffffff8005521000, value=0xffffff8005521018 (expect epi+24=0xffffff8005521018)
+
+Thread 2 hit Breakpoint 3, 0xffffffc0083bcf74 in __ep_remove (ep=ep@entry=0xffffff800551eb40, epi=0xffffff8005521000, force=force@entry=0x0) at fs/eventpoll.c:771
+771		call_rcu(&epi->rcu, epi_rcu_free);
+[SEQ-005] call_rcu (DEFERRED FREE): epi=0xffffff8005521000
+[*] First epi 0xffffff8005521000 is now deferred-free'd. Spray can begin after RCU grace period.
+
+Thread 2 hit Breakpoint 4, 0xffffffc0083be4d8 in kmem_cache_zalloc (k=<optimized out>, flags=0xcc0) at ./include/linux/slab.h:679
+679		return kmem_cache_alloc(k, flags | __GFP_ZERO);
+[SEQ-006] kmem_cache_alloc RETURN: new_epi=0xffffff807fa1e000
+
+Thread 2 hit Breakpoint 4, 0xffffffc0083be4d8 in kmem_cache_zalloc (k=<optimized out>, flags=0xcc0) at ./include/linux/slab.h:679
+679		return kmem_cache_alloc(k, flags | __GFP_ZERO);
+[SEQ-007] kmem_cache_alloc RETURN: new_epi=0xffffff8005521000
+[SEQ-007] *** RECLAIM MATCH: freed=0xffffff8005521000 == new=0xffffff8005521000 ***
+
+=== EVENT SEQUENCE SUMMARY ===
+[SEQ-001] kmem_cache_alloc RETURN: new_epi=0xffffff8005521f00
+[SEQ-002] kmem_cache_alloc RETURN: new_epi=0xffffff8005521000
+[SEQ-003] __ep_remove ENTRY: ep=0xffffff800551eb40, epi=0xffffff8005521000
+[SEQ-004] list_del_init WRITE rdllink.next: epi=0xffffff8005521000, value=0xffffff8005521018 (expect epi+24=0xffffff8005521018)
+[SEQ-005] call_rcu (DEFERRED FREE): epi=0xffffff8005521000
+[SEQ-006] kmem_cache_alloc RETURN: new_epi=0xffffff807fa1e000
+[SEQ-007] kmem_cache_alloc RETURN: new_epi=0xffffff8005521000
+[SEQ-007] *** RECLAIM MATCH: freed=0xffffff8005521000 == new=0xffffff8005521000 ***
+
+=== TIMING ANALYSIS ===
+RESULT: list_del_init (SEQ-4) happens BEFORE call_rcu (SEQ-5)
+        The write corrupts the STILL-OWNED epitem, BEFORE the deferred free.
+        Reclaim (SEQ-7) happens AFTER both.
+        CONCLUSION: The list_del_init write is NORMAL CLEANUP, not UAF corruption of reclaimed object.
+
+=== EXP-008 COMPLETE ===
+[Inferior 1 (process 1) detached]
