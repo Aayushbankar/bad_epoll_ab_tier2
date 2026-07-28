@@ -12,3 +12,4 @@ This index logs all test reproducers, GDB automation scripts, and experimental e
 
 | EXP-007 | 2026-07-27 | Cache isolation verification + same-cache epitem reclaim | eventpoll_epi cache | test_epoll_spray | gdb_epoll_spray.py | **PASSED** (Reclaim verified) | tier2/evidence/EXP-007_raw_gdb.log |
 | EXP-008 | 2026-07-28 | Timing analysis: does list_del_init corrupt freed or live reclaimed epitem? Primitive assessment. | eventpoll_epi cache | test_epoll_spray | gdb_epoll_spray.py (extended) | **PASSED** (Dead end identified) | tier2/evidence/EXP-008_raw_gdb.log |
+| EXP-009 | 2026-07-28 | `struct file` UAF: Identify if `epi->ffd.file` is accessed after the underlying file's refcount drops to zero, and attempt pipe_buffer cross-cache reclaim of the file struct slot. | filp cache (struct file) | (pending) | (pending) | **RUNNING** | (pending) |
