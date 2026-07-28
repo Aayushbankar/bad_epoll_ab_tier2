@@ -1,0 +1,35 @@
+[*] Building EXP-009 test binary...
+[*] Packaging rootfs...
+[*] Launching QEMU in background...
+[*] Launching GDB automation...
+pwndbg: loaded 199 pwndbg commands. Type pwndbg [filter] for a list.
+pwndbg: created 12 GDB functions (can be used with print/break). Type help function to see them.
+Reading symbols from ./android/artifacts/vmlinux...
+0x0000000040000000 in ?? ()
+Breakpoint 1 at 0xffffffc0080a1de4: file kernel/fork.c, line 3159.
+\n[*] Signal: Thread 1 is about to close outer epoll. Enabling __ep_remove breakpoint.
+Breakpoint 2 at 0xffffffc0083bce2c: file fs/eventpoll.c, line 723.
+\n=======================================================
+=== STALE FILE POINTER CAPTURED IN THREAD 1 ===
+    file_ptr: 0xffffff80028cc300
+    f_op:     0xffffffc009397b78
+    f_count:  1
+=======================================================\n
+Breakpoint 3 at 0xffffffc00835c5a0: file fs/file_table.c, line 296.
+[*] Patching instruction at 0xffffffc0083bcf44 to an infinite loop (B .)
+\n[*] Signal: Thread 2 is about to close inner epoll.
+Breakpoint 4 at 0xffffffc00835c6b4: file fs/file_table.c, line 56.
+\n[*] BINGO! __fput CALLED for STALE file 0xffffff80028cc300!
+Breakpoint 5 at 0xffffffc0083bd0a8: file fs/eventpoll.c, line 792.
+Breakpoint 6 at 0xffffffc008118d3c: mutex_lock. (3 locations)
+\n[*] Thread 2: ep_clear_and_put CALLED!
+\n[*] Thread 2: mutex_lock CALLED for 0xffffff80047bdf00!
+\n[*] Thread 2: mutex_lock CALLED for 0xffffffc009bdeb00!
+\n[*] Thread 2: mutex_lock CALLED for 0xffffff8004c01b68!
+\n[*] Thread 2: mutex_lock CALLED for 0xffffff8004c01ba0!
+\n[*] Thread 2: mutex_lock CALLED for 0xffffff8004c07428!
+\n[*] Thread 2: mutex_lock CALLED for 0xffffff8004c07460!
+[Inferior 1 (process 1) exited normally]
+------- tip of the day (disable with set show-tips off) -------
+Use GDB's dprintf command to print all calls to given function. E.g. dprintf malloc, "malloc(%p)\n", (void*)$rdi will print all malloc calls
+[31m[1mpwndbg> [0m[31m[0m
