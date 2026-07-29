@@ -30,12 +30,21 @@ void *thread2_func(void *arg) {
     return NULL;
 }
 
+void spray_files(int count) {
+    for (int i = 0; i < count; i++) {
+        open("/dev/null", O_RDONLY);
+    }
+}
+
 void *thread3_func(void *arg) {
     pin_to_cpu(1); // Pin Thread 3 to CPU 1
-    usleep(150000);
-    // Signal Thread 3 is about to open file
+    usleep(1000000); 
+    
+    // Signal Thread 3 is about to open pipes
     unshare(3333);
-    int fd = open("/dev/null", O_RDONLY);
+    
+    // Spray file structs via open() on CPU 1
+    spray_files(8000);
     return NULL;
 }
 
@@ -65,8 +74,14 @@ int main() {
     unshare(1111);
     close(outer_epfd);
     
+    // Wait for the RCU grace period (same as Thread 3)
+    usleep(1000000);
+    // Spray file structs via open() on CPU 0
+    spray_files(8000);
+    
     pthread_join(t2, NULL);
     pthread_join(t3, NULL);
     
+    while(1) { sleep(1); }
     return 0;
 }
