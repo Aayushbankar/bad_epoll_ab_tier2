@@ -1,0 +1,3 @@
+=== EXP-011 GDB Trace ===
+[*] BINGO! __fput CALLED for STALE file 0xffffff800287a800!
+[*] Verifying via register read inside breakpoint: $x0 = 0xffffff800287a800

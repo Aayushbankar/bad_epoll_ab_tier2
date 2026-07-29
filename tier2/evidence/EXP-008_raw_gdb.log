@@ -160,4 +160,5 @@ In file: /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/android/source
   ► 2   "" stopped: 0xffffffc0083be4d8 <do_epoll_ctl+812> 
     1   "" stopped: 0xffffffc008f5792c <cpu_do_idle+12> 
 ────────────────────────────────────────────────────────────────────────────────
-[32m[1mpwndbg> [0m[32m[0m
+[32m[1mpwndbg> [0m[32m[0m[Inferior 1 (process 1) detached]
+[*] Cleaning up QEMU...

