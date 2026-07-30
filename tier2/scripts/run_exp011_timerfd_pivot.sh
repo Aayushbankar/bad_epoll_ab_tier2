@@ -11,8 +11,7 @@ echo "[*] Packaging rootfs..."
 cd "$TIER2_DIR/rootfs" || exit 1
 chmod +x init
 
-# Copy test_exp011 to rootfs so init can run it
-cp ../android/artifacts/rootfs/test_exp011 ./test_exp011
+# test_exp011 is already built directly into rootfs/test_exp011 by gcc
 
 find . -print0 | cpio --null -ov --format=newc > ../initramfs.cpio 2>/dev/null
 cd "$TIER2_DIR"
@@ -23,4 +22,5 @@ QEMU_PID=$!
 sleep 5
 
 echo "[*] Launching GDB automation..."
-gdb -q -ex "target remote :1234" -x scripts/gdb_exp011_timerfd_pivot.py ./android/artifacts/vmlinux
+gdb -q -ex "target remote :1234" -x scripts/gdb_exp011_timerfd_pivot.py ./android/artifacts/vmlinux > evidence/EXP-011_raw_gdb.log 2>&1
+

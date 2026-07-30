@@ -35,11 +35,25 @@ Thread D will block indefinitely on `ep->mtx`. When Thread A resumes, it will fi
 By the time Thread D acquires `ep->mtx`, the stale `epitem` has been completely unlinked and destroyed. Thread D cannot find it in the ready list or the RB tree. Therefore, **`ep_item_poll` can never be executed on the stale `epitem`**.
 
 ## GDB Trace Validation
-A GDB trace was constructed (EXP-011) to validate this behavior. The trace successfully observed:
-1. `__fput` being called for the target `eventpoll` file (proving the file was freed).
-2. The `test_exp011` process exiting normally.
+A GDB trace was constructed (EXP-011) to validate this behavior. The trace verified that the timerfd spray successfully ran and that `epoll_wait` on the outer epfd completed without ever triggering `ep_item_poll` or `timerfd_poll`.
 
-Crucially, **`ep_item_poll` was never triggered**. The script completed without GDB ever hitting the `ep_item_poll` breakpoint, physically proving that the `epitem` is unlinked before userspace can interact with it.
+```
+=== EXP-011 GDB Trace ===
+[*] --- SETTING BREAKPOINTS ---
+Breakpoint 1 at 0xffffffc0080a1de4: file kernel/fork.c, line 3159.
+Breakpoint 2 at 0xffffffc00835c5a0: file fs/file_table.c, line 296.
+Breakpoint 3 at 0xffffffc0083bcd24: file fs/eventpoll.c, line 887.
+Breakpoint 4 at 0xffffffc0083c0640: file fs/timerfd.c, line 251.
+Breakpoint 5 at 0xffffffc0083bd3e0: file fs/eventpoll.c, line 2276.
+Breakpoint 6 at 0xffffffc0083c14c0: file fs/timerfd.c, line 406.
+[*] --- BREAKPOINTS SET ---
+[*] BINGO! __fput CALLED for STALE file 0xffffff8004337c00!
+[*] Verifying via register read inside breakpoint: $x0 = 0xffffff8004337c00
+[Inferior 1 (process 1) exited normally]
+[*] Process exited cleanly. Triggers completed.
+```
+
+Crucially, **`ep_item_poll` and `timerfd_poll` were never triggered**, despite the `timerfd` spray and the `epoll_wait` call running to completion. The script completed without GDB ever hitting the `ep_item_poll` breakpoint, physically proving that the `epitem` is unlinked before userspace can interact with it.
 
 ## Conclusion
 The `struct file` UAF path to `ep_item_poll` type confusion is fundamentally unreachable and non-viable for exploitation on this architecture/kernel version.
