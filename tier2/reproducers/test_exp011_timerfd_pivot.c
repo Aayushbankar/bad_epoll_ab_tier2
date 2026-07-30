@@ -86,8 +86,14 @@ int main() {
     write(efd, &val, 8); // Now inner_epfd is readable!
     
     pthread_t t2, t3;
-    pthread_create(&t2, NULL, thread2_func, NULL);
-    pthread_create(&t3, NULL, thread3_func, NULL);
+    if (pthread_create(&t2, NULL, thread2_func, NULL) != 0) {
+        perror("pthread_create t2");
+        return 1;
+    }
+    if (pthread_create(&t3, NULL, thread3_func, NULL) != 0) {
+        perror("pthread_create t3");
+        return 1;
+    }
     
     // Wait for the RCU grace period (same as Thread 3)
     usleep(1000000);

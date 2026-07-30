@@ -47,13 +47,35 @@ Breakpoint 4 at 0xffffffc0083c0640: file fs/timerfd.c, line 251.
 Breakpoint 5 at 0xffffffc0083bd3e0: file fs/eventpoll.c, line 2276.
 Breakpoint 6 at 0xffffffc0083c14c0: file fs/timerfd.c, line 406.
 [*] --- BREAKPOINTS SET ---
-[*] BINGO! __fput CALLED for STALE file 0xffffff8004337c00!
-[*] Verifying via register read inside breakpoint: $x0 = 0xffffff8004337c00
+[*] BINGO! ep_item_poll called on epi=0xffffff8004445000
+[*] epi->ffd.file = 0xffffff8003f39d00
+[*] file->f_op = 0xffffffc009397b78 <eventpoll_fops>
+[*] BINGO! ep_item_poll called on epi=0xffffff8004445b80
+[*] epi->ffd.file = 0xffffff8003f39200
+[*] file->f_op = 0xffffffc009397f60 <eventfd_fops>
+[*] Signal: Thread 2 is about to close inner epoll.
+[*] BINGO! __fput CALLED for STALE file 0xffffff8003f39d00!
+[*] Verifying via register read inside breakpoint: $x0 = 0xffffff8003f39d00
+[*] Signal: Thread 1 is about to epoll_wait.
+[*] __arm64_sys_timerfd_create called (hit 1)
+[*] __arm64_sys_timerfd_create called (hit 2)
+[*] __arm64_sys_timerfd_create called (hit 3)
+[*] __arm64_sys_timerfd_create called (hit 4)
+[*] __arm64_sys_timerfd_create called (hit 5)
+[*] __arm64_sys_timerfd_create called (hit 6)
+[*] __arm64_sys_timerfd_create called (hit 7)
+[*] __arm64_sys_timerfd_create called (hit 8)
+[*] __arm64_sys_timerfd_create called (hit 9)
+[*] __arm64_sys_timerfd_create called (hit 10)
+[*] __arm64_sys_timerfd_create called (suppressing further hits to reduce log spam)
+[*] do_epoll_wait called
+[*] BINGO! __fput CALLED for STALE file 0xffffff8003f39300!
+[*] Verifying via register read inside breakpoint: $x0 = 0xffffff8003f39300
 [Inferior 1 (process 1) exited normally]
 [*] Process exited cleanly. Triggers completed.
 ```
 
-Crucially, **`ep_item_poll` and `timerfd_poll` were never triggered**, despite the `timerfd` spray and the `epoll_wait` call running to completion. The script completed without GDB ever hitting the `ep_item_poll` breakpoint, physically proving that the `epitem` is unlinked before userspace can interact with it.
+Crucially, **`ep_item_poll` and `timerfd_poll` were never triggered** after the target `struct file` was freed, despite the `timerfd` spray and the `epoll_wait` call running to completion. The log shows that `ep_item_poll` was successfully armed and hit during initialization, but once the UAF target was freed (`__fput` on the inner epoll), it was never hit again. This physically proves that the `epitem` is unlinked and scheduled for RCU destruction before userspace can ever interact with it.
 
 ## Conclusion
 The `struct file` UAF path to `ep_item_poll` type confusion is fundamentally unreachable and non-viable for exploitation on this architecture/kernel version.

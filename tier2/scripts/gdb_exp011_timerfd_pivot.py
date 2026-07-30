@@ -67,14 +67,14 @@ class timerfd_poll_Breakpoint(gdb.Breakpoint):
 class sys_timerfd_create_Breakpoint(gdb.Breakpoint):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.hit_count = 0
+        self.my_hit_count = 0
 
     def stop(self):
         try:
-            self.hit_count += 1
-            if self.hit_count <= 10:
-                log(f"__arm64_sys_timerfd_create called (hit {self.hit_count})")
-            elif self.hit_count == 11:
+            self.my_hit_count += 1
+            if self.my_hit_count <= 10:
+                log(f"__arm64_sys_timerfd_create called (hit {self.my_hit_count})")
+            elif self.my_hit_count == 11:
                 log("__arm64_sys_timerfd_create called (suppressing further hits to reduce log spam)")
                 self.enabled = False
         except Exception as e:
