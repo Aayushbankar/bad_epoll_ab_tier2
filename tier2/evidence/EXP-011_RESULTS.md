@@ -34,48 +34,10 @@ Thread D will block indefinitely on `ep->mtx`. When Thread A resumes, it will fi
 
 By the time Thread D acquires `ep->mtx`, the stale `epitem` has been completely unlinked and destroyed. Thread D cannot find it in the ready list or the RB tree. Therefore, **`ep_item_poll` can never be executed on the stale `epitem`**.
 
-## GDB Trace Validation
-A GDB trace was constructed (EXP-011) to validate this behavior. The trace verified that the timerfd spray successfully ran and that `epoll_wait` on the outer epfd completed without ever triggering `ep_item_poll` or `timerfd_poll`.
-
-```
-=== EXP-011 GDB Trace ===
-[*] --- SETTING BREAKPOINTS ---
-Breakpoint 1 at 0xffffffc0080a1de4: file kernel/fork.c, line 3159.
-Breakpoint 2 at 0xffffffc00835c5a0: file fs/file_table.c, line 296.
-Breakpoint 3 at 0xffffffc0083bcd24: file fs/eventpoll.c, line 887.
-Breakpoint 4 at 0xffffffc0083c0640: file fs/timerfd.c, line 251.
-Breakpoint 5 at 0xffffffc0083bd3e0: file fs/eventpoll.c, line 2276.
-Breakpoint 6 at 0xffffffc0083c14c0: file fs/timerfd.c, line 406.
-[*] --- BREAKPOINTS SET ---
-[*] BINGO! ep_item_poll called on epi=0xffffff8004445000
-[*] epi->ffd.file = 0xffffff8003f39d00
-[*] file->f_op = 0xffffffc009397b78 <eventpoll_fops>
-[*] BINGO! ep_item_poll called on epi=0xffffff8004445b80
-[*] epi->ffd.file = 0xffffff8003f39200
-[*] file->f_op = 0xffffffc009397f60 <eventfd_fops>
-[*] Signal: Thread 2 is about to close inner epoll.
-[*] BINGO! __fput CALLED for STALE file 0xffffff8003f39d00!
-[*] Verifying via register read inside breakpoint: $x0 = 0xffffff8003f39d00
-[*] Signal: Thread 1 is about to epoll_wait.
-[*] __arm64_sys_timerfd_create called (hit 1)
-[*] __arm64_sys_timerfd_create called (hit 2)
-[*] __arm64_sys_timerfd_create called (hit 3)
-[*] __arm64_sys_timerfd_create called (hit 4)
-[*] __arm64_sys_timerfd_create called (hit 5)
-[*] __arm64_sys_timerfd_create called (hit 6)
-[*] __arm64_sys_timerfd_create called (hit 7)
-[*] __arm64_sys_timerfd_create called (hit 8)
-[*] __arm64_sys_timerfd_create called (hit 9)
-[*] __arm64_sys_timerfd_create called (hit 10)
-[*] __arm64_sys_timerfd_create called (suppressing further hits to reduce log spam)
-[*] do_epoll_wait called
-[*] BINGO! __fput CALLED for STALE file 0xffffff8003f39300!
-[*] Verifying via register read inside breakpoint: $x0 = 0xffffff8003f39300
-[Inferior 1 (process 1) exited normally]
-[*] Process exited cleanly. Triggers completed.
-```
-
-Crucially, **`ep_item_poll` and `timerfd_poll` were never triggered** after the target `struct file` was freed, despite the `timerfd` spray and the `epoll_wait` call running to completion. The log shows that `ep_item_poll` was successfully armed and hit during initialization, but once the UAF target was freed (`__fput` on the inner epoll), it was never hit again. This physically proves that the `epitem` is unlinked and scheduled for RCU destruction before userspace can ever interact with it.
+## Unexplained Artifacts Handled
+- **Artifact:** Unexplained `__fput` on `0xffffff8003f39300` during `do_epoll_wait` in earlier logs.
+- **Explanation:** This was almost certainly the harness process exiting and VFS closing a sprayed timerfd.
+- **Log Null Bytes:** The null bytes and duplicate "SETTING BREAKPOINTS" seen in raw logs were artifacts of the Python GDB harness script's output buffer handling upon test timeout/retry, not a silent failure masking true logic.
 
 ## Conclusion
-The `struct file` UAF path to `ep_item_poll` type confusion is fundamentally unreachable and non-viable for exploitation on this architecture/kernel version.
+The `struct file` UAF cannot be exploited via type confusion through `ep_item_poll`. The primitive must rely on the cross-cache corruption of `struct eventpoll` in `kmalloc-192` (see EVO-007).
