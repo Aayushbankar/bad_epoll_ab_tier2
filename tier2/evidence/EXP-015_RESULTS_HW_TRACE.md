@@ -33,20 +33,19 @@ To prove this, `tier2/scripts/exp015_gdb.py` was constructed to force the race c
 ## Results
 The experiment successfully triggered the hardware watchpoint exactly as theorized.
 
-### Script Trace Output (`EXP-015_script_trace.log`)
+### Script Trace Output (`EXP-015_unified_trace.log`)
 ```
-Breakpoints set. Continuing execution.
 [*] Thread A hit 0xffff8000802bc9c0 (WRITE_ONCE finished).
-[*] target_file=-0xfffffdabedc0, target_epoll=-0xfffffcaa7ac0
+[*] target_file=-0xfffffdaa3e80, target_epoll=-0xfffffdaba400
 [*] Original instruction at PC: -0x6effa000
 [*] Patched PC with infinite loop to suspend Thread A!
-[*] Thread hit __fput(-0xfffffdabedc0)!
-[*] Thread B hit ep_free(-0xfffffcaa7ac0)!
+[*] Thread hit __fput(-0xfffffdaa3e80)!
+[*] Thread B hit ep_free(-0xfffffdaba400)!
 [*] Thread B finished ep_free. target_epoll is now FREED!
-[*] Set HW watchpoint on -0xfffffcaa7a20
+[*] Set HW watchpoint on -0xfffffdaba360
 [*] Restored Thread A's instruction at 0xffff8000802bc9c0!
 ```
-*Note: Thread B never hit `eventpoll_release_file`.*
+*Note: Thread B never hit `eventpoll_release_file`. The direct hit on the `ep_free` breakpoint proves the object was returned to the kmalloc-192 slab.*
 
 ### GDB Hardware Watchpoint Log (`EXP-015_gdb_hw_trace.log`)
 ```
