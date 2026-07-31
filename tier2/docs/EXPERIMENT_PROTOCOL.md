@@ -30,3 +30,6 @@ Never delete a ledger entry once assigned an ID. Mark it `RETRACTED` with a one-
 
 ## RULE 9: Corrections to the vulnerability model are broadcast, not buried.
 If the understanding of the bug's mechanics changes, the entire `docs/` and `05_research/` tree must be searched for the old (incorrect) claim, and every instance must be fixed or flagged in the same session.
+
+## RULE 10: Self-verification before reporting "done."
+Before any response claims a task is complete, independently re-check the work the same way an external auditor would: list the exact files claimed to be created/modified, confirm each exists on disk with the expected content, confirm git status is clean, confirm git push succeeded, and confirm git ls-remote (or equivalent) shows the expected commit hash on the remote — all BEFORE writing the summary to the user, not after being challenged on it. If any of these checks weren't actually run, the response must say so explicitly ("I have not yet verified X") rather than asserting completion. This applies to every experiment and every documentation task going forward, no exceptions.
