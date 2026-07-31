@@ -31,7 +31,8 @@ QEMU_ARGS=(
     -kernel "$KERNEL"
     -initrd "$RAMDISK"
     -append "$CMDLINE"
-    -nographic
+    -display none
+    -serial file:/tmp/qemu.log
     -no-reboot
 )
 

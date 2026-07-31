@@ -19,8 +19,8 @@ cd "$TIER2_DIR"
 echo "[*] Launching QEMU in background..."
 DEBUG=1 ./scripts/run_qemu.sh > /tmp/qemu.log 2>&1 &
 QEMU_PID=$!
+disown $QEMU_PID
 sleep 5
 
-echo "[*] Launching GDB automation..."
-gdb -q -ex "target remote :1234" -x scripts/gdb_exp011_timerfd_pivot.py ./android/artifacts/vmlinux > evidence/EXP-011_raw_gdb.log 2>&1
+echo "[*] QEMU launched with PID $QEMU_PID"
 

@@ -1,0 +1,5 @@
+[31m[1mpwndbg: [0m[31m[0m[91mloaded 199 pwndbg commands. Type [35mpwndbg [filter][0m[91m for a list.[0m
+[31m[1mpwndbg: [0m[31m[0m[91mcreated 12 GDB functions (can be used with print/break). Type [35mhelp function[0m[91m to see them.[0m
+0x0000000040000000 in ?? ()
+Breakpoint 1 at 0xffffffc0080a1de4: file kernel/fork.c, line 3159.
+[Inferior 1 (process 1) exited normally]

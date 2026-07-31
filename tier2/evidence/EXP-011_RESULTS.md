@@ -40,4 +40,4 @@ By the time Thread D acquires `ep->mtx`, the stale `epitem` has been completely 
 - **Log Null Bytes:** The null bytes and duplicate "SETTING BREAKPOINTS" seen in raw logs were artifacts of the Python GDB harness script's output buffer handling upon test timeout/retry, not a silent failure masking true logic.
 
 ## Conclusion
-The `struct file` UAF cannot be exploited via type confusion through `ep_item_poll`. The primitive must rely on the cross-cache corruption of `struct eventpoll` in `kmalloc-192` (see EVO-007).
+The `struct file` UAF cannot be exploited via type confusion through `ep_item_poll` due to the `ep->mtx` barrier. Note: A previously proposed theory (EVO-007) that the primitive could rely on cross-cache corruption of `struct eventpoll` in `kmalloc-192` was definitively disproved by VER-021. The vulnerability must be exploited through another path (such as `epitem` same-cache reclaim as seen in VER-016 analysis, or EXP-012 exploration).

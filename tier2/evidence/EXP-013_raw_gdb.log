@@ -1,0 +1,18 @@
+=== EXP-013 GDB Trace ===
+refresh_cpu_vm_stats (do_pagesets=do_pagesets@entry=true) at mm/vmstat.c:817
+817		for_each_populated_zone(zone) {
+[*] --- SETTING BREAKPOINTS ---
+Hardware assisted breakpoint 1 at 0xffff8000802bcbd4: file fs/eventpoll.c, line 934.
+Hardware assisted breakpoint 2 at 0xffff8000802bc824: file fs/eventpoll.c, line 806.
+[*] --- BREAKPOINTS SET ---
+[*] ep_eventpoll_release called! file=-281474937846784, ep=0xffff000002802cc0
+[*] __ep_remove called! ep=-281474934756160, epi=-281474937122752
+[*] inner_epoll file=0xffff000002510180, inner_ep=0xffff000002802e00
+[*] Memory at inner_ep+160 BEFORE hlist_del_rcu: 18446462598772428944
+Hardware watchpoint 3: *(unsigned long *)(0xffff000002802e00 + 160)
+[Switching to Thread 1.2]
+
+[!!!] WATCHPOINT HIT: inner_ep+160 changed!
+[*] ep_eventpoll_release called! file=-281474937847424, ep=0xffff000002802e00
+[Inferior 1 (process 1) exited normally]
+[*] Process exited. Quitting...
