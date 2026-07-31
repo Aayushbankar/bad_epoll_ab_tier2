@@ -7,7 +7,7 @@ PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../.." &> /dev/null && pwd)"
 TIER2_DIR="${PROJECT_ROOT}/tier2"
 
 KERNEL="${TIER2_DIR}/android/artifacts/Image"
-RAMDISK="${TIER2_DIR}/initramfs.cpio"
+RAMDISK="${TIER2_DIR}/android/artifacts/rootfs.cpio"
 
 CPUS=${CPUS:-2}
 RAM=${RAM:-2048}

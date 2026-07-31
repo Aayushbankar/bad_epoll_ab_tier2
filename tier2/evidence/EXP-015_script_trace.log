@@ -1,0 +1,10 @@
+Breakpoints set. Continuing execution.
+[*] Thread A hit 0xffff8000802bc9c0 (WRITE_ONCE finished).
+[*] target_file=-0xfffffdabedc0, target_epoll=-0xfffffcaa7ac0
+[*] Original instruction at PC: -0x6effa000
+[*] Patched PC with infinite loop to suspend Thread A!
+[*] Thread hit __fput(-0xfffffdabedc0)!
+[*] Thread B hit ep_free(-0xfffffcaa7ac0)!
+[*] Thread B finished ep_free. target_epoll is now FREED!
+[*] Set HW watchpoint on -0xfffffcaa7a20
+[*] Restored Thread A's instruction at 0xffff8000802bc9c0!

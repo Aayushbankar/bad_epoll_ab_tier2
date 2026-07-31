@@ -1,0 +1,15 @@
+0x0000000040000000 in ?? ()
+Breakpoint 1 at 0xffff8000802bc9c0: file fs/eventpoll.c, line 346.
+Breakpoint 2 at 0xffff8000802bcbb4: file fs/eventpoll.c, line 793.
+Breakpoint 3 at 0xffff8000802bdb6c: file fs/eventpoll.c, line 1084.
+Breakpoint 4 at 0xffff800080260adc: file fs/file_table.c, line 405.
+Breakpoint 5 at 0xffff8000802bcbbc: file fs/eventpoll.c, line 909.
+Hardware watchpoint 6: *(long*)(-281474920774176)
+
+Thread 1 hit Hardware watchpoint 6: *(long*)(-281474920774176)
+
+Old value = -281474920794800
+New value = 0
+__hlist_del (n=0xffff000003553550) at ./include/linux/list.h:989
+989		if (next)
+[Inferior 1 (process 1) detached]
