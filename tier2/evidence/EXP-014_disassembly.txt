@@ -1,0 +1,55 @@
+ffff8000802bdb6c <eventpoll_release_file>:
+ffff8000802bdb6c:	d503233f 	paciasp
+ffff8000802bdb70:	a9bc7bfd 	stp	x29, x30, [sp, #-64]!
+ffff8000802bdb74:	910003fd 	mov	x29, sp
+ffff8000802bdb78:	a9025bf5 	stp	x21, x22, [sp, #32]
+ffff8000802bdb7c:	aa0003f6 	mov	x22, x0
+ffff8000802bdb80:	91002015 	add	x21, x0, #0x8
+ffff8000802bdb84:	a90153f3 	stp	x19, x20, [sp, #16]
+ffff8000802bdb88:	f9001bf7 	str	x23, [sp, #48]
+ffff8000802bdb8c:	52800037 	mov	w23, #0x1                   	// #1
+ffff8000802bdb90:	aa1503e0 	mov	x0, x21
+ffff8000802bdb94:	9428476b 	bl	ffff800080ccf940 <_raw_spin_lock>
+ffff8000802bdb98:	f9404ac1 	ldr	x1, [x22, #144]
+ffff8000802bdb9c:	aa1503e0 	mov	x0, x21
+ffff8000802bdba0:	b4000401 	cbz	x1, ffff8000802bdc20 <eventpoll_release_file+0xb4>
+ffff8000802bdba4:	f9400021 	ldr	x1, [x1]
+ffff8000802bdba8:	d1014034 	sub	x20, x1, #0x50
+ffff8000802bdbac:	b40003a1 	cbz	x1, ffff8000802bdc20 <eventpoll_release_file+0xb4>
+ffff8000802bdbb0:	381ec037 	sturb	w23, [x1, #-20]
+ffff8000802bdbb4:	9428464f 	bl	ffff800080ccf4f0 <_raw_spin_unlock>
+ffff8000802bdbb8:	f9402693 	ldr	x19, [x20, #72]
+ffff8000802bdbbc:	aa1303e0 	mov	x0, x19
+ffff8000802bdbc0:	9428341f 	bl	ffff800080ccac3c <mutex_lock>
+ffff8000802bdbc4:	aa1403e1 	mov	x1, x20
+ffff8000802bdbc8:	52800022 	mov	w2, #0x1                   	// #1
+ffff8000802bdbcc:	aa1303e0 	mov	x0, x19
+ffff8000802bdbd0:	97fffb15 	bl	ffff8000802bc824 <__ep_remove>
+ffff8000802bdbd4:	12001c14 	and	w20, w0, #0xff
+ffff8000802bdbd8:	aa1303e0 	mov	x0, x19
+ffff8000802bdbdc:	94282da8 	bl	ffff800080cc927c <mutex_unlock>
+ffff8000802bdbe0:	34fffd94 	cbz	w20, ffff8000802bdb90 <eventpoll_release_file+0x24>
+ffff8000802bdbe4:	aa1303e0 	mov	x0, x19
+ffff8000802bdbe8:	97fffab3 	bl	ffff8000802bc6b4 <ep_refcount_dec_and_test>
+ffff8000802bdbec:	72001c1f 	tst	w0, #0xff
+ffff8000802bdbf0:	54fffd00 	b.eq	ffff8000802bdb90 <eventpoll_release_file+0x24>  // b.none
+ffff8000802bdbf4:	f9404660 	ldr	x0, [x19, #136]
+ffff8000802bdbf8:	97f63fe6 	bl	ffff80008004db90 <free_uid>
+ffff8000802bdbfc:	f9404260 	ldr	x0, [x19, #128]
+ffff8000802bdc00:	940ff3ba 	bl	ffff8000806baae8 <wakeup_source_unregister>
+ffff8000802bdc04:	aa1303e0 	mov	x0, x19
+ffff8000802bdc08:	97fdcf1a 	bl	ffff800080231870 <kfree>
+ffff8000802bdc0c:	aa1503e0 	mov	x0, x21
+ffff8000802bdc10:	9428474c 	bl	ffff800080ccf940 <_raw_spin_lock>
+ffff8000802bdc14:	f9404ac1 	ldr	x1, [x22, #144]
+ffff8000802bdc18:	aa1503e0 	mov	x0, x21
+ffff8000802bdc1c:	b5fffc41 	cbnz	x1, ffff8000802bdba4 <eventpoll_release_file+0x38>
+ffff8000802bdc20:	aa1503e0 	mov	x0, x21
+ffff8000802bdc24:	94284633 	bl	ffff800080ccf4f0 <_raw_spin_unlock>
+ffff8000802bdc28:	a94153f3 	ldp	x19, x20, [sp, #16]
+ffff8000802bdc2c:	a9425bf5 	ldp	x21, x22, [sp, #32]
+ffff8000802bdc30:	f9401bf7 	ldr	x23, [sp, #48]
+ffff8000802bdc34:	a8c47bfd 	ldp	x29, x30, [sp], #64
+ffff8000802bdc38:	d50323bf 	autiasp
+ffff8000802bdc3c:	d65f03c0 	ret
+
