@@ -1,0 +1,23 @@
+gic_kvm_info : unknown
+vm_area_struct : unknown
+io_futex_data : kmalloc (generic)
+nfs_fh : kmalloc (generic)
+ext4_inode : unknown
+p9_req_t : unknown
+inet_peer : unknown
+genl_family : unknown
+nfnl_err : kmalloc (generic)
+uart_8250_em485 : kmalloc (generic)
+rhashtable : unknown
+file : kmem_cache
+rsc : unknown
+urb : unknown
+fs_context : unknown
+cred : unknown
+worker : unknown
+rsi : unknown
+kstat : unknown
+bpf_local_storage : unknown
+kretprobe : unknown
+eventpoll : unknown
+dentry : unknown
