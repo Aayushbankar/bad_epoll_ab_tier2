@@ -1,0 +1,56 @@
+[*] Connected to QEMU
+Breakpoint 1 at 0xffff8000802bc9c0: file fs/eventpoll.c, line 346.[*] Breakpoints set. Continuing execution.
+[*] Thread A hit 0xffff8000802bc9c0 (WRITE_ONCE finished).
+[*] target_file=-0xfffffdaa3e80, target_epoll=-0xfffffdaba400
+[*] Original instruction at PC: -0x6effa000
+[*] Patched PC with infinite loop to suspend Thread A!
+Breakpoint 2 at 0xffff8000802bcbb4: file fs/eventpoll.c, line 793.
+Breakpoint 3 at 0xffff8000802bdb6c: file fs/eventpoll.c, line 1084.
+Breakpoint 4 at 0xffff800080260adc: file fs/file_table.c, line 405.
+[*] Thread hit __fput(-0xfffffdaa3e80)!
+[*] Thread B hit ep_free(-0xfffffdaba400)!
+Breakpoint 5 at 0xffff8000802bcbbc: file fs/eventpoll.c, line 909.
+[*] Thread B finished ep_free. target_epoll is now FREED!
+[*] Memory dump of freed struct eventpoll:
+[*] 
+0xffff000002545c00:	0x0000000000000000	0x0000000000000000
+0xffff000002545c10:	0xffff000002545c10	0xffff000002545c10
+0xffff000002545c20:	0x0000000000000000	0xffff000002545c28
+0xffff000002545c30:	0xffff000002545c28	0x0000000000000000
+0xffff000002545c40:	0xffff000002545c40	0xffff000002545c40
+0xffff000002545c50:	0xffff000002545c50	0xffff000002545c50
+0xffff000002545c60:	0x0000000000000000	0x0000000000000000
+0xffff000002545c70:	0x0000000000000000	0xffffffffffffffff
+0xffff000002545c80:	0x0000000000000000	0xffff80008152be98
+0xffff000002545c90:	0xffff00000255c180	0x0000000000000001
+0xffff000002545ca0:	0xffff0000024fea50	0x0000000000000000
+0xffff000002545cb0:	0x0000000000000000	0x0000000000000000
+0xffff000002545cc0:	0xffff0000037b0000	0x0000000000000000
+0xffff000002545cd0:	0xffff000002545cd0	0xffff000002545cd0
+0xffff000002545ce0:	0x0000000000000000	0xffff000002545ce8
+0xffff000002545cf0:	0xffff000002545ce8	0x0000000000000000
+
+Hardware watchpoint 6: *(long*)(-281474937627488)
+[*] Set HW watchpoint on -0xfffffdaba360
+[*] Restored Thread A's instruction at 0xffff8000802bc9c0!
+[*] Dumping state after watchpoint hit...
+#0  __hlist_del (n=0xffff0000024fea50) at ./include/linux/list.h:989
+#1  hlist_del_rcu (n=0xffff0000024fea50) at ./include/linux/rculist.h:516
+#2  __ep_remove (ep=ep@entry=0xffff000002545cc0, epi=0xffff0000024fea00, force=force@entry=0x0) at fs/eventpoll.c:836
+#3  0xffff8000802bca60 in ep_remove_safe (ep=0xffff000002545cc0, epi=<optimized out>) at fs/eventpoll.c:866
+#4  0xffff8000802bcb6c in ep_clear_and_put (ep=0xffff000002545cc0) at fs/eventpoll.c:902
+#5  0xffff8000802bcbec in ep_eventpoll_release (inode=<optimized out>, file=<optimized out>) at fs/eventpoll.c:937
+#6  0xffff800080260bb0 in __fput (file=0xffff00000255c0c0) at fs/file_table.c:429
+#7  0xffff800080260ea4 in __fput_sync (file=file@entry=0xffff00000255c0c0) at fs/file_table.c:514
+#8  0xffff80008025c13c in __do_sys_close (fd=<optimized out>) at fs/open.c:1569
+#9  __se_sys_close (fd=<optimized out>) at fs/open.c:1554
+#10 __arm64_sys_close (regs=<optimized out>) at fs/open.c:1554
+#11 0xffff800080026508 in __invoke_syscall (syscall_fn=<optimized out>, regs=0xffff800081b03eb0) at arch/arm64/kernel/syscall.c:35
+#12 invoke_syscall (regs=regs@entry=0xffff800081b03eb0, scno=<optimized out>, sc_nr=sc_nr@entry=0x1cf, syscall_table=<optimized out>) at arch/arm64/kernel/syscall.c:49
+#13 0xffff800080026610 in el0_svc_common (regs=regs@entry=0xffff800081b03eb0, scno=<optimized out>, sc_nr=0x1cf, syscall_table=<optimized out>, sc_nr=0x1cf) at arch/arm64/kernel/syscall.c:132
+#14 0xffff8000800266d8 in do_el0_svc (regs=regs@entry=0xffff800081b03eb0) at arch/arm64/kernel/syscall.c:151
+#15 0xffff800080cc3890 in el0_svc (regs=0xffff800081b03eb0) at arch/arm64/kernel/entry-common.c:735
+#16 0xffff800080cc3d38 in el0t_64_sync_handler (regs=<optimized out>) at arch/arm64/kernel/entry-common.c:754
+#17 0xffff80008001154c in el0t_64_sync () at arch/arm64/kernel/entry.S:598
+Backtrace stopped: previous frame identical to this frame (corrupt stack?)
+[Inferior 1 (process 1) detached]
