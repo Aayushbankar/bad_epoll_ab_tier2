@@ -1,51 +1,33 @@
-# EXP-014: `eventpoll_release_file` Thread B Race Analysis
+# EXP-014: `eventpoll_release_file` Thread B Race Analysis (REVISED)
 
-**Objective**: Examine the Thread B path (`close(inner_epoll)` -> `eventpoll_release_file`) to determine if there is a window where a stale reference is read/dereferenced against memory reclaimed by an attacker, and audit all callers outside `__ep_remove`.
+**Objective**: Resolve contradictions regarding the lockless CVE fast path, confirm register liveness around `mutex_lock` via disassembly, and assess Thread B's execution path.
 
-## 1. Kernel-Wide Audit of `epitem` Usage
-A full kernel-tree search confirms that `struct epitem` is entirely local to `fs/eventpoll.c`. The corrupted offsets (`rdllink`, `pwqlist`, `fllink`) are never exported to or read by other kernel subsystems. Thus, the only possible exploitation vectors must reside within `fs/eventpoll.c` itself.
+## 1. Resolution of the Locking Contradiction (User Point 2)
+My previous narrative claimed that `eventpoll_release_file` acquires `epmutex` (the global mutex). This was factually incorrect and based on a mischaracterization of older kernel code. In this specific kernel tree (6.12.67), the execution works as follows:
 
-## 2. The `eventpoll_release_file` UAF Window
-While prior analysis focused exclusively on what `__ep_remove` (Thread A) corrupts during teardown, auditing Thread B reveals the actual, true UAF primitive of this vulnerability.
+- **Thread A (`__ep_remove`)**: Acquires `file->f_lock` (inner file), sets `file->f_ep = NULL`, unlinks the `epitem`, and drops `f_lock`. It does **not** hold `epmutex`.
+- **Thread B (`eventpoll_release`)**: Reaches the inline function `eventpoll_release()` from `__fput`. It executes the lockless fast path:
+  ```c
+  if (likely(!READ_ONCE(file->f_ep)))
+      return;
+  ```
+- **The Genuine Race**: The CVE exploits this exact lockless check. If Thread B's `READ_ONCE` occurs immediately after Thread A's `WRITE_ONCE(file->f_ep, NULL)`, Thread B **skips** `eventpoll_release_file` entirely and proceeds to free the inner `struct file`. Meanwhile, Thread A has just dropped `file->f_lock` but may still be executing cleanup tasks, meaning Thread A is left with a dangling pointer to a freed `struct file`. This confirms the CVE mechanism and proves the UAF target is indeed `struct file` (as explored in EXP-009/EXP-010), not `struct epitem` via `eventpoll_release_file`.
 
-When an `epoll` instance is added to another `epoll` instance, an `epitem` is created to link them. This `epitem` is added to the inner epoll's `file->f_ep` list.
+## 2. Disassembly and Register Liveness (User Point 3)
+Although the `mutex_lock` path in `eventpoll_release_file` is not the true UAF primitive (due to the `epi->dying` flag and `f_lock` serialization preventing the double-execution race), we obtained the disassembly to confirm compiler behavior around the blocking call:
 
-During a concurrent teardown where Thread A closes the outer epoll and Thread B closes the inner epoll, the following race occurs:
-
-**Thread A (`close(outer_epoll)`)**:
-1. Calls `ep_clear_and_put(outer)`.
-2. Iterates over its tree, calling `ep_remove_safe(outer, epi)`.
-3. `__ep_remove` removes `epi` from `inner->file->f_ep` (holding `file->f_lock`).
-4. `__ep_remove` calls `kfree_rcu(epi)`. The RCU grace period begins.
-
-**Thread B (`close(inner_epoll)`)**:
-1. Refcount of `inner_epoll->file` drops to 0. `__fput` calls `eventpoll_release_file(inner->file)`.
-2. `eventpoll_release_file` acquires `epmutex` (which Thread A does **not** hold) and begins iterating over `inner->file->f_ep` using `hlist_for_each_entry_safe`.
-3. The `_safe` iterator caches the next pointer, but does not protect against concurrent deletion of the current node by another thread.
-4. **The Race Window**: Thread B loads `epi`, then blocks on `mutex_lock_nested(&epi->ep->mtx, 0)`. While blocked, Thread A finishes its teardown and the RCU grace period elapses, freeing `epi`.
-5. The attacker immediately reclaims the `epi` slot (via `eventpoll_epi` cache, easily done by creating a new epitem). The attacker fully controls the reclaimed object's contents.
-6. Thread B wakes up and executes the loop body using the now-reclaimed, attacker-controlled `epi`!
-
-## 3. The Exploitation Primitive
-The code executed by Thread B immediately after wake-up is:
-```c
-hlist_for_each_entry_safe(epi, next, &file->f_ep, fllink) {
-    ep = epi->ep;                     // [1] ARBITRARY READ
-    mutex_lock_nested(&ep->mtx, 0);   // [2] ARBITRARY WRITE / HIJACK
-    ep_remove_safe(ep, epi);          // [3] DOUBLE FREE
-    mutex_unlock(&ep->mtx);
-}
+```assembly
+ffff8000802bdbbc:  aa1303e0   mov  x0, x19                  // x0 = ep (from x19)
+ffff8000802bdbc0:  9428341f   bl   ffff800080ccac3c <mutex_lock>  // block point
+ffff8000802bdbc4:  aa1403e1   mov  x1, x20                  // x1 = epi (from x20)
+ffff8000802bdbc8:  52800022   mov  w2, #0x1                 // force = true
+ffff8000802bdbcc:  aa1303e0   mov  x0, x19                  // x0 = ep (from x19)
+ffff8000802bdbd0:  97fffb15   bl   ffff8000802bc824 <__ep_remove> // wake point call
 ```
-
-Because the attacker controls the reclaimed `epi`, they control `epi->ep`.
-When Thread B attempts to lock `ep->mtx`:
-- It dereferences the attacker-controlled `ep` pointer.
-- `mutex_lock` operations write to the `mutex` struct (specifically setting the `owner` field to the current `task_struct` and modifying the `wait_lock` spinlock).
-- This grants the attacker a **powerful arbitrary write primitive** (writing a valid `task_struct` pointer to an arbitrary kernel address) and potentially an execution hijack via the mutex wait queue.
-
-Furthermore, Thread B then calls `ep_remove_safe` on the attacker-controlled `epitem`, which can result in a double-free or cross-rbtree corruption (since `__ep_remove` will try to delete the new `epitem` from the old attacker-controlled `ep->rbr`).
+**Conclusion from Disassembly:**
+The compiler **keeps the original values live in registers** (`x19` for `ep`, `x20` for `epi`). They are **not** reloaded from memory after `mutex_lock` returns. If a UAF were possible here, the Thread B would definitively pass the original dangling pointers directly to `__ep_remove`.
 
 ## Conclusion
-The UAF primitive does not rely on `ep_item_poll` or the corrupted `rdllink` list pointers generated by `__ep_remove`. The true primitive is Thread B reading the stale `epi->ep` pointer inside `eventpoll_release_file()` after the `epitem` has been freed and reclaimed. This yields an attacker-controlled mutex lock operation, which is highly exploitable.
+The previously claimed `eventpoll_release_file` UAF is structurally impossible in this kernel version due to strict `file->f_lock` and `epi->dying` serialization. The actual UAF race strictly follows the original CVE mechanism: Thread B takes the lockless fast path, bypassing `eventpoll_release_file` entirely, and freeing the `struct file` out from under Thread A.
 
-**Status:** EXP-014 VERIFIED via STATIC source analysis.
+**Status**: STATIC-HIGH-CONFIDENCE (Narrative corrected. Awaiting further live trace if required).
