@@ -58,33 +58,30 @@ This confirms that the memory corruption is contained and unreachable before the
 
 ### Part 2: Live Trace Verification (EXP-012b)
 
-Following the project's rigorous standards (source analysis is theory; runtime observation is fact), a GDB trace was executed to confirm the ordering of `ep_unregister_pollwait()` relative to the `list_del_init()` corruption point.
+Following the project's rigorous standards, a GDB trace was executed to confirm the ordering of `remove_wait_queue()` relative to the `list_del_init()` corruption point, and to strictly verify the identity of the `epitem` across both teardown phases.
 
 **Trace Target:** `ep_clear_and_put` (invoked during `close(epoll_fd)`)
 **Log:** `tier2/evidence/EXP-012_raw_gdb.log`
 
-The trace revealed a crucial two-phase teardown in `ep_clear_and_put()` that is executed when an epoll fd is closed:
+The trace captured the execution of a single-threaded closure (which calls `ep_clear_and_put()`), specifically tracking the address of the `epi` being drained vs. the one being corrupted:
 
 ```
-[*] BREAKPOINT HIT: remove_wait_queue (ep_unregister_pollwait)
-[*] BT:
-#0  ep_remove_wait_queue (pwq=0xffff000001e45440) at fs/eventpoll.c:648
-#1  ep_unregister_pollwait (ep=<optimized out>, epi=<optimized out>) at fs/eventpoll.c:663
-#2  ep_clear_and_put (ep=0xffff000001e3f9c0) at fs/eventpoll.c:887
-
+[*] BREAKPOINT HIT: remove_wait_queue
+[*]     wq_entry = -0xfffffcb47a30
+[*]     pwq (wq_entry - 16) = -0xfffffcb47a40
+[*]     pwq->base (epi) = 0xffff0000034a9880
 [*] BREAKPOINT HIT: __ep_remove (entry)
-[*] BT:
-#0  __ep_remove (ep=ep@entry=0xffff000001e3f9c0, epi=0xffff000001e3e180, force=force@entry=0x0) at fs/eventpoll.c:806
-#1  0xffff8000802bca60 in ep_remove_safe (ep=0xffff000001e3f9c0, epi=<optimized out>) at fs/eventpoll.c:866
-#2  0xffff8000802bcb6c in ep_clear_and_put (ep=0xffff000001e3f9c0) at fs/eventpoll.c:902
+[*]     epi = 0xffff0000034a9880
+[*]     IDENTITY MATCH: The epi being removed is the EXACT SAME one drained in remove_wait_queue!
 ```
 
 **Observation:**
-The trace definitively proves that `remove_wait_queue` (which synchronizes with and drains `ep_poll_callback`) executes in a completely separate loop (line 887) BEFORE `__ep_remove` is even invoked (line 902). 
+The trace definitively proves that `remove_wait_queue` (which synchronizes with and drains `ep_poll_callback`) executes in a completely separate loop BEFORE `__ep_remove` is even invoked on the exact same `epitem`. 
 
-Since the corrupting `list_del_init(&epi->rdllink)` instruction lives deep inside `__ep_remove`, all in-flight wait queue callbacks for the entire eventpoll instance are guaranteed to be fully drained and unregistered before the corruption window opens.
+**Concurrency Caveat:**
+This live trace captures a single `close()` execution on one thread. It verifies *instruction order*, not concurrent safety. The argument that this sequence is safe from concurrent `ep_poll_callback` wakeups relies on the structural/static facts (that `ep->mtx` and `whead->lock` correctly serialize access during this teardown). Thus, the instruction order is empirically confirmed, but the concurrency safety argument remains structural.
 
 ### Final Conclusion
-With live trace confirmation, the theoretical finding is verified as fact. The corrupted `rdllink` pointers cannot be reached via `ep_poll_callback` because all wait queue entries are deterministically destroyed before the corruption occurs.
+The instruction ordering is verified as fact: the wait queues are deterministically destroyed before the corruption occurs. Since `ep_poll_callback` requires an active wait queue to reach the `epitem`, the corrupted `rdllink` pointers cannot be reached via this path.
 
-**Status:** Upgrade VER-022 to VERIFIED. The `ep_item_poll` path (RCU traversal) remains the *only* viable primitive for triggering the UAF.
+**Status:** Upgrade VER-022 to VERIFIED, with the caveat that the concurrency safety remains structurally deduced. The `ep_item_poll` path (RCU traversal) remains the *only* viable primitive for triggering the UAF.

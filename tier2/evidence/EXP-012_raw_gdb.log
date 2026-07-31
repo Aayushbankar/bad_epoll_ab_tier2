@@ -1,6 +1,6 @@
 [31m[1mpwndbg: [0m[31m[0m[91mloaded 199 pwndbg commands. Type [35mpwndbg [filter][0m[91m for a list.[0m
 [31m[1mpwndbg: [0m[31m[0m[91mcreated 12 GDB functions (can be used with print/break). Type [35mhelp function[0m[91m to see them.[0m
-[*] Starting EXP-012 drain verification...
+[*] Starting EXP-012 drain verification with identity tracking...
 0x0000000040000000 in ?? ()
 [*] Connected to QEMU
 [*] Setting setup breakpoint on __arm64_sys_epoll_ctl...
@@ -8,16 +8,11 @@ Breakpoint 1 at 0xffff8000802be934: file fs/eventpoll.c, line 2356.
 [*] Continuing execution...
 [*] Setup Breakpoint Hit! Harness is running. Setting internal breakpoints...
 Breakpoint 2 at 0xffff8000802bc824: file fs/eventpoll.c, line 806.
-Breakpoint 3 at 0xffff8000802bc874: fs/eventpoll.c:648. (2 locations)
-No compiled code for line 844 in file "fs/eventpoll.c".
-Breakpoint 4 (fs/eventpoll.c:844) pending.
-[*] BREAKPOINT HIT: remove_wait_queue (ep_unregister_pollwait)
-[*] BT:\n#0  ep_remove_wait_queue (pwq=0xffff000001e45440) at fs/eventpoll.c:648
-#1  ep_unregister_pollwait (ep=<optimized out>, epi=<optimized out>) at fs/eventpoll.c:663
-#2  ep_clear_and_put (ep=0xffff000001e3f9c0) at fs/eventpoll.c:887
-
+Breakpoint 3 at 0xffff8000800966e4: file kernel/sched/wait.c, line 51.
+[*] BREAKPOINT HIT: remove_wait_queue
+[*]     wq_entry = -0xfffffcb47a30
+[*]     pwq (wq_entry - 16) = -0xfffffcb47a40
+[*]     pwq->base (epi) = 0xffff0000034a9880
 [*] BREAKPOINT HIT: __ep_remove (entry)
-[*] BT:\n#0  __ep_remove (ep=ep@entry=0xffff000001e3f9c0, epi=0xffff000001e3e180, force=force@entry=0x0) at fs/eventpoll.c:806
-#1  0xffff8000802bca60 in ep_remove_safe (ep=0xffff000001e3f9c0, epi=<optimized out>) at fs/eventpoll.c:866
-#2  0xffff8000802bcb6c in ep_clear_and_put (ep=0xffff000001e3f9c0) at fs/eventpoll.c:902
-
+[*]     epi = 0xffff0000034a9880
+[*]     IDENTITY MATCH: The epi being removed is the EXACT SAME one drained in remove_wait_queue!
