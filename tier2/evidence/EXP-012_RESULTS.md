@@ -50,8 +50,41 @@ The only data structure holding a valid path to the `epitem` during the grace pe
 Transfers events from the ready list to userspace. It requires `ep->mtx` to execute. Since `__ep_remove` also holds `ep->mtx` during the race, `ep_send_events` is strictly serialized and cannot concurrently access the `rdllink` during the grace period.
 
 ## Conclusion
-**VERIFIED - STRUCTURAL DEAD-END.** 
+**STATIC-HIGH-CONFIDENCE - STRUCTURAL DEAD-END.** 
 
 The corrupted `epitem` is completely isolated during the RCU grace period. The `rdllink` field is corrupted by `list_del_init`, but every mechanism that could theoretically read or write to `rdllink` relies on locating the `epitem` via data structures (`rbr`, `pwqlist`, `rdllist`) from which the `epitem` has already been synchronously unlinked. The only paths that can reach the `epitem` during the grace period (RCU traversals) do not access the corrupted offsets.
 
-This confirms that the memory corruption is contained and unreachable before the object is physically freed. Live trace verification is unnecessary as the structural isolation is absolute.
+This confirms that the memory corruption is contained and unreachable before the object is physically freed. Pending a lightweight live-trace of the `ep_unregister_pollwait` drain behavior to upgrade to fully VERIFIED.
+
+### Part 2: Live Trace Verification (EXP-012b)
+
+Following the project's rigorous standards (source analysis is theory; runtime observation is fact), a GDB trace was executed to confirm the ordering of `ep_unregister_pollwait()` relative to the `list_del_init()` corruption point.
+
+**Trace Target:** `ep_clear_and_put` (invoked during `close(epoll_fd)`)
+**Log:** `tier2/evidence/EXP-012_raw_gdb.log`
+
+The trace revealed a crucial two-phase teardown in `ep_clear_and_put()` that is executed when an epoll fd is closed:
+
+```
+[*] BREAKPOINT HIT: remove_wait_queue (ep_unregister_pollwait)
+[*] BT:
+#0  ep_remove_wait_queue (pwq=0xffff000001e45440) at fs/eventpoll.c:648
+#1  ep_unregister_pollwait (ep=<optimized out>, epi=<optimized out>) at fs/eventpoll.c:663
+#2  ep_clear_and_put (ep=0xffff000001e3f9c0) at fs/eventpoll.c:887
+
+[*] BREAKPOINT HIT: __ep_remove (entry)
+[*] BT:
+#0  __ep_remove (ep=ep@entry=0xffff000001e3f9c0, epi=0xffff000001e3e180, force=force@entry=0x0) at fs/eventpoll.c:806
+#1  0xffff8000802bca60 in ep_remove_safe (ep=0xffff000001e3f9c0, epi=<optimized out>) at fs/eventpoll.c:866
+#2  0xffff8000802bcb6c in ep_clear_and_put (ep=0xffff000001e3f9c0) at fs/eventpoll.c:902
+```
+
+**Observation:**
+The trace definitively proves that `remove_wait_queue` (which synchronizes with and drains `ep_poll_callback`) executes in a completely separate loop (line 887) BEFORE `__ep_remove` is even invoked (line 902). 
+
+Since the corrupting `list_del_init(&epi->rdllink)` instruction lives deep inside `__ep_remove`, all in-flight wait queue callbacks for the entire eventpoll instance are guaranteed to be fully drained and unregistered before the corruption window opens.
+
+### Final Conclusion
+With live trace confirmation, the theoretical finding is verified as fact. The corrupted `rdllink` pointers cannot be reached via `ep_poll_callback` because all wait queue entries are deterministically destroyed before the corruption occurs.
+
+**Status:** Upgrade VER-022 to VERIFIED. The `ep_item_poll` path (RCU traversal) remains the *only* viable primitive for triggering the UAF.
