@@ -1,0 +1,90 @@
+[*] Connected to QEMU
+[*] Resolving struct offsets...
+[*]   struct file->f_op offset: 16
+[*]   struct file->private_data offset: 32
+[*]   struct file->f_ep offset: 144
+[*]   eventpoll_fops: 0xffff800080d01408
+[*]   struct eventpoll->refs offset: 160
+[*]   epi->ffd.file offset: 48 (from disassembly)
+Breakpoint 1 at 0xffff8000802bc824: file fs/eventpoll.c, line 806.[*] EXP-024 breakpoints set. Continuing.
+[*] __ep_remove: ep=-0xfffffc810000, epi=-0xfffffe193e80, file=0xffff0000037e73c0, f_op=0xffff800080d01408, is_epoll=True
+[*]   >> EPOLL FILE DETECTED!
+[*]   >> inner_epoll = file->private_data = 0xffff0000037f0180
+[*]   >> file->f_ep = 0xffff0000037f0220
+[*]   >> &inner_epoll->refs = 0xffff0000037f0220
+[*]   >> inner_epoll->refs.first (offset 160) = 0xffff000001e6c250
+[*]     refs[1]: 0xffff000001e6c250 -> next=0xffff000001e6c1d0
+[*]     refs[2]: 0xffff000001e6c1d0 -> next=0x0
+[*]   >> Epitems in inner_epoll->refs: 2
+[*]   >> epi->fllink at -0xfffffe193e30, fllink.next = 0x0
+[*]   >> Single-epitem check: head->first==&epi->fllink=False, !fllink.next=True
+[*]   >> Would WRITE_ONCE(f_ep, NULL) execute? False
+[*]   >> DUAL-WATCH CONFIRMED: f_ep will NOT be set NULL
+[*]   >> The lockless-bypass race (VER-026) CANNOT trigger
+[*]   >> inner_epoll will NOT be freed before hlist_del_rcu
+[*]   >> Full dump of inner_epoll at 0xffff0000037f0180 (BEFORE hlist_del_rcu):
+[*] 
+0xffff0000037f0180:	0x0000000000000000	0x0000000000000000
+0xffff0000037f0190:	0xffff0000037f0190	0xffff0000037f0190
+0xffff0000037f01a0:	0x0000000000000000	0xffff0000037f01a8
+0xffff0000037f01b0:	0xffff0000037f01a8	0x0000000000000000
+0xffff0000037f01c0:	0xffff000001e59868	0xffff000001e59868
+0xffff0000037f01d0:	0xffff0000037f01d0	0xffff0000037f01d0
+0xffff0000037f01e0:	0x0000000000000000	0xffff000001e6c100
+0xffff0000037f01f0:	0xffff000001e6c100	0xffffffffffffffff
+0xffff0000037f0200:	0x0000000000000000	0xffff80008152be98
+0xffff0000037f0210:	0xffff0000037e73c0	0x0000000000000005
+0xffff0000037f0220:	0xffff000001e6c250	0x0000000200000000
+0xffff0000037f0230:	0x0000000000000000	0x0000000000000000
+
+[*]   >> Setting hardware watchpoint on 0xffff0000037f0220
+Hardware watchpoint 2: *(unsigned long*)(18446462598791496224)
+Breakpoint 3 at 0xffff8000802bcba4: ep_free. (2 locations)
+[*] ep_free: ep=0x1
+[*] === WATCHPOINT FIRED: inner_epoll+160 modified! ===
+[*]   New value at offset 160: 0x0
+[*]   Backtrace:
+#0  __hlist_del (n=0xffff000001e6c250) at ./include/linux/list.h:989
+#1  hlist_del_rcu (n=0xffff000001e6c250) at ./include/linux/rculist.h:516
+#2  __ep_remove (ep=0xffff0000037f00c0, epi=0xffff000001e6c200, force=0x1) at fs/eventpoll.c:836
+#3  0xffff800080030174 in alloc_insn_page () at arch/arm64/kernel/probes/kprobes.c:57
+Backtrace stopped: previous frame identical to this frame (corrupt stack?)
+
+[*]   PC = 0xffff8000802bc8d8 = __ep_remove + 0xb4
+[*]   ep_free_inner_seen: False
+[*]   >> inner_epoll is STILL ALIVE — this is NOT a UAF write
+[*]   >> Value is NULL — single-epitem hlist_del_rcu
+[*]   >> Full dump of inner_epoll at 0xffff0000037f0180 (AT WRITE TIME):
+[*] 
+0xffff0000037f0180:	0x0000000000000000	0x0000000000000000
+0xffff0000037f0190:	0xffff0000037f0190	0xffff0000037f0190
+0xffff0000037f01a0:	0x0000000000000000	0xffff0000037f01a8
+0xffff0000037f01b0:	0xffff0000037f01a8	0x0000000000000000
+0xffff0000037f01c0:	0xffff0000037f01c0	0xffff0000037f01c0
+0xffff0000037f01d0:	0xffff0000037f01d0	0xffff0000037f01d0
+0xffff0000037f01e0:	0x0000000000000000	0xffff000001e6c100
+0xffff0000037f01f0:	0xffff000001e6c100	0xffffffffffffffff
+0xffff0000037f0200:	0x0000000000000000	0xffff80008152be98
+0xffff0000037f0210:	0xffff0000037e73c0	0x0000000000000005
+0xffff0000037f0220:	0x0000000000000000	0x0000000200000000
+0xffff0000037f0230:	0x0000000000000000	0x0000000000000000
+
+[*] ep_free: ep=0x1
+[*] ep_free: ep=0x1
+[*] TIMEOUT (60s)
+[Switching to Thread 1.2]
+[*] ============================================================
+[*] FINAL EXPERIMENT REPORT
+[*] ============================================================
+[*] inner_epoll_addr: 0xffff0000037f0180
+[*] write_captured: True
+[*] ep_free_inner_seen: False
+[*] refs.first history (chronological):
+[*]   AT_ENTRY: 0xffff000001e6c250
+[*]   WATCHPOINT_WRITE: 0x0
+[*] 
+[*] VERDICT: hlist_del_rcu wrote to LIVE inner_epoll (never freed during trace).
+[*] The dual-watch topology does NOT produce a UAF write.
+[*] VER-029/VER-030 claims are UNSUPPORTED by this evidence.
+[*] ============================================================
+[Inferior 1 (process 1) detached]
