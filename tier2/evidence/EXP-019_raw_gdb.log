@@ -1,0 +1,69 @@
+[*] Connected to QEMU
+Breakpoint 1 at 0xffff8000802bc9c0: file fs/eventpoll.c, line 346.[*] Breakpoints set. Continuing execution.
+[*] Thread A hit __ep_remove+0x19c (WRITE_ONCE finished).
+[*] target_file=-0xfffffdaa8b80, target_epoll=-0xfffffca3b640
+[*] Original instruction at 0xffff8000802bc9c0: -0x6effa000
+[*] Patched PC with infinite loop to suspend Thread A!
+Breakpoint 2 at 0xffff8000802bcbb4: file fs/eventpoll.c, line 793.
+[*] Thread B hit ep_free(-0xfffffca3b640)!
+Breakpoint 3 at 0xffff8000802bcbbc: file fs/eventpoll.c, line 909.
+[*] Thread B finished ep_free. target_epoll is now FREED!
+[*] Memory dump of freed struct eventpoll (BEFORE spray):
+[*] 
+0xffff0000035c49c0:	0x0000000000000000	0x0000000000000000
+0xffff0000035c49d0:	0xffff0000035c49d0	0xffff0000035c49d0
+0xffff0000035c49e0:	0x0000000000000000	0xffff0000035c49e8
+0xffff0000035c49f0:	0xffff0000035c49e8	0x0000000000000000
+0xffff0000035c4a00:	0xffff0000035c4a00	0xffff0000035c4a00
+0xffff0000035c4a10:	0xffff0000035c4a10	0xffff0000035c4a10
+0xffff0000035c4a20:	0xffff0000035c4a80	0x0000000000000000
+0xffff0000035c4a30:	0x0000000000000000	0xffffffffffffffff
+0xffff0000035c4a40:	0x0000000000000000	0xffff80008152be98
+0xffff0000035c4a50:	0xffff000002557480	0x0000000000000001
+0xffff0000035c4a60:	0xffff000003550750	0x0000000000000000
+0xffff0000035c4a70:	0x0000000000000000	0x0000000000000000
+
+[*] Timer fired! Interrupting GDB to check spray...
+[Switching to Thread 1.2]
+[*] Interrupted! Dumping memory (AFTER spray):
+[*] 
+0xffff0000035c49c0:	0xffff0000035c4a80	0xffff000003559fc0
+0xffff0000035c49d0:	0x0000000000000001	0x0000000000000090
+0xffff0000035c49e0:	0x0000000000000000	0xffff000002526718
+0xffff0000035c49f0:	0x0000000000000000	0x0000000000000000
+0xffff0000035c4a00:	0x0000000000000000	0x0000000000000000
+0xffff0000035c4a10:	0x0000000000000000	0x0000000000000000
+0xffff0000035c4a20:	0x0000000000000000	0x0000000000000000
+0xffff0000035c4a30:	0x0000000000000000	0x0000000000000000
+0xffff0000035c4a40:	0x0000000000000000	0xdead000000000000
+0xffff0000035c4a50:	0x0000000000000000	0x0000000000000000
+0xffff0000035c4a60:	0x0000000000000000	0x0000000000000000
+0xffff0000035c4a70:	0x0000000000000000	0x0000000000000000
+
+[*] Marker at -0xfffffca3b5b8 (offset 136): 0xffff0000035c4a48:	0xdead000000000000
+[*] Restoring Thread A's instruction and continuing to trigger panic...
+[*] Restored original instruction at 0xffff8000802bc9c0
+[*] Executing continue to trigger panic...
+[*] Hang timeout! Interrupting GDB...
+[*] Interrupted! Dumping memory (AFTER spray):
+[*] 
+0xffff0000035c49c0:	0xffff0000035c4a80	0xffff000003559fc0
+0xffff0000035c49d0:	0x0000000000000001	0x0000000000000090
+0xffff0000035c49e0:	0x0000000000000000	0xffff000002526718
+0xffff0000035c49f0:	0x0000000000000000	0x0000000000000000
+0xffff0000035c4a00:	0x0000000000000000	0x0000000000000000
+0xffff0000035c4a10:	0x0000000000000000	0x0000000000000000
+0xffff0000035c4a20:	0x0000000000000000	0x0000000000000000
+0xffff0000035c4a30:	0x0000000000000000	0x0000000000000000
+0xffff0000035c4a40:	0x0000000000000000	0xdead000000000000
+0xffff0000035c4a50:	0x0000000000000000	0x0000000000000000
+0xffff0000035c4a60:	0x0000000000000000	0x0000000000000000
+0xffff0000035c4a70:	0x0000000000000000	0x0000000000000000
+
+[*] Marker at -0xfffffca3b5b8 (offset 136): 0xffff0000035c4a48:	0xdead000000000000
+[*] Restoring Thread A's instruction and continuing to trigger panic...
+[*] Restored original instruction at 0xffff8000802bc9c0
+[*] Executing continue to trigger panic...
+Cannot execute this command while the target is running.
+Use the "interrupt" command to stop the target
+and then try again.
