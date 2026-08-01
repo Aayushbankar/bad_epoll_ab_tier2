@@ -19,3 +19,4 @@ This index logs all test reproducers, GDB automation scripts, and experimental e
 | EXP-016 | 2026-07-31 | Target selection: filter all 129-192 byte structs for kmalloc-192 spray and offset 160 NULL write primitive. | (pending) | (pending) | (pending) | **RUNNING** | (pending) |
 | EXP-018 | 2026-08-01 | msg_msg Spray Reclaim Verification | test_exp018.c | exp018_gdb.py | run_exp018.sh | **PASSED** (Reclaim verified) | `tier2/evidence/EXP-018_RESULTS.md` |
 | EXP-019 | 2026-08-01 | Controlled Crash PoC (Chain 0) | test_exp019.c | exp019_gdb.py | run_exp019.sh | **FAILED** (percpu_counter_dec not on freed ep) | `tier2/evidence/EXP-019_RESULTS.md` |
+| EXP-022b | 2026-08-01 | Info Leak via hlist_del_rcu (2 epitems) | test_exp022b.c | exp022b_gdb.py | run_exp022b.sh | **PASSED** (Kernel pointer leaked: 0xffff0000037bb6d0) | `tier2/evidence/EXP-022b_RESULTS.md` |

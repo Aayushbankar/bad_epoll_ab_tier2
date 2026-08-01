@@ -1,0 +1,52 @@
+[*] Connected to QEMU
+Breakpoint 1 at 0xffff8000802bc9c0: file fs/eventpoll.c, line 346.[*] Breakpoints set. Continuing execution.
+[*] Thread A hit __ep_remove+0x19c (WRITE_ONCE finished).
+[*] target_file=-0xfffffc8d7c40, target_epoll=-0xfffffda5b1c0
+[*] Original instruction at 0xffff8000802bc9c0: -0x6effa000
+[*] Patched PC with infinite loop to suspend Thread A!
+Breakpoint 2 at 0xffff8000802bcbb4: file fs/eventpoll.c, line 793.
+[*] Hang timeout! Interrupting GDB...
+[Switching to Thread 1.2]
+[*] Interrupted! Dumping memory (AFTER spray):
+[*] 
+0xffff0000025a4e40:	0x0000000000000000	0x0000000000000000
+0xffff0000025a4e50:	0xffff0000025a4e50	0xffff0000025a4e50
+0xffff0000025a4e60:	0x0000000000000000	0xffff0000025a4e68
+0xffff0000025a4e70:	0xffff0000025a4e68	0x0000000000000000
+0xffff0000025a4e80:	0xffff0000025a4e80	0xffff0000025a4e80
+0xffff0000025a4e90:	0xffff0000025a4e90	0xffff0000025a4e90
+0xffff0000025a4ea0:	0x0000000000000000	0xffff0000037bb480
+0xffff0000025a4eb0:	0xffff0000037bb480	0xffffffffffffffff
+0xffff0000025a4ec0:	0x0000000000000000	0xffff80008152be98
+0xffff0000025a4ed0:	0xffff0000037283c0	0x0000000000000005
+0xffff0000025a4ee0:	0xffff0000037bb6d0	0x0000000200000000
+0xffff0000025a4ef0:	0x0000000000000000	0x0000000000000000
+
+[*] refs.first at -0xfffffda5b120 (offset 160): 0xffff0000025a4ee0:	0xffff0000037bb6d0
+[*] Restoring Thread A's instruction and continuing to completion...
+[*] Restored original instruction at 0xffff8000802bc9c0
+[*] Executing continue - letting Thread A complete...
+[*] Thread B hit ep_free(-0xfffffda5b1c0)!
+Breakpoint 3 at 0xffff8000802bcbbc: file fs/eventpoll.c, line 909.
+[*] Thread B finished ep_free. target_epoll is now FREED!
+[*] Memory dump of freed struct eventpoll (BEFORE spray):
+[*] 
+0xffff0000025a4e40:	0x0000000000000000	0x0000000000000000
+0xffff0000025a4e50:	0xffff0000025a4e50	0xffff0000025a4e50
+0xffff0000025a4e60:	0x0000000000000000	0xffff0000025a4e68
+0xffff0000025a4e70:	0xffff0000025a4e68	0x0000000000000000
+0xffff0000025a4e80:	0xffff0000025a4e80	0xffff0000025a4e80
+0xffff0000025a4e90:	0xffff0000025a4e90	0xffff0000025a4e90
+0xffff0000025a4ea0:	0xffff0000025a4900	0x0000000000000000
+0xffff0000025a4eb0:	0x0000000000000000	0xffffffffffffffff
+0xffff0000025a4ec0:	0x0000000000000000	0xffff80008152be98
+0xffff0000025a4ed0:	0xffff0000037283c0	0x0000000000000005
+0xffff0000025a4ee0:	0x0000000000000000	0x0000000000000000
+0xffff0000025a4ef0:	0x0000000000000000	0x0000000000000000
+
+[*] Timer fired! Interrupting GDB to check spray...
+[*] Second interrupt - harness should be running msgrcv now
+[*] Letting harness run to completion...
+Cannot execute this command while the target is running.
+Use the "interrupt" command to stop the target
+and then try again.
