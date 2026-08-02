@@ -50,3 +50,28 @@ This document serves as the authoritative, machine-parseable Single Source of Tr
 | VER-033 | 2026-08-02 | EXP-024: Dual-watch KASLR leak claim DISPROVED. With 2+ epitems in inner_epoll->refs, the single-epitem condition (eventpoll.c:826) is FALSE, so WRITE_ONCE(f_ep, NULL) does NOT execute. Without f_ep=NULL, the lockless-bypass race (VER-026) cannot trigger, and inner_epoll is never freed before hlist_del_rcu. Hardware watchpoint confirmed: write went to LIVE memory (ep_free_inner_seen=False), value was NULL. The conditions for UAF (single-epitem) and kernel-pointer write (multi-epitem) are mutually exclusive. | `hlist_del_rcu` / `inner_epoll->refs` | RUNTIME (GDB HW watchpoint) | `tier2/evidence/EXP-024_raw_gdb.log`, `tier2/evidence/EXP-024_RESULTS.md` | **VERIFIED** (Negative Result) |
 | VER-031 | 2026-08-01 | EXP-023b: `percpu_counter_dec` in `__ep_remove` operates on the OUTER eventpoll's user_struct (valid), not the freed INNER eventpoll. GDB-assisted overwrite of outer_epoll->user failed to redirect the decrement. Breakpoint at percpu_counter_add_batch confirms fbc = root_user+8. Chain 2 arbitrary decrement not achievable in outer-close/inner-close race. | `percpu_counter_dec` / `__ep_remove` | RUNTIME (GDB trace) | `tier2/evidence/EXP-023b_raw_gdb.log` | **VERIFIED** (Negative Result) |
 | VER-032 | 2026-08-01 | EXP-023b: The ONLY verified UAF write on the freed eventpoll in this race is `hlist_del_rcu(&epi->fllink)` at offset 160 (NULL with 1 epitem, kernel pointer with 2+ epitems). All other operations (rb_erase_cached, spin_lock_irq, percpu_counter_dec) operate on the OUTER epoll. Future chains must target hlist_del_rcu primitive. | `hlist_del_rcu` / freed eventpoll | RUNTIME (GDB trace) | `tier2/evidence/EXP-023b_raw_gdb.log` | **VERIFIED** |
+
+---
+
+## Phase 3: Natural Schedulability & Android Portability (PLANNED — Not Yet Verified)
+
+| Verification ID | Date & Timestamp (UTC) | Claim / Fact Description | Target Symbol / Address | Verification Method | Raw Evidence File | Status |
+|---|---|---|---|---|---|---|
+| VER-034 | 2026-08-02 | NAT-001: Race naturally schedulable without GDB — hit rate in 10,000 iterations | `__ep_remove` / `hlist_del_rcu` | RUNTIME (Statistical) | `tier2/evidence/NAT-001_raw_*.log` | **RUNNING** |
+| VER-035 | 2026-08-02 | NAT-002: Preemption point exists at `cond_resched` in `ep_unregister_pollwait` (line 888) | `ep_clear_and_put` / `ep_unregister_pollwait` | RUNTIME (GDB trace + yield test) | `tier2/evidence/NAT-002_raw_*.log` | **RUNNING** |
+| VER-036 | 2026-08-02 | NAT-003: msg_msg reclaim works under natural timing (no GDB window) | `load_msg` / `kmalloc-192` | RUNTIME (Statistical reclaim stats) | `tier2/evidence/NAT-003_raw_*.log` | **RUNNING** |
+| VER-037 | 2026-08-02 | NAT-004: Per-CPU partial slab interferes with cross-CPU reclaim | `kmalloc-192` / `SLUB_CPU_PARTIAL` | RUNTIME (Same-CPU vs cross-CPU) | `tier2/evidence/NAT-004_raw_*.log` | **RUNNING** |
+| VER-038 | 2026-08-02 | AND-001: SysV IPC (`msgsnd`/`msgrcv`) works in Android target context | `msgget` / `msgsnd` / `msgrcv` | RUNTIME (Binary test on AVD) | `tier2/evidence/AND-001_raw_*.log` | **RUNNING** |
+| VER-039 | 2026-08-02 | AND-002: KASLR does not reduce race hit rate to zero | `__ep_remove` / `kmalloc-192` | RUNTIME (KASLR on vs off) | `tier2/evidence/AND-002_raw_*.log` | **RUNNING** |
+| VER-040 | 2026-08-02 | AND-003: SELinux enforcing allows exploit syscalls (`epoll`, `msgget`, `msgsnd`, `msgrcv`) | `epoll_create1` / `msgget` / etc. | RUNTIME (SELinux audit) | `tier2/evidence/AND-003_raw_*.log` | **RUNNING** |
+| VER-041 | 2026-08-02 | AND-004: MTE/KASAN_HW_TAGS does not prevent UAF detection | `hlist_del_rcu` / MTE tags | RUNTIME (kasan=on + MTE) | `tier2/evidence/AND-004_raw_*.log` | **RUNNING** |
+
+---
+
+## Evolution Notes (Updated)
+
+| EVO ID | Date | Note |
+|---|---|---|
+| EVO-005 | 2026-07-24 | Corrected slab cache from `kmalloc-192` to dedicated `eventpoll_epi` cache (120 bytes, `SLAB_HWCACHE_ALIGN|SLAB_ACCOUNT`). All prior "offset 160" analysis is invalid. The `snd_timer_user` open cannot reclaim the freed epitem because they are in different slab caches. Same-cache reclaim via `epoll_ctl(EPOLL_CTL_ADD)` is the viable strategy. |
+| EVO-006 | 2026-07-27 | Confirmed `eventpoll_epi` is a truly isolated dedicated cache. `CONFIG_MEMCG` is disabled (`.config` line: `# CONFIG_MEMCG is not set`), so `kmalloc-cg-128` does not exist. The cache's `SLAB_ACCOUNT` flag prevents merging into `kmalloc-128` (which lacks `SLAB_ACCOUNT`). Cross-cache reclaim from generic kmalloc caches is NOT possible. Only same-cache reclaim (allocating new `epitem` objects via `epoll_ctl`) can reclaim the freed slot. Source: `eventpoll.c:2555` (`kmem_cache_create`), `slab_common.c:173-215` (`find_mergeable`). |
+| EVO-009 | 2026-08-02 | **Phase 3 Pivot**: All prior race evidence was DEBUGGER-ASSISTED (GDB patching). Natural schedulability UNPROVEN. Phase 3 experiments (NAT-001 through AND-004) designed to falsify "race is naturally reachable" hypothesis with statistical rigor. |

@@ -22,3 +22,19 @@ This index logs all test reproducers, GDB automation scripts, and experimental e
 | EXP-022b | 2026-08-01 | Info Leak via hlist_del_rcu (2 epitems) | test_exp022b.c | exp022b_gdb.py | run_exp022b.sh | **RETRACTED** (See EXP-024: race conditions mutually exclusive) | `tier2/evidence/EXP-022b_RESULTS.md` |
 | EXP-023b | 2026-08-01 | percpu_counter_dec Arbitrary Decrement Test (GDB-assisted) | test_exp023b.c | exp023b_gdb.py | run_exp023b.sh | **INCONCLUSIVE** (Redirect failed - ep param is outer epoll) | `tier2/evidence/EXP-023b_RESULTS.md` |
 | EXP-024 | 2026-08-02 | Clean re-test of dual-watch KASLR leak (VER-029/030 retraction) | test_exp024.c | exp024_gdb.py | run_exp024.sh | **PASSED** (Negative: write to LIVE memory, not UAF. VER-029/030 retracted.) | `tier2/evidence/EXP-024_RESULTS.md` |
+
+---
+
+## Phase 3: Natural Schedulability & Android Portability
+
+| Experiment ID | Experiment Name | Primary Objective | Reproducer Binary | GDB Script | Execution Shell Launcher | Result Summary | Evidence Reference |
+|---|---|---|---|---|---|---|---|
+| NAT-001 | 2026-08-02 | Statistical Natural Race Test (10k iterations, no GDB) | test_nat001.c | (none) | run_nat001.sh | **RUNNING** | `tier2/evidence/NAT-001_raw_*.log` |
+| NAT-002 | 2026-08-02 | Preemption Point Audit: cond_resched in ep_unregister_pollwait | test_nat002.c | exp_nat002_trace.py | run_nat002.sh | **RUNNING** | `tier2/evidence/NAT-002_raw_*.log` |
+| NAT-003 | 2026-08-02 | msg_msg Reclaim Under Natural Timing | test_nat001.c (subset) | (none) | run_nat001.sh | **RUNNING** | `tier2/evidence/NAT-003_raw_*.log` |
+| NAT-004 | 2026-08-02 | Per-CPU Partial Slab Interference | test_nat004.c | (none) | run_nat004.sh | **RUNNING** | `tier2/evidence/NAT-004_raw_*.log` |
+| NAT-005 | 2026-08-02 | Alternative Spray Primitives (add_key, setxattr) | test_nat005.c | (none) | run_nat005.sh | **RUNNING** | `tier2/evidence/NAT-005_raw_*.log` |
+| AND-001 | 2026-08-02 | SysV IPC Availability Under Android Seccomp | test_ipc.c | (none) | run_and001.sh | **RUNNING** | `tier2/evidence/AND-001_raw_*.log` |
+| AND-002 | 2026-08-02 | KASLR Impact on Race Reliability | test_nat001.c | (none) | run_and002.sh | **RUNNING** | `tier2/evidence/AND-002_raw_*.log` |
+| AND-003 | 2026-08-02 | SELinux Policy Audit for Exploit Syscalls | test_selinux.c | (none) | run_and003.sh | **RUNNING** | `tier2/evidence/AND-003_raw_*.log` |
+| AND-004 | 2026-08-02 | MTE/KASAN_HW_TAGS Impact on UAF Primitive | test_nat001.c | (none) | run_and004.sh | **RUNNING** | `tier2/evidence/AND-004_raw_*.log` |
