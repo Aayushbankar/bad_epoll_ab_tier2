@@ -58,13 +58,13 @@ This document serves as the authoritative, machine-parseable Single Source of Tr
 | Verification ID | Date & Timestamp (UTC) | Claim / Fact Description | Target Symbol / Address | Verification Method | Raw Evidence File | Status |
 |---|---|---|---|---|---|---|
 | VER-034 | 2026-08-02 | NAT-001: Race naturally schedulable without GDB — hit rate in 10,000 iterations | `__ep_remove` / `hlist_del_rcu` | RUNTIME (Statistical) | `tier2/evidence/NAT-001_raw_*.log` | **RUNNING** |
-| VER-035 | 2026-08-02 | NAT-002: cond_resched at lines 888/903 exists but is NO-OP in 2-CPU pinned PREEMPT_VOLUNTARY — multi-epitem topology provides only instruction-count timing window, not scheduling yield | `ep_clear_and_put` / `ep_remove_safe` / `__ep_remove` | STATIC-HIGH-CONFIDENCE (Source + Disassembly + Mechanism Analysis) | `tier2/evidence/NAT-002/NAT-002_RESULTS.md`, `tier2/evidence/NAT-002/NAT-002_raw_disassembly.log`, `tier2/evidence/NAT-002/NAT-002_CORRECTION.md` | **CORRECTED** |
-| VER-036 | 2026-08-02 | NAT-003: msg_msg reclaim works under natural timing (no GDB window) | `load_msg` / `kmalloc-192` | RUNTIME (Statistical reclaim stats) | `tier2/evidence/NAT-003_raw_*.log` | **RUNNING** |
-| VER-037 | 2026-08-02 | NAT-004: Per-CPU partial slab interferes with cross-CPU reclaim | `kmalloc-192` / `SLUB_CPU_PARTIAL` | RUNTIME (Same-CPU vs cross-CPU) | `tier2/evidence/NAT-004_raw_*.log` | **RUNNING** |
-| VER-038 | 2026-08-02 | AND-001: SysV IPC (`msgsnd`/`msgrcv`) works in Android target context | `msgget` / `msgsnd` / `msgrcv` | RUNTIME (Binary test on AVD) | `tier2/evidence/AND-001_raw_*.log` | **RUNNING** |
-| VER-039 | 2026-08-02 | AND-002: KASLR does not reduce race hit rate to zero | `__ep_remove` / `kmalloc-192` | RUNTIME (KASLR on vs off) | `tier2/evidence/AND-002_raw_*.log` | **RUNNING** |
-| VER-040 | 2026-08-02 | AND-003: SELinux enforcing allows exploit syscalls (`epoll`, `msgget`, `msgsnd`, `msgrcv`) | `epoll_create1` / `msgget` / etc. | RUNTIME (SELinux audit) | `tier2/evidence/AND-003_raw_*.log` | **RUNNING** |
-| VER-041 | 2026-08-02 | AND-004: MTE/KASAN_HW_TAGS does not prevent UAF detection | `hlist_del_rcu` / MTE tags | RUNTIME (kasan=on + MTE) | `tier2/evidence/AND-004_raw_*.log` | **RUNNING** |
+| VER-035 | 2026-08-02 | NAT-002: cond_resched at lines 888/903 exists but is NO-OP in 2-CPU pinned PREEMPT_VOLUNTARY | `ep_clear_and_put` / `ep_remove_safe` / `__ep_remove` | STATIC-HIGH-CONFIDENCE (Source + Disassembly + Mechanism) | `tier2/evidence/NAT-002/NAT-002_RESULTS.md` | **CORRECTED** |
+| VER-036 | 2026-08-02 | NAT-003: msg_msg reclaim works under natural timing (no GDB window) | `load_msg` / `kmalloc-192` | RUNTIME (Statistical reclaim stats) | `tier2/evidence/NAT-003_raw_*.log` | **PLANNED** |
+| VER-037 | 2026-08-02 | NAT-004: Per-CPU partial slab interferes with cross-CPU reclaim | `kmalloc-192` / `SLUB_CPU_PARTIAL` | RUNTIME (Same-CPU vs cross-CPU) | `tier2/evidence/NAT-004_raw_*.log` | **PLANNED** |
+| VER-038 | 2026-08-02 | AND-001: SysV IPC (`msgsnd`/`msgrcv`) works in Android target context | `msgget` / `msgsnd` / `msgrcv` | RUNTIME (Binary test on AVD) | `tier2/evidence/AND-001_raw_*.log` | **PLANNED** |
+| VER-039 | 2026-08-02 | AND-002: KASLR does not reduce race hit rate to zero | `__ep_remove` / `kmalloc-192` | RUNTIME (KASLR on vs off) | `tier2/evidence/AND-002_raw_*.log` | **PLANNED** |
+| VER-040 | 2026-08-02 | AND-003: SELinux enforcing allows exploit syscalls (`epoll`, `msgget`, `msgsnd`, `msgrcv`) | `epoll_create1` / `msgget` / etc. | RUNTIME (SELinux audit) | `tier2/evidence/AND-003_raw_*.log` | **PLANNED** |
+| VER-041 | 2026-08-02 | AND-004: MTE/KASAN_HW_TAGS does not prevent UAF detection | `hlist_del_rcu` / MTE tags | RUNTIME (kasan=on + MTE) | `tier2/evidence/AND-004_raw_*.log` | **PLANNED** |
 
 ---
 

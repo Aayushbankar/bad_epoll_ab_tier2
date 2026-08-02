@@ -31,10 +31,10 @@ This index logs all test reproducers, GDB automation scripts, and experimental e
 |---|---|---|---|---|---|---|---|
 | NAT-001 | 2026-08-02 | Statistical Natural Race Test (10k iterations, no GDB) | test_nat001.c | (none) | run_nat001.sh | **RUNNING** | `tier2/evidence/NAT-001_raw_*.log` |
 | NAT-002 | 2026-08-02 | Preemption Point Audit: cond_resched at lines 888/903 — CORRECTED: no-op in 2-CPU pinned PREEMPT_VOLUNTARY | test_nat002.c | exp_nat002_trace.py | run_nat002.sh | **CORRECTED** (cond_resched no-op; timing window only) | `tier2/evidence/NAT-002/NAT-002_RESULTS.md` |
-| NAT-003 | 2026-08-02 | msg_msg Reclaim Under Natural Timing | test_nat001.c (subset) | (none) | run_nat001.sh | **RUNNING** | `tier2/evidence/NAT-003_raw_*.log` |
-| NAT-004 | 2026-08-02 | Per-CPU Partial Slab Interference | test_nat004.c | (none) | run_nat004.sh | **RUNNING** | `tier2/evidence/NAT-004_raw_*.log` |
-| NAT-005 | 2026-08-02 | Alternative Spray Primitives (add_key, setxattr) | test_nat005.c | (none) | run_nat005.sh | **RUNNING** | `tier2/evidence/NAT-005_raw_*.log` |
-| AND-001 | 2026-08-02 | SysV IPC Availability Under Android Seccomp | test_ipc.c | (none) | run_and001.sh | **RUNNING** | `tier2/evidence/AND-001_raw_*.log` |
-| AND-002 | 2026-08-02 | KASLR Impact on Race Reliability | test_nat001.c | (none) | run_and002.sh | **RUNNING** | `tier2/evidence/AND-002_raw_*.log` |
-| AND-003 | 2026-08-02 | SELinux Policy Audit for Exploit Syscalls | test_selinux.c | (none) | run_and003.sh | **RUNNING** | `tier2/evidence/AND-003_raw_*.log` |
-| AND-004 | 2026-08-02 | MTE/KASAN_HW_TAGS Impact on UAF Primitive | test_nat001.c | (none) | run_and004.sh | **RUNNING** | `tier2/evidence/AND-004_raw_*.log` |
+| NAT-003 | 2026-08-02 | msg_msg Reclaim Under Natural Timing | test_nat001.c (subset) | (none) | run_nat001.sh | **PLANNED** | `tier2/evidence/NAT-003_raw_*.log` |
+| NAT-004 | 2026-08-02 | Per-CPU Partial Slab Interference | test_nat004.c | (none) | run_nat004.sh | **PLANNED** | `tier2/evidence/NAT-004_raw_*.log` |
+| NAT-005 | 2026-08-02 | Alternative Spray Primitives (add_key, setxattr) | test_nat005.c | (none) | run_nat005.sh | **PLANNED** | `tier2/evidence/NAT-005_raw_*.log` |
+| AND-001 | 2026-08-02 | SysV IPC Availability Under Android Seccomp | test_ipc.c | (none) | run_and001.sh | **PLANNED** | `tier2/evidence/AND-001_raw_*.log` |
+| AND-002 | 2026-08-02 | KASLR Impact on Race Reliability | test_nat001.c | (none) | run_and002.sh | **PLANNED** | `tier2/evidence/AND-002_raw_*.log` |
+| AND-003 | 2026-08-02 | SELinux Policy Audit for Exploit Syscalls | test_selinux.c | (none) | run_and003.sh | **PLANNED** | `tier2/evidence/AND-003_raw_*.log` |
+| AND-004 | 2026-08-02 | MTE/KASAN_HW_TAGS Impact on UAF Primitive | test_nat001.c | (none) | run_and004.sh | **PLANNED** | `tier2/evidence/AND-004_raw_*.log` |
