@@ -1,0 +1,161 @@
+NAT-002 Static Analysis Raw Evidence
+=====================================
+
+Kernel: linux-6.12.67 (commit 7e35917775b8, Android 14 GKI)
+vmlinux: third_party/linux-6.12.67/vmlinux
+Architecture: ARM64
+
+---
+
+### 1. ep_clear_and_put Disassembly (ffff8000802bca90)
+
+First Loop cond_resched (Line 888):
+ffff8000802bcb30:  bl  ffff800080cc8248 <dynamic_cond_resched>
+
+Second Loop - ep_remove_safe + cond_resched (Line 903):
+ffff8000802bcb68:  bl  ffff8000802bca44 <ep_remove_safe>
+ffff8000802bcb6c:  bl  ffff800080cc8248 <dynamic_cond_resched>
+
+Loop Structure:
+- First loop: ffff8000802bcae8 - ffff8000802bcb40 (ep_unregister_pollwait + cond_resched)
+- Second loop: ffff8000802bcb44 - ffff8000802bcb70 (ep_remove_safe + cond_resched)
+
+---
+
+### 2. ep_remove_safe Disassembly (ffff8000802bca44)
+
+ffff8000802bca44 <ep_remove_safe>:
+  ... prologue ...
+  ffff8000802bca5c:  bl  ffff8000802bc824 <__ep_remove>
+  ... epilogue ...
+
+---
+
+### 3. __ep_remove Disassembly (ffff8000802bc824) — NO cond_resched
+
+ffff8000802bc824 <__ep_remove>:
+  ffff8000802bc824:  d503233f  paciasp
+  ffff8000802bc828:  a9bb7bfd  stp x29, x30, [sp, #-80]!
+  ffff8000802bc82c:  910003fd  mov x29, sp
+  ffff8000802bc830:  a90153f3  stp x19, x20, [sp, #16]
+  ffff8000802bc834:  aa0103f4  mov x20, x1
+  ffff8000802bc838:  a9025bf5  stp x21, x22, [sp, #32]
+  ffff8000802bc83c:  b0007135  adrp x21, ffff8000810e1000 <rodata_full>
+  ffff8000802bc840:  aa0003f6  mov x22, x0
+  ffff8000802bc844:  a90363f7  stp x23, x24, [sp, #48]
+  ffff8000802bc848:  911b82b5  add x21, x21, #0x6e0
+  ffff8000802bc84c:  12001c58  and w24, w2, #0xff
+  ffff8000802bc850:  f9402033  ldr x19, [x1, #64]          # epi->ffd.file
+  ffff8000802bc854:  f9401837  ldr x23, [x1, #48]
+  ffff8000802bc858:  b4000213  cbz x19, ffff8000802bc898
+  ffff8000802bc85c:  d503201f  nop
+  ffff8000802bc860:  f9400261  ldr x1, [x19]
+  ffff8000802bc864:  f9002281  str x1, [x20, #64]
+  ffff8000802bc868:  97f8438d  bl  ffff8000800cd69c <__rcu_read_lock>
+  ffff8000802bc86c:  9100e260  add x0, x19, #0x38
+  ffff8000802bc870:  c8dffc00  ldar x0, [x0]
+  ffff8000802bc874:  b4000060  cbz x0, ffff8000802bc880
+  ffff8000802bc878:  91004261  add x1, x19, #0x10
+  ffff8000802bc87c:  97f7679a  bl  ffff8000800966e4 <remove_wait_queue>
+  ffff8000802bc880:  97f85b92  bl  ffff8000800d36c8 <__rcu_read_unlock>
+  ffff8000802bc884:  f94002a0  ldr x0, [x21]
+  ffff8000802bc888:  aa1303e1  mov x1, x19
+  ffff8000802bc88c:  97fdd844  bl  ffff80008023299c <kmem_cache_free>
+  ffff8000802bc890:  f9402293  ldr x19, [x20, #64]
+  ffff8000802bc894:  b5fffe73  cbnz x19, ffff8000802bc860
+  ffff8000802bc898:  910022f5  add x21, x23, #0x8         # file->f_ep
+  ffff8000802bc89c:  aa1503e0  mov x0, x21
+  ffff8000802bc8a0:  94284c28  bl  ffff800080ccf940 <_raw_spin_lock>   # file->f_lock
+  ffff8000802bc8a4:  3940f281  ldrb w1, [x20, #60]
+  ffff8000802bc8a8:  52000021  eor w1, w1, #0x1
+  ffff8000802bc8ac:  2a010301  orr w1, w24, w1
+  ffff8000802bc8b0:  72001c33  ands w19, w1, #0xff
+  ffff8000802bc8b4:  54000960  b.eq  ffff8000802bc9e0
+  ffff8000802bc8b8:  f9404ae1  ldr x1, [x23, #144]        # file->f_ep (epitems_head*)
+  ffff8000802bc8bc:  aa1403e2  mov x2, x20
+  ffff8000802bc8c0:  f9400020  ldr x0, [x1]
+  ffff8000802bc8c4:  f8450c43  ldr x3, [x2, #80]!
+  ffff8000802bc8c8:  eb02001f  cmp x0, x2
+  ffff8000802bc8cc:  540006a0  b.eq  ffff8000802bc9a0
+  ffff8000802bc8d0:  f9402e80  ldr x0, [x20, #88]
+  ffff8000802bc8d4:  f9000003  str x3, [x0]
+  ffff8000802bc8d8:  b4000043  cbz x3, ffff8000802bc8e0
+  ffff8000802bc8dc:  f9000460  str x0, [x3, #8]
+  ffff8000802bc8e0:  d2802440  mov x0, #0x122
+  ffff8000802bc8e4:  f2fbd5a0  movk x0, #0xdead, lsl #48
+  ffff8000802bc8e8:  f9002e80  str x0, [x20, #88]
+  ffff8000802bc8ec:  aa1503e0  mov x0, x21
+  ffff8000802bc8f0:  94284b00  bl  ffff800080ccf4f0 <_raw_spin_unlock>
+  ffff8000802bc8f4:  f9403ac0  ldr x0, [x22, #112]        # ep->rbr (OUTER epoll)
+  ffff8000802bc8f8:  9101a2d5  add x21, x22, #0x68
+  ffff8000802bc8fc:  eb00029f  cmp x20, x0
+  ffff8000802bc900:  54000081  b.ne  ffff8000802bc910
+  ffff8000802bc904:  aa1403e0  mov x0, x20
+  ffff8000802bc908:  9427e37e  bl  ffff800080cb5700 <rb_next>
+  ffff8000802bc90c:  f9003ac0  str x0, [x22, #112]
+  ffff8000802bc910:  aa1503e1  mov x1, x21
+  ffff8000802bc914:  aa1403e0  mov x0, x20
+  ffff8000802bc918:  910182d5  add x21, x22, #0x60
+  ffff8000802bc91c:  9427e176  bl  ffff800080cb4ef4 <rb_erase>          # rb_erase_cached
+  ffff8000802bc920:  aa1503e0  mov x0, x21
+  ffff8000802bc924:  94284c5e  bl  ffff800080ccfa9c <_raw_spin_lock_irq>  # ep->lock (OUTER)
+  ffff8000802bc928:  f9400e81  ldr x1, [x20, #24]
+  ffff8000802bc92c:  91006280  add x0, x20, #0x18
+  ffff8000802bc930:  eb01001f  cmp x0, x1
+  ffff8000802bc934:  540000c0  b.eq  ffff8000802bc94c
+  ffff8000802bc938:  a9418682  ldp x2, x1, [x20, #24]
+  ffff8000802bc93c:  f9000441  str x1, [x2, #8]
+  ffff8000802bc940:  f9000022  str x2, [x1]
+  ffff8000802bc944:  f9000e80  str x0, [x20, #24]
+  ffff8000802bc948:  f9001280  str x0, [x20, #32]
+  ffff8000802bc94c:  aa1503e0  mov x0, x21
+  ffff8000802bc950:  94284b2a  bl  ffff800080ccf5f8 <_raw_spin_unlock_irq>
+  ffff8000802bc954:  f9403280  ldr x0, [x20, #96]
+  ffff8000802bc958:  940ff864  bl  ffff8000806baae8 <wakeup_source_unregister>
+  ffff8000802bc95c:  b4000094  cbz x20, ffff8000802bc96c
+  ffff8000802bc960:  aa1403e1  mov x1, x20
+  ffff8000802bc964:  aa1403e0  mov x0, x20
+  ffff8000802bc968:  97f85fcf  bl  ffff8000800d48a4 <kvfree_call_rcu>
+  ffff8000802bc96c:  f00092e2  adrp x2, ffff80008151b000
+  ffff8000802bc970:  92800001  mov x1, #0xffffffffffffffff
+  ffff8000802bc974:  f94046c0  ldr x0, [x22, #136]        # ep->user (OUTER epoll)
+  ffff8000802bc978:  b944dc42  ldr w2, [x2, #1244]
+  ffff8000802bc97c:  91002000  add x0, x0, #0x8
+  ffff8000802bc980:  9409cb16  bl  ffff80008052f5d8 <percpu_counter_add_batch>
+  ffff8000802bc984:  2a1303e0  mov w0, w19
+  ffff8000802bc988:  a94153f3  ldp x19, x20, [sp, #16]
+  ffff8000802bc98c:  a9425bf5  ldp x21, x22, [sp, #32]
+  ffff8000802bc990:  a94363f7  ldp x23, x24, [sp, #48]
+  ffff8000802bc994:  a8c57bfd  ldp x29, x30, [sp], #80
+  ffff8000802bc998:  d50323bf  autiasp
+  ffff8000802bc99c:  d65f03c0  ret
+
+**CONFIRMED: No call to cond_resched/dynamic_cond_resched/might_resched inside __ep_remove**
+
+---
+
+### 4. Source Code Lines (fs/eventpoll.c)
+
+Line 888 (First Loop):
+    ep_unregister_pollwait(ep, epi);
+    cond_resched();
+
+Line 903 (Second Loop):
+    ep_remove_safe(ep, epi);
+    cond_resched();
+
+Line 828 (WRITE_ONCE):
+    WRITE_ONCE(file->f_ep, NULL);
+
+Line 836 (hlist_del_rcu - UAF WRITE):
+    hlist_del_rcu(&epi->fllink);
+
+---
+
+### 5. Race Window Mapping
+
+GDB-Forced (EXP-015): Artificial preemption at __ep_remove+0x19c (between WRITE_ONCE and hlist_del_rcu)
+Natural P1: cond_resched at line 888 (after ep_unregister_pollwait, before Loop 2)
+Natural P2: cond_resched at line 903 (after ep_remove_safe/__ep_remove complete, before next epitem)
+
+Multi-epitem topology required for P2 to target adjacent epitem.
