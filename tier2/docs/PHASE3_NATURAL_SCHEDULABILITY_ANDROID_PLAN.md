@@ -137,29 +137,25 @@ Ranked by: **(Expected Information Gain × Android Relevance) / Engineering Cost
 
 ---
 
-### 4.2 NAT-002: Preemption Point Analysis
+### 4.2 NAT-002: Preemption Point Analysis (CORRECTED)
 
 **Goal**: Identify if/where natural preemption can occur in the race window.
 
-**Hypothesis**: The only viable preemption point is the `cond_resched()` in `ep_unregister_pollwait` loop (line 888 of `ep_clear_and_put`), not inside `__ep_remove`.
+**Finding (CORRECTED)**: The `cond_resched()` at lines 888 and 903 in `ep_clear_and_put` are **NO-OPs in a 2-CPU pinned `PREEMPT_VOLUNTARY` setup** because `TIF_NEED_RESCHED` is never set on either CPU (timer tick uses `queued=0` → no `resched_curr()`, no cross-CPU wakeups). The multi-epitem topology provides only an **instruction-count timing window** (~250-550 cycles between epitems), not a scheduling yield window.
 
-**Preconditions**: Same as NAT-001 + `CONFIG_DEBUG_PREEMPT=y` (if available) or tracepoints.
+**Updated Hypothesis**: Natural race triggering requires **timing-widening techniques** (false-sharing cache-line bouncing via third thread, slab contention, timer/IPI storms), not reliance on `cond_resched()`.
 
 **Method**:
-1. Static analysis: Audit `__ep_remove` (lines 804-859) for `cond_resched`, `might_resched`, `preempt_enable` — **NONE exist**.
-2. Audit `ep_clear_and_put` (lines 870-909): `cond_resched` at line 888 inside `for (rbp = rb_first_cached...)` loop calling `ep_unregister_pollwait`.
-3. Dynamic tracing: Add kernel tracepoint at `ep_unregister_pollwait` entry/exit; measure time spent.
-4. Test harness modification: Add explicit `sched_yield()` in Thread A between `ep_unregister_pollwait` and `WRITE_ONCE` to simulate preemption.
+1. Static analysis: **CONFIRMED** — `__ep_remove` has zero preemption points; `ep_clear_and_put` has `cond_resched` at lines 888, 903 but they don't yield in this topology
+2. Mechanism analysis: **CONFIRMED** — `PREEMPT_VOLUNTARY` + 2-CPU pinning = no `TIF_NEED_RESCHED` set
+3. NAT-001 harness must pivot to Tier 1 timing-widening techniques
 
 **Evidence Required**:
-- Source code audit excerpt with line numbers
-- Trace data showing `ep_unregister_pollwait` duration
-- Hit rate comparison: with vs without explicit yield
+- Source code audit excerpt with line numbers (done)
+- Mechanism analysis of `cond_resched` in `PREEMPT_VOLUNTARY` (done)
+- NAT-001 harness redesign specification (next)
 
-**Success Criteria**: Race triggers reliably when Thread A yields at `ep_unregister_pollwait` exit.
-**Failure Criteria**: Even with explicit yield, race window too narrow.
-
-**Confidence**: High (source audit is deterministic).
+**Status**: **CORRECTED** — original yield hypothesis falsified; see `NAT-002_CORRECTION.md`
 
 ---
 

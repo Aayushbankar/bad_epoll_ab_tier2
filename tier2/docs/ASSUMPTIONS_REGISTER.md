@@ -81,7 +81,7 @@
 | ID | Assumption | Status | Evidence | Notes |
 |----|------------|--------|----------|-------|
 | A-031 | Race window exists at `__ep_remove` after `WRITE_ONCE` | DEBUGGER-ASSISTED | EXP-015/018/019 | GDB patch creates artificial point |
-| A-032 | Natural preemption point at `cond_resched` in `ep_unregister_pollwait` | HYPOTHESIS | Source audit (line 888) | NAT-002 to test |
+| A-032 | Natural preemption point at `cond_resched` in `ep_unregister_pollwait` | **FALSIFIED** | NAT-002 correction | P1/P2 cond_resched no-op in 2-CPU pinned PREEMPT_VOLUNTARY; TIF_NEED_RESCHED never set |
 | A-033 | 2-CPU QEMU scheduling approximates device | UNTESTED | — | virt vs physical CPU differ |
 | A-034 | `SCHED_FIFO` + CPU pinning enables stochastic hit | HYPOTHESIS | — | RUNNER_GUIDE claims 0.01-1% |
 | A-035 | No other preemption points in `__ep_remove` | VALIDATED | Source audit | No `cond_resched`/`might_resched` |

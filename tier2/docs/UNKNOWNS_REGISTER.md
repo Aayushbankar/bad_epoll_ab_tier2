@@ -11,7 +11,7 @@
 | ID | Question | Why It Matters | Discriminating Experiment | Expected Resolution |
 |----|----------|----------------|---------------------------|---------------------|
 | U-001 | **Can the race be triggered WITHOUT GDB patching?** | If NO: all race evidence is artifact; vulnerability not practically exploitable | **NAT-001**: 10,000 iterations natural race test | Binary: ≥1 hit = YES; 0 hits = NO (95% CI < 10⁻⁴) |
-| U-002 | **Does a natural preemption point exist in the race window?** | If NO: race window too narrow (< 20 cycles) for scheduler | **NAT-002**: Audit `cond_resched` at `ep_unregister_pollwait` line 888 + yield test | YES: yield at line 888 enables race; NO: even yield fails |
+| U-002 | **Does a natural preemption point exist in the race window?** | If NO: race window too narrow (< 20 cycles) for scheduler | **NAT-002**: Audit `cond_resched` at lines 888/903 + mechanism analysis | **RESOLVED: NO** — cond_resched is no-op in 2-CPU pinned PREEMPT_VOLUNTARY; multi-epitem gives only instruction-count window (~250-550 cycles) |
 | U-003 | **Does `msg_msg` reclaim work under natural timing (no GDB 2-3s window)?** | If NO: spray unreliable; exploit fails even if race hits | **NAT-003**: Reclaim stats from NAT-001 runs | YES: ≥10% exact match; NO: only GDB window works |
 | U-004 | **Does SysV IPC (`msgsnd`/`msgrcv`) work in target Android context?** | If NO: primary spray blocked; must pivot or fail | **AND-001**: Minimal binary test on AVD shell/app | Binary: syscall succeeds = YES; ENOSYS/EACCES = NO |
 | U-005 | **Does SELinux enforcing block required syscalls?** | If YES: exploit blocked on production devices | **AND-003**: Test all primitives in enforcing mode | Per-syscall: allowed/denied |
@@ -26,7 +26,7 @@
 | U-007 | **Does `SLUB_CPU_PARTIAL` prevent cross-CPU reclaim?** | If YES: Thread A/B must share CPU for spray | **NAT-004**: Same-CPU vs cross-CPU hit rate | Significant difference = YES |
 | U-008 | **Does MTE/KASAN_HW_TAGS crash on UAF write?** | If YES: hardware detects UAF before exploitation | **AND-004**: NAT-001 with `kasan=on` + MTE | Crash type: MTE tag fault vs NULL deref |
 | U-009 | **Do alternative sprays (`add_key`, `setxattr`) work if msg_msg blocked?** | Fallback if U-004 = NO | **NAT-005**: Spray test + reclaim verification | Binary per primitive |
-| U-010 | **Can explicit `sched_yield` at `ep_unregister_pollwait` enable race?** | If YES: timing optimization needed | **NAT-002**: Harness with yield at line 888 | Hit rate with vs without yield |
+| U-010 | **Can explicit `sched_yield` at `ep_unregister_pollwait` enable race?** | If YES: timing optimization needed | **NAT-002**: cond_resched is no-op; explicit sched_yield syscall would yield but adds ~1000+ cycles overhead | Unlikely to help — yield overhead exceeds race window |
 
 ---
 
