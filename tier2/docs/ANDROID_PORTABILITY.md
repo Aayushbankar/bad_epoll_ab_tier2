@@ -10,7 +10,7 @@
 
 | # | Linux Finding | Android Effect | PoC Impact | Remaining Blocker | Experiment |
 |---|---------------|----------------|------------|-------------------|------------|
-| **LF-001** | Race exists (lockless fast-path bypass) | **UNKNOWN** — GDB-assisted only | **BLOCKER** | Natural schedulability unproven; cond_resched no-op in 2-CPU PREEMPT_VOLUNTARY | NAT-001, NAT-002 (corrected) |
+| **LF-001** | Race exists (lockless fast-path bypass) | **RESOLVED: NO** — GDB-assisted only; natural race 0/10k | **BLOCKER** | NAT-001: 0 hits with all widening techniques | NAT-001 (complete) |
 | **LF-002** | Primitive: NULL write at offset 160 of kmalloc-192 | Works IF race works | Medium | Depends on LF-001 | NAT-001 |
 | **LF-003** | `msg_msg` (144B) reclaims freed eventpoll | **UNKNOWN** — seccomp may block `msgsnd`/`msgrcv` | **BLOCKER** | Android seccomp profile | AND-001 |
 | **LF-004** | Chain 0 (`percpu_counter_dec` crash) dead | N/A — dead on Linux | None | — | — |
@@ -152,7 +152,7 @@ Phase D: Production PoC
 
 | Blocker | Severity | Depends On | ETA |
 |---------|----------|------------|-----|
-| **Natural race unproven; cond_resched no-op** | CRITICAL | NAT-001 redesign with timing-widening | Week 1 |
+| **Natural race unproven → RESOLVED: NOT naturally winnable** | CRITICAL | NAT-001 complete (0/10k) | **DONE** |
 | **msg_msg blocked by seccomp** | CRITICAL | AND-001 | Week 1 |
 | **SELinux denies exploit syscalls** | CRITICAL | AND-003 | Week 1 |
 | **KASLR reduces hit rate to 0** | HIGH | AND-002 | Week 1 |

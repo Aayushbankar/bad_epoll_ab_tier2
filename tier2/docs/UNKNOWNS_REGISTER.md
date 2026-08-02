@@ -10,7 +10,7 @@
 
 | ID | Question | Why It Matters | Discriminating Experiment | Expected Resolution |
 |----|----------|----------------|---------------------------|---------------------|
-| U-001 | **Can the race be triggered WITHOUT GDB patching?** | If NO: all race evidence is artifact; vulnerability not practically exploitable | **NAT-001**: 10,000 iterations natural race test | Binary: ≥1 hit = YES; 0 hits = NO (95% CI < 10⁻⁴) |
+| U-001 | **Can the race be triggered WITHOUT GDB patching?** | If NO: all race evidence is artifact; vulnerability not practically exploitable | **NAT-001**: 10,000 iterations natural race test with 4 widening techniques | **RESOLVED: NO** — 0 hits in 10,000 iterations (95% CI upper bound 0.0384%) |
 | U-002 | **Does a natural preemption point exist in the race window?** | If NO: race window too narrow (< 20 cycles) for scheduler | **NAT-002**: Audit `cond_resched` at lines 888/903 + mechanism analysis | **RESOLVED: NO** — cond_resched is no-op in 2-CPU pinned PREEMPT_VOLUNTARY; multi-epitem gives only instruction-count window (~250-550 cycles) |
 | U-003 | **Does `msg_msg` reclaim work under natural timing (no GDB 2-3s window)?** | If NO: spray unreliable; exploit fails even if race hits | **NAT-003**: Reclaim stats from NAT-001 runs | YES: ≥10% exact match; NO: only GDB window works |
 | U-004 | **Does SysV IPC (`msgsnd`/`msgrcv`) work in target Android context?** | If NO: primary spray blocked; must pivot or fail | **AND-001**: Minimal binary test on AVD shell/app | Binary: syscall succeeds = YES; ENOSYS/EACCES = NO |

@@ -1,0 +1,360 @@
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x411fd070]
+[    0.000000] Linux version 6.12.67 (legion@fedora) (aarch64-linux-gnu-gcc (GCC) 16.1.1 20260501 (Red Hat Cross 16.1.1-1), GNU ld version 2.46-1.fc44) #3 SMP PREEMPT_DYNAMIC Sun Aug  2 17:13:36 IST 2026
+[    0.000000] KASLR disabled on command line
+[    0.000000] random: crng init done
+[    0.000000] Machine model: linux,dummy-virt
+[    0.000000] earlycon: pl11 at MMIO 0x0000000009000000 (options '')
+[    0.000000] printk: legacy bootconsole [pl11] enabled
+[    0.000000] efi: UEFI not found.
+[    0.000000] OF: reserved mem: Reserved memory: No reserved-memory node in the DT
+[    0.000000] NUMA: Faking a node at [mem 0x0000000040000000-0x00000000bfffffff]
+[    0.000000] NODE_DATA(0) allocated [mem 0xbfbf6c40-0xbfbfa2ff]
+[    0.000000] Zone ranges:
+[    0.000000]   DMA      [mem 0x0000000040000000-0x00000000bfffffff]
+[    0.000000]   DMA32    empty
+[    0.000000]   Normal   empty
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000040000000-0x00000000bfffffff]
+[    0.000000] Initmem setup node 0 [mem 0x0000000040000000-0x00000000bfffffff]
+[    0.000000] psci: probing for conduit method from DT.
+[    0.000000] psci: PSCIv1.1 detected in firmware.
+[    0.000000] psci: Using standard PSCI v0.2 function IDs
+[    0.000000] psci: Trusted OS migration not required
+[    0.000000] psci: SMC Calling Convention v1.0
+[    0.000000] percpu: Embedded 29 pages/cpu s79384 r8192 d31208 u118784
+[    0.000000] Detected PIPT I-cache on CPU0
+[    0.000000] CPU features: detected: Spectre-v2
+[    0.000000] CPU features: detected: Spectre-v3a
+[    0.000000] CPU features: detected: Spectre-v4
+[    0.000000] CPU features: detected: Spectre-BHB
+[    0.000000] CPU features: detected: ARM erratum 832075
+[    0.000000] CPU features: detected: ARM errata 1165522, 1319367, or 1530923
+[    0.000000] alternatives: applying boot alternatives
+[    0.000000] Kernel command line: console=ttyAMA0 root=/dev/ram0 kasan=off nokaslr earlycon=pl011,0x09000000 printk.devkmsg=on rw
+[    0.000000] Unknown kernel command line parameters "kasan=off", will be passed to user space.
+[    0.000000] Dentry cache hash table entries: 262144 (order: 9, 2097152 bytes, linear)
+[    0.000000] Inode-cache hash table entries: 131072 (order: 8, 1048576 bytes, linear)
+[    0.000000] Fallback order for Node 0: 0 
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 524288
+[    0.000000] Policy zone: DMA
+[    0.000000] mem auto-init: stack:off, heap alloc:off, heap free:off
+[    0.000000] software IO TLB: SWIOTLB bounce buffer size adjusted to 2MB
+[    0.000000] software IO TLB: area num 2.
+[    0.000000] software IO TLB: mapped [mem 0x00000000bd600000-0x00000000bd800000] (2MB)
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=2, Nodes=1
+[    0.000000] Dynamic Preempt: voluntary
+[    0.000000] rcu: Preemptible hierarchical RCU implementation.
+[    0.000000] rcu: 	RCU event tracing is enabled.
+[    0.000000] rcu: 	RCU restricting CPUs from NR_CPUS=64 to nr_cpu_ids=2.
+[    0.000000] 	Trampoline variant of Tasks RCU enabled.
+[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 100 jiffies.
+[    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=2
+[    0.000000] RCU Tasks: Setting shift to 1 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=2.
+[    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+[    0.000000] Root IRQ handler: gic_handle_irq
+[    0.000000] GICv2m: range[mem 0x08020000-0x08020fff], SPI[80:143]
+[    0.000000] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[    0.000000] arch_timer: cp15 timer(s) running at 62.50MHz (virt).
+[    0.000000] clocksource: arch_sys_counter: mask: 0x1ffffffffffffff max_cycles: 0x1cd42e208c, max_idle_ns: 881590405314 ns
+[    0.000090] sched_clock: 57 bits at 63MHz, resolution 16ns, wraps every 4398046511096ns
+[    0.014940] Console: colour dummy device 80x25
+[    0.018760] Calibrating delay loop (skipped), value calculated using timer frequency.. 125.00 BogoMIPS (lpj=62500)
+[    0.019513] pid_max: default: 32768 minimum: 301
+[    0.022300] LSM: initializing lsm=capability,selinux
+[    0.023278] SELinux:  Initializing.
+[    0.028913] Mount-cache hash table entries: 4096 (order: 3, 32768 bytes, linear)
+[    0.029541] Mountpoint-cache hash table entries: 4096 (order: 3, 32768 bytes, linear)
+[    0.073916] cacheinfo: Unable to detect cache hierarchy for CPU 0
+[    0.090845] rcu: Hierarchical SRCU implementation.
+[    0.091096] rcu: 	Max phase no-delay instances is 400.
+[    0.096507] Timer migration: 1 hierarchy levels; 8 children per group; 1 crossnode level
+[    0.101149] EFI services will not be available.
+[    0.102866] smp: Bringing up secondary CPUs ...
+[    0.108060] Detected PIPT I-cache on CPU1
+[    0.110276] CPU1: Booted secondary processor 0x0000000001 [0x411fd070]
+[    0.116237] smp: Brought up 1 node, 2 CPUs
+[    0.117138] SMP: Total of 2 processors activated.
+[    0.117420] CPU: All CPU(s) started at EL1
+[    0.117788] CPU features: detected: 32-bit EL0 Support
+[    0.118142] CPU features: detected: CRC32 instructions
+[    0.136588] alternatives: applying system-wide alternatives
+[    0.176389] Memory: 2013000K/2097152K available (13248K kernel code, 2538K rwdata, 4596K rodata, 1536K init, 644K bss, 80092K reserved, 0K cma-reserved)
+[    0.224397] devtmpfs: initialized
+[    0.255753] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1911260446275000 ns
+[    0.257620] futex hash table entries: 512 (order: 3, 32768 bytes, linear)
+[    0.259389] 27072 pages in range for non-PLT usage
+[    0.259554] 518592 pages in range for PLT usage
+[    0.266640] DMI not present or invalid.
+[    0.277683] NET: Registered PF_NETLINK/PF_ROUTE protocol family
+[    0.286227] DMA: preallocated 256 KiB GFP_KERNEL pool for atomic allocations
+[    0.287103] DMA: preallocated 256 KiB GFP_KERNEL|GFP_DMA pool for atomic allocations
+[    0.287888] DMA: preallocated 256 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
+[    0.288924] audit: initializing netlink subsys (disabled)
+[    0.292997] audit: type=2000 audit(0.224:1): state=initialized audit_enabled=0 res=1
+[    0.300158] thermal_sys: Registered thermal governor 'step_wise'
+[    0.300250] thermal_sys: Registered thermal governor 'user_space'
+[    0.303108] cpuidle: using governor menu
+[    0.305053] hw-breakpoint: found 6 breakpoint and 4 watchpoint registers.
+[    0.306636] ASID allocator initialised with 65536 entries
+[    0.310410] Serial: AMBA PL011 UART driver
+[    0.369531] 9000000.pl011: ttyAMA0 at MMIO 0x9000000 (irq = 13, base_baud = 0) is a PL011 rev1
+[    0.373555] printk: legacy console [ttyAMA0] enabled
+[    0.373555] printk: legacy console [ttyAMA0] enabled
+[    0.375025] printk: legacy bootconsole [pl11] disabled
+[    0.375025] printk: legacy bootconsole [pl11] disabled
+[    0.398610] HugeTLB: registered 1.00 GiB page size, pre-allocated 0 pages
+[    0.398855] HugeTLB: 0 KiB vmemmap can be freed for a 1.00 GiB page
+[    0.399118] HugeTLB: registered 32.0 MiB page size, pre-allocated 0 pages
+[    0.399387] HugeTLB: 0 KiB vmemmap can be freed for a 32.0 MiB page
+[    0.399546] HugeTLB: registered 2.00 MiB page size, pre-allocated 0 pages
+[    0.399706] HugeTLB: 0 KiB vmemmap can be freed for a 2.00 MiB page
+[    0.399859] HugeTLB: registered 64.0 KiB page size, pre-allocated 0 pages
+[    0.400020] HugeTLB: 0 KiB vmemmap can be freed for a 64.0 KiB page
+[    0.409728] ACPI: Interpreter disabled.
+[    0.410718] iommu: Default domain type: Translated
+[    0.410993] iommu: DMA domain TLB invalidation policy: lazy mode
+[    0.415114] SCSI subsystem initialized
+[    0.419122] usbcore: registered new interface driver usbfs
+[    0.419760] usbcore: registered new interface driver hub
+[    0.420212] usbcore: registered new device driver usb
+[    0.420965] pps_core: LinuxPPS API ver. 1 registered
+[    0.421182] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    0.421532] PTP clock support registered
+[    0.424851] Advanced Linux Sound Architecture Driver Initialized.
+[    0.440585] NetLabel: Initializing
+[    0.440747] NetLabel:  domain hash size = 128
+[    0.440867] NetLabel:  protocols = UNLABELED CIPSOv4 CALIPSO
+[    0.443218] NetLabel:  unlabeled traffic allowed by default
+[    0.447085] vgaarb: loaded
+[    0.449246] clocksource: Switched to clocksource arch_sys_counter
+[    0.455945] VFS: Disk quotas dquot_6.6.0
+[    0.456349] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+[    0.463819] pnp: PnP ACPI: disabled
+[    0.501269] NET: Registered PF_INET protocol family
+[    0.504142] IP idents hash table entries: 32768 (order: 6, 262144 bytes, linear)
+[    0.520882] tcp_listen_portaddr_hash hash table entries: 1024 (order: 2, 16384 bytes, linear)
+[    0.521492] Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[    0.522517] TCP established hash table entries: 16384 (order: 5, 131072 bytes, linear)
+[    0.523466] TCP bind hash table entries: 16384 (order: 7, 524288 bytes, linear)
+[    0.525045] TCP: Hash tables configured (established 16384 bind 16384)
+[    0.529055] UDP hash table entries: 1024 (order: 3, 32768 bytes, linear)
+[    0.530138] UDP-Lite hash table entries: 1024 (order: 3, 32768 bytes, linear)
+[    0.533122] NET: Registered PF_UNIX/PF_LOCAL protocol family
+[    0.542228] RPC: Registered named UNIX socket transport module.
+[    0.543041] RPC: Registered udp transport module.
+[    0.543351] RPC: Registered tcp transport module.
+[    0.543634] RPC: Registered tcp-with-tls transport module.
+[    0.543924] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[    0.550133] PCI: CLS 0 bytes, default 64
+[    0.563700] Unpacking initramfs...
+[    0.637070] Freeing initrd memory: 13920K
+[    1.402891] Initialise system trusted keyrings
+[    1.405906] workingset: timestamp_bits=56 max_order=19 bucket_order=0
+[    1.415859] NFS: Registering the id_resolver key type
+[    1.416660] Key type id_resolver registered
+[    1.416920] Key type id_legacy registered
+[    1.418749] 9p: Installing v9fs 9p2000 file system support
+[    1.522210] Key type asymmetric registered
+[    1.522672] Asymmetric key parser 'x509' registered
+[    1.523293] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 251)
+[    1.524677] io scheduler mq-deadline registered
+[    1.524941] io scheduler kyber registered
+[    1.538724] kworker/R-acpi_ (47) used greatest stack depth: 15168 bytes left
+[    1.540833] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+[    1.606963] loop: module loaded
+[    1.618515] e100: Intel(R) PRO/100 Network Driver
+[    1.618977] e100: Copyright(c) 1999-2006 Intel Corporation
+[    1.619706] e1000: Intel(R) PRO/1000 Network Driver
+[    1.620008] e1000: Copyright (c) 1999-2006 Intel Corporation.
+[    1.620712] e1000e: Intel(R) PRO/1000 Network Driver
+[    1.620992] e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
+[    1.621670] sky2: driver version 1.30
+[    1.627861] usbcore: registered new interface driver usblp
+[    1.628452] usbcore: registered new interface driver usb-storage
+[    1.632967] device-mapper: ioctl: 4.48.0-ioctl (2023-03-01) initialised: dm-devel@lists.linux.dev
+[    1.634200] hid: raw HID events driver (C) Jiri Kosina
+[    1.638767] usbcore: registered new interface driver usbhid
+[    1.638971] usbhid: USB HID core driver
+[    1.645174] hw perfevents: enabled with armv8_pmuv3 PMU driver, 7 (0,8000003f) counters available
+[    1.661909] Initializing XFRM netlink socket
+[    1.663666] NET: Registered PF_INET6 protocol family
+[    1.676682] Segment Routing with IPv6
+[    1.677076] In-situ OAM (IOAM) with IPv6
+[    1.679652] sit: IPv6, IPv4 and MPLS over IPv4 tunneling driver
+[    1.687692] NET: Registered PF_PACKET protocol family
+[    1.691377] 9pnet: Installing 9P2000 support
+[    1.692357] Key type dns_resolver registered
+[    1.743429] registered taskstats version 1
+[    1.743834] Loading compiled-in X.509 certificates
+[    1.774993] Demotion targets for Node 0: null
+[    1.781262] printk: legacy console [netcon0] enabled
+[    1.781731] netconsole: network logging started
+[    1.786800] cfg80211: Loading compiled-in X.509 certificates for regulatory database
+[    1.795041] kworker/u8:1 (51) used greatest stack depth: 14672 bytes left
+[    1.811438] Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+[    1.812814] Loaded X.509 cert 'wens: 61c038651aabdcf94bd0ac7ff06c7248db18c600'
+[    1.817058] clk: Disabling unused clocks
+[    1.817812] ALSA device list:
+[    1.818098]   No soundcards found.
+[    1.821736] platform regulatory.0: Direct firmware load for regulatory.db failed with error -2
+[    1.823467] cfg80211: failed to load regulatory.db
+[    1.890917] Freeing unused kernel memory: 1536K
+[    2.009701] Checked W+X mappings: passed, no W+X pages found
+[    2.014255] Run /init as init process
+[*] Init: Starting NAT-001 harness[NAT-001] Statistical Natural Race Test with Timing Widening
+[NAT-001] Target: 10,000 iterations (10 boots × 1000)
+[NAT-001] Techniques: cache-bounce + slab-prefill + timer-storm + multi-epitem
+[NAT-001] ARM64: cache_line=64, kmalloc-192 cpu_partial=120, HZ=120
+[NAT-001] Cache bounce line allocated at 0xffff88661000
+[NAT-001] Slab prefill: 5000 eventpoll fds created
+[NAT-001] Timer storm: 100 timerfds created
+[*] Boot 1 starting...
+[    2.173270] harness (54) used greatest stack depth: 14016 bytes left
+[*] Progress: 100/10000, hits=0 (0.000000%)
+[*] Progress: 200/10000, hits=0 (0.000000%)
+[*] Progress: 300/10000, hits=0 (0.000000%)
+[    3.457521] harness (391) used greatest stack depth: 14000 bytes left
+[*] Progress: 400/10000, hits=0 (0.000000%)
+[    3.946789] harness (498) used greatest stack depth: 13712 bytes left
+[*] Progress: 500/10000, hits=0 (0.000000%)
+[*] Progress: 600/10000, hits=0 (0.000000%)
+[*] Progress: 700/10000, hits=0 (0.000000%)
+[*] Progress: 800/10000, hits=0 (0.000000%)
+[    5.588751] harness (938) used greatest stack depth: 13648 bytes left
+[*] Progress: 900/10000, hits=0 (0.000000%)
+[*] Progress: 1000/10000, hits=0 (0.000000%)
+[*] Boot 1 complete. Hits: 0/1000
+[*] Boot 2 starting...
+[*] Progress: 1100/10000, hits=0 (0.000000%)
+[*] Progress: 1200/10000, hits=0 (0.000000%)
+[*] Progress: 1300/10000, hits=0 (0.000000%)
+[*] Progress: 1400/10000, hits=0 (0.000000%)
+[*] Progress: 1500/10000, hits=0 (0.000000%)
+[*] Progress: 1600/10000, hits=0 (0.000000%)
+[*] Progress: 1700/10000, hits=0 (0.000000%)
+[*] Progress: 1800/10000, hits=0 (0.000000%)
+[*] Progress: 1900/10000, hits=0 (0.000000%)
+[*] Progress: 2000/10000, hits=0 (0.000000%)
+[*] Boot 2 complete. Hits: 0/2000
+[*] Boot 3 starting...
+[*] Progress: 2100/10000, hits=0 (0.000000%)
+[*] Progress: 2200/10000, hits=0 (0.000000%)
+[*] Progress: 2300/10000, hits=0 (0.000000%)
+[*] Progress: 2400/10000, hits=0 (0.000000%)
+[*] Progress: 2500/10000, hits=0 (0.000000%)
+[*] Progress: 2600/10000, hits=0 (0.000000%)
+[*] Progress: 2700/10000, hits=0 (0.000000%)
+[*] Progress: 2800/10000, hits=0 (0.000000%)
+[*] Progress: 2900/10000, hits=0 (0.000000%)
+[*] Progress: 3000/10000, hits=0 (0.000000%)
+[*] Boot 3 complete. Hits: 0/3000
+[*] Boot 4 starting...
+[*] Progress: 3100/10000, hits=0 (0.000000%)
+[   13.477005] harness (3235) used greatest stack depth: 13536 bytes left
+[*] Progress: 3200/10000, hits=0 (0.000000%)
+[*] Progress: 3300/10000, hits=0 (0.000000%)
+[*] Progress: 3400/10000, hits=0 (0.000000%)
+[*] Progress: 3500/10000, hits=0 (0.000000%)
+[*] Progress: 3600/10000, hits=0 (0.000000%)
+[*] Progress: 3700/10000, hits=0 (0.000000%)
+[*] Progress: 3800/10000, hits=0 (0.000000%)
+[*] Progress: 3900/10000, hits=0 (0.000000%)
+[*] Progress: 4000/10000, hits=0 (0.000000%)
+[*] Boot 4 complete. Hits: 0/4000
+[*] Boot 5 starting...
+[*] Progress: 4100/10000, hits=0 (0.000000%)
+[*] Progress: 4200/10000, hits=0 (0.000000%)
+[*] Progress: 4300/10000, hits=0 (0.000000%)
+[*] Progress: 4400/10000, hits=0 (0.000000%)
+[*] Progress: 4500/10000, hits=0 (0.000000%)
+[*] Progress: 4600/10000, hits=0 (0.000000%)
+[*] Progress: 4700/10000, hits=0 (0.000000%)
+[*] Progress: 4800/10000, hits=0 (0.000000%)
+[*] Progress: 4900/10000, hits=0 (0.000000%)
+[*] Progress: 5000/10000, hits=0 (0.000000%)
+[*] Boot 5 complete. Hits: 0/5000
+[*] Boot 6 starting...
+[*] Progress: 5100/10000, hits=0 (0.000000%)
+[*] Progress: 5200/10000, hits=0 (0.000000%)
+[*] Progress: 5300/10000, hits=0 (0.000000%)
+[*] Progress: 5400/10000, hits=0 (0.000000%)
+[*] Progress: 5500/10000, hits=0 (0.000000%)
+[*] Progress: 5600/10000, hits=0 (0.000000%)
+[*] Progress: 5700/10000, hits=0 (0.000000%)
+[*] Progress: 5800/10000, hits=0 (0.000000%)
+[*] Progress: 5900/10000, hits=0 (0.000000%)
+[*] Progress: 6000/10000, hits=0 (0.000000%)
+[*] Boot 6 complete. Hits: 0/6000
+[*] Boot 7 starting...
+[*] Progress: 6100/10000, hits=0 (0.000000%)
+[*] Progress: 6200/10000, hits=0 (0.000000%)
+[*] Progress: 6300/10000, hits=0 (0.000000%)
+[*] Progress: 6400/10000, hits=0 (0.000000%)
+[*] Progress: 6500/10000, hits=0 (0.000000%)
+[*] Progress: 6600/10000, hits=0 (0.000000%)
+[*] Progress: 6700/10000, hits=0 (0.000000%)
+[*] Progress: 6800/10000, hits=0 (0.000000%)
+[*] Progress: 6900/10000, hits=0 (0.000000%)
+[*] Progress: 7000/10000, hits=0 (0.000000%)
+[*] Boot 7 complete. Hits: 0/7000
+[*] Boot 8 starting...
+[*] Progress: 7100/10000, hits=0 (0.000000%)
+[*] Progress: 7200/10000, hits=0 (0.000000%)
+[*] Progress: 7300/10000, hits=0 (0.000000%)
+[*] Progress: 7400/10000, hits=0 (0.000000%)
+[*] Progress: 7500/10000, hits=0 (0.000000%)
+[*] Progress: 7600/10000, hits=0 (0.000000%)
+[*] Progress: 7700/10000, hits=0 (0.000000%)
+[*] Progress: 7800/10000, hits=0 (0.000000%)
+[*] Progress: 7900/10000, hits=0 (0.000000%)
+[*] Progress: 8000/10000, hits=0 (0.000000%)
+[*] Boot 8 complete. Hits: 0/8000
+[*] Boot 9 starting...
+[*] Progress: 8100/10000, hits=0 (0.000000%)
+[*] Progress: 8200/10000, hits=0 (0.000000%)
+[*] Progress: 8300/10000, hits=0 (0.000000%)
+[*] Progress: 8400/10000, hits=0 (0.000000%)
+[*] Progress: 8500/10000, hits=0 (0.000000%)
+[*] Progress: 8600/10000, hits=0 (0.000000%)
+[*] Progress: 8700/10000, hits=0 (0.000000%)
+[*] Progress: 8800/10000, hits=0 (0.000000%)
+[*] Progress: 8900/10000, hits=0 (0.000000%)
+[*] Progress: 9000/10000, hits=0 (0.000000%)
+[*] Boot 9 complete. Hits: 0/9000
+[*] Boot 10 starting...
+[*] Progress: 9100/10000, hits=0 (0.000000%)
+[*] Progress: 9200/10000, hits=0 (0.000000%)
+[*] Progress: 9300/10000, hits=0 (0.000000%)
+[*] Progress: 9400/10000, hits=0 (0.000000%)
+[*] Progress: 9500/10000, hits=0 (0.000000%)
+[*] Progress: 9600/10000, hits=0 (0.000000%)
+[*] Progress: 9700/10000, hits=0 (0.000000%)
+[*] Progress: 9800/10000, hits=0 (0.000000%)
+[*] Progress: 9900/10000, hits=0 (0.000000%)
+[*] Progress: 10000/10000, hits=0 (0.000000%)
+[*] Boot 10 complete. Hits: 0/10000
+[NAT-001] FINAL: 0 hits in 10000 iterations (0.000000%)
+[NAT-001] 95% Wilson CI: [0.000000, 0.000384]
+[   37.835035] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000100
+[   37.835950] CPU: 0 UID: 0 PID: 1 Comm: harness Not tainted 6.12.67 #3
+[   37.836320] Hardware name: linux,dummy-virt (DT)
+[   37.836760] Call trace:
+[   37.836947]  dump_backtrace.part.0+0xe0/0xec
+[   37.837916]  show_stack+0x18/0x24
+[   37.838075]  dump_stack_lvl+0x5c/0x7c
+[   37.838258]  dump_stack+0x18/0x24
+[   37.838490]  panic+0x15c/0x364
+[   37.838661]  make_task_dead+0x0/0x190
+[   37.838822]  do_group_exit+0x30/0xa4
+[   37.838976]  pid_child_should_wake+0x0/0x64
+[   37.839149]  invoke_syscall.constprop.0+0x48/0xc8
+[   37.839372]  do_el0_svc+0x3c/0xd8
+[   37.839530]  el0_svc+0x38/0x150
+[   37.839690]  el0t_64_sync_handler+0x120/0x12c
+[   37.839873]  el0t_64_sync+0x190/0x194
+[   37.840523] SMP: stopping secondary CPUs
+[   37.841628] Kernel Offset: disabled
+[   37.841934] CPU features: 0x08,80000003,c0200000,0200420b
+[   37.842428] Memory Limit: none
+[   37.843163] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000100 ]---
