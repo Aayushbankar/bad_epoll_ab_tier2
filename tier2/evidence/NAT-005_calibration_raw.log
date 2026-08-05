@@ -1,0 +1,11 @@
+[*] Connected to QEMU via GDB :1234
+Breakpoint 1 at 0xffff80008025f0b8: file fs/read_write.c, line 726.Breakpoint 2 at 0xffff800080070688: file kernel/reboot.c, line 716.[*] Breakpoints set on ksys_write and __arm64_sys_reboot (NO inner __ep_remove breakpoints). Continuing...
+[*] HARNESS MSG: [CALIBRATE] Empirical Cycle Benchmark Starting (ARM64 freq: 62500000 Hz)
+[*] HARNESS MSG: [CALIBRATE] Empirical Results (100-sample averages):
+  - Baseline empty close(ep): 1241 cycles
+  - 1-item close(ep_outer): 1840 cycles
+  - 2-item close(ep_outer): 2823 cycles
+  - Per-item __ep_remove overhead: 983 cycles
+  - Measured Critical Window Target Offset for 2nd item (ep_inner1): 2331 cycles
+[*] RUNTIME TRACE: __arm64_sys_reboot hit! Calibration measurement complete.
+[Inferior 1 (process 1) detached]
