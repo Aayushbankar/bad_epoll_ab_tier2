@@ -1,0 +1,4 @@
+[*] Connected to QEMU
+Breakpoint 1 at 0xffff800080430100: file ipc/msgutil.c, line 96.[*] Breakpoint set on load_msg symbol. Continuing execution...
+[*] RUNTIME BREAKPOINT HIT: load_msg(src=0xffffc1df8370, len=120)
+[*] SysV IPC msgsnd syscall successfully trapped in kernel!

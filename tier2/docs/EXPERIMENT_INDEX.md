@@ -34,7 +34,7 @@ This index logs all test reproducers, GDB automation scripts, and experimental e
 | NAT-003 | 2026-08-02 | msg_msg Reclaim Under Natural Timing | test_nat001.c (subset) | (none) | run_nat001.sh | **PLANNED** | `tier2/evidence/NAT-003_raw_*.log` |
 | NAT-004 | 2026-08-02 | Per-CPU Partial Slab Interference | test_nat004.c | (none) | run_nat004.sh | **PLANNED** | `tier2/evidence/NAT-004_raw_*.log` |
 | NAT-005 | 2026-08-02 | Alternative Spray Primitives (add_key, setxattr) | test_nat005.c | (none) | run_nat005.sh | **PLANNED** | `tier2/evidence/NAT-005_raw_*.log` |
-| AND-001 | 2026-08-02 | SysV IPC Availability Under Android Seccomp | test_ipc.c | (none) | run_and001.sh | **PLANNED** | `tier2/evidence/AND-001_raw_*.log` |
+| AND-001 | 2026-08-05 | SysV IPC Availability Under Android Target | test_and001.c | exp_and001_gdb.py | run_and001.sh | **PASSED** (SysV IPC functional; load_msg trapped) | `tier2/evidence/AND-001_raw_ipc.log` |
 | AND-002 | 2026-08-02 | KASLR Impact on Race Reliability | test_nat001.c | (none) | run_and002.sh | **PLANNED** | `tier2/evidence/AND-002_raw_*.log` |
 | AND-003 | 2026-08-02 | SELinux Policy Audit for Exploit Syscalls | test_selinux.c | (none) | run_and003.sh | **PLANNED** | `tier2/evidence/AND-003_raw_*.log` |
 | AND-004 | 2026-08-02 | MTE/KASAN_HW_TAGS Impact on UAF Primitive | test_nat001.c | (none) | run_and004.sh | **PLANNED** | `tier2/evidence/AND-004_raw_*.log` |
