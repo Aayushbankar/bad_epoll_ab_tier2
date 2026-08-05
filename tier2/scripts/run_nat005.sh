@@ -23,7 +23,7 @@ cd "${TIER2_DIR}"
 echo "[*] Launching QEMU in DEBUG mode for 100,000 Iteration Closed-Loop Search..."
 rm -f evidence/NAT-005_raw_serial.log
 
-CMDLINE="console=ttyAMA0 root=/dev/ram0 kasan=off nokaslr earlycon=pl011,0x09000000 printk.devkmsg=on rw" DEBUG=1 ./scripts/run_qemu.sh > /dev/null 2>&1 &
+CMDLINE="console=ttyAMA0 root=/dev/ram0 kasan=off nokaslr earlycon=pl011,0x09000000 printk.devkmsg=on isolcpus=1 nohz_full=1 rcu_nocbs=1 rw" DEBUG=1 ./scripts/run_qemu.sh > /dev/null 2>&1 &
 QEMU_PID=$!
 sleep 2
 

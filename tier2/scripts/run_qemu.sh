@@ -11,7 +11,7 @@ RAMDISK="${TIER2_DIR}/initramfs.cpio"
 
 CPUS=${CPUS:-2}
 RAM=${RAM:-2048}
-CMDLINE=${CMDLINE:-"console=ttyAMA0 root=/dev/ram0 kasan=on nokaslr earlycon=pl011,0x09000000 printk.devkmsg=on rw"}
+CMDLINE=${CMDLINE:-"console=ttyAMA0 root=/dev/ram0 kasan=off nokaslr earlycon=pl011,0x09000000 printk.devkmsg=on isolcpus=1 nohz_full=1 rcu_nocbs=1 rw"}
 
 if [ ! -f "$KERNEL" ]; then
     echo "[!] ERROR: Kernel Image not found at $KERNEL"

