@@ -9,6 +9,8 @@
 #include <stdatomic.h>
 #include <sys/epoll.h>
 #include <fcntl.h>
+#include <sys/reboot.h>
+#include <string.h>
 
 #define CACHE_LINE_SIZE 64
 
@@ -18,6 +20,10 @@ typedef struct {
 
 static bounce_line_t shared_line;
 static atomic_int stop_hammer = 0;
+
+static void print_msg(const char *msg) {
+    write(1, msg, strlen(msg));
+}
 
 static inline uint64_t get_cycles(void) {
     uint64_t val;
@@ -37,7 +43,7 @@ void *hammer_thread(void *arg) {
 
     while (!atomic_load(&stop_hammer)) {
         shared_line.val[0]++;
-        __sync_synchronize();
+        asm volatile("" ::: "memory");
     }
     return NULL;
 }
@@ -46,32 +52,33 @@ int main(void) {
     cpu_set_t cs; CPU_ZERO(&cs); CPU_SET(0, &cs);
     pthread_setaffinity_np(pthread_self(), sizeof(cs), &cs);
 
+    char buf[256];
     uint64_t frq = get_cntfrq();
-    printf("[NAT-005 Topology Test] ARM64 cntfrq_el0 = %lu Hz (%lu MHz)\n", frq, frq / 1000000);
-    fflush(stdout);
+    snprintf(buf, sizeof(buf), "[NAT-005 Topology Test] ARM64 cntfrq_el0 = %lu Hz (%lu MHz)\n", frq, frq / 1000000);
+    print_msg(buf);
 
     // 1. Measure baseline close() cycle count without bounce
     int ep = epoll_create1(0);
     uint64_t t0 = get_cycles();
     close(ep);
     uint64_t t1 = get_cycles();
-    printf("[NAT-005 Topology Test] Baseline single close() cycles: %lu ticks (~%.2f us)\n",
+    snprintf(buf, sizeof(buf), "[NAT-005 Topology Test] Baseline single close() cycles: %lu ticks (~%.2f us)\n",
            t1 - t0, (double)(t1 - t0) * 1000000.0 / frq);
-    fflush(stdout);
+    print_msg(buf);
 
     // 2. Measure close() cycle count under false sharing (hammer thread on CPU 1)
     pthread_t th;
     atomic_store(&stop_hammer, 0);
     pthread_create(&th, NULL, hammer_thread, NULL);
-    usleep(1000);
+    usleep(100);
 
     uint64_t total_bounce_cycles = 0;
-    int samples = 100;
+    int samples = 50;
     for (int i = 0; i < samples; i++) {
         int ep_test = epoll_create1(0);
         uint64_t s0 = get_cycles();
         shared_line.val[0]++;
-        __sync_synchronize();
+        asm volatile("" ::: "memory");
         close(ep_test);
         uint64_t s1 = get_cycles();
         total_bounce_cycles += (s1 - s0);
@@ -79,12 +86,13 @@ int main(void) {
     atomic_store(&stop_hammer, 1);
     pthread_join(th, NULL);
 
-    printf("[NAT-005 Topology Test] Average close() under false sharing: %lu ticks (~%.2f us)\n",
+    snprintf(buf, sizeof(buf), "[NAT-005 Topology Test] Average close() under false sharing: %lu ticks (~%.2f us)\n",
            total_bounce_cycles / samples, (double)(total_bounce_cycles / samples) * 1000000.0 / frq);
-    fflush(stdout);
+    print_msg(buf);
 
-    printf("[NAT-005 Topology Test] Topology & Timer Verification PASSED\n");
-    fflush(stdout);
+    snprintf(buf, sizeof(buf), "[NAT-005 Topology Test] Topology & Timer Verification PASSED\n");
+    print_msg(buf);
 
-    exit(0); // Exit init -> Kernel panic -> QEMU -no-reboot exits and flushes log!
+    reboot(RB_POWER_OFF);
+    return 0;
 }

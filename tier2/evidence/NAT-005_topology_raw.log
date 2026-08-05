@@ -1,0 +1,8 @@
+[*] Connected to QEMU via GDB :1234
+Breakpoint 1 at 0xffff80008025f0b8: file fs/read_write.c, line 726.Breakpoint 2 at 0xffff800080070688: file kernel/reboot.c, line 716.[*] Breakpoints set on ksys_write and __arm64_sys_reboot. Continuing execution...
+[*] HARNESS MSG: [NAT-005 Topology Test] ARM64 cntfrq_el0 = 62500000 Hz (62 MHz)
+[*] HARNESS MSG: [NAT-005 Topology Test] Baseline single close() cycles: 50057 ticks (~800.91 us)
+[*] HARNESS MSG: [NAT-005 Topology Test] Average close() under false sharing: 1830 ticks (~29.28 us)
+[*] HARNESS MSG: [NAT-005 Topology Test] Topology & Timer Verification PASSED
+[*] RUNTIME TRACE: __arm64_sys_reboot hit! Harness completed successfully.
+[Inferior 1 (process 1) detached]

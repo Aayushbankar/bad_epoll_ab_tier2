@@ -1,5 +1,5 @@
 #!/bin/bash
-# run_nat005_topology.sh — Runs topology test in QEMU and captures raw output
+# run_nat005_topology.sh — Runs topology test in QEMU via GDB breakpoint tracer
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
@@ -20,24 +20,19 @@ chmod +x init harness
 find . -print0 | cpio --null -ov --format=newc > ../initramfs.cpio 2>/dev/null
 cd "${TIER2_DIR}"
 
-echo "[*] Launching QEMU for topology verification..."
-rm -f qemu_serial.log evidence/NAT-005_topology_raw.log
+echo "[*] Launching QEMU in DEBUG mode..."
+rm -f evidence/NAT-005_topology_raw.log
 
-KERNEL="${TIER2_DIR}/android/artifacts/Image"
-RAMDISK="${TIER2_DIR}/initramfs.cpio"
-CMDLINE="console=ttyAMA0 root=/dev/ram0 kasan=off nokaslr earlycon=pl011,0x09000000 printk.devkmsg=on rw"
+CMDLINE="console=ttyAMA0 root=/dev/ram0 kasan=off nokaslr earlycon=pl011,0x09000000 printk.devkmsg=on rw" DEBUG=1 ./scripts/run_qemu.sh > /dev/null 2>&1 &
+QEMU_PID=$!
+sleep 2
 
-qemu-system-aarch64 \
-    -M virt \
-    -cpu cortex-a57 \
-    -smp 2 \
-    -m 2048 \
-    -kernel "${KERNEL}" \
-    -initrd "${RAMDISK}" \
-    -append "${CMDLINE}" \
-    -display none \
-    -serial file:qemu_serial.log \
-    -no-reboot
+echo "[*] Executing GDB tracer script..."
+gdb -batch -q -x scripts/exp_nat005_gdb.py android/artifacts/vmlinux || true
 
-cp qemu_serial.log evidence/NAT-005_topology_raw.log
-echo "[*] Evidence saved to evidence/NAT-005_topology_raw.log"
+echo "[*] Stopping QEMU..."
+kill $QEMU_PID 2>/dev/null || true
+pkill -f qemu-system-aarch64 2>/dev/null || true
+
+echo "[*] Topology Verification complete. Evidence file:"
+ls -la evidence/NAT-005_topology_raw.log

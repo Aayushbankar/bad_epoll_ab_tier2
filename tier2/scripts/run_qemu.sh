@@ -7,7 +7,7 @@ PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../.." &> /dev/null && pwd)"
 TIER2_DIR="${PROJECT_ROOT}/tier2"
 
 KERNEL="${TIER2_DIR}/android/artifacts/Image"
-RAMDISK="${TIER2_DIR}/android/artifacts/rootfs.cpio"
+RAMDISK="${TIER2_DIR}/initramfs.cpio"
 
 CPUS=${CPUS:-2}
 RAM=${RAM:-2048}
@@ -32,7 +32,7 @@ QEMU_ARGS=(
     -initrd "$RAMDISK"
     -append "$CMDLINE"
     -display none
-    -serial file:/tmp/qemu.log
+    -serial file:qemu_serial.log
     -no-reboot
 )
 
@@ -52,5 +52,5 @@ echo "    To exit QEMU at any time, press: Ctrl-a then x"
 echo "=========================================================="
 echo ""
 
-qemu-system-aarch64 "${QEMU_ARGS[@]}"
+stdbuf -o0 -e0 qemu-system-aarch64 "${QEMU_ARGS[@]}"
 
