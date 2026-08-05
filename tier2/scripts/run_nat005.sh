@@ -1,5 +1,5 @@
 #!/bin/bash
-# run_nat005.sh — Runs 100,000 iteration adaptive launch-ahead search in QEMU
+# run_nat005.sh — Runs 100,000 iteration closed-loop adaptive search in QEMU
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
@@ -20,7 +20,7 @@ chmod +x init harness
 find . -print0 | cpio --null -ov --format=newc > ../initramfs.cpio 2>/dev/null
 cd "${TIER2_DIR}"
 
-echo "[*] Launching QEMU in DEBUG mode for 100,000 Iteration Adaptive Search..."
+echo "[*] Launching QEMU in DEBUG mode for 100,000 Iteration Closed-Loop Search..."
 rm -f evidence/NAT-005_raw_serial.log
 
 CMDLINE="console=ttyAMA0 root=/dev/ram0 kasan=off nokaslr earlycon=pl011,0x09000000 printk.devkmsg=on rw" DEBUG=1 ./scripts/run_qemu.sh > /dev/null 2>&1 &
@@ -34,8 +34,4 @@ echo "[*] Stopping QEMU..."
 kill $QEMU_PID 2>/dev/null || true
 pkill -f qemu-system-aarch64 2>/dev/null || true
 
-if [ -f evidence/NAT-005_topology_raw.log ]; then
-    cp evidence/NAT-005_topology_raw.log evidence/NAT-005_raw_serial.log
-fi
-
-echo "[*] NAT-005 Adaptive Search complete. Evidence saved to evidence/NAT-005_raw_serial.log"
+echo "[*] NAT-005 Closed-Loop Search complete. Evidence saved to evidence/NAT-005_raw_serial.log"

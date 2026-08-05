@@ -1,16 +1,44 @@
 [*] Connected to QEMU via GDB :1234
 Breakpoint 1 at 0xffff80008025f0b8: file fs/read_write.c, line 726.Breakpoint 2 at 0xffff800080070688: file kernel/reboot.c, line 716.[*] Breakpoints set on ksys_write and __arm64_sys_reboot. Continuing execution...
-[*] HARNESS MSG: [NAT-005] Starting 100,000 Iteration Adaptive Search (ARM64 freq: 62500000 Hz)
-[*] HARNESS MSG: [NAT-005] Progress: 10000/100000 iterations completed, uaf_hits=0 (delay=150 cycles)
-[*] HARNESS MSG: [NAT-005] Progress: 20000/100000 iterations completed, uaf_hits=0 (delay=350 cycles)
-[*] HARNESS MSG: [NAT-005] Progress: 30000/100000 iterations completed, uaf_hits=0 (delay=550 cycles)
-[*] HARNESS MSG: [NAT-005] Progress: 40000/100000 iterations completed, uaf_hits=0 (delay=750 cycles)
-[*] HARNESS MSG: [NAT-005] Progress: 50000/100000 iterations completed, uaf_hits=0 (delay=950 cycles)
-[*] HARNESS MSG: [NAT-005] Progress: 60000/100000 iterations completed, uaf_hits=0 (delay=1150 cycles)
-[*] HARNESS MSG: [NAT-005] Progress: 70000/100000 iterations completed, uaf_hits=0 (delay=1350 cycles)
-[*] HARNESS MSG: [NAT-005] Progress: 80000/100000 iterations completed, uaf_hits=0 (delay=1550 cycles)
-[*] HARNESS MSG: [NAT-005] Progress: 90000/100000 iterations completed, uaf_hits=0 (delay=1750 cycles)
-[*] HARNESS MSG: [NAT-005] Progress: 100000/100000 iterations completed, uaf_hits=0 (delay=1950 cycles)
-[*] HARNESS MSG: [NAT-005] Adaptive Search FINAL RESULT: 100000/100000 iterations completed, total uaf_hits=0
+[*] HARNESS MSG: [NAT-005] Starting Closed-Loop Adaptive Search in Critical Window (250-550 cycles, freq: 62500000 Hz)
+[*] HARNESS MSG: [NAT-005] Phase 1: Executing Fine-Grained Critical Window Sweep (250..550 cycles, step=10)...
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=250 cycles: 2800 iterations complete | best_alignment_err=111 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=260 cycles: 5600 iterations complete | best_alignment_err=119 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=270 cycles: 8400 iterations complete | best_alignment_err=118 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=280 cycles: 11200 iterations complete | best_alignment_err=204 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=290 cycles: 14000 iterations complete | best_alignment_err=259 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=300 cycles: 16800 iterations complete | best_alignment_err=157 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=310 cycles: 19600 iterations complete | best_alignment_err=69 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=320 cycles: 22400 iterations complete | best_alignment_err=4 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=330 cycles: 25200 iterations complete | best_alignment_err=65 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=340 cycles: 28000 iterations complete | best_alignment_err=83 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=350 cycles: 30800 iterations complete | best_alignment_err=15 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=360 cycles: 33600 iterations complete | best_alignment_err=206 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=370 cycles: 36400 iterations complete | best_alignment_err=61 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=380 cycles: 39200 iterations complete | best_alignment_err=7 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=390 cycles: 42000 iterations complete | best_alignment_err=43 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=400 cycles: 44800 iterations complete | best_alignment_err=68 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=410 cycles: 47600 iterations complete | best_alignment_err=10 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=420 cycles: 50400 iterations complete | best_alignment_err=294 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=430 cycles: 53200 iterations complete | best_alignment_err=133 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=440 cycles: 56000 iterations complete | best_alignment_err=108 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=450 cycles: 58800 iterations complete | best_alignment_err=272 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=460 cycles: 61600 iterations complete | best_alignment_err=178 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=470 cycles: 64400 iterations complete | best_alignment_err=41 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=480 cycles: 67200 iterations complete | best_alignment_err=23 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=490 cycles: 70000 iterations complete | best_alignment_err=94 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=500 cycles: 72800 iterations complete | best_alignment_err=42 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=510 cycles: 75600 iterations complete | best_alignment_err=119 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=520 cycles: 78400 iterations complete | best_alignment_err=76 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=530 cycles: 81200 iterations complete | best_alignment_err=168 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=540 cycles: 84000 iterations complete | best_alignment_err=33 cycles
+[*] HARNESS MSG: [NAT-005] Critical Window Delay=550 cycles: 86800 iterations complete | best_alignment_err=29 cycles
+[*] HARNESS MSG: [NAT-005] Phase 2: Executing Boundary Sweep (100..240 and 560..800 cycles, step=20)...
+[*] HARNESS MSG: [NAT-005] Closed-Loop Adaptive Search FINAL RESULT:
+  - Total Iterations: 93730 / 100000
+  - Critical Window Focus: 250-550 cycles (step=10, 86.8% budget)
+  - Best Delay Alignment Setting: 320 cycles
+  - Closest Near-Miss Alignment Error: 4 cycles
+  - Total UAF Hits: 0
 [*] RUNTIME TRACE: __arm64_sys_reboot hit! Harness completed successfully.
 [Inferior 1 (process 1) detached]
