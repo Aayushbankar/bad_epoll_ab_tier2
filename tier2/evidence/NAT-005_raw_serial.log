@@ -1,0 +1,16 @@
+[*] Connected to QEMU via GDB :1234
+Breakpoint 1 at 0xffff80008025f0b8: file fs/read_write.c, line 726.Breakpoint 2 at 0xffff800080070688: file kernel/reboot.c, line 716.[*] Breakpoints set on ksys_write and __arm64_sys_reboot. Continuing execution...
+[*] HARNESS MSG: [NAT-005] Starting 100,000 Iteration Adaptive Search (ARM64 freq: 62500000 Hz)
+[*] HARNESS MSG: [NAT-005] Progress: 10000/100000 iterations completed, uaf_hits=0 (delay=150 cycles)
+[*] HARNESS MSG: [NAT-005] Progress: 20000/100000 iterations completed, uaf_hits=0 (delay=350 cycles)
+[*] HARNESS MSG: [NAT-005] Progress: 30000/100000 iterations completed, uaf_hits=0 (delay=550 cycles)
+[*] HARNESS MSG: [NAT-005] Progress: 40000/100000 iterations completed, uaf_hits=0 (delay=750 cycles)
+[*] HARNESS MSG: [NAT-005] Progress: 50000/100000 iterations completed, uaf_hits=0 (delay=950 cycles)
+[*] HARNESS MSG: [NAT-005] Progress: 60000/100000 iterations completed, uaf_hits=0 (delay=1150 cycles)
+[*] HARNESS MSG: [NAT-005] Progress: 70000/100000 iterations completed, uaf_hits=0 (delay=1350 cycles)
+[*] HARNESS MSG: [NAT-005] Progress: 80000/100000 iterations completed, uaf_hits=0 (delay=1550 cycles)
+[*] HARNESS MSG: [NAT-005] Progress: 90000/100000 iterations completed, uaf_hits=0 (delay=1750 cycles)
+[*] HARNESS MSG: [NAT-005] Progress: 100000/100000 iterations completed, uaf_hits=0 (delay=1950 cycles)
+[*] HARNESS MSG: [NAT-005] Adaptive Search FINAL RESULT: 100000/100000 iterations completed, total uaf_hits=0
+[*] RUNTIME TRACE: __arm64_sys_reboot hit! Harness completed successfully.
+[Inferior 1 (process 1) detached]

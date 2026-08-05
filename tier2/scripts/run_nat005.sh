@@ -1,5 +1,5 @@
 #!/bin/bash
-# run_nat005.sh — NAT-005 Adaptive Launch-Ahead Search & Topology Test Launcher
+# run_nat005.sh — Runs 100,000 iteration adaptive launch-ahead search in QEMU
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
@@ -20,24 +20,22 @@ chmod +x init harness
 find . -print0 | cpio --null -ov --format=newc > ../initramfs.cpio 2>/dev/null
 cd "${TIER2_DIR}"
 
-echo "[*] Launching QEMU for NAT-005 Adaptive Search & Topology Verification..."
-rm -f qemu_serial.log evidence/NAT-005_raw_serial.log
+echo "[*] Launching QEMU in DEBUG mode for 100,000 Iteration Adaptive Search..."
+rm -f evidence/NAT-005_raw_serial.log
 
-KERNEL="${TIER2_DIR}/android/artifacts/Image"
-RAMDISK="${TIER2_DIR}/initramfs.cpio"
-CMDLINE="console=ttyAMA0 root=/dev/ram0 kasan=off nokaslr earlycon=pl011,0x09000000 printk.devkmsg=on rw"
+CMDLINE="console=ttyAMA0 root=/dev/ram0 kasan=off nokaslr earlycon=pl011,0x09000000 printk.devkmsg=on rw" DEBUG=1 ./scripts/run_qemu.sh > /dev/null 2>&1 &
+QEMU_PID=$!
+sleep 2
 
-qemu-system-aarch64 \
-    -M virt \
-    -cpu cortex-a57 \
-    -smp 2 \
-    -m 2048 \
-    -kernel "${KERNEL}" \
-    -initrd "${RAMDISK}" \
-    -append "${CMDLINE}" \
-    -display none \
-    -serial file:qemu_serial.log \
-    -no-reboot
+echo "[*] Executing GDB tracer script..."
+gdb -batch -q -x scripts/exp_nat005_gdb.py android/artifacts/vmlinux || true
 
-cp qemu_serial.log evidence/NAT-005_raw_serial.log
-echo "[*] Evidence saved to evidence/NAT-005_raw_serial.log"
+echo "[*] Stopping QEMU..."
+kill $QEMU_PID 2>/dev/null || true
+pkill -f qemu-system-aarch64 2>/dev/null || true
+
+if [ -f evidence/NAT-005_topology_raw.log ]; then
+    cp evidence/NAT-005_topology_raw.log evidence/NAT-005_raw_serial.log
+fi
+
+echo "[*] NAT-005 Adaptive Search complete. Evidence saved to evidence/NAT-005_raw_serial.log"
