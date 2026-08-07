@@ -21,3 +21,5 @@ bpf_local_storage : unknown
 kretprobe : unknown
 eventpoll : unknown
 dentry : unknown
+log_c : unknown
+folio : unknown

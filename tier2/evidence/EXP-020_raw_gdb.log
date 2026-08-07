@@ -1,0 +1,260 @@
+[*] Connected to QEMU
+Breakpoint 1 at 0xffff8000802bc9c0: file fs/eventpoll.c, line 346.[*] Breakpoints set. Continuing execution.
+[*] Thread A hit __ep_remove+0x19c (WRITE_ONCE finished).
+[*] target_file=-0xfffffe154000, target_epoll=-0xfffffca82280
+[*] Original instruction at PC: -0x6effa000
+[*] Patched PC with infinite loop to suspend Thread A!
+Breakpoint 2 at 0xffff8000802bcbb4: file fs/eventpoll.c, line 793.
+[*] Thread B hit ep_free(-0xfffffca82280)!
+Breakpoint 3 at 0xffff8000802bcbbc: file fs/eventpoll.c, line 909.
+[*] Thread B finished ep_free. target_epoll is now FREED!
+[*] Timer fired! Interrupting GDB to check spray and restore PC...
+[Switching to Thread 1.2]
+[*] Interrupted! Restoring PC and setting watchpoint...
+[*] 
+0xffff00000357dd80:	0x0000000000000000	0x0000000000000000
+0xffff00000357dd90:	0xffff00000357dd90	0xffff00000357dd90
+0xffff00000357dda0:	0x0000000000000000	0xffff00000357dda8
+0xffff00000357ddb0:	0xffff00000357dda8	0x0000000000000000
+0xffff00000357ddc0:	0xffff00000357ddc0	0xffff00000357ddc0
+0xffff00000357ddd0:	0xffff00000357ddd0	0xffff00000357ddd0
+0xffff00000357dde0:	0xffff00000357d9c0	0x0000000000000000
+0xffff00000357ddf0:	0x0000000000000000	0xffffffffffffffff
+0xffff00000357de00:	0x0000000000000000	0xffff80008152be98
+0xffff00000357de10:	0xffff000001eac000	0x0000000000000001
+0xffff00000357de20:	0xffff0000035789d0	0x0000000000000000
+0xffff00000357de30:	0x0000000000000000	0x0000000000000000
+
+[*] Restored original instruction.
+[*] Setting breakpoint at rb_erase_cached (rb_erase in this kernel)
+Breakpoint 4 at 0xffff8000802bc91c: file ./include/linux/rbtree.h, line 126.
+[*] Executing continue to reach rb_erase...
+[Switching to Thread 1.1]
+[*] At call to rb_erase! Starting stepi trace...
+[*] --- Step 0 ---
+[*] INSN: => 0xffff8000802bc91c <__ep_remove+248>:	bl	0xffff800080cb4ef4 <rb_erase>
+[*] x0             0xffff000003578980  0xffff000003578980
+x1             0xffff00000357dd28  0xffff00000357dd28
+x2             0xffff000003578980  0xffff000003578980
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0xffff00000262b3c0  0xffff00000262b3c0
+
+[*] --- Step 1 ---
+[*] INSN: => 0xffff800080cb4ef4 <rb_erase>:	ldp	x5, x4, [x0, #8]
+[*] x0             0xffff000003578980  0xffff000003578980
+x1             0xffff00000357dd28  0xffff00000357dd28
+x2             0xffff000003578980  0xffff000003578980
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0xffff00000262b3c0  0xffff00000262b3c0
+
+[*] --- Step 2 ---
+[*] INSN: => 0xffff800080cb4ef8 <rb_erase+4>:	cbz	x4, 0xffff800080cb5100 <rb_erase+524>
+[*] x0             0xffff000003578980  0xffff000003578980
+x1             0xffff00000357dd28  0xffff00000357dd28
+x2             0xffff000003578980  0xffff000003578980
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x0                 0x0
+
+[*] --- Step 3 ---
+[*] INSN: => 0xffff800080cb5100 <rb_erase+524>:	ldr	x2, [x0]
+[*] x0             0xffff000003578980  0xffff000003578980
+x1             0xffff00000357dd28  0xffff00000357dd28
+x2             0xffff000003578980  0xffff000003578980
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x0                 0x0
+
+[*] --- Step 4 ---
+[*] INSN: => 0xffff800080cb5104 <rb_erase+528>:	ands	x3, x2, #0xfffffffffffffffc
+[*] x0             0xffff000003578980  0xffff000003578980
+x1             0xffff00000357dd28  0xffff00000357dd28
+x2             0x1                 0x1
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x0                 0x0
+
+[*] --- Step 5 ---
+[*] INSN: => 0xffff800080cb5108 <rb_erase+532>:	b.eq	0xffff800080cb5168 <rb_erase+628>  // b.none
+[*] x0             0xffff000003578980  0xffff000003578980
+x1             0xffff00000357dd28  0xffff00000357dd28
+x2             0x1                 0x1
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x0                 0x0
+
+[*] --- Step 6 ---
+[*] INSN: => 0xffff800080cb5168 <rb_erase+628>:	str	x5, [x1]
+[*] x0             0xffff000003578980  0xffff000003578980
+x1             0xffff00000357dd28  0xffff00000357dd28
+x2             0x1                 0x1
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x0                 0x0
+
+[*] --- Step 7 ---
+[*] INSN: => 0xffff800080cb516c <rb_erase+632>:	cbz	x5, 0xffff800080cb4f84 <rb_erase+144>
+[*] x0             0xffff000003578980  0xffff000003578980
+x1             0xffff00000357dd28  0xffff00000357dd28
+x2             0x1                 0x1
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x0                 0x0
+
+[*] --- Step 8 ---
+[*] INSN: => 0xffff800080cb4f84 <rb_erase+144>:	ret
+[*] x0             0xffff000003578980  0xffff000003578980
+x1             0xffff00000357dd28  0xffff00000357dd28
+x2             0x1                 0x1
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x0                 0x0
+
+[*] --- Step 9 ---
+[*] INSN: => 0xffff8000802bc920 <__ep_remove+252>:	mov	x0, x21
+[*] x0             0xffff000003578980  0xffff000003578980
+x1             0xffff00000357dd28  0xffff00000357dd28
+x2             0x1                 0x1
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x0                 0x0
+
+[*] --- Step 10 ---
+[*] INSN: => 0xffff8000802bc924 <__ep_remove+256>:	bl	0xffff800080ccfa9c <_raw_spin_lock_irq>
+[*] x0             0xffff00000357dd20  0xffff00000357dd20
+x1             0xffff00000357dd28  0xffff00000357dd28
+x2             0x1                 0x1
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x0                 0x0
+
+[*] --- Step 11 ---
+[*] INSN: => 0xffff800080ccfa9c <_raw_spin_lock_irq>:	msr	daifset, #0x3
+[*] x0             0xffff00000357dd20  0xffff00000357dd20
+x1             0xffff00000357dd28  0xffff00000357dd28
+x2             0x1                 0x1
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x0                 0x0
+
+[*] --- Step 12 ---
+[*] INSN: => 0xffff800080ccfaa0 <_raw_spin_lock_irq+4>:	mrs	x2, sp_el0
+[*] x0             0xffff00000357dd20  0xffff00000357dd20
+x1             0xffff00000357dd28  0xffff00000357dd28
+x2             0x1                 0x1
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x0                 0x0
+
+[*] --- Step 13 ---
+[*] INSN: => 0xffff800080ccfaa0 <_raw_spin_lock_irq+4>:	mrs	x2, sp_el0
+[*] x0             0xffff00000357dd20  0xffff00000357dd20
+x1             0xffff00000357dd28  0xffff00000357dd28
+x2             0x1                 0x1
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x0                 0x0
+
+[*] --- Step 14 ---
+[*] INSN: => 0xffff800080ccfaa4 <_raw_spin_lock_irq+8>:	ldr	w1, [x2, #8]
+[*] x0             0xffff00000357dd20  0xffff00000357dd20
+x1             0xffff00000357dd28  0xffff00000357dd28
+x2             0xffff00000262b3c0  0xffff00000262b3c0
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x0                 0x0
+
+[*] --- Step 15 ---
+[*] INSN: => 0xffff800080ccfaa8 <_raw_spin_lock_irq+12>:	add	w1, w1, #0x1
+[*] x0             0xffff00000357dd20  0xffff00000357dd20
+x1             0x0                 0x0
+x2             0xffff00000262b3c0  0xffff00000262b3c0
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x0                 0x0
+
+[*] --- Step 16 ---
+[*] INSN: => 0xffff800080ccfaac <_raw_spin_lock_irq+16>:	str	w1, [x2, #8]
+[*] x0             0xffff00000357dd20  0xffff00000357dd20
+x1             0x1                 0x1
+x2             0xffff00000262b3c0  0xffff00000262b3c0
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x0                 0x0
+
+[*] --- Step 17 ---
+[*] INSN: => 0xffff800080ccfab0 <_raw_spin_lock_irq+20>:	b	0xffff800080ccfac8 <_raw_spin_lock_irq+44>
+[*] x0             0xffff00000357dd20  0xffff00000357dd20
+x1             0x1                 0x1
+x2             0xffff00000262b3c0  0xffff00000262b3c0
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x0                 0x0
+
+[*] --- Step 18 ---
+[*] INSN: => 0xffff800080ccfac8 <_raw_spin_lock_irq+44>:	mov	x2, #0x0                   	// #0
+[*] x0             0xffff00000357dd20  0xffff00000357dd20
+x1             0x1                 0x1
+x2             0xffff00000262b3c0  0xffff00000262b3c0
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x0                 0x0
+
+[*] --- Step 19 ---
+[*] INSN: => 0xffff800080ccfacc <_raw_spin_lock_irq+48>:	mov	w3, #0x1                   	// #1
+[*] x0             0xffff00000357dd20  0xffff00000357dd20
+x1             0x1                 0x1
+x2             0x0                 0x0
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x0                 0x0
+
+[*] --- Step 20 ---
+[*] INSN: => 0xffff800080ccfad0 <_raw_spin_lock_irq+52>:	prfm	pstl1strm, [x0]
+[*] x0             0xffff00000357dd20  0xffff00000357dd20
+x1             0x1                 0x1
+x2             0x0                 0x0
+x3             0x1                 0x1
+x4             0x0                 0x0
+x5             0x0                 0x0
+
+[*] --- Step 21 ---
+[*] INSN: => 0xffff800080ccfad4 <_raw_spin_lock_irq+56>:	ldaxr	w1, [x0]
+[*] x0             0xffff00000357dd20  0xffff00000357dd20
+x1             0x1                 0x1
+x2             0x0                 0x0
+x3             0x1                 0x1
+x4             0x0                 0x0
+x5             0x0                 0x0
+
+[*] --- Step 22 ---
+[*] INSN: => 0xffff800080ccfae4 <_raw_spin_lock_irq+72>:	cbnz	w4, 0xffff800080ccfad4 <_raw_spin_lock_irq+56>
+[*] x0             0xffff00000357dd20  0xffff00000357dd20
+x1             0x0                 0x0
+x2             0x0                 0x0
+x3             0x1                 0x1
+x4             0x0                 0x0
+x5             0x0                 0x0
+
+[*] --- Step 23 ---
+[*] INSN: => 0xffff800080ccfae4 <_raw_spin_lock_irq+72>:	cbnz	w4, 0xffff800080ccfad4 <_raw_spin_lock_irq+56>
+[*] x0             0xffff00000357dd20  0xffff00000357dd20
+x1             0x0                 0x0
+x2             0x0                 0x0
+x3             0x1                 0x1
+x4             0x0                 0x0
+x5             0x0                 0x0
+
+[*] --- Step 24 ---
+[*] INSN: => 0xffff800080ccfae8 <_raw_spin_lock_irq+76>:	cbz	w1, 0xffff800080ccfac4 <_raw_spin_lock_irq+40>
+[*] x0             0xffff00000357dd20  0xffff00000357dd20
+x1             0x0                 0x0
+x2             0x0                 0x0
+x3             0x1                 0x1
+x4             0x0                 0x0
+x5             0x0                 0x0
+
+[*] Finished. Exiting GDB.
+[Inferior 1 (process 1) detached]
