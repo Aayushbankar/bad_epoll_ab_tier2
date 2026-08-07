@@ -65,6 +65,11 @@ trigger.asm
 tier2/qemu.log
 tier2/qemu.pid
 tier2/qemu_verify.log
+tier2/qemu_out.log
+tier2/qemu_serial.log
+tier2/qemu_stdout.log
+tier2/out.txt
+tier2/run.log
 tier2/scripts/emulator.log
 tier2/scripts/emulator.pid
 tier2/scripts/qemu.log
