@@ -125,5 +125,5 @@ DOCUMENTATION HEALTH
 - Active Ledgers:
   - `VERIFICATION_LEDGER.md`: SSOT mapping verifiable claims to raw execution logs.
   - `EXPERIMENT_INDEX.md`: Maps test reproducers and launch scripts.
-  - `KNOWLEDGE_EVOLUTION.md`: Tracks history of technical pivots and insights.
+  - `KNOWLEDGE_EVOLUTION.md`: Tracks history of technical pivots and insights (ARCHIVED 2026-07-23 to `_archive_pre_reset/` during the verification reset).
 - Strategy and Assessment: `ENGINEERING_READINESS_ASSESSMENT.md` identifies remaining path to Goal 2.

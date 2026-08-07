@@ -35,6 +35,6 @@ The primary goal of Tier 2 is to successfully port the `CVE-2026-46242` Bad Epol
 | **Project Progress** | [CURRENT_PROGRESS.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/CURRENT_PROGRESS.md) | Single Source of Truth for milestone status |
 | **Verification Ledger** | [VERIFICATION_LEDGER.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/VERIFICATION_LEDGER.md) | Machine-parseable matrix mapping claims to raw evidence |
 | **Experiment Index** | [EXPERIMENT_INDEX.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/EXPERIMENT_INDEX.md) | Registry of reproducers, GDB scripts, and shell runners |
-| **Knowledge Evolution** | [KNOWLEDGE_EVOLUTION.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/KNOWLEDGE_EVOLUTION.md) | Historical tracking of assumptions, discoveries, and lessons |
+| **Knowledge Evolution** | [KNOWLEDGE_EVOLUTION.md (archived)](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/_archive_pre_reset/KNOWLEDGE_EVOLUTION.md) | Historical tracking of assumptions, discoveries, and lessons (archived 2026-07-23; see `_archive_pre_reset/ARCHIVE_INDEX.md`) |
 | **Documentation Map** | [DOCUMENTATION_MAP.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/DOCUMENTATION_MAP.md) | Complete 15-domain architectural sitemap |
 
