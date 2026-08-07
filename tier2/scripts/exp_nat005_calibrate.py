@@ -5,7 +5,7 @@ gdb.execute("set pagination off")
 gdb.execute("set confirm off")
 
 # Enable GDB logging
-gdb.execute("set logging file /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/evidence/NAT-005_calibration_raw.log")
+gdb.execute("set logging file evidence/NAT-005_calibration_raw.log")
 gdb.execute("set logging overwrite on")
 gdb.execute("set logging enabled on")
 
