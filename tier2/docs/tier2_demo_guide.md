@@ -21,7 +21,8 @@ Use the following exact commands to demonstrate the current working state of the
 ### Step A: Navigate to the Project Root
 Ensure you are in the root directory before running the scripts:
 ```bash
-cd /mnt/work/company/cyphermatrix/repos/bad-epoll-lab
+# Updated 2026-08-08: use repo-relative path after repo separation
+cd "$(git rev-parse --show-toplevel)"
 ```
 
 ### Step B: (Optional) Rebuild the Initramfs

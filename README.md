@@ -1,3 +1,29 @@
+# CVE-2026-46242: Bad Epoll (Tier 2 Standalone)
+
+> **Migration Note (2026-08-08):** This repository was separated from `Aayushbankar/bad-epoll-lab`. This repo (`bad_epoll_ab_tier2`) focuses exclusively on Tier 2. The Tier 1 x86_64 exploit and historical monorepo content remain in the original repository.
+
+Welcome to the internal engineering repository for the "Bad Epoll" vulnerability (CVE-2026-46242). This repository houses the complete documentation, research, and functional exploits targeting this specific Linux kernel Use-After-Free condition.
+
+## Project Overview
+
+This repository focuses on **Tier 2**: Android ARM64 GKI assessment, which resulted in a DoS-only verdict. The assessment targets `linux-6.12.67` (Android 14 GKI). 
+
+## Repository Layout
+
+- **`tier2/`**: Active Tier 2 research
+- **`exploit/tier2/`** and **`exploit/tier3/`**: Prepared environments
+- **`third_party/linux-6.12.67/`**: Kernel source tree
+- **`docs/`**: Historical Tier 1 documentation archive
+- **`research/`**, **`scripts/`**, **`archive/`**, **`article/`**, **`artifacts/`**: Reference material
+
+## Important Links
+
+- **[Runner Guide](tier2/docs/RUNNER_GUIDE.md)**
+- **[Tier 2 Complete Report](tier2/docs/TIER2_COMPLETE_REPORT.md)**
+- **[Original `bad-epoll-lab` Repo (Tier 1)](https://github.com/Aayushbankar/bad-epoll-lab)**
+
+<details><summary>📜 Original README (pre-migration, preserved for reference)</summary>
+
 # CVE-2026-46242: Bad Epoll
 
 Welcome to the internal engineering repository for the "Bad Epoll" vulnerability (CVE-2026-46242). This repository houses the complete documentation, research, and functional exploits targeting this specific Linux kernel Use-After-Free condition.
@@ -33,3 +59,5 @@ For a complete listing of all internal engineering reports, historical timelines
 
 ## Future Work
 The repository is frozen at the successful Tier 1 boundary. The next phase transitions into `exploit/tier2/` to evaluate the feasibility of porting the `epoll` Use-After-Free timing constraints to the Android Generic Kernel Image (GKI) utilizing ARM64 EL1 -> EL0 transition paradigms.
+
+</details>

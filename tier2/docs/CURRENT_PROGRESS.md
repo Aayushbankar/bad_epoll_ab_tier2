@@ -1,10 +1,15 @@
 # Current Progress Audit
 
+> **Migration Note (2026-08-08):** This file was written during active Tier 2
+> research on the `tier2-android-port` branch of `bad-epoll-lab`. The repo has
+> since been separated into `bad_epoll_ab_tier2`. Branch is now `main`.
+> See [`MIGRATION_LOG.md`](../../MIGRATION_LOG.md) for details.
+
 --------------------------------------------------
 CURRENT PROJECT STATUS
 --------------------------------------------------
 
-Current Git branch: `tier2-android-port`
+Current Git branch: `main` *(was `tier2-android-port` pre-migration 2026-08-08)*
 Current commit: `50ece7037e4ba51c8b7700229e3f522b7b6fba31`
 Git status: Modified `.gitignore`, untracked `tier2/` files. No staged changes.
 Current phase: Environment Verification & Recovery
@@ -16,7 +21,7 @@ MILESTONE STATUS
 
 | Milestone | Status | Evidence | Blocker |
 |---|---|---|---|
-| Tier 1 frozen | COMPLETE | `exploit/tier1/` binaries exist | None |
+| Tier 1 frozen | COMPLETE | `exploit/tier1/` binaries *(removed during repo separation 2026-08-08; content in original bad-epoll-lab repo)* | None |
 | Tier 2 branch created | COMPLETE | `git branch` output | None |
 | Android toolchain | PARTIAL | Binaries present, PATH variables missing | `emulator` not in PATH |
 | Android toolchain | COMPLETE | Binaries patched/linked | None |

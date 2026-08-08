@@ -1,3 +1,9 @@
+> **Migration Note (2026-08-08):** This file reflects the pre-migration
+> `bad-epoll-lab` monorepo structure. `exploit/tier1/` and `exploit/tier1.5/`
+> have been removed during repo separation into `bad_epoll_ab_tier2`.
+> See [`MIGRATION_LOG.md`](MIGRATION_LOG.md) and the "Post-Migration" section
+> at the bottom of this file.
+
 # Final Repository Structure
 
 This document outlines the final directory tree and the explicit purpose of every major directory mapped during the Tier 1 Checkpoint Repo Reorganization.
@@ -281,3 +287,26 @@ This document outlines the final directory tree and the explicit purpose of ever
 - **research/**: Useful, active debugging and validation scripts (like Python GDB tracers) retained for future use.
 - **scripts/**: Core repository automation scripts grouped by category (build, setup, debug).
 - **third_party/**: External submodules and downloaded kernels (like linux-6.12.67 and rp++). Ownership remains external.
+
+---
+
+## Post-Migration Structure (2026-08-08)
+
+After separation into `bad_epoll_ab_tier2`, the following changes were made:
+
+### Removed
+- `exploit/tier1/` — complete Tier 1 x86_64 exploit directory (lives in original `bad-epoll-lab` repo)
+- `exploit/tier1.5/` — kernelCTF baseline environment (branch and directory deleted)
+- `CVE-2026-46242_Tier1_Final_Writeup.*` — LaTeX build artifacts
+- `tier1_terminal_session.log` — Tier 1 terminal recording
+
+### Retained
+- `tier2/` — active Tier 2 research (unchanged)
+- `exploit/tier2/` and `exploit/tier3/` — prepared environments
+- `third_party/linux-6.12.67/` — kernel source tree
+- `docs/` — historical Tier 1 documentation archive
+- `research/`, `scripts/`, `archive/`, `article/`, `artifacts/` — reference material
+
+### Branch
+- `tier2-android-port` renamed to `main`
+- Remote repointed from `Aayushbankar/bad-epoll-lab` to `Aayushbankar/bad_epoll_ab_tier2`

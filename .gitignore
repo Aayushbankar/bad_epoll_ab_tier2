@@ -13,12 +13,16 @@ third_party/linux-*/
 third_party/security-research/
 
 # Compiled binaries
-exploit/tier1/exploit
+# --- Migration Note (2026-08-08) ---
+# exploit/tier1/ and exploit/tier1.5/ were removed during repo separation.
+# Original rules retained as comments for historical reference.
+# ---
+# exploit/tier1/exploit # removed: repo separation 2026-08-08
 exploit/tier2/exploit_android
 
 # Rootfs (generated)
-exploit/tier1/rootfs/
-exploit/tier1/initramfs.cpio
+# exploit/tier1/rootfs/ # removed: repo separation 2026-08-08
+# exploit/tier1/initramfs.cpio # removed: repo separation 2026-08-08
 
 # Tier 2 Android Artifacts and Tooling
 tier2/android/source/

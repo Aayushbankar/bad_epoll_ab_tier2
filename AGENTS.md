@@ -1,9 +1,13 @@
-# AGENTS.md — bad-epoll-lab
+# AGENTS.md — bad_epoll_ab_tier2
+
+> **Migration Note (2026-08-08):** This repo was separated from
+> `Aayushbankar/bad-epoll-lab`. Branch `tier2-android-port` is now `main`.
+> See [`MIGRATION_LOG.md`](MIGRATION_LOG.md) for full details.
 
 ## Repo Overview
 - **Goal**: CVE-2026-46242 (epoll UAF) research on Android ARM64 GKI.
 - **Current phase**: Tier 2 — exploitability assessment on `linux-6.12.67` (Android 14 GKI).
-- **Branch**: `tier2-android-port`
+- **Branch**: `main` *(formerly `tier2-android-port` in the `bad-epoll-lab` monorepo)*
 - **Evidence standard**: `tier2/docs/EXPERIMENT_PROTOCOL.md` (10 rules, non-negotiable).
 
 ---
@@ -49,7 +53,7 @@ kill $QEMU_PID || true; pkill -f qemu-system-aarch64
 3. **Rule 4**: Log experiment in `tier2/docs/EXPERIMENT_INDEX.md` as `RUNNING` **before** starting.
 3. **Rule 5**: No hardcoded addresses without derivation record (symbol at runtime, or comment with vmlinux build).
 4. **Rule 6**: `STATIC` vs `RUNTIME` — never conflate.
-5. **Rule 10**: Before claiming done: `git status` clean? `git push`? `git ls-remote origin tier2-android-port` shows hash? If not, say so explicitly.
+5. **Rule 10**: Before claiming done: `git status` clean? `git push`? `git ls-remote origin main` shows hash? If not, say so explicitly.
 
 ### Git Commit Format
 ```
@@ -100,7 +104,7 @@ Types: `evidence`, `feat`, `fix`, `docs`, `scripts`
 - **Citing agent-internal paths**: All evidence must be in `tier2/evidence/` committed.
 - **Claiming `VERIFIED` without quoting raw log**: Must read and quote the exact lines.
 - **Conflating STATIC and RUNTIME**: Label every claim.
-- **Using `git rev-parse HEAD` as push proof**: Must show `git ls-remote origin tier2-android-port`.
+- **Using `git rev-parse HEAD` as push proof**: Must show `git ls-remote origin main`.
 
 ---
 

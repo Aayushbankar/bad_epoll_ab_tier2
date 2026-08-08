@@ -5,7 +5,8 @@
 
 set -euo pipefail
 
-TIER2_DIR="/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2"
+# Updated 2026-08-08: use relative path after repo separation (was absolute bad-epoll-lab path)
+TIER2_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 EVIDENCE_DIR="${TIER2_DIR}/evidence/NAT-001"
 SCRIPTS_DIR="${TIER2_DIR}/scripts"
 ROOTFS_DIR="${TIER2_DIR}/rootfs"

@@ -6,7 +6,7 @@
 ## Survival Assessment
 
 ### Complete & Intact
-- **Git Branch**: `tier2-android-port` is fully intact and tracks our previous progress.
+- **Git Branch**: `main` *(was `tier2-android-port` pre-migration 2026-08-08)* is fully intact and tracks our previous progress.
 - **Tier 1 Artifacts**: Exploit, rootfs, and qemu logs remain unmodified.
 - **Generated Documentation**: The `tier2/docs/` markdown files (e.g., `GAP_ANALYSIS.md`, `ASSUMPTIONS.md`) generated immediately prior to the shutdown survived and are complete.
 - **Reverse Engineering Hubs**: The directories inside `tier2/reverse/` (`epoll`, `binder`, `slub`, etc.) and their respective `README.md` notebooks survived intact.

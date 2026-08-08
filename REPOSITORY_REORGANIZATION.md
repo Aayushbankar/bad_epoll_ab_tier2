@@ -26,3 +26,21 @@ To transition this repository into a long-term engineering artifact suitable for
 ## Link Updates
 - Internal paths inside shell scripts (e.g., `start_qemu.sh`, `run_qemu_gdb.sh`) were repointed from `linux-6.12.67/` to `../../third_party/linux-6.12.67/` to accommodate the structural shift.
 - The root `README.md` was rewritten to serve as the master navigational hub, linking dynamically to the new `docs/MASTER_INDEX.md`.
+
+
+---
+
+## Repository Separation (2026-08-08)
+
+The monorepo was split into two independent repositories:
+- **`bad_epoll_ab_tier2`** (this repo): Tier 2 Android ARM64 GKI exploitability assessment
+- **`bad-epoll-lab`** (archived on GitHub): Tier 1 x86_64 exploit on `main` branch
+
+Changes:
+- Branch `tier2-android-port` renamed to `main`
+- Branch `tier1.5-investigation` deleted (local and remote)
+- `exploit/tier1/` and `exploit/tier1.5/` removed from working tree
+- Top-level Tier 1 artifacts removed (`.aux`, `.log`, `.out`, `.toc`, session log)
+- Remote repointed from `Aayushbankar/bad-epoll-lab` to `Aayushbanker/bad_epoll_ab_tier2`
+- All historical documentation preserved with migration annotations
+- Full commit history (85 commits) retained

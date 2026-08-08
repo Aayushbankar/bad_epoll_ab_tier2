@@ -11,6 +11,10 @@ Data sources (parsed manually into tables below):
   ASSUMPTIONS_REGISTER.md, RUNNER_GUIDE.md, tier2/evidence/*_RESULTS.md
 """
 
+# NOTE (2026-08-08): Some slide text references "bad-epoll-lab" and "tier2-android-port"
+# for historical accuracy in the mentor deck. These are presentation strings,
+# not functional paths. See MIGRATION_LOG.md for repo separation details.
+
 import html
 import subprocess
 import sys
@@ -22,7 +26,8 @@ from pptx.enum.shapes import MSO_SHAPE
 from pptx.enum.text import MSO_ANCHOR, PP_ALIGN
 from pptx.util import Inches, Pt
 
-REPO = Path("/mnt/work/company/cyphermatrix/repos/bad-epoll-lab")
+# Updated 2026-08-08: use relative path after repo separation (was absolute bad-epoll-lab path)
+REPO = Path(__file__).resolve().parent.parent.parent  # repo root
 OUT_PPTX = REPO / "tier2" / "docs" / "TIER2_MENTOR_DECK.pptx"
 OUT_PDF = REPO / "tier2" / "docs" / "TIER2_MENTOR_EXEC_SUMMARY.pdf"
 

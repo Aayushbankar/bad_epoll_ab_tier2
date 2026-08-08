@@ -3,14 +3,14 @@
 > [!IMPORTANT]
 > This document has been consolidated into the project Single Source of Truth (SSOT).
 > For active milestone tracking and verified checklists, refer to:
-> **[CURRENT_PROGRESS.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/CURRENT_PROGRESS.md)**
+> **[CURRENT_PROGRESS.md](CURRENT_PROGRESS.md)**
 
 ---
 
 # Master Checklist (Archived Snapshot)
 
 ## Repository
-- [x] Create `tier2-android-port` branch
+- [x] Create `tier2-android-port` branch *(renamed to `main` during repo separation 2026-08-08)*
 - [x] Establish Tier 2 directory structure
 - [x] Create base documentation (Roadmap, Checklist, Log, Learning Map)
 

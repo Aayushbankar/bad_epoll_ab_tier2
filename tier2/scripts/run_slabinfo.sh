@@ -18,6 +18,7 @@ file ./android/artifacts/vmlinux
 target remote :1234
 c &
 shell sleep 2
-shell echo "/print_slabinfo" | nc localhost 4444 > /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/evidence/slabinfo.txt
+# Updated 2026-08-08: use relative path after repo separation (was absolute bad-epoll-lab path)
+shell echo "/print_slabinfo" | nc localhost 4444 > evidence/slabinfo.txt
 GDB
 kill $QEMU_PID

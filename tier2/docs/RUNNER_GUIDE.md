@@ -13,7 +13,7 @@ Read `tier2/docs/EXPERIMENT_PROTOCOL.md` in full. The 10 rules are non-negotiabl
 1. **Rule 1**: All evidence goes into `tier2/evidence/` as committed files. NEVER cite paths outside the repo.
 2. **Rule 2**: No `VERIFIED`/`PASSED` status until you have READ the raw evidence file in full and QUOTED the specific lines that support the claim.
 3. **Rule 4**: Log the experiment in `tier2/docs/EXPERIMENT_INDEX.md` as `RUNNING` BEFORE you start. Update status AFTER.
-4. **Rule 10**: Before reporting ANYTHING as done: `git status` (clean?), `git push`, then `git ls-remote origin tier2-android-port` to confirm the hash is on the remote. Show the `ls-remote` output. Never use `git rev-parse HEAD` as proof of push.
+4. **Rule 10**: Before reporting ANYTHING as done: `git status` (clean?), `git push`, then `git ls-remote origin main` to confirm the hash is on the remote. Show the `ls-remote` output. Never use `git rev-parse HEAD` as proof of push.
 
 ### Git Commit Format
 ```
@@ -38,7 +38,8 @@ Update `tier2/docs/VERIFICATION_LEDGER.md` for every new verified/disproved clai
 
 ### How to Compile a C Harness
 ```bash
-cd /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2
+# Updated 2026-08-08: use repo-relative path after repo separation (was absolute bad-epoll-lab path)
+cd "$(git rev-parse --show-toplevel)/tier2"
 ./aarch64-linux-musl-cross/bin/aarch64-linux-musl-gcc -static -O0 -g -o rootfs/harness scripts/<YOUR_HARNESS>.c -pthread
 ```
 
@@ -540,5 +541,5 @@ For EVERY experiment, create the results doc in this exact format:
 - [ ] All evidence files committed to `tier2/evidence/`
 - [ ] All scripts committed to `tier2/scripts/`
 - [ ] `git status` is clean
-- [ ] `git push origin tier2-android-port` succeeded
-- [ ] `git ls-remote origin tier2-android-port` output shown with commit hash
+- [ ] `git push origin main` succeeded
+- [ ] `git ls-remote origin main` output shown with commit hash

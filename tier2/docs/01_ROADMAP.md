@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > This document has been consolidated into the project Single Source of Truth (SSOT).
 > For current progress, milestone tracking, and status, refer to:
-> **[CURRENT_PROGRESS.md](file:///mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/docs/CURRENT_PROGRESS.md)**
+> **[CURRENT_PROGRESS.md](CURRENT_PROGRESS.md)**
 
 ---
 
