@@ -26,8 +26,7 @@ sleep 2
 echo "[*] Executing GDB tracer script..."
 gdb -batch -q -x scripts/exp_and003_gdb.py android/artifacts/vmlinux || true
 
-echo "[*] Stopping QEMU..."
-kill $QEMU_PID 2>/dev/null || true
-pkill -f qemu-system-aarch64 2>/dev/null || true
+echo "[*] Waiting for QEMU to exit..."
+wait $QEMU_PID || true
 
 echo "[*] AND-003 Search complete. Evidence saved to evidence/AND-003_raw_enforcing.log"

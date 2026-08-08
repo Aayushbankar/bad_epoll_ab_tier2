@@ -1,0 +1,52 @@
+[*] Connected to QEMU via GDB :1234
+Breakpoint 1 at 0xffff80008025f0b8: file fs/read_write.c, line 726.Breakpoint 2 at 0xffff800080070688: file kernel/reboot.c, line 716.[*] Breakpoints set on ksys_write and __arm64_sys_reboot. Continuing execution...
+[*] HARNESS MSG: [AND-003] === SELinux Enforcing Mode Syscall Audit ===
+[*] HARNESS MSG: [AND-003] PID: 1, UID: 0, GID: 0
+[*] HARNESS MSG: [AND-003] SELinux context: kernel
+[*] HARNESS MSG: [AND-003] Cannot read /sys/fs/selinux/enforce: No such file or directory
+[*] HARNESS MSG: [AND-003] SELinux enforcing: -1 (UNKNOWN/DISABLED)
+[*] HARNESS MSG: [AND-003] SELinux policy version: -1 (NOT LOADED)
+[*] HARNESS MSG: [AND-003] --- Pre-test audit log ---
+[*] HARNESS MSG: [AND-003] --- dmesg audit entries (last 50 lines with 'audit'/'avc') ---
+[*] HARNESS MSG: [AND-003] AUDIT: 5,34,0,-;Kernel command line: console=ttyAMA0 root=/dev/ram0 kasan=off nokaslr earlycon=pl011,0x09000000 printk.devkmsg=on rw security=selinux selinux=1 enforcing=1
+[*] HARNESS MSG: [AND-003] AUDIT: 6,64,18390,-;LSM: initializing lsm=capability,selinux
+[*] HARNESS MSG: [AND-003] AUDIT: 6,65,19032,-;SELinux:  Initializing.
+[*] HARNESS MSG: [AND-003] AUDIT: 6,93,242101,-;audit: initializing netlink subsys (disabled)
+[*] HARNESS MSG: [AND-003] AUDIT: 5,94,245011,-;audit: type=2000 audit(0.197:1): state=initialized audit_enabled=0 res=1
+[*] HARNESS MSG: [AND-003] --- end audit log ---
+[*] HARNESS MSG: [AND-003] === Syscall Tests ===
+[*] HARNESS MSG: [AND-003] Testing epoll_create1(0)...
+[*] HARNESS MSG: [AND-003] epoll_create1: SUCCESS (fd=0)
+[*] HARNESS MSG: [AND-003] Testing epoll_ctl(EPOLL_CTL_ADD)...
+[*] HARNESS MSG: [AND-003] epoll_ctl: SUCCESS (added fd=1 to epfd=0)
+[*] HARNESS MSG: [AND-003] Testing close()...
+[*] HARNESS MSG: [AND-003] close: SUCCESS (fd=1)
+[*] HARNESS MSG: [AND-003] Testing msgget(IPC_PRIVATE, IPC_CREAT|0666)...
+[*] HARNESS MSG: [AND-003] msgget: SUCCESS (msqid=0)
+[*] HARNESS MSG: [AND-003] Testing msgsnd (144-byte payload)...
+[*] HARNESS MSG: [AND-003] msgsnd: SUCCESS (144 bytes to msqid=0)
+[*] HARNESS MSG: [AND-003] Testing msgrcv (144-byte receive)...
+[*] HARNESS MSG: [AND-003] msgrcv: SUCCESS (received 144 bytes, mtype=1, mtext[0]='X')
+[*] HARNESS MSG: [AND-003] --- Post-test audit log ---
+[*] HARNESS MSG: [AND-003] --- dmesg audit entries (last 50 lines with 'audit'/'avc') ---
+[*] HARNESS MSG: [AND-003] AUDIT: 5,34,0,-;Kernel command line: console=ttyAMA0 root=/dev/ram0 kasan=off nokaslr earlycon=pl011,0x09000000 printk.devkmsg=on rw security=selinux selinux=1 enforcing=1
+[*] HARNESS MSG: [AND-003] AUDIT: 6,64,18390,-;LSM: initializing lsm=capability,selinux
+[*] HARNESS MSG: [AND-003] AUDIT: 6,65,19032,-;SELinux:  Initializing.
+[*] HARNESS MSG: [AND-003] AUDIT: 6,93,242101,-;audit: initializing netlink subsys (disabled)
+[*] HARNESS MSG: [AND-003] AUDIT: 5,94,245011,-;audit: type=2000 audit(0.197:1): state=initialized audit_enabled=0 res=1
+[*] HARNESS MSG: [AND-003] --- end audit log ---
+[*] HARNESS MSG: [AND-003] === SUMMARY ===
+[*] HARNESS MSG: [AND-003] Final SELinux context: kernel
+[*] HARNESS MSG: [AND-003] Cannot read /sys/fs/selinux/enforce: No such file or directory
+[*] HARNESS MSG: [AND-003] SELinux enforcing: -1
+[*] HARNESS MSG: [AND-003] RESULT: epoll_create1   ALLOWED  (returned fd=0)
+[*] HARNESS MSG: [AND-003] RESULT: epoll_ctl       ALLOWED  (EPOLL_CTL_ADD fd=1 to epfd=0)
+[*] HARNESS MSG: [AND-003] RESULT: close           ALLOWED  (closed fd=1)
+[*] HARNESS MSG: [AND-003] RESULT: msgget          ALLOWED  (msqid=0)
+[*] HARNESS MSG: [AND-003] RESULT: msgsnd          ALLOWED  (sent 144 bytes to msqid=0)
+[*] HARNESS MSG: [AND-003] RESULT: msgrcv          ALLOWED  (received 144 bytes, mtype=1, data[0]='X')
+[*] HARNESS MSG: [AND-003] OVERALL: ALL EXPLOIT SYSCALLS PERMITTED (6/6 syscalls allowed)
+[*] HARNESS MSG: [AND-003] OVERALL: 6/6 syscalls succeeded under SELinux
+[*] HARNESS MSG: [AND-003] === END AND-003 ===
+[*] RUNTIME TRACE: __arm64_sys_reboot hit! Harness completed successfully.
+[Inferior 1 (process 1) detached]

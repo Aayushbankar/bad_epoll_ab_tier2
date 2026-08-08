@@ -36,5 +36,5 @@ This index logs all test reproducers, GDB automation scripts, and experimental e
 | NAT-005 | 2026-08-05 | Adaptive Launch-Ahead Search & Topology Verification | test_nat005.c | exp_nat005_gdb.py | run_nat005.sh | **PASSED** (0/92,740 hits; isolcpus=1 + 4MB eviction; best alignment error=1 cycle) | `tier2/evidence/NAT-005_RESULTS.md` |
 | AND-001 | 2026-08-05 | SysV IPC Availability Under Android Target | test_and001.c | exp_and001_gdb.py | run_and001.sh | **PASSED** (SysV IPC functional; load_msg trapped) | `tier2/evidence/AND-001_raw_ipc.log` |
 | AND-002 | 2026-08-08 | KASLR Impact on Race Reliability (NAT-005 harness, KASLR on vs off) | test_nat005.c | exp_and002_gdb.py | run_and002.sh | **RUNNING** | `tier2/evidence/AND-002_raw_kaslr_off.log`, `tier2/evidence/AND-002_raw_kaslr_on.log` |
-| AND-003 | 2026-08-02 | SELinux Policy Audit for Exploit Syscalls | test_and003.c | exp_and003_gdb.py | run_and003.sh | **RUNNING** | `tier2/evidence/AND-003_raw_*.log` |
+| AND-003 | 2026-08-02 | SELinux Policy Audit for Exploit Syscalls | test_and003.c | exp_and003_gdb.py | run_and003.sh | **PASSED** (All 6 syscalls allowed) | `tier2/evidence/AND-003_RESULTS.md`, `tier2/evidence/AND-003_raw_enforcing.log` |
 | AND-004 | 2026-08-02 | MTE/KASAN_HW_TAGS Impact on UAF Primitive | test_nat001.c | (none) | run_and004.sh | **PLANNED** | `tier2/evidence/AND-004_raw_*.log` |

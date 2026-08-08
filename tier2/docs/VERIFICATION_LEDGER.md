@@ -65,7 +65,7 @@ This document serves as the authoritative, machine-parseable Single Source of Tr
 | VER-038 | 2026-08-05 | AND-001: SysV IPC (`msgsnd`/`msgrcv`) works in target kernel context; trapped runtime call at `load_msg` (`0xffff800080430100`) | `load_msg` / `msgget` / `msgsnd` | RUNTIME (GDB Breakpoint) | `tier2/evidence/AND-001_raw_ipc.log` | **VERIFIED** |
 | VER-039 | 2026-08-05 | NAT-005: 92,740 iteration upgraded closed-loop search (isolcpus=1 CPU isolation + 4MB memory cache eviction sweeper, 10-cycle steps) produced 0/92,740 UAF hits; near-miss alignment error reached 1 cycle (16 ns) at delay=2360 under TCG software emulation | `__ep_remove` / `hlist_del_rcu` | RUNTIME (Upgraded Closed-Loop Sweep) | `tier2/evidence/NAT-005_raw_serial.log` | **VERIFIED** (Negative Result under TCG) |
 | VER-042 | 2026-08-02 | AND-002: KASLR does not reduce race hit rate to zero | `__ep_remove` / `kmalloc-192` | RUNTIME (KASLR on vs off) | `tier2/evidence/AND-002_raw_*.log` | **PLANNED** |
-| VER-040 | 2026-08-02 | AND-003: SELinux enforcing allows exploit syscalls (`epoll`, `msgget`, `msgsnd`, `msgrcv`) | `epoll_create1` / `msgget` / etc. | RUNTIME (SELinux audit) | `tier2/evidence/AND-003_raw_*.log` | **PLANNED** |
+| VER-040 | 2026-08-08 | AND-003: SELinux enforcing allows exploit syscalls (`epoll`, `msgget`, `msgsnd`, `msgrcv`) | `epoll_create1` / `msgget` / etc. | RUNTIME (SELinux audit) | `tier2/evidence/AND-003_raw_enforcing.log` | **VERIFIED** |
 | VER-041 | 2026-08-02 | AND-004: MTE/KASAN_HW_TAGS does not prevent UAF detection | `hlist_del_rcu` / MTE tags | RUNTIME (kasan=on + MTE) | `tier2/evidence/AND-004_raw_*.log` | **PLANNED** |
 
 ---
