@@ -1,0 +1,14 @@
+[NAT-005] Starting Upgraded Harness (isolcpus=1 + 4MB Cache Eviction, Target: 2330 cycles, freq: 62500000 Hz)
+[NAT-005] Phase 1: Executing Fine-Grained Sweep Centered on 2,330 Cycles (2180..2480, step=10)...
+[NAT-005] Calibrated Window Delay=2180 cycles: 2800 iterations complete | best_alignment_err=0 cycles
+[NAT-005] Calibrated Window Delay=2190 cycles: 5600 iterations complete | best_alignment_err=179 cycles
+[NAT-005] Calibrated Window Delay=2200 cycles: 8400 iterations complete | best_alignment_err=121 cycles
+[NAT-005] Calibrated Window Delay=2210 cycles: 11200 iterations complete | best_alignment_err=13 cycles
+[NAT-005] Calibrated Window Delay=2220 cycles: 14000 iterations complete | best_alignment_err=72 cycles
+[NAT-005] Calibrated Window Delay=2230 cycles: 16800 iterations complete | best_alignment_err=107 cycles
+[NAT-005] Calibrated Window Delay=2240 cycles: 19600 iterations complete | best_alignment_err=75 cycles
+[NAT-005] Calibrated Window Delay=2250 cycles: 22400 iterations complete | best_alignment_err=71 cycles
+[NAT-005] Calibrated Window Delay=2260 cycles: 25200 iterations complete | best_alignment_err=25 cycles
+[NAT-005] Calibrated Window Delay=2270 cycles: 28000 iterations complete | best_alignment_err=72 cycles
+[NAT-005] Calibrated Window Delay=2280 cycles: 30800 iterations complete | best_alignment_err=17 cycles
+[NAT-005] Calibrated Window Delay=2290 cycles: 33600 iterations complete | best_alignment_err=91 cycles
