@@ -1,63 +1,120 @@
-# CVE-2026-46242: Bad Epoll (Tier 2 Standalone)
+# CVE-2026-46242: Bad Epoll (Tier 2 Android ARM64 Assessment)
 
-> **Migration Note (2026-08-08):** This repository was separated from `Aayushbankar/bad-epoll-lab`. This repo (`bad_epoll_ab_tier2`) focuses exclusively on Tier 2. The Tier 1 x86_64 exploit and historical monorepo content remain in the original repository.
+[![Status](https://img.shields.io/badge/Verdict-DoS--Only%20(AMBER)-orange.svg)](#verdict)
+[![Target](https://img.shields.io/badge/Target-Android%2014%20GKI%206.1.23%20ARM64-blue.svg)](#environment)
+[![Evidence](https://img.shields.io/badge/Evidence-42%20VER%20%7C%2021%20Dead%20Ends-green.svg)](tier2/docs/VERIFICATION_LEDGER.md)
 
-Welcome to the internal engineering repository for the "Bad Epoll" vulnerability (CVE-2026-46242). This repository houses the complete documentation, research, and functional exploits targeting this specific Linux kernel Use-After-Free condition.
+Welcome to the canonical public research repository for **CVE-2026-46242** ("Bad Epoll"), a race-driven Use-After-Free (UAF) vulnerability in the Linux kernel's event polling (`epoll`) subsystem. This repository documents the complete **Tier 2** engineering assessment targeting the **Android 14 Generic Kernel Image (GKI) on ARM64**, establishing why modern kernel mitigations (PAC, BTI, kCFI, MTE, slab isolation, and voluntary preemption models) structurally reduce this critical privilege escalation primitive to **Denial of Service (DoS) only**.
 
-## Project Overview
+---
 
-This repository focuses on **Tier 2**: Android ARM64 GKI assessment, which resulted in a DoS-only verdict. The assessment targets `linux-6.12.67` (Android 14 GKI). 
+## 🧭 Start Here
 
-## Repository Layout
+If you are exploring this research for the first time:
 
-- **`tier2/`**: Active Tier 2 research
-- **`exploit/tier2/`** and **`exploit/tier3/`**: Prepared environments
-- **`third_party/linux-6.12.67/`**: Kernel source tree
-- **`docs/`**: Historical Tier 1 documentation archive
-- **`research/`**, **`scripts/`**, **`archive/`**, **`article/`**, **`artifacts/`**: Reference material
+1. 📖 **[Public Deep-Dive Article](article/MEDIUM_DEEP_DIVE_FINAL.md)** — Comprehensive technical walkthrough with architecture diagrams, slab layouts, and the 21-dead-end decision tree.
+2. 📋 **[Mentor Progress Writeup](docs/MENTOR_PROGRESS_WRITEUP_2026-08-29.md)** — Internal audit writeup detailing objectives, methodology, proven/disproven primitives, blockers, and next steps.
+3. 📊 **[Tier 2 Complete Exploitability Report](tier2/docs/TIER2_COMPLETE_REPORT.md)** — Full engineering report containing the decision matrix, metrics dashboard, and runtime findings.
+4. 🔬 **[Physical Silicon vs Emulation Analysis](docs/29_PHYSICAL_ARM64_SILICON_REBOOT_ANALYSIS.md)** — First-principles evaluation of QEMU TCG vs bare-metal ARM64 hardware timing.
+5. 📂 **[Master Documentation Index](docs/MASTER_INDEX.md)** — Index of all technical reports, analyses, and daily logs.
 
-## Important Links
+> 🔗 **Looking for the working x86_64 root exploit?**  
+> See the companion **[Tier 1 Repository (`bad-epoll-lab`)](https://github.com/Aayushbankar/bad-epoll-lab)** for the full x86_64 exploit chain (`pipe_buffer` cross-cache, AAR, KASLR bypass, JOP/ROP, UID 0).
 
-- **[Runner Guide](tier2/docs/RUNNER_GUIDE.md)**
-- **[Tier 2 Complete Report](tier2/docs/TIER2_COMPLETE_REPORT.md)**
-- **[Original `bad-epoll-lab` Repo (Tier 1)](https://github.com/Aayushbankar/bad-epoll-lab)**
+---
 
-<details><summary>📜 Original README (pre-migration, preserved for reference)</summary>
+## 🎯 Verdict & Key Findings
 
-# CVE-2026-46242: Bad Epoll
+| Dimension | Tier 1 (x86_64 Linux) | Tier 2 (ARM64 Android GKI) |
+|---|---|---|
+| **Vulnerability Status** | Verified & Reproducible (~99% hit rate) | Verified with GDB Assist (0/102,740 Natural Hits) |
+| **Exploitation Primitive** | Arbitrary Address Read + RIP Control | Fixed 8-byte NULL write @ offset 160 |
+| **Outcome** | **Privilege Escalation (UID: 0)** | **Denial of Service Only (Kernel Panic)** |
+| **Mitigations Overcome** | SMEP, SMAP, KPTI, KASLR | None (PAC, BTI, kCFI, MTE standing) |
+| **Repository Status** | [bad-epoll-lab (Tier 1)](https://github.com/Aayushbankar/bad-epoll-lab) | Canonical Tier 2 Research Base |
 
-Welcome to the internal engineering repository for the "Bad Epoll" vulnerability (CVE-2026-46242). This repository houses the complete documentation, research, and functional exploits targeting this specific Linux kernel Use-After-Free condition.
+### Key Technical Conclusions:
+1. **The UAF is Real**: Thread A (`__ep_remove`) and Thread B (`eventpoll_release`) race to free `struct eventpoll` (176 bytes) into `kmalloc-192` (`VER-026`).
+2. **Reclaim is Deterministic**: `msg_msg` allocations (144-byte user data) reliably reclaim the freed slot (`VER-027`).
+3. **The Primitive is Capped**: The sole UAF write is `hlist_del_rcu(&epi->fllink)`, writing an 8-byte NULL at offset 160 (`VER-032`). On GKI 6.1, offset 160 lands inside `msg_msg` payload or corrupts kernel pointers into immediate panics.
+4. **All 4 Exploitation Chains Collapsed**: 21 distinct dead ends documented across controlled crash, dual-watch KASLR leak, arbitrary decrement, and LPE paths (`DEAD_ENDS_REGISTER.md`).
+5. **Scheduler Isolation**: In `PREEMPT_VOLUNTARY`, `__ep_remove` has zero preemption points, bounding the natural race window to ~250–550 cycles (~125–275 ns).
 
-## Project Overview
-This project successfully ports the official kernelCTF exploit to a localized Fedora GCC-compiled `linux-6.12.67` environment. It provides a robust Jump-Oriented Programming (JOP) and Return-Oriented Programming (ROP) payload capable of fully bypassing KASLR and KPTI to achieve unprivileged root execution. 
+---
 
-## Repository Layout
-This repository has been strictly engineered to provide a self-contained, reproducible artifact for long-term archival and further Tier 2 (Android) development. 
+## 🔬 Evidence-First Methodology
 
-- **`docs/`**: The master repository for all technical reports, timelines, architectural diagrams, and engineering checklists. 
-- **`exploit/`**: The tiered structure housing the localized exploit environments (Tier 1 through Tier 3).
-- **`artifacts/`**: The frozen archival collection containing every generated database, binary, memory dump, and system trace collected during development.
-- **`scripts/`**: Setup, utility, and build automation scripts.
-- **`research/`**: Validated debugging tools, tracers, and memory extraction utilities.
-- **`third_party/`**: External dependencies, including the raw `linux-6.12.67` kernel source tree and the upstream `security-research` generators.
-- **`archive/`**: Deprecated scripts and redundant file copies retained strictly for historical preservation.
+This repository follows a strict verification protocol to prevent confirmation bias:
 
-## Tier Overview
-- **`exploit/tier1/`**: The primary localized Linux VM environment. Verified, stable, and completely self-contained. 
-- **`exploit/tier1.5/`**: The kernelCTF recreation environment for upstream synchronization.
-- **`exploit/tier2/`**: Prepared environment for Android ARM64 kernel porting.
-- **`exploit/tier3/`**: Prepared environment for advanced SELinux enforcement analysis.
+- **[Verification Ledger](tier2/docs/VERIFICATION_LEDGER.md)**: 42 machine-parseable claims mapped directly to hardware watchpoint traces and disassembly audits.
+- **[Dead Ends Register](tier2/docs/DEAD_ENDS_REGISTER.md)**: 21 closed paths with explicit killing evidence and experiment citations.
+- **[Assumptions Register](tier2/docs/ASSUMPTIONS_REGISTER.md)**: 42 hypotheses tracked across lifecycle states (`UNTESTED` → `VALIDATED` / `FALSIFIED`).
+- **[Experiment Index](tier2/docs/EXPERIMENT_INDEX.md)**: Complete registry of all 19 experimental runs (`EXP-006` through `EXP-024`, `NAT-001`–`NAT-005`, `AND-001`–`AND-003`).
 
-## Quick Start & Reproduction
-To fully reproduce the Tier 1 environment from a fresh installation, consult the comprehensive [Reproduction Guide](docs/checkpoints/tier1_complete/AUDIT_REPRODUCTION.md). It details dependency installation, `target_db` regeneration, and VM execution.
+---
 
-## Evidence & Verification
-The success of this port is backed by concrete runtime evidence (memory dumps, live GDB instruction traces, QEMU console outputs). A complete index is available in the [Runtime Evidence Index](docs/checkpoints/tier1_complete/AUDIT_EVIDENCE.md).
+## 📁 Repository Structure
 
-## Documentation Index
-For a complete listing of all internal engineering reports, historical timelines, and vulnerability analyses, please see the [Master Index](docs/MASTER_INDEX.md).
+```text
+.
+├── README.md                 # Project front door, findings summary, navigation
+├── article/                  # Publication deliverables
+│   ├── MEDIUM_DEEP_DIVE_FINAL.md    # Ready-to-publish Medium technical article
+│   ├── LINKEDIN_POST_FINAL.md       # Accompanying LinkedIn post
+│   ├── DISTRIBUTION_PLAN.md         # Ranked cross-posting & researcher engagement strategy
+│   └── archive/                     # Historical article drafts
+├── docs/                     # Core documentation & milestone reports
+│   ├── MASTER_INDEX.md              # Master technical index
+│   ├── MENTOR_PROGRESS_WRITEUP_2026-08-29.md  # Formal mentor review writeup
+│   ├── 29_PHYSICAL_ARM64_SILICON_REBOOT_ANALYSIS.md
+│   └── daily/                       # Research daily logs
+├── tier2/
+│   ├── docs/                 # Authoritative Tier 2 research documents
+│   │   ├── TIER2_COMPLETE_REPORT.md # Master exploitability assessment
+│   │   ├── VERIFICATION_LEDGER.md   # SSOT claim verification matrix
+│   │   ├── DEAD_ENDS_REGISTER.md    # Comprehensive dead ends register
+│   │   ├── ASSUMPTIONS_REGISTER.md  # Hypotheses & lifecycle tracking
+│   │   └── EXPERIMENT_INDEX.md      # Experiment execution index
+│   ├── evidence/             # Curated, referenced execution & GDB trace logs
+│   ├── scripts/              # Reproducers, GDB harnesses, and test automation
+│   └── archive/              # Superseded exploratory logs and legacy scripts
+│       └── debug_logs/       # Intermediate execution runs & test logs
+└── third_party/              # Upstream dependencies & toolchain assets
+```
 
-## Future Work
-The repository is frozen at the successful Tier 1 boundary. The next phase transitions into `exploit/tier2/` to evaluate the feasibility of porting the `epoll` Use-After-Free timing constraints to the Android Generic Kernel Image (GKI) utilizing ARM64 EL1 -> EL0 transition paradigms.
+---
 
-</details>
+## 🛠️ Reproduction & Quick Start
+
+To reproduce the Tier 2 GDB-assisted verification harness:
+
+1. **Launch Android GKI ARM64 Kernel in QEMU:**
+   ```bash
+   DEBUG=1 ./tier2/scripts/run_qemu.sh
+   ```
+2. **Attach GDB and Run the Deterministic Race Verification:**
+   ```bash
+   gdb-multiarch -batch -q -x tier2/scripts/exp_and003_gdb.py tier2/android/artifacts/vmlinux
+   ```
+3. Consult the **[Manual Demonstration Runbook](tier2/docs/TIER2_MANUAL_RUNBOOK.md)** for detailed step-by-step reproduction instructions.
+
+---
+
+## 🛡️ Responsible Disclosure & CVE Information
+
+- **CVE ID**: CVE-2026-46242 ("Bad Epoll")
+- **Component**: Linux Kernel eventpoll subsystem (`fs/eventpoll.c`)
+- **Introduced**: Linux v6.4-rc1 (commit `58c9b016e128`)
+- **Patched**: Linux v6.11 (commit `a6dc643c693`)
+- **Upstream Credit**: Google Security Research / kernelCTF
+
+*This repository contains independent defensive and offensive security research analyzing mitigation efficacy on Android ARM64 Generic Kernel Images. No unpatched vulnerabilities or 0-day primitives are disclosed.*
+
+---
+
+## 👤 Author & Research Context
+
+- **Author**: Aayush Bankar
+- **Mentorship**: Rathod Ruturaj Prafulsin (CypherMatrix)
+- **Academic Affiliation**: Gujarat Technological University (GTU)
+- **Tooling**: Research augmented with agentic AI tooling (Antigravity) for code navigation, hypothesis generation, and evidence organization, with all execution traces and engineering decisions verified manually.

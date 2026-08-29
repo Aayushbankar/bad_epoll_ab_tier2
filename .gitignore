@@ -57,7 +57,17 @@ exploit/**/bzImage
 exploit/**/exploit
 exploit/**/bin/exploit
 
-# Temporary files and test outputs
+# Temporary files, disks, rootfs and test outputs
+*.img
+*.log.tmp
+tmp_rootfs/
+tier2/tmp_rootfs/
+qemu_test*.log
+tier2/qemu_test*.log
+tier2/qemu_kaslr_crash.log
+tier2/test_serial_pipe.log
+tier2/test_syscall
+tier2/test_write
 qemu_output*.txt
 qemu_stack_test.txt
 test_output.txt

@@ -1,0 +1,66 @@
+import gdb
+import os
+import time
+
+gdb.execute("set pagination off")
+gdb.execute("set confirm off")
+
+# Evidence file path is passed via GDB parameter 'AND002_LOG'
+# Default fallback
+evidence_file = os.environ.get("AND002_LOG", "evidence/AND-002_raw_serial.log")
+
+gdb.execute(f"set logging file {evidence_file}")
+gdb.execute("set logging overwrite on")
+gdb.execute("set logging enabled on")
+
+def log(msg):
+    print(f"[*] {msg}", flush=True)
+
+def connect():
+    for i in range(15):
+        try:
+            gdb.execute("target remote :1234")
+            log("Connected to QEMU via GDB :1234")
+            return True
+        except gdb.error:
+            time.sleep(1)
+    return False
+
+if not connect():
+    log("Failed to connect to QEMU")
+    gdb.execute("quit")
+
+class WriteTrace(gdb.Breakpoint):
+    def __init__(self):
+        super(WriteTrace, self).__init__("ksys_write", internal=False)
+
+    def stop(self):
+        fd = int(gdb.parse_and_eval("$x0"))
+        if fd == 1 or fd == 2:
+            buf = int(gdb.parse_and_eval("$x1"))
+            count = int(gdb.parse_and_eval("$x2"))
+            try:
+                data = gdb.selected_inferior().read_memory(buf, count).tobytes()
+                text = data.decode("utf-8", errors="ignore")
+                if "NAT-005" in text or "AND-002" in text:
+                    log(f"HARNESS MSG: {text.strip()}")
+            except Exception as e:
+                pass
+        return False
+
+class RebootTrace(gdb.Breakpoint):
+    def __init__(self):
+        super(RebootTrace, self).__init__("__arm64_sys_reboot", internal=False)
+
+    def stop(self):
+        log("RUNTIME TRACE: __arm64_sys_reboot hit! Harness completed successfully.")
+        gdb.execute("detach")
+        gdb.execute("quit")
+        return False
+
+WriteTrace()
+RebootTrace()
+
+log(f"AND-002 GDB tracer active. Logging to: {evidence_file}")
+log("Breakpoints set on ksys_write and __arm64_sys_reboot. Continuing execution...")
+gdb.execute("continue")

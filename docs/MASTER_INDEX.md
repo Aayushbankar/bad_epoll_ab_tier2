@@ -52,3 +52,6 @@ This index serves as the centralized table of contents for all engineering repor
 - [CMDS_RUN.txt](archive/CMDS_RUN.txt): Deprecated command logs.
 - [PROJECT_TIMELINE_AND_AUDIT.md](archive/PROJECT_TIMELINE_AND_AUDIT.md): Replaced by `AUDIT_TIMELINE.md`.
 - [ENVIRONMENT_CONSTANTS.md.bak](archive/ENVIRONMENT_CONSTANTS.md.bak): Deprecated environmental variables.
+
+## Latest Analysis
+- [Physical ARM64 Silicon vs Emulation Analysis](29_PHYSICAL_ARM64_SILICON_REBOOT_ANALYSIS.md)

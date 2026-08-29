@@ -1,0 +1,10 @@
+[*] Connected to QEMU via GDB :1234
+[*] Continuing execution for 40 seconds...
+[*] Time elapsed. Sending SIGINT to GDB...
+[*] Interrupted: Disconnected from target.
+[*] Scanning memory for signature...
+[*] Search results: warning: Unable to access 16009 bytes of target memory at 0x40000000, halting search.
+Pattern not found.
+
+Python Exception <class 'gdb.error'>: The program is not being run.
+Error occurred in Python: The program is not being run.

@@ -23,6 +23,8 @@ if [ ! -f "$RAMDISK" ]; then
     exit 1
 fi
 
+SERIAL=${SERIAL:-file:qemu_serial.log}
+
 QEMU_ARGS=(
     -M virt
     -cpu cortex-a57
@@ -32,7 +34,7 @@ QEMU_ARGS=(
     -initrd "$RAMDISK"
     -append "$CMDLINE"
     -display none
-    -serial file:qemu_serial.log
+    -serial "$SERIAL"
     -no-reboot
 )
 

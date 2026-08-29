@@ -1,0 +1,3 @@
+Script started on 2026-08-08 17:52:46+05:30 [COMMAND="qemu-system-aarch64 -M virt -cpu cortex-a57 -smp 1 -m 512M -kernel android/artifacts/Image -initrd initramfs.cpio -append "console=ttyAMA0 root=/dev/ram0 nokaslr rw" -nographic -no-reboot" TERM="dumb" TTY="/dev/pts/2" COLUMNS="80" LINES="24"]
+
+Script done on 2026-08-08 17:52:49+05:30 [COMMAND_EXIT_CODE="0"]

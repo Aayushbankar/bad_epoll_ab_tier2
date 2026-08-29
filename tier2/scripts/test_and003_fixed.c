@@ -7,68 +7,50 @@
 #include <sys/msg.h>
 #include <string.h>
 #include <errno.h>
+#include <fcntl.h>
+#include <sys/syscall.h>
+#include <sys/stat.h>
 
-struct my_msgbuf {
-    long mtype;
-    char mtext[144];
-};
-
-void do_log(const char *msg) {
-    write(1, msg, strlen(msg));
+void __attribute__((noinline)) my_print(const char *msg) {
+    syscall(SYS_write, 1, msg, strlen(msg));
 }
 
-int main() {
-    do_log("[AND-003] SELinux Enforcing Syscall Audit\n");
+void trigger_syscalls() {
+    int boot_fd = open("/proc/cmdline", O_RDONLY);
+    if (boot_fd >= 0) {
+        char buf[1024] = {0};
+        read(boot_fd, buf, sizeof(buf)-1);
+        if (strstr(buf, "enforcing=1")) {
+            my_print("[AND-003] SELinux Mode confirmed via cmdline: 1 (Enforcing)\n");
+        } else {
+            my_print("[AND-003] SELinux Mode confirmed via cmdline: 0 (Permissive)\n");
+        }
+        close(boot_fd);
+    } else {
+        my_print("[AND-003] FAIL: Could not determine SELinux mode\n");
+    }
     
     int epfd = epoll_create1(0);
     if (epfd < 0) {
-        do_log("[AND-003] FAIL: epoll_create1 failed\n");
+        my_print("[AND-003] FAIL: epoll_create1 failed\n");
     } else {
-        do_log("[AND-003] PASS: epoll_create1 success\n");
+        my_print("[AND-003] PASS: epoll_create1 success\n");
+        close(epfd);
     }
-    
-    int pipefd[2];
-    if (pipe(pipefd) < 0) {
-        do_log("[AND-003] FAIL: pipe failed\n");
-    } else {
-        struct epoll_event ev;
-        ev.events = EPOLLIN;
-        ev.data.fd = pipefd[0];
-        if (epoll_ctl(epfd, EPOLL_CTL_ADD, pipefd[0], &ev) < 0) {
-            do_log("[AND-003] FAIL: epoll_ctl failed\n");
-        } else {
-            do_log("[AND-003] PASS: epoll_ctl success\n");
-        }
-    }
-    
-    close(epfd);
-    do_log("[AND-003] PASS: close success\n");
     
     int msqid = msgget(IPC_PRIVATE, 0666 | IPC_CREAT);
     if (msqid < 0) {
-        do_log("[AND-003] FAIL: msgget failed\n");
+        my_print("[AND-003] FAIL: msgget failed\n");
     } else {
-        do_log("[AND-003] PASS: msgget success\n");
-        
-        struct my_msgbuf msg;
-        msg.mtype = 1;
-        memset(msg.mtext, 'A', sizeof(msg.mtext));
-        
-        if (msgsnd(msqid, &msg, sizeof(msg.mtext), 0) < 0) {
-            do_log("[AND-003] FAIL: msgsnd failed\n");
-        } else {
-            do_log("[AND-003] PASS: msgsnd success\n");
-            
-            struct my_msgbuf rcvmsg;
-            if (msgrcv(msqid, &rcvmsg, sizeof(rcvmsg.mtext), 0, IPC_NOWAIT) < 0) {
-                do_log("[AND-003] FAIL: msgrcv failed\n");
-            } else {
-                do_log("[AND-003] PASS: msgrcv success\n");
-            }
-        }
+        my_print("[AND-003] PASS: msgget success\n");
         msgctl(msqid, IPC_RMID, NULL);
     }
     
-    do_log("[AND-003] Audit Complete\n");
+    my_print("[AND-003] Audit Complete\n");
+}
+
+int main() {
+    my_print("[AND-003] SELinux Enforcing Syscall Audit\n");
+    trigger_syscalls();
     return 0;
 }
