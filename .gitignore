@@ -104,3 +104,9 @@ tier2/android/
 # Internal mentor/sprint logs and archive — never public (moved to private repo)
 docs/mentor/
 docs/archive/
+
+# LaTeX build artifacts (keep PDFs, ignore aux)
+article/*.aux
+article/*.log
+article/*.out
+article/*.toc

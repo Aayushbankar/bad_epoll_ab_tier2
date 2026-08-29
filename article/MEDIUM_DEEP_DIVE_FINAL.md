@@ -6,6 +6,8 @@
 
 **Original Vulnerability Credit:** Discovered and exploited by **Jaeyoung Chung** ([github.com/J-jaeyoung/bad-epoll](https://github.com/J-jaeyoung/bad-epoll)) via Google's kernelCTF program.
 
+> **📄 Complete Technical Writeup (26 pages, PDF) — available now:** This Medium post is a distilled narrative. For the full dossier — executive summary, environment & reproducibility (Tier-1 offsets/gadgets, Tier-2 GKI build), expanded Tier-1 chain, 21 dead ends with killing VER/EXP, experiment index, and verification ledger excerpt — download the technical writeup: **[CVE-2026-46242_Technical_Writeup.pdf](https://github.com/Aayushbankar/bad-epoll-lab/blob/publish/clean-and-writeup-2026-08-29/article/CVE-2026-46242_Technical_Writeup.pdf)** (also in § Links; ping for direct download).
+
 ---
 
 > ### 📌 Research Scope & Attribution
@@ -481,6 +483,16 @@ The Bad Epoll research concludes with a **DoS-only verdict for the deliberately 
 
 ---
 
+## Links & Repositories
+
+- **This Medium article:** `<<MEDIUM_URL_PENDING>>` (distilled narrative; technical depth preserved)
+- **📄 Complete Technical Writeup (PDF, 26 pages):** **[CVE-2026-46242_Technical_Writeup.pdf](https://github.com/Aayushbankar/bad-epoll-lab/blob/publish/clean-and-writeup-2026-08-29/article/CVE-2026-46242_Technical_Writeup.pdf)** — full dossier with executive summary, environment & reproducibility (Tier-1 offsets/gadgets at `03_offsets_layout.md`, Tier-2 build at `7e35917775b8` + `a1f93804449d`), expanded Tier-1 chain, 21 dead ends, schedulability analysis, mitigations, and Appendices A–F (verification ledger, experiment index, glossary). Ping for direct download.
+- **Tier-1 repo:** [github.com/Aayushbankar/bad-epoll-lab](https://github.com/Aayushbankar/bad-epoll-lab) @ `publish/clean-and-writeup-2026-08-29`
+- **Tier-2 repo:** [github.com/Aayushbankar/bad_epoll_ab_tier2](https://github.com/Aayushbankar/bad_epoll_ab_tier2) @ `main`
+- **Evidence ledgers:** `tier2/docs/VERIFICATION_LEDGER.md` (42 entries), `DEAD_ENDS_REGISTER.md` (21), `ASSUMPTIONS_REGISTER.md` (42), `EXPERIMENT_INDEX.md`
+
+---
+
 ## Disclosure & Attribution Note
  
 - **Original Vulnerability & Exploit**: CVE-2026-46242 was discovered and exploited by security researcher **Jaeyoung Chung**, submitted to Google's kernelCTF program with a public proof-of-concept at [github.com/J-jaeyoung/bad-epoll](https://github.com/J-jaeyoung/bad-epoll).
@@ -491,7 +503,7 @@ The Bad Epoll research concludes with a **DoS-only verdict for the deliberately 
 
 ## About the Author
 
-**Aayush Bankar** is a Cybersecurity Analyst at CypherMatrix. The research workflow integrates AI-assisted agentic coding tools (Antigravity / local LLM orchestration) for code comprehension, hypothesis generation, and evidence organization — with all engineering decisions and runtime evidence verified manually. The AI-augmented workflow is documented transparently in the Tier 1 Final Writeup.
+**Aayush Bankar** is a Cybersecurity Analyst at CypherMatrix. The research workflow integrates AI-assisted agentic coding tools (local LLM orchestration) for code comprehension, hypothesis generation, and evidence organization — with all engineering decisions and runtime evidence verified manually. The AI-augmented workflow is documented transparently in the Tier 1 Final Writeup.
 
 **Connect:** [GitHub](https://github.com/Aayushbankar) · [LinkedIn](https://linkedin.com/in/aayushbankar)
 

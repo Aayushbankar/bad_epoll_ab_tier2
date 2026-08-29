@@ -12,6 +12,8 @@ The writeup breaks down slab-cache mechanics, `msg_msg` heap sprays, why `hlist_
 
 **One open question:** is there a `kmalloc-192` struct on (vulnerable) GKI 6.1 where zeroing 8 bytes at offset 160 yields more than a kernel panic? EXP-016 says no — if you've done slab cross-referencing on recent GKI builds, I'd value your perspective.
 
-Full technical writeup with evidence ledgers, repo links, and architecture diagrams: <<MEDIUM_URL_PENDING>>
+Medium article (distilled, technical): <<MEDIUM_URL_PENDING>>
+
+📄 Complete 26-page technical writeup (PDF) — executive summary, Tier-1 offsets/gadgets, 21 dead ends with killing evidence, experiment index, and verification ledger excerpt — available on GitHub (see Medium § Links): https://github.com/Aayushbankar/bad-epoll-lab/blob/publish/clean-and-writeup-2026-08-29/article/CVE-2026-46242_Technical_Writeup.pdf — ping for direct download.
 
 #LinuxKernel #ExploitDev #AndroidSecurity #CVE #InfoSec #KernelExploitation #VulnerabilityResearch #ARM64 #OffensiveSecurity
