@@ -103,31 +103,28 @@ This writes an **8-byte NULL** to offset `0xa0` (160) of the **already-freed** `
 
 ### Diagram 1: Attack Surface — Userspace to Kernel UAF
 
-```mermaid
-flowchart TD
-    subgraph US["Userspace"]
-        P["Process"]
-    end
-    subgraph KS["Kernel: fs/eventpoll.c"]
-        direction TB
-        TA["Thread A: close(outer)"] --> EP["__ep_remove()"]
-        EP --> WO["WRITE_ONCE(f_ep, NULL)"]
-        WO -->|"Thread A preempted\nor delayed"| HD["hlist_del_rcu(&epi->fllink)"]
-
-        TB_["Thread B: close(inner)"] --> FP["__fput() → eventpoll_release()"]
-        FP --> CK{"f_ep == NULL?"}
-        CK -->|"YES (lockless)"| FR["kfree(inner_epoll)\n→ kmalloc-192"]
-        CK -->|"NO"| SAFE["Normal cleanup"]
-
-        HD -->|"Writes to\nFREED memory"| UAF["🔴 UAF: NULL write\n@ freed + 0xa0"]
-    end
-    P --> TA
-    P --> TB_
-    FR -.->|"Memory freed\nbefore write"| UAF
-
-    style UAF fill:#ff4444,color:#fff
-    style FR fill:#ff8800,color:#fff
 ```
+[ USERSPACE: Process with nested epoll FDs ]
+      │                                │
+      ▼                                ▼
+[ Thread A: close(outer) ]     [ Thread B: close(inner) ]
+      │                                │
+      ▼                                ▼
+__ep_remove()                  eventpoll_release()
+      │                                │
+WRITE_ONCE(f_ep, NULL)         Reads f_ep == NULL (lockless)
+      │                                │
+      │ [ Thread A delayed ]           ▼
+      │                        kfree(inner_eventpoll)
+      │                        --> Freed to kmalloc-192 freelist
+      │                                │
+      ▼                                │
+hlist_del_rcu(&epi->fllink)            │
+      │                                │
+      └──────> [ 🔴 UAF: 8-byte NULL write @ offset 160 ] <──────┘
+               (Writes to already-freed struct eventpoll)
+```
+
 
 ---
 
@@ -157,37 +154,19 @@ When the race succeeds and the memory is freed back to `kmalloc-192`, an attacke
 
 ### Diagram 2: Race Timeline — Alloc → Free → Reclaim → UAF
 
-```mermaid
-sequenceDiagram
-    participant U as Userspace
-    participant A as Thread A (close outer)
-    participant B as Thread B (close inner)
-    participant K as kmalloc-192 Slab
-
-    U->>K: epoll_create1() → alloc struct eventpoll
-    Note over K: slot LIVE @ 0xffff...c9c0
-
-    U->>A: close(outer_epoll)
-    A->>A: __ep_remove(): WRITE_ONCE(f_ep, NULL)
-    Note over A: Thread A delayed / preempted
-
-    U->>B: close(inner_epoll)
-    B->>B: eventpoll_release(): f_ep == NULL → skip cleanup
-    B->>K: ep_free() → kfree(inner_epoll)
-    Note over K: slot FREED → kmalloc-192 freelist
-
-    U->>K: msgsnd() × N → msg_msg spray (144B payload)
-    Note over K: slot RECLAIMED by msg_msg
-
-    A->>K: hlist_del_rcu(&epi->fllink)
-    Note over K: 🔴 8-byte NULL write @ offset 160<br/>Hits msg_msg payload (attacker data)<br/>or kernel pointer (crash)
-
-    alt Offset 160 = payload data
-        K-->>U: Benign (zeroes attacker's own bytes)
-    else Offset 160 = kernel pointer
-        K-->>U: 💥 Kernel NULL dereference → panic (DoS)
-    end
 ```
+TIME  THREAD A (close outer)            THREAD B (close inner)        kmalloc-192 SLAB
+───────────────────────────────────────────────────────────────────────────────────────
+t0    epoll_ctl(EPOLL_CTL_DEL)          --                            [LIVE eventpoll]
+t1    __ep_remove(): f_ep = NULL        --                            [LIVE eventpoll]
+t2    [Thread A preempted]              eventpoll_release()           [LIVE eventpoll]
+t3    --                                kfree(inner_eventpoll)  ───>  [SLOT FREED]
+t4    --                                msgsnd() spray (144B)   ───>  [RECLAIMED by msg_msg]
+t5    hlist_del_rcu(&epi->fllink) ─────────────────────────────────>  [🔴 NULL write @ 0xa0]
+───────────────────────────────────────────────────────────────────────────────────────
+OUTCOME: 8-byte NULL zeroes attacker payload data (or crashes kernel if pointing to ptr)
+```
+
 
 ---
 
@@ -199,18 +178,32 @@ The original kernelCTF exploit authored by Jaeyoung Chung uses a different appro
 
 ### Diagram 3: Tier 1 Exploitation Chain
 
-```mermaid
-flowchart LR
-    A["🎯 Race Trigger\nclose-vs-close\n~99% reliable"] --> B["♻️ Cross-Cache\npipe_buffer → file\nreclaim freed struct"]
-    B --> C["📖 AAR\n/proc/self/fdinfo\nseq_file leak"]
-    C --> D["🔓 KASLR Bypass\nkernel_base from\nleaked pointers"]
-    D --> E["🎮 RIP Control\nf_op→poll hijack\nindirect call"]
-    E --> F["⛓️ JOP/ROP Chain\n4 stack pivots →\ncommit_creds"]
-    F --> G["👑 UID 0\nGID 0, EUID 0\nRoot achieved"]
-
-    style A fill:#4CAF50,color:#fff
-    style G fill:#FF9800,color:#fff
 ```
+┌───────────────────────────┐
+│ 01. RACE TRIGGER (~99%)   │  close(outer) vs close(inner) UAF
+└─────────────┬─────────────┘
+              ▼
+┌───────────────────────────┐
+│ 02. HEAP RECLAMATION      │  msg_msg spray reclaims kmalloc-192
+└─────────────┬─────────────┘
+              ▼
+┌───────────────────────────┐
+│ 03. ARBITRARY READ (AAR)  │  /proc/self/fdinfo seq_file leak
+└─────────────┬─────────────┘
+              ▼
+┌───────────────────────────┐
+│ 04. KASLR BYPASS          │  Compute kernel base from leaked pointers
+└─────────────┬─────────────┘
+              ▼
+┌───────────────────────────┐
+│ 05. RIP CONTROL & ROP     │  f_op->poll hijack -> 4 stack pivots
+└─────────────┬─────────────┘
+              ▼
+┌───────────────────────────┐
+│ 06. ROOT PRIVILEGE        │  commit_creds(&init_cred) -> UID 0
+└───────────────────────────┘
+```
+
 
 **Stage 1 — Race trigger:** Two threads race `close()` on nested epoll FDs. False-sharing and timer interrupts widen the window. Success rate: ~99% after tuning timing constants for QEMU latency.
 
@@ -278,48 +271,32 @@ Verified via GDB memory dump: marker `0xdead000000000000` placed at user byte 88
 
 ## The 21 Dead Ends: Why Every Exploitation Chain Failed
 
-This is the core of the Tier 2 research. Four exploitation chains were hypothesized, investigated, and disproven — each with specific killing evidence.
-
 ### Diagram 4: Exploitation Decision Tree
 
-```mermaid
-flowchart TD
-    ROOT["CVE-2026-46242\nUAF Primitive:\n8-byte NULL write\n@ offset 160"] --> Q1{"Which object\nis the victim?"}
-
-    Q1 -->|"struct epitem\n(eventpoll_epi cache)"| OBJ1["DE-007: Same-cache reclaim\nlist_del_init BEFORE free\n→ INIT_LIST_HEAD overwrites\n🔴 DEAD (VER-016)"]
-    Q1 -->|"struct file\n(filp cache)"| OBJ2["DE-005/006: Type confusion\nep→mtx barrier blocks access\nSLAB_TYPESAFE_BY_RCU isolation\n🔴 DEAD (VER-018/025)"]
-    Q1 -->|"struct eventpoll\n(kmalloc-192)"| OBJ3["✅ Correct victim\n176B → kmalloc-192\nmsg_msg reclaim works"]
-
-    OBJ3 --> Q2{"What can\nNULL@160 do?"}
-
-    Q2 --> C0["Chain 0: Controlled crash\npercpu_counter_dec on\nfreed ep→user"]
-    C0 --> C0D["🔴 DEAD: percpu_counter_dec\nuses OUTER epoll's user,\nnot freed INNER\n(VER-028, EXP-019)"]
-
-    Q2 --> C1["Chain 1: KASLR leak\nDual-watch topology →\nkernel pointer at offset 160\n→ msgrcv readback"]
-    C1 --> C1D["🔴 DEAD: Single-epitem UAF\nand multi-epitem pointer write\nare MUTUALLY EXCLUSIVE\n(VER-033, EXP-024)"]
-
-    Q2 --> C2["Chain 2: Arbitrary decrement\nFake user_struct at\nep→user offset 136\n→ redirect decrement"]
-    C2 --> C2D["🔴 DEAD: ep param is\nalways OUTER epoll;\nfbc = root_user+8\n(VER-031, EXP-023b)"]
-
-    Q2 --> C3["Chain 3: Full LPE\ncreds / modprobe_path\ncorruption"]
-    C3 --> C3D["🔴 DEAD: Depends on\nChains 1+2, both dead"]
-
-    Q2 --> OTHER["Other primitives:\nrb_erase_cached @104\nspin_lock @96"]
-    OTHER --> OTHERD["🔴 DEAD: All operate\non OUTER epoll (valid)\nnot freed INNER\n(VER-032)"]
-
-    Q2 --> DOS["DoS: NULL@160 hits\nkernel pointer in\nvictim struct"]
-    DOS --> DOSD["Kernel NULL deref\n→ panic\n⚠️ DoS ONLY"]
-
-    style OBJ1 fill:#cc0000,color:#fff
-    style OBJ2 fill:#cc0000,color:#fff
-    style C0D fill:#cc0000,color:#fff
-    style C1D fill:#cc0000,color:#fff
-    style C2D fill:#cc0000,color:#fff
-    style C3D fill:#cc0000,color:#fff
-    style OTHERD fill:#cc0000,color:#fff
-    style DOSD fill:#ff8800,color:#fff
-    style OBJ3 fill:#2e7d32,color:#fff
 ```
+CVE-2026-46242: UAF Primitive (8-byte NULL write @ offset 160)
+ │
+ ├── TARGET 1: struct epitem (eventpoll_epi cache)
+ │    └── [DE-007] list_del_init before free -> 🔴 DEAD (VER-016)
+ │
+ ├── TARGET 2: struct file (filp cache)
+ │    └── [DE-005/006] ep->mtx barrier + SLAB_TYPESAFE_BY_RCU -> 🔴 DEAD (VER-018)
+ │
+ └── TARGET 3: struct eventpoll (kmalloc-192 generic cache)
+      │
+      ├── [Chain 0: Controlled Crash]
+      │    └── percpu_counter_dec on freed ep->user -> 🔴 DEAD: targets outer valid user
+      │
+      ├── [Chain 1: Dual-Watch KASLR Leak]
+      │    └── Multi-watch layout -> 🔴 DEAD: structurally mutually exclusive
+      │
+      ├── [Chain 2: Arbitrary Decrement -> LPE]
+      │    └── msg_msg reclaim -> 🔴 DEAD: locked onto root_user, fixed NULL at 160
+      │
+      └── [Chain 3: Struct Field Zeroing @ 160]
+           └── fib6_info / snd_timer_user / packet_fanout -> 🔴 DEAD: all crash (EXP-016)
+```
+
 
 ### Chain 0 — Controlled Crash via `percpu_counter_dec`
 
