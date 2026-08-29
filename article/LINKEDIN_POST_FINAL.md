@@ -33,7 +33,7 @@ It turns out modern Android kernel defenses are remarkably resilient against thi
 Instead of sweeping the failures under the rug, I spent the last few weeks writing down all 26 pages of the autopsy—every dead end, memory offset, and verification log.
 
 📖 Medium Deep Dive: <<MEDIUM_URL_PENDING>>
-📄 Full 26-Page Technical Writeup (PDF): https://github.com/Aayushbankar/bad-epoll-lab/blob/publish/clean-and-writeup-2026-08-29/article/CVE-2026-46242_Technical_Writeup.pdf
+📄 Full 26-Page Technical Writeup (PDF): https://github.com/Aayushbankar/bad_epoll_ab_tier2/blob/publish/clean-and-writeup-2026-08-29/article/CVE-2026-46242_Technical_Writeup.pdf
 
 🔍 Two open questions for kernel exploit devs & security researchers:
 
