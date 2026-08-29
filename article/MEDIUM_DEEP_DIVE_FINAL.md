@@ -103,27 +103,8 @@ This writes an **8-byte NULL** to offset `0xa0` (160) of the **already-freed** `
 
 ### Diagram 1: Attack Surface — Userspace to Kernel UAF
 
-```
-[ USERSPACE: Process with nested epoll FDs ]
-      │                                │
-      ▼                                ▼
-[ Thread A: close(outer) ]     [ Thread B: close(inner) ]
-      │                                │
-      ▼                                ▼
-__ep_remove()                  eventpoll_release()
-      │                                │
-WRITE_ONCE(f_ep, NULL)         Reads f_ep == NULL (lockless)
-      │                                │
-      │ [ Thread A delayed ]           ▼
-      │                        kfree(inner_eventpoll)
-      │                        --> Freed to kmalloc-192 freelist
-      │                                │
-      ▼                                │
-hlist_del_rcu(&epi->fllink)            │
-      │                                │
-      └──────> [ 🔴 UAF: 8-byte NULL write @ offset 160 ] <──────┘
-               (Writes to already-freed struct eventpoll)
-```
+![Diagram 1: Attack Surface — Userspace to Kernel UAF](https://raw.githubusercontent.com/Aayushbankar/bad_epoll_ab_tier2/publish/clean-and-writeup-2026-08-29/article/assets/diagram-01.png)
+
 
 
 ---
@@ -154,18 +135,8 @@ When the race succeeds and the memory is freed back to `kmalloc-192`, an attacke
 
 ### Diagram 2: Race Timeline — Alloc → Free → Reclaim → UAF
 
-```
-TIME  THREAD A (close outer)            THREAD B (close inner)        kmalloc-192 SLAB
-───────────────────────────────────────────────────────────────────────────────────────
-t0    epoll_ctl(EPOLL_CTL_DEL)          --                            [LIVE eventpoll]
-t1    __ep_remove(): f_ep = NULL        --                            [LIVE eventpoll]
-t2    [Thread A preempted]              eventpoll_release()           [LIVE eventpoll]
-t3    --                                kfree(inner_eventpoll)  ───>  [SLOT FREED]
-t4    --                                msgsnd() spray (144B)   ───>  [RECLAIMED by msg_msg]
-t5    hlist_del_rcu(&epi->fllink) ─────────────────────────────────>  [🔴 NULL write @ 0xa0]
-───────────────────────────────────────────────────────────────────────────────────────
-OUTCOME: 8-byte NULL zeroes attacker payload data (or crashes kernel if pointing to ptr)
-```
+![Diagram 2: Race Timeline — Alloc → Free → Reclaim → UAF](https://raw.githubusercontent.com/Aayushbankar/bad_epoll_ab_tier2/publish/clean-and-writeup-2026-08-29/article/assets/diagram-02.png)
+
 
 
 ---
@@ -178,31 +149,8 @@ The original kernelCTF exploit authored by Jaeyoung Chung uses a different appro
 
 ### Diagram 3: Tier 1 Exploitation Chain
 
-```
-┌───────────────────────────┐
-│ 01. RACE TRIGGER (~99%)   │  close(outer) vs close(inner) UAF
-└─────────────┬─────────────┘
-              ▼
-┌───────────────────────────┐
-│ 02. HEAP RECLAMATION      │  msg_msg spray reclaims kmalloc-192
-└─────────────┬─────────────┘
-              ▼
-┌───────────────────────────┐
-│ 03. ARBITRARY READ (AAR)  │  /proc/self/fdinfo seq_file leak
-└─────────────┬─────────────┘
-              ▼
-┌───────────────────────────┐
-│ 04. KASLR BYPASS          │  Compute kernel base from leaked pointers
-└─────────────┬─────────────┘
-              ▼
-┌───────────────────────────┐
-│ 05. RIP CONTROL & ROP     │  f_op->poll hijack -> 4 stack pivots
-└─────────────┬─────────────┘
-              ▼
-┌───────────────────────────┐
-│ 06. ROOT PRIVILEGE        │  commit_creds(&init_cred) -> UID 0
-└───────────────────────────┘
-```
+![Diagram 3: Tier 1 Exploitation Chain](https://raw.githubusercontent.com/Aayushbankar/bad_epoll_ab_tier2/publish/clean-and-writeup-2026-08-29/article/assets/diagram-03.png)
+
 
 
 **Stage 1 — Race trigger:** Two threads race `close()` on nested epoll FDs. False-sharing and timer interrupts widen the window. Success rate: ~99% after tuning timing constants for QEMU latency.
@@ -273,29 +221,8 @@ Verified via GDB memory dump: marker `0xdead000000000000` placed at user byte 88
 
 ### Diagram 4: Exploitation Decision Tree
 
-```
-CVE-2026-46242: UAF Primitive (8-byte NULL write @ offset 160)
- │
- ├── TARGET 1: struct epitem (eventpoll_epi cache)
- │    └── [DE-007] list_del_init before free -> 🔴 DEAD (VER-016)
- │
- ├── TARGET 2: struct file (filp cache)
- │    └── [DE-005/006] ep->mtx barrier + SLAB_TYPESAFE_BY_RCU -> 🔴 DEAD (VER-018)
- │
- └── TARGET 3: struct eventpoll (kmalloc-192 generic cache)
-      │
-      ├── [Chain 0: Controlled Crash]
-      │    └── percpu_counter_dec on freed ep->user -> 🔴 DEAD: targets outer valid user
-      │
-      ├── [Chain 1: Dual-Watch KASLR Leak]
-      │    └── Multi-watch layout -> 🔴 DEAD: structurally mutually exclusive
-      │
-      ├── [Chain 2: Arbitrary Decrement -> LPE]
-      │    └── msg_msg reclaim -> 🔴 DEAD: locked onto root_user, fixed NULL at 160
-      │
-      └── [Chain 3: Struct Field Zeroing @ 160]
-           └── fib6_info / snd_timer_user / packet_fanout -> 🔴 DEAD: all crash (EXP-016)
-```
+![Diagram 4: Exploitation Decision Tree](https://raw.githubusercontent.com/Aayushbankar/bad_epoll_ab_tier2/publish/clean-and-writeup-2026-08-29/article/assets/diagram-04.png)
+
 
 
 ### Chain 0 — Controlled Crash via `percpu_counter_dec`
