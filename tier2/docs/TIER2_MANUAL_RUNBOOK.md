@@ -23,7 +23,7 @@ The following host-side configuration and artifacts are required to execute the 
 
 - **Host Environment**: Debian/Ubuntu Linux with `qemu-system-aarch64` and `gdb-multiarch`.
 - **Containers**: `podman` or `docker` (to safely rebuild the rootfs via `debian:bookworm-slim` cross-compilation).
-- **Working Directory**: `/mnt/work/company/cyphermatrix/repos/bad-epoll-lab` (or equivalent absolute repository path).
+- **Working Directory**: the repository root (this `bad-epoll-lab` checkout).
 - **Kernel Image**: `tier2/android/artifacts/Image`
 - **Kernel Symbols**: `tier2/android/artifacts/vmlinux`
 - **Initramfs Archive**: `tier2/initramfs.cpio`

@@ -100,3 +100,7 @@ tier2/rootfs/
 
 # Ignore the tier2/android kernel source tree entirely
 tier2/android/
+
+# Internal mentor/sprint logs and archive — never public (moved to private repo)
+docs/mentor/
+docs/archive/
