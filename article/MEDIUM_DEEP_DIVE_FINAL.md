@@ -13,13 +13,21 @@
 > - **Original Discovery & Exploit**: CVE-2026-46242 ("Bad Epoll", CVSS 7.8) was discovered, analyzed, and exploited by security researcher **Jaeyoung Chung**, who achieved a ~99% reliable root exploit against Google's kernelCTF environment ([J-jaeyoung/bad-epoll](https://github.com/J-jaeyoung/bad-epoll)). The bug was patched upstream in Linux kernel commit `a6dc643c693`.
 > - **This Project's Contribution**: 
 >   1. **Tier 1 (x86_64/QEMU)**: Independent reproduction, toolchain porting (GCC 16 adaptation, database regeneration), and runtime verification of the kernelCTF exploit chain.
->   2. **Tier 2 (ARM64 Android 14 GKI)**: Original portability and exploitability research evaluating whether the primitive survives modern Android kernel mitigations (PAC, BTI, kCFI, MTE, and slab isolation) — establishing a documented negative result (DoS-only).
+>   2. **Tier 2 (ARM64 Android 14 GKI)**: Original portability and exploitability research evaluating whether the primitive survives modern Android kernel mitigations (PAC, BTI, kCFI, MTE, and slab isolation) — establishing a documented negative result (DoS-only). **Crucially, this ran on a deliberately backported-vulnerable build, not a stock device** (see disclosure below).
 
 ---
 
+> ### ⚠️ Tier 2 Test Methodology Disclosure (read before the Android section)
+>
+> The Tier 2 assessment did **not** run against a stock or production Android kernel. **Stock Android GKI 6.1.23 (base commit `7e35917775b8`) is not vulnerable to CVE-2026-46242** — the vulnerability-introducing commit `58c9b016e128` (Linux v6.4-rc1) is absent from the 6.1 branch. This is consistent with discoverer Jaeyoung Chung's own affected-version statement: the bug was introduced in v6.4, so v6.1-based devices (e.g. Pixel 8) are not affected.
+>
+> To study what Android's mitigation stack does to *this* primitive, we **deliberately cherry-picked the 6.1.y backport commit `a1f93804449d` into the GKI 6.1.23 source tree** to reconstruct a vulnerable build for testing. Every Tier 2 result below (0/102,740 natural race hits, 21 dead ends, DoS-only verdict) is therefore a **portability / mitigation study of a synthetic, backported-vulnerable kernel — not a finding about any shipping or production Android device.**
+>
+> The correct framing is: *"if CVE-2026-46242 were present on a GKI 6.1 kernel, would Android's mitigation stack stop exploitation?"* — **not** *"we tested a real-world vulnerable Android kernel."*
+
 Every Linux process that handles network connections, manages file descriptors, or runs an event loop almost certainly uses `epoll`. It is the backbone of high-performance I/O on Linux — nginx, Node.js, Android's SurfaceFlinger, and the Binder driver all depend on it. When a Use-After-Free vulnerability lands in this subsystem, the blast radius is enormous: every server, every phone, every container.
 
-**CVE-2026-46242**, known as "Bad Epoll," is exactly that — a race condition in the kernel's `epoll` implementation that frees a critical data structure while another thread is still writing to it. On a standard x86_64 Linux VM, I ported and reproduced the original kernelCTF exploit chain to achieve a working root shell (`UID: 0`). On an Android ARM64 device running a hardened Generic Kernel Image (GKI), I conducted new exploitability research and hit a wall — 21 documented dead ends, zero natural race hits in 102,740 attempts, and a final verdict of **Denial of Service only**.
+**CVE-2026-46242**, known as "Bad Epoll," is exactly that — a race condition in the kernel's `epoll` implementation that frees a critical data structure while another thread is still writing to it. On a standard x86_64 Linux VM, I ported and reproduced the original kernelCTF exploit chain to achieve a working root shell (`UID: 0`). On a backported-vulnerable Android ARM64 GKI 6.1 build (reconstructed for testing by cherry-picking the 6.1.y backport into stock 6.1.23), I conducted new exploitability research and hit a wall — 21 documented dead ends, zero natural race hits in 102,740 attempts, and a final verdict of **Denial of Service only** (on that synthetic build, not stock Android).
 
 This post is the full technical story: the vulnerability mechanics, the working x86_64 exploit chain, the systematic ARM64 Android assessment, every exploitation chain that failed and why, and what Android's modern mitigation stack actually stops in practice. If you've ever wanted to see what happens when a real vulnerability meets real mitigations — not in a whitepaper, but in GDB traces and slab dumps — this is it.
 
@@ -36,8 +44,8 @@ This post is the full technical story: the vulnerability mechanics, the working 
 | **Original Discoverer & PoC** | Jaeyoung Chung ([J-jaeyoung/bad-epoll](https://github.com/J-jaeyoung/bad-epoll)) via Google kernelCTF |
 | **Introduced** | v6.4-rc1 (commit `58c9b016e128`) |
 | **Patched Upstream** | v6.11 / v7.1-rc1 (commit `a6dc643c693`) |
-| **Affected** | Linux 6.4 through 6.10.x, including Android GKI kernels |
-| **Impact** | LPE to root (x86_64); DoS-only (ARM64 Android GKI) |
+| **Affected** | Linux 6.4 through 6.10.x, including Android GKI kernels **≥ 6.4**. (Android GKI **6.1 is *not* affected** — the introducing commit `58c9b016e128` is absent from the 6.1 branch; see Tier 2 disclosure below.) |
+| **Impact** | LPE to root (x86_64 kernelCTF target); DoS-only *on the deliberately backported-vulnerable GKI 6.1 test build* — stock Android GKI 6.1 is unaffected |
 
 ---
 
@@ -231,9 +239,9 @@ The exploit initially crashed with a Supervisor Write Fault at `0xffffffff810001
 
 ## Tier 2: The Android ARM64 Assessment
 
-**Environment:** Android 14 GKI, kernel 6.1.23 (commit `7e35917775b8`), QEMU `aarch64` with GDB.
+**Environment:** Android 14 GKI, kernel 6.1.23 (base commit `7e35917775b8`), running under QEMU `aarch64` with GDB. **Important:** stock GKI 6.1.23 is *not* vulnerable to CVE-2026-46242 (the introducing commit `58c9b016e128`, v6.4-rc1, is absent). To create a test target, we cherry-picked the 6.1.y backport `a1f93804449d` into this tree, producing a **deliberately backported-vulnerable build**. All Tier 2 results below describe that synthetic build, not any production Android device.
 
-The Tier 2 goal was to assess whether Bad Epoll could achieve privilege escalation on a modern Android device — specifically, whether the vulnerability could collapse the traditional multi-stage Android exploit chain (sandbox escape → kernel exploit → SELinux bypass → root) into a single step.
+The Tier 2 goal was a *hypothetical* assessment: **if** Bad Epoll were present on a GKI 6.1 kernel, could it achieve privilege escalation? — i.e., whether the vulnerability (had it existed on 6.1) could collapse the traditional multi-stage Android exploit chain (sandbox escape → kernel exploit → SELinux bypass → root) into a single step. This is a portability / mitigation study of a synthetic vulnerable kernel, **not a claim that any production Android device is affected**.
 
 ### The Slab Cache Journey
 
@@ -443,7 +451,7 @@ The x86_64 exploit bypasses KASLR, SMEP, SMAP, and KPTI through AAR, JOP/ROP, an
 
 ## Lessons and Takeaways
 
-**1. A vulnerability is not an exploit.** CVE-2026-46242 is real, verified, and mechanically reproducible. On x86_64 it grants root. On Android ARM64 GKI it's a kernel panic at best. The gap between "the bug exists" and "the bug is exploitable" is the entire story.
+**1. A vulnerability is not an exploit.** CVE-2026-46242 is real, verified, and mechanically reproducible. On x86_64 it grants root. On the backported-vulnerable GKI 6.1 build it's a kernel panic at best. The gap between "the bug exists" and "the bug is exploitable" is the entire story — and importantly, stock Android GKI 6.1 was never exposed to this bug at all (it was introduced in v6.4).
 
 **2. The mitigation stack works in depth.** No single Android mitigation killed this exploit — they all contributed. PAC blocks function pointer forgery. kCFI blocks indirect call hijacking. SLAB isolation blocks cross-cache reclaim. MTE detects stale access. PREEMPT_VOLUNTARY closes the scheduling window. Each layer removes options until nothing viable remains.
 
@@ -459,11 +467,11 @@ The x86_64 exploit bypasses KASLR, SMEP, SMAP, and KPTI through AAR, JOP/ROP, an
 
 ## What's Next: Open Questions
 
-The Bad Epoll research concludes with a **DoS-only verdict on Android ARM64 GKI**. But several questions remain open:
+The Bad Epoll research concludes with a **DoS-only verdict for the deliberately backported-vulnerable GKI 6.1.23 build we tested** (stock Android GKI 6.1 is unaffected). But several questions remain open:
 
 1. **Physical ARM64 validation:** Would the race fire naturally on real silicon (Cortex-X4 + Cortex-A520 big.LITTLE)? The first-principles analysis says yes, but at what rate? A 2-week hardware timebox with ~1M iterations would settle this definitively.
 
-2. **Alternative kmalloc-192 victims:** The EXP-016 audit covered `fib6_info`, `snd_timer_user`, `packet_fanout`, `urb`, and `wakeup_source`. Are there other kmalloc-192 structs where NULL at offset 160 could corrupt something more useful than a crash-inducing pointer? I'd genuinely like to hear from anyone who's done deep slab cross-referencing on GKI 6.1.
+2. **Alternative kmalloc-192 victims:** The EXP-016 audit covered `fib6_info`, `snd_timer_user`, `packet_fanout`, `urb`, and `wakeup_source`. Are there other kmalloc-192 structs where NULL at offset 160 could corrupt something more useful than a crash-inducing pointer? I'd genuinely like to hear from anyone who's done deep slab cross-referencing on (vulnerable) GKI 6.1 builds.
 
 3. **Different kernel configs:** Our assessment is on `PREEMPT_VOLUNTARY` with `PREEMPT_DYNAMIC` defaulting to voluntary. Would `PREEMPT_FULL` (or a vendor kernel with different preemption settings) add schedulable points inside `__ep_remove`?
 
@@ -477,7 +485,7 @@ The Bad Epoll research concludes with a **DoS-only verdict on Android ARM64 GKI*
  
 - **Original Vulnerability & Exploit**: CVE-2026-46242 was discovered and exploited by security researcher **Jaeyoung Chung**, submitted to Google's kernelCTF program with a public proof-of-concept at [github.com/J-jaeyoung/bad-epoll](https://github.com/J-jaeyoung/bad-epoll).
 - **Upstream Patch**: The vulnerability is publicly disclosed and patched upstream in Linux kernel commit `a6dc643c693` (v6.11 / v7.1-rc1).
-- **This Research**: Represents an independent reproduction of the Tier 1 x86_64 exploit and original Tier 2 portability/exploitability research evaluating mitigation boundaries on Android 14 ARM64 GKI — no unpatched 0-day primitives or undisclosed flaws are presented.
+- **This Research**: Represents an independent reproduction of the Tier 1 x86_64 exploit and original Tier 2 portability/exploitability research evaluating mitigation boundaries on a deliberately backported-vulnerable Android 14 ARM64 GKI 6.1.23 build. Stock Android GKI 6.1 is **not** affected by CVE-2026-46242 (introducing commit `58c9b016e128`, v6.4-rc1, is absent); the Tier 2 test kernel was reconstructed by cherry-picking the 6.1.y backport `a1f93804449d`. No unpatched 0-day primitives or undisclosed flaws are presented.
 
 ---
 

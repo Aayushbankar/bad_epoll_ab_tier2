@@ -4,13 +4,19 @@
 [![Target](https://img.shields.io/badge/Target-Android%2014%20GKI%206.1.23%20ARM64-blue.svg)](#environment)
 [![Evidence](https://img.shields.io/badge/Evidence-42%20VER%20%7C%2021%20Dead%20Ends-green.svg)](tier2/docs/VERIFICATION_LEDGER.md)
 
-Welcome to the canonical public research repository for **CVE-2026-46242** ("Bad Epoll"), a race-driven Use-After-Free (UAF) vulnerability in the Linux kernel's event polling (`epoll`) subsystem. This repository documents the complete **Tier 2** engineering assessment targeting the **Android 14 Generic Kernel Image (GKI) on ARM64**, establishing why modern kernel mitigations (PAC, BTI, kCFI, MTE, slab isolation, and voluntary preemption models) structurally reduce this critical privilege escalation primitive to **Denial of Service (DoS) only**.
+Welcome to the canonical public research repository for **CVE-2026-46242** ("Bad Epoll"), a race-driven Use-After-Free (UAF) vulnerability in the Linux kernel's event polling (`epoll`) subsystem. This repository documents the complete **Tier 2** engineering assessment targeting a **deliberately backported-vulnerable Android 14 Generic Kernel Image (GKI) 6.1.23 on ARM64** (stock GKI 6.1 is *not* affected by CVE-2026-46242; see the disclosure below), establishing — as a portability / mitigation study — why Android's kernel mitigations (PAC, BTI, kCFI, MTE, slab isolation, and voluntary preemption models) would structurally reduce this privilege escalation primitive to **Denial of Service (DoS) only**.
 
 > ### 📌 Research Scope & Attribution
 > - **Original Vulnerability & Exploit**: Discovered, analyzed, and exploited by security researcher **Jaeyoung Chung** ([github.com/J-jaeyoung/bad-epoll](https://github.com/J-jaeyoung/bad-epoll)), submitted to Google's **kernelCTF** program (CVSS 7.8, ~99% reliable root exploit on x86_64 target).
 > - **Project Scope & Contribution**:
 >   - **Tier 1 (x86_64 Linux VM)**: Independent reproduction, toolchain porting (Fedora GCC 16, gadget database regeneration), and runtime verification of the kernelCTF primitive.
->   - **Tier 2 (ARM64 Android GKI)**: Original portability and exploitability research evaluating whether the primitive survives modern Android kernel mitigations (PAC, BTI, kCFI, MTE, slab isolation) — establishing a documented negative result (DoS-only).
+>   - **Tier 2 (ARM64 Android GKI 6.1.23)**: Original portability and exploitability research evaluating whether the primitive survives modern Android kernel mitigations (PAC, BTI, kCFI, MTE, slab isolation) — establishing a documented negative result (DoS-only). **Note:** this ran on a *deliberately backported-vulnerable* GKI 6.1.23 build (see disclosure below), **not** stock/production Android.
+
+> ### ⚠️ Tier 2 Test Methodology Disclosure
+>
+> **Stock Android GKI 6.1.23 (base commit `7e35917775b8`) is not vulnerable to CVE-2026-46242.** The introducing commit `58c9b016e128` (Linux v6.4-rc1) is absent from the 6.1 branch, consistent with discoverer Jaeyoung Chung's own affected-version statement (v6.1-based devices such as Pixel 8 are not affected).
+>
+> To study what Android's mitigation stack does to this primitive, the Tier 2 test kernel was produced by **deliberately cherry-picking the 6.1.y backport `a1f93804449d` into the GKI 6.1.23 tree**. The DoS-only verdict is therefore a **portability / mitigation study of a synthetic, backported-vulnerable kernel — not a finding about any shipping or production Android device.** The framing is: *"if CVE-2026-46242 were present on GKI 6.1, would Android's mitigations stop it?"* — not *"we tested a real-world vulnerable Android kernel."*
 
 ---
 
@@ -42,7 +48,7 @@ If you are exploring this research for the first time:
 ### Key Technical Conclusions:
 1. **The UAF is Real**: Thread A (`__ep_remove`) and Thread B (`eventpoll_release`) race to free `struct eventpoll` (176 bytes) into `kmalloc-192` (`VER-026`).
 2. **Reclaim is Deterministic**: `msg_msg` allocations (144-byte user data) reliably reclaim the freed slot (`VER-027`).
-3. **The Primitive is Capped**: The sole UAF write is `hlist_del_rcu(&epi->fllink)`, writing an 8-byte NULL at offset 160 (`VER-032`). On GKI 6.1, offset 160 lands inside `msg_msg` payload or corrupts kernel pointers into immediate panics.
+3. **The Primitive is Capped**: The sole UAF write is `hlist_del_rcu(&epi->fllink)`, writing an 8-byte NULL at offset 160 (`VER-032`). On the backported-vulnerable GKI 6.1.23 build, offset 160 lands inside `msg_msg` payload or corrupts kernel pointers into immediate panics.
 4. **All 4 Exploitation Chains Collapsed**: 21 distinct dead ends documented across controlled crash, dual-watch KASLR leak, arbitrary decrement, and LPE paths (`DEAD_ENDS_REGISTER.md`).
 5. **Scheduler Isolation**: In `PREEMPT_VOLUNTARY`, `__ep_remove` has zero preemption points, bounding the natural race window to ~250–550 cycles (~125–275 ns).
 
@@ -113,6 +119,7 @@ To reproduce the Tier 2 GDB-assisted verification harness:
 - **Original Discoverer & Exploit Author**: Jaeyoung Chung ([github.com/J-jaeyoung/bad-epoll](https://github.com/J-jaeyoung/bad-epoll)) via Google kernelCTF
 - **Introduced**: Linux v6.4-rc1 (commit `58c9b016e128`)
 - **Patched Upstream**: Linux v6.11 / v7.1-rc1 (commit `a6dc643c693`)
+- **Android GKI 6.1 note**: Stock Android GKI 6.1 is **not** affected — commit `58c9b016e128` is absent from the 6.1 branch (consistent with Jaeyoung Chung's affected-version statement). The Tier 2 DoS-only verdict was obtained on a *deliberately backported-vulnerable* GKI 6.1.23 build (6.1.y backport `a1f93804449d`).
 
 *This repository contains independent defensive and offensive security research analyzing mitigation efficacy on Android ARM64 Generic Kernel Images. No unpatched vulnerabilities or 0-day primitives are disclosed.*
 
