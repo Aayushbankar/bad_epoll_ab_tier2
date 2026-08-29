@@ -1,13 +1,15 @@
 # Mentor Progress Report — CVE-2026-46242 (Bad Epoll)
 **Date:** 2026-08-29
-**To:** Rathod Ruturaj Prafulsin
-**From:** Aayush Bankar
+**To:** CypherMatrix Engineering Review
+**From:** Aayush Bankar (Cybersecurity Analyst, CypherMatrix)
 **Project:** CVE-2026-46242 Exploitation Research (Tier 1 + Tier 2)
 
-## 1. Objective
-Validate the complete exploit chain for CVE-2026-46242 across two architectures:
-- Tier 1: x86_64 Linux 6.12.67 (QEMU) — port the Google kernelCTF exploit to a local environment
-- Tier 2: ARM64 Android 14 GKI 6.1.23 (QEMU aarch64) — assess exploitability on modern Android
+
+## 1. Objective & Research Scope
+Evaluate the exploitability and mitigation boundaries for CVE-2026-46242 ("Bad Epoll", CVSS 7.8):
+- **Background**: Originally discovered and exploited by Jaeyoung Chung via Google kernelCTF (`github.com/J-jaeyoung/bad-epoll`), achieving ~99% reliability on x86_64; patched upstream in Linux kernel commit `a6dc643c693`.
+- **Tier 1 (x86_64 Linux 6.12.67 / QEMU)**: Independently reproduce, adapt to local GCC 16 toolchains, and verify the original kernelCTF exploit chain to root (`UID: 0`).
+- **Tier 2 (ARM64 Android 14 GKI 6.1.23 / QEMU aarch64)**: Conduct original exploitability research to determine if the primitive survives modern Android kernel mitigations (PAC, BTI, kCFI, MTE, and slab isolation).
 
 ## 2. Methodology
 - Evidence-first protocol: 42 verification entries in VERIFICATION_LEDGER.md, each mapped to raw GDB traces or source audits

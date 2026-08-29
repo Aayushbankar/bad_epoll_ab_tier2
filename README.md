@@ -6,6 +6,12 @@
 
 Welcome to the canonical public research repository for **CVE-2026-46242** ("Bad Epoll"), a race-driven Use-After-Free (UAF) vulnerability in the Linux kernel's event polling (`epoll`) subsystem. This repository documents the complete **Tier 2** engineering assessment targeting the **Android 14 Generic Kernel Image (GKI) on ARM64**, establishing why modern kernel mitigations (PAC, BTI, kCFI, MTE, slab isolation, and voluntary preemption models) structurally reduce this critical privilege escalation primitive to **Denial of Service (DoS) only**.
 
+> ### 📌 Research Scope & Attribution
+> - **Original Vulnerability & Exploit**: Discovered, analyzed, and exploited by security researcher **Jaeyoung Chung** ([github.com/J-jaeyoung/bad-epoll](https://github.com/J-jaeyoung/bad-epoll)), submitted to Google's **kernelCTF** program (CVSS 7.8, ~99% reliable root exploit on x86_64 target).
+> - **Project Scope & Contribution**:
+>   - **Tier 1 (x86_64 Linux VM)**: Independent reproduction, toolchain porting (Fedora GCC 16, gadget database regeneration), and runtime verification of the kernelCTF primitive.
+>   - **Tier 2 (ARM64 Android GKI)**: Original portability and exploitability research evaluating whether the primitive survives modern Android kernel mitigations (PAC, BTI, kCFI, MTE, slab isolation) — establishing a documented negative result (DoS-only).
+
 ---
 
 ## 🧭 Start Here
@@ -102,11 +108,11 @@ To reproduce the Tier 2 GDB-assisted verification harness:
 
 ## 🛡️ Responsible Disclosure & CVE Information
 
-- **CVE ID**: CVE-2026-46242 ("Bad Epoll")
+- **CVE ID**: CVE-2026-46242 ("Bad Epoll", CVSS 7.8)
 - **Component**: Linux Kernel eventpoll subsystem (`fs/eventpoll.c`)
+- **Original Discoverer & Exploit Author**: Jaeyoung Chung ([github.com/J-jaeyoung/bad-epoll](https://github.com/J-jaeyoung/bad-epoll)) via Google kernelCTF
 - **Introduced**: Linux v6.4-rc1 (commit `58c9b016e128`)
-- **Patched**: Linux v6.11 (commit `a6dc643c693`)
-- **Upstream Credit**: Google Security Research / kernelCTF
+- **Patched Upstream**: Linux v6.11 / v7.1-rc1 (commit `a6dc643c693`)
 
 *This repository contains independent defensive and offensive security research analyzing mitigation efficacy on Android ARM64 Generic Kernel Images. No unpatched vulnerabilities or 0-day primitives are disclosed.*
 
@@ -114,7 +120,6 @@ To reproduce the Tier 2 GDB-assisted verification harness:
 
 ## 👤 Author & Research Context
 
-- **Author**: Aayush Bankar
-- **Mentorship**: Rathod Ruturaj Prafulsin (CypherMatrix)
-- **Academic Affiliation**: Gujarat Technological University (GTU)
+- **Author**: Aayush Bankar, Cybersecurity Analyst, CypherMatrix
 - **Tooling**: Research augmented with agentic AI tooling (Antigravity) for code navigation, hypothesis generation, and evidence organization, with all execution traces and engineering decisions verified manually.
+

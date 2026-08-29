@@ -1,9 +1,11 @@
 # TIER 2 EXPLOITABILITY ASSESSMENT — COMPLETE REPORT
 
-**CVE-2026-46242 ("Bad Epoll")** — Use-After-Free in the Linux epoll subsystem on Android ARM64 GKI
-**Branch:** main *(formerly `tier2-android-port` in `bad-epoll-lab`; repo separated 2026-08-08)* @ cc0dc7754
-**Kernel:** linux-6.12.67, Android 14 GKI, commit 7e35917775b8
-**Intern:** Aayush Bankar · **Date:** 2026-08-07
+**CVE-2026-46242 ("Bad Epoll", CVSS 7.8)** — Use-After-Free in the Linux epoll subsystem on Android ARM64 GKI  
+**Original Vulnerability & PoC Credit:** Discovered and exploited by **Jaeyoung Chung** ([github.com/J-jaeyoung/bad-epoll](https://github.com/J-jaeyoung/bad-epoll)) via Google kernelCTF (~99% reliable on x86_64 target)  
+**Research Scope:** Tier 1 verified the x86_64 reproduction; this report covers original Tier 2 exploitability research on Android 14 GKI  
+**Branch:** main *(formerly `tier2-android-port` in `bad-epoll-lab`; repo separated 2026-08-08)* @ cc0dc7754  
+**Kernel:** linux-6.12.67, Android 14 GKI, commit 7e35917775b8  
+**Intern:** Aayush Bankar · **Date:** 2026-08-07  
 
 ---
 

@@ -1,14 +1,25 @@
 # CVE-2026-46242 Deep Dive: A Working Root Exploit on Linux, 21 Dead Ends on Android
 
-**Author:** Aayush Bankar  
+**Author:** Aayush Bankar (Cybersecurity Analyst, CypherMatrix)  
 **Date:** August 2026  
-**Repos:** [Tier 1 — bad-epoll-lab](https://github.com/Aayushbankar/bad-epoll-lab) | [Tier 2 — bad_epoll_ab_tier2](https://github.com/Aayushbankar/bad_epoll_ab_tier2)
+**Repos:** [Tier 1 — bad-epoll-lab](https://github.com/Aayushbankar/bad-epoll-lab) | [Tier 2 — bad_epoll_ab_tier2](https://github.com/Aayushbankar/bad_epoll_ab_tier2)  
+
+**Original Vulnerability Credit:** Discovered and exploited by **Jaeyoung Chung** ([github.com/J-jaeyoung/bad-epoll](https://github.com/J-jaeyoung/bad-epoll)) via Google's kernelCTF program.
+
+---
+
+> ### 📌 Research Scope & Attribution
+>
+> - **Original Discovery & Exploit**: CVE-2026-46242 ("Bad Epoll", CVSS 7.8) was discovered, analyzed, and exploited by security researcher **Jaeyoung Chung**, who achieved a ~99% reliable root exploit against Google's kernelCTF environment ([J-jaeyoung/bad-epoll](https://github.com/J-jaeyoung/bad-epoll)). The bug was patched upstream in Linux kernel commit `a6dc643c693`.
+> - **This Project's Contribution**: 
+>   1. **Tier 1 (x86_64/QEMU)**: Independent reproduction, toolchain porting (GCC 16 adaptation, database regeneration), and runtime verification of the kernelCTF exploit chain.
+>   2. **Tier 2 (ARM64 Android 14 GKI)**: Original portability and exploitability research evaluating whether the primitive survives modern Android kernel mitigations (PAC, BTI, kCFI, MTE, and slab isolation) — establishing a documented negative result (DoS-only).
 
 ---
 
 Every Linux process that handles network connections, manages file descriptors, or runs an event loop almost certainly uses `epoll`. It is the backbone of high-performance I/O on Linux — nginx, Node.js, Android's SurfaceFlinger, and the Binder driver all depend on it. When a Use-After-Free vulnerability lands in this subsystem, the blast radius is enormous: every server, every phone, every container.
 
-**CVE-2026-46242**, known as "Bad Epoll," is exactly that — a race condition in the kernel's `epoll` implementation that frees a critical data structure while another thread is still writing to it. On a standard x86_64 Linux VM, I turned it into a working root exploit. On an Android ARM64 device running a hardened Generic Kernel Image (GKI), I hit a wall — 21 documented dead ends, zero natural race hits in 102,740 attempts, and a final verdict of **Denial of Service only**.
+**CVE-2026-46242**, known as "Bad Epoll," is exactly that — a race condition in the kernel's `epoll` implementation that frees a critical data structure while another thread is still writing to it. On a standard x86_64 Linux VM, I ported and reproduced the original kernelCTF exploit chain to achieve a working root shell (`UID: 0`). On an Android ARM64 device running a hardened Generic Kernel Image (GKI), I conducted new exploitability research and hit a wall — 21 documented dead ends, zero natural race hits in 102,740 attempts, and a final verdict of **Denial of Service only**.
 
 This post is the full technical story: the vulnerability mechanics, the working x86_64 exploit chain, the systematic ARM64 Android assessment, every exploitation chain that failed and why, and what Android's modern mitigation stack actually stops in practice. If you've ever wanted to see what happens when a real vulnerability meets real mitigations — not in a whitepaper, but in GDB traces and slab dumps — this is it.
 
@@ -18,14 +29,14 @@ This post is the full technical story: the vulnerability mechanics, the working 
 
 | Field | Value |
 |-------|-------|
-| **CVE** | CVE-2026-46242 |
+| **CVE** | CVE-2026-46242 (CVSS 7.8) |
 | **Name** | Bad Epoll |
 | **Class** | Use-After-Free (race condition) |
 | **Subsystem** | `fs/eventpoll.c` |
+| **Original Discoverer & PoC** | Jaeyoung Chung ([J-jaeyoung/bad-epoll](https://github.com/J-jaeyoung/bad-epoll)) via Google kernelCTF |
 | **Introduced** | v6.4-rc1 (commit `58c9b016e128`) |
-| **Patched** | v6.11 (commit `a6dc643c693`) |
+| **Patched Upstream** | v6.11 / v7.1-rc1 (commit `a6dc643c693`) |
 | **Affected** | Linux 6.4 through 6.10.x, including Android GKI kernels |
-| **Original exploit** | Google Security Research / kernelCTF |
 | **Impact** | LPE to root (x86_64); DoS-only (ARM64 Android GKI) |
 
 ---
@@ -174,7 +185,7 @@ sequenceDiagram
 
 **Environment:** Fedora 44, Linux 6.12.67 (compiled from source, GCC 16.1.1), QEMU with SMEP/SMAP/KPTI enabled.
 
-The upstream Google kernelCTF exploit uses a different approach than the ARM64 analysis above — on x86_64, the exploit targets `struct epitem` (120 bytes, in `eventpoll_epi` cache on newer kernels, but cross-cacheable on the COS target) and `struct file`, not `struct eventpoll`. The chain:
+The original kernelCTF exploit authored by Jaeyoung Chung uses a different approach than the ARM64 analysis above — on x86_64, the exploit targets `struct epitem` (120 bytes, in `eventpoll_epi` cache on newer kernels, but cross-cacheable on the COS target) and `struct file`, not `struct eventpoll`. The chain:
 
 ### Diagram 3: Tier 1 Exploitation Chain
 
@@ -406,7 +417,7 @@ Even if an attacker could achieve 100% reliable race triggering on physical hard
 
 | Mitigation | What It Blocks |
 |------------|---------------|
-| **PAC (Pointer Authentication)** | Function pointers are cryptographically signed with hardware keys. Forging `f_op->poll` → hardware translation fault. |
+| **PAC (Pointer Authentication)** | Function pointers are cryptographically signed with hardware keys. Forging `f_op->poll` → hardware translation fault. While micro-architectural side-channels like **PACMAN** (*MIT CSAIL, 2022*) demonstrate speculative verification oracles in isolated userland environments, an operational GKI kernel with an unguided NULL-write primitive lacks the arbitrary read oracle required to synthesize valid pointer signatures. |
 | **kCFI (Kernel Control Flow Integrity)** | Clang validates 32-bit type hashes before every indirect `blr` call. Even a valid kernel address fails if the hash doesn't match. |
 | **BTI (Branch Target Identification)** | Indirect branches must land on `bti c` instruction landing pads. Random code gadgets are unreachable. |
 
@@ -414,9 +425,10 @@ Even if an attacker could achieve 100% reliable race triggering on physical hard
 
 | Mitigation | What It Blocks |
 |------------|---------------|
-| **MTE (Memory Tagging Extension)** | 4-bit physical tags on every 16-byte granule. Accessing freed memory with mismatched tags → synchronous hardware fault. Turns UAF into detected crash. |
+| **MTE (Memory Tagging Extension)** | 4-bit physical tags on every 16-byte granule. Accessing freed memory with mismatched tags → synchronous hardware fault. While speculative leakage of tags has been explored academically (**TikTag**, *2024*), asynchronous multicore system noise prevents reliable tag recovery in an unguided race, turning stale UAF access into an immediate hardware exception. |
 | **SLAB_TYPESAFE_BY_RCU** | `filp_cachep` (struct file cache) cannot be reclaimed by objects from different caches. |
 | **SLAB_ACCOUNT** | `eventpoll_epi` cache is fully isolated from generic kmalloc caches. |
+
 
 ### Scheduling
 
@@ -461,17 +473,20 @@ The Bad Epoll research concludes with a **DoS-only verdict on Android ARM64 GKI*
 
 ---
 
-## Disclosure Note
-
-CVE-2026-46242 is publicly disclosed and patched (Linux v6.11, commit `a6dc643c693`). The original exploit was published by Google Security Research through the kernelCTF program. This research is an independent reproduction and Android portability assessment — no new unpatched vulnerability is being disclosed.
+## Disclosure & Attribution Note
+ 
+- **Original Vulnerability & Exploit**: CVE-2026-46242 was discovered and exploited by security researcher **Jaeyoung Chung**, submitted to Google's kernelCTF program with a public proof-of-concept at [github.com/J-jaeyoung/bad-epoll](https://github.com/J-jaeyoung/bad-epoll).
+- **Upstream Patch**: The vulnerability is publicly disclosed and patched upstream in Linux kernel commit `a6dc643c693` (v6.11 / v7.1-rc1).
+- **This Research**: Represents an independent reproduction of the Tier 1 x86_64 exploit and original Tier 2 portability/exploitability research evaluating mitigation boundaries on Android 14 ARM64 GKI — no unpatched 0-day primitives or undisclosed flaws are presented.
 
 ---
 
 ## About the Author
 
-**Aayush Bankar** is a security research intern at CypherMatrix and a student at Gujarat Technological University (GTU). This project was conducted under the mentorship of Rathod Ruturaj Prafulsin. The research workflow integrates AI-assisted agentic coding tools (Antigravity / local LLM orchestration) for code comprehension, hypothesis generation, and evidence organization — with all engineering decisions and runtime evidence verified manually. The AI-augmented workflow is documented transparently in the Tier 1 Final Writeup.
+**Aayush Bankar** is a Cybersecurity Analyst at CypherMatrix. The research workflow integrates AI-assisted agentic coding tools (Antigravity / local LLM orchestration) for code comprehension, hypothesis generation, and evidence organization — with all engineering decisions and runtime evidence verified manually. The AI-augmented workflow is documented transparently in the Tier 1 Final Writeup.
 
 **Connect:** [GitHub](https://github.com/Aayushbankar) · [LinkedIn](https://linkedin.com/in/aayushbankar)
+
 
 ---
 
