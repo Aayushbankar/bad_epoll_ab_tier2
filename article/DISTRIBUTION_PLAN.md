@@ -11,7 +11,7 @@ Ranked by **where kernel exploit devs actually discuss and reply**, not just bro
 | # | Platform | Why It Fits | Action |
 |---|----------|-------------|--------|
 | 1 | **r/netsec** (Reddit) | The single highest-quality offensive security subreddit. Kernel research posts get serious technical discussion. Commenters routinely include CTF players, Google P0 researchers, and mitigation engineers. Self-posts with technical summaries get more traction than bare links. | Post with a 3-paragraph technical summary + link. Title: "Deep dive: CVE-2026-46242 (epoll UAF) — porting Jaeyoung Chung's kernelCTF exploit to ARM64 Android GKI (21 dead ends documented)" |
-| 2 | **Twitter/X — tag specific researchers** | The real kernel exploit conversation happens in quote-tweets and threads, not broadcast. Tag: **@J-jaeyoung** (Jaeyoung Chung, original author), **@_xeroxz** (kernelCTF), **@jabornh** (Jann Horn / P0), **@maddiestone** (Maddie Stone / TAG), **@theaborneproject** (Will), **@pabordin** (Pavel Boldin), **@man_yue_mo** (Man Yue Mo / GHSL). Start a thread with the key finding: "0/102,740 natural hits — here's why Android's mitigation stack actually works against epoll UAF." | Thread (5-7 tweets) with key diagrams as images. Pin the Mermaid decision tree diagram. |
+| 2 | **Twitter/X — tag specific researchers** | The real kernel exploit conversation happens in quote-tweets and threads, not broadcast. Tag: **@_xeroxz** (kernelCTF program), **@maddiestone** (Maddie Stone / TAG), **@theaborneproject** (Will), **@pabordin** (Pavel Boldin), **@man_yue_mo** (Man Yue Mo / GHSL). Start a thread with the key finding: "0/102,740 natural hits — here's why Android's mitigation stack actually works against epoll UAF." **Credit note:** Jaeyoung Chung (original discoverer) has no verified X/Twitter account — do **not** tag a guessed `@J-jaeyoung` handle. Credit him via his GitHub repo only: https://github.com/J-jaeyoung/bad-epoll. | Thread (5-7 tweets) with key diagrams as images. Pin the Mermaid decision tree diagram. |
 | 3 | **Kernel Security mailing list / oss-security** | Appropriate for negative-result research on a patched CVE. The audience is kernel maintainers and security engineers who care about mitigation effectiveness data. Only post if you want kernel community visibility — it's not social media, it's archival. | Email with a structured summary: CVE, affected versions, Tier 1/Tier 2 findings, link to full writeup. |
 
 ### Tier 2 — Strong Reach, Mixed Audience
@@ -47,9 +47,7 @@ Ranked by **where kernel exploit devs actually discuss and reply**, not just bro
 
 | Handle | Who | Why |
 |--------|-----|-----|
-| @J-jaeyoung | Jaeyoung Chung | Original discoverer & kernelCTF exploit author |
 | @_xeroxz | kernelCTF contributor | Context on the kernelCTF program |
-| @jabornh | Jann Horn (Google P0) | epoll subsystem expertise |
 | @maddiestone | Maddie Stone (Google TAG) | Android exploitation analysis |
 | @man_yue_mo | Man Yue Mo (GitHub Security Lab) | Android kernel & GPU driver exploitation research |
 | @staborobot | Android Security team | Mitigation effectiveness data |
