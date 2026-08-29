@@ -2,42 +2,50 @@
 
 ---
 
-## 🚀 The Master LinkedIn Post (2,531 Characters — Safe for LinkedIn 3,000 Limit)
+## 🚀 Final Master LinkedIn Post (2,632 Characters)
 
 ```markdown
-Hey everyone, it’s been a while since my last post.
+Hey guys, it’s been quite a while since my last post.
 
-I've been dealing with a lot behind the scenes lately, but over the past few weeks I got pulled into something completely outside my comfort zone: Linux kernel exploitation.
+I was recently struck with a lot of things all at once, but here is the first real update on what I’ve been obsessing over since mid-June.
 
-As someone relatively new to low-level kernel internals, I wanted to test a fundamental question:
-What happens when a 99% reliable kernelCTF root exploit meets modern hardened mobile defense?
+I decided to jump straight into the deep end of Linux kernel exploitation.
 
-The result: 0 hits out of 102,740 race attempts. 21 documented dead ends. 0 root shells.
+The target was CVE-2026-46242 ("Bad Epoll", found by Jaeyoung Chung via Google kernelCTF)—a Use-After-Free race condition in fs/eventpoll.c.
 
-I took CVE-2026-46242 ("Bad Epoll", found by Jaeyoung Chung via Google kernelCTF)—a Use-After-Free in fs/eventpoll.c—and tried porting it across two targets:
+In an x86_64 Linux VM:
+Rebuilt the original exploit chain. Heap spray with msg_msg, bypass KASLR, ROP chain, and popped a UID 0 root shell. 99% reliable. Everything felt clean.
 
-🔹 Tier 1 (x86_64 Linux VM): Reconstructed the original exploit chain from scratch. Heap spray with msg_msg, KASLR leak, ROP chain — got a working root shell (UID 0).
-🔹 Tier 2 (ARM64 Android GKI Hardened Testbed): Ported the primitive to a deliberately backported-vulnerable GKI 6.1 build to see if it could ever escalate on mobile.
+So I asked myself: can I make this work on an ARM64 Android kernel?
 
-Under GDB watchpoints, the bug was deterministic. But without breakpoints in real execution? Total flatline.
+10 weeks and 102,740 test runs later, the answer was a brutal NO.
 
-What 102,740 iterations and 21 dead ends taught me:
-→ The Preemption Illusion: Under voluntary preemption, cond_resched() was a no-op. The race window inside __ep_remove ran in ~125–275 ns—impossible for natural thread scheduling to hit without artificial delays.
-→ Structural Dead Ends: Controlled crash refcounts failed, dual-watch KASLR leaks proved impossible, and msg_msg sprays left only a fixed NULL write at offset 160.
-→ Struct Audits: Audited reachable kmalloc-192 objects (fib6_info, snd_timer_user)—NULL writes yield a DoS panic, never privilege escalation.
-→ Silicon Mitigations: PAC, kCFI, BTI, and slab isolation neutralized every escalation route.
+Here is what 10 weeks of debugging kernel panics looked like:
+• 102,740 automated race runs. 0 natural hits. Under voluntary preemption, the vulnerable window in __ep_remove executed in ~125 nanoseconds—natural scheduling couldn't land in it once.
+• Even when forcing race wins, the decrement was locked onto root_user, leaving only a fixed 8-byte NULL write at offset 160.
+• Audited every reachable kmalloc-192 struct—every single one crashed into an instant kernel panic instead of privilege escalation.
+• Modern defenses—PAC, kCFI, BTI, and slab isolation—dismantled every backup theory.
 
-I documented everything—from my naive assumptions to the final DoS verdict—in a distilled article and a complete 26-page technical report:
+21 exploitation hypotheses tested. 21 dead ends. 0 root shells.
+
+It turns out modern Android kernel defenses are remarkably resilient against this class of bug. 
+
+Instead of sweeping the failures under the rug, I spent the last few weeks writing down all 26 pages of the autopsy—every dead end, memory offset, and verification log.
 
 📖 Medium Deep Dive: <<MEDIUM_URL_PENDING>>
-📄 Complete 26-Page Technical Writeup (PDF): https://github.com/Aayushbankar/bad-epoll-lab/blob/publish/clean-and-writeup-2026-08-29/article/CVE-2026-46242_Technical_Writeup.pdf
+📄 Full 26-Page Technical Writeup (PDF): https://github.com/Aayushbankar/bad-epoll-lab/blob/publish/clean-and-writeup-2026-08-29/article/CVE-2026-46242_Technical_Writeup.pdf
 
-💬 Question for experienced kernel researchers: Is there any kmalloc-192 struct on GKI where zeroing 8 bytes at offset 160 yields more than a kernel panic? (Our EXP-016 analysis says no—would love to hear your take).
+🔍 Two open questions for kernel exploit devs & security researchers:
 
-Drop your feedback below! (Or comment "EPOLL" if you want the 26-page PDF sent to your DMs).
+1. The Struct Challenge: On GKI kmalloc-192, is there ANY reachable struct where zeroing 8 bytes at offset 160 doesn't cause an immediate kernel panic? (Our EXP-016 audited fib6_info, snd_timer_user, and packet_fanout—all dead).
+2. The Timing Challenge: On physical ARM64 silicon with voluntary preemption, has anyone ever reliably stretched a ~125ns eventpoll race window without synthetic timer storms or hardware breakpoints?
 
-#VulnerabilityResearch #LinuxKernel #AndroidSecurity #ExploitDevelopment #InfoSec
+If you see an alternate angle or have ideas on either of these, drop your take below. 👇
+(Or comment "EPOLL" if you’d like the full 26-page technical PDF sent straight to your DMs!)
+
+#LinuxKernel #AndroidSecurity #ExploitDevelopment #VulnerabilityResearch #InfoSec
 ```
+
 
 ---
 

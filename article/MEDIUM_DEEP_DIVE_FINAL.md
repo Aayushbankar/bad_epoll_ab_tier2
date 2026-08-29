@@ -1,6 +1,6 @@
 # CVE-2026-46242 Deep Dive: A Working Root Exploit on Linux, 21 Dead Ends on Android
 
-**Author:** Aayush Bankar (Cybersecurity Analyst, CypherMatrix)  
+**Author:** Aayush Bankar (Independent Security Researcher)  
 **Date:** August 2026  
 **Repos:** [Tier 1 — bad-epoll-lab](https://github.com/Aayushbankar/bad-epoll-lab) | [Tier 2 — bad_epoll_ab_tier2](https://github.com/Aayushbankar/bad_epoll_ab_tier2)  
 
@@ -503,7 +503,7 @@ The Bad Epoll research concludes with a **DoS-only verdict for the deliberately 
 
 ## About the Author
 
-**Aayush Bankar** is a Cybersecurity Analyst at CypherMatrix. The research workflow integrates AI-assisted agentic coding tools (local LLM orchestration) for code comprehension, hypothesis generation, and evidence organization — with all engineering decisions and runtime evidence verified manually. The AI-augmented workflow is documented transparently in the Tier 1 Final Writeup.
+**Aayush Bankar** is an Independent Security Researcher focused on low-level systems security, kernel internals, and vulnerability research. The research workflow integrates AI-assisted agentic coding tools (local LLM orchestration) for code comprehension, hypothesis generation, and evidence organization — with all engineering decisions and runtime evidence verified manually. The AI-augmented workflow is documented transparently in the Tier 1 Final Writeup.
 
 **Connect:** [GitHub](https://github.com/Aayushbankar) · [LinkedIn](https://linkedin.com/in/aayushbankar)
 
