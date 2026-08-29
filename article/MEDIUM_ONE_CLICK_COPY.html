@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Medium Story Copy</title>
+<style>
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    max-width: 780px;
+    margin: 40px auto;
+    padding: 0 20px;
+    color: #242424;
+}
+pre {
+    background: #f2f2f2;
+    padding: 16px;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 14px;
+}
+code {
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+    background: #f2f2f2;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+blockquote {
+    border-left: 3px solid #242424;
+    margin-left: 0;
+    padding-left: 18px;
+    color: #6B6B6B;
+    font-style: italic;
+}
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin: 20px 0;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+th, td {
+    border: 1px solid #E5E5E5;
+    padding: 10px 14px;
+    text-align: left;
+}
+th {
+    background: #FAFAFA;
+}
+</style>
+</head>
+<body>
+<h1>CVE-2026-46242 Deep Dive: A Working Root Exploit on Linux, 21 Dead Ends on Android</h1>
+<p><strong>Author:</strong> Aayush Bankar (Independent Security Researcher)<br />
+<strong>Date:</strong> August 2026<br />
+<strong>Repos:</strong> <a href="https://github.com/Aayushbankar/bad-epoll-lab">Tier 1 — bad-epoll-lab</a> | <a href="https://github.com/Aayushbankar/bad_epoll_ab_tier2">Tier 2 — bad_epoll_ab_tier2</a>  </p>
+<p><strong>Original Vulnerability Credit:</strong> Discovered and exploited by <strong>Jaeyoung Chung</strong> (<a href="https://github.com/J-jaeyoung/bad-epoll">github.com/J-jaeyoung/bad-epoll</a>) via Google's kernelCTF program.</p>
+<blockquote>
+<p><strong>📄 Complete Technical Writeup (26 pages, PDF) — available now:</strong> This Medium post is a distilled narrative. For the full dossier — executive summary, environment &amp; reproducibility (Tier-1 offsets/gadgets, Tier-2 GKI build), expanded Tier-1 chain, 21 dead ends with killing VER/EXP, experiment index, and verification ledger excerpt — download the technical writeup: <strong><a href="https://github.com/Aayushbankar/bad_epoll_ab_tier2/blob/publish/clean-and-writeup-2026-08-29/article/CVE-2026-46242_Technical_Writeup.pdf">CVE-2026-46242_Technical_Writeup.pdf</a></strong> (also in § Links; ping for direct download).</p>
+</blockquote>
+<hr />
+<blockquote>
+<h3>📌 Research Scope &amp; Attribution</h3>
+<ul>
+<li><strong>Original Discovery &amp; Exploit</strong>: CVE-2026-46242 ("Bad Epoll", CVSS 7.8) was discovered, analyzed, and exploited by security researcher <strong>Jaeyoung Chung</strong>, who achieved a ~99% reliable root exploit against Google's kernelCTF environment (<a href="https://github.com/J-jaeyoung/bad-epoll">J-jaeyoung/bad-epoll</a>). The bug was patched upstream in Linux kernel commit <code>a6dc643c693</code>.</li>
+<li><strong>This Project's Contribution</strong>: </li>
+<li><strong>Tier 1 (x86_64/QEMU)</strong>: Independent reproduction, toolchain porting (GCC 16 adaptation, database regeneration), and runtime verification of the kernelCTF exploit chain.</li>
+<li><strong>Tier 2 (ARM64 Android 14 GKI)</strong>: Original portability and exploitability research evaluating whether the primitive survives modern Android kernel mitigations (PAC, BTI, kCFI, MTE, and slab isolation) — establishing a documented negative result (DoS-only). <strong>Crucially, this ran on a deliberately backported-vulnerable build, not a stock device</strong> (see disclosure below).</li>
+</ul>
+</blockquote>
+<hr />
+<blockquote>
+<h3>⚠️ Tier 2 Test Methodology Disclosure (read before the Android section)</h3>
+<p>The Tier 2 assessment did <strong>not</strong> run against a stock or production Android kernel. <strong>Stock Android GKI 6.1.23 (base commit <code>7e35917775b8</code>) is not vulnerable to CVE-2026-46242</strong> — the vulnerability-introducing commit <code>58c9b016e128</code> (Linux v6.4-rc1) is absent from the 6.1 branch. This is consistent with discoverer Jaeyoung Chung's own affected-version statement: the bug was introduced in v6.4, so v6.1-based devices (e.g. Pixel 8) are not affected.</p>
+<p>To study what Android's mitigation stack does to <em>this</em> primitive, we <strong>deliberately cherry-picked the 6.1.y backport commit <code>a1f93804449d</code> into the GKI 6.1.23 source tree</strong> to reconstruct a vulnerable build for testing. Every Tier 2 result below (0/102,740 natural race hits, 21 dead ends, DoS-only verdict) is therefore a <strong>portability / mitigation study of a synthetic, backported-vulnerable kernel — not a finding about any shipping or production Android device.</strong></p>
+<p>The correct framing is: <em>"if CVE-2026-46242 were present on a GKI 6.1 kernel, would Android's mitigation stack stop exploitation?"</em> — <strong>not</strong> <em>"we tested a real-world vulnerable Android kernel."</em></p>
+</blockquote>
+<p>Every Linux process that handles network connections, manages file descriptors, or runs an event loop almost certainly uses <code>epoll</code>. It is the backbone of high-performance I/O on Linux — nginx, Node.js, Android's SurfaceFlinger, and the Binder driver all depend on it. When a Use-After-Free vulnerability lands in this subsystem, the blast radius is enormous: every server, every phone, every container.</p>
+<p><strong>CVE-2026-46242</strong>, known as "Bad Epoll," is exactly that — a race condition in the kernel's <code>epoll</code> implementation that frees a critical data structure while another thread is still writing to it. On a standard x86_64 Linux VM, I ported and reproduced the original kernelCTF exploit chain to achieve a working root shell (<code>UID: 0</code>). On a backported-vulnerable Android ARM64 GKI 6.1 build (reconstructed for testing by cherry-picking the 6.1.y backport into stock 6.1.23), I conducted new exploitability research and hit a wall — 21 documented dead ends, zero natural race hits in 102,740 attempts, and a final verdict of <strong>Denial of Service only</strong> (on that synthetic build, not stock Android).</p>
+<p>This post is the full technical story: the vulnerability mechanics, the working x86_64 exploit chain, the systematic ARM64 Android assessment, every exploitation chain that failed and why, and what Android's modern mitigation stack actually stops in practice. If you've ever wanted to see what happens when a real vulnerability meets real mitigations — not in a whitepaper, but in GDB traces and slab dumps — this is it.</p>
+<hr />
+<h2>CVE-2026-46242: The Basics</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CVE</strong></td>
+<td>CVE-2026-46242 (CVSS 7.8)</td>
+</tr>
+<tr>
+<td><strong>Name</strong></td>
+<td>Bad Epoll</td>
+</tr>
+<tr>
+<td><strong>Class</strong></td>
+<td>Use-After-Free (race condition)</td>
+</tr>
+<tr>
+<td><strong>Subsystem</strong></td>
+<td><code>fs/eventpoll.c</code></td>
+</tr>
+<tr>
+<td><strong>Original Discoverer &amp; PoC</strong></td>
+<td>Jaeyoung Chung (<a href="https://github.com/J-jaeyoung/bad-epoll">J-jaeyoung/bad-epoll</a>) via Google kernelCTF</td>
+</tr>
+<tr>
+<td><strong>Introduced</strong></td>
+<td>v6.4-rc1 (commit <code>58c9b016e128</code>)</td>
+</tr>
+<tr>
+<td><strong>Patched Upstream</strong></td>
+<td>v6.11 / v7.1-rc1 (commit <code>a6dc643c693</code>)</td>
+</tr>
+<tr>
+<td><strong>Affected</strong></td>
+<td>Linux 6.4 through 6.10.x, including Android GKI kernels <strong>≥ 6.4</strong>. (Android GKI <strong>6.1 is <em>not</em> affected</strong> — the introducing commit <code>58c9b016e128</code> is absent from the 6.1 branch; see Tier 2 disclosure below.)</td>
+</tr>
+<tr>
+<td><strong>Impact</strong></td>
+<td>LPE to root (x86_64 kernelCTF target); DoS-only <em>on the deliberately backported-vulnerable GKI 6.1 test build</em> — stock Android GKI 6.1 is unaffected</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<blockquote>
+<h3>📋 Methodology Note</h3>
+<p>This research follows an evidence-first protocol designed to prevent confirmation bias:<br />
+- <strong>42 verification entries</strong> in a formal ledger, each mapped to raw GDB hardware watchpoint traces or static source audits<br />
+- <strong>3 retracted claims</strong> (VER-010, VER-029, VER-030) — kept visible with retraction reasons, not silently deleted<br />
+- <strong>21 dead ends</strong> formally documented with the specific experiment that killed each hypothesis<br />
+- <strong>42 assumptions</strong> tracked with status transitions (validated → falsified) and the evidence that triggered each transition<br />
+- All raw evidence (GDB logs, serial output, disassembly traces) is committed to the repository</p>
+<p>The full evidence chain is in the repos: <a href="https://github.com/Aayushbankar/bad_epoll_ab_tier2/blob/main/tier2/docs/VERIFICATION_LEDGER.md"><code>VERIFICATION_LEDGER.md</code></a>, <a href="https://github.com/Aayushbankar/bad_epoll_ab_tier2/blob/main/tier2/docs/DEAD_ENDS_REGISTER.md"><code>DEAD_ENDS_REGISTER.md</code></a>, <a href="https://github.com/Aayushbankar/bad_epoll_ab_tier2/blob/main/tier2/docs/ASSUMPTIONS_REGISTER.md"><code>ASSUMPTIONS_REGISTER.md</code></a>.</p>
+</blockquote>
+<hr />
+<h2>The Vulnerability: A Race in the Heart of I/O</h2>
+<p>The bug lives in the interaction between <code>__ep_remove()</code> and <code>eventpoll_release()</code> — two kernel functions that can execute concurrently when nested <code>epoll</code> file descriptors are closed from different threads.</p>
+<p>Here's the scenario. You create two epoll instances — an "outer" and an "inner" — and register the inner as a monitored file descriptor on the outer:</p>
+<pre><code class="language-c">int outer = epoll_create1(0);
+int inner = epoll_create1(0);
+epoll_ctl(outer, EPOLL_CTL_ADD, inner, &amp;ev);  // inner watched by outer
+</code></pre>
+<p>Now two threads race to close them:</p>
+<p><strong>Thread A</strong> calls <code>close(outer)</code>. This enters <code>__ep_remove()</code>, which processes the <code>epitem</code> linking the inner fd to the outer epoll. Critically, it executes:</p>
+<pre><code class="language-c">WRITE_ONCE(file-&gt;f_ep, NULL);  // Clears the inner file's epoll backpointer
+</code></pre>
+<p><strong>Thread B</strong> calls <code>close(inner)</code>. This triggers <code>__fput()</code> → <code>eventpoll_release()</code>. The release function checks <code>f_ep</code> on a <strong>lockless fast path</strong>:</p>
+<pre><code class="language-c">if (!file_has_epoll(f))   // Reads f_ep — sees NULL from Thread A
+    return;                // Skips epoll cleanup entirely
+</code></pre>
+<p>Thread B sees <code>NULL</code> (set by Thread A), assumes no epoll references exist, and <strong>frees the <code>struct eventpoll</code></strong> associated with the inner fd. The memory returns to the <code>kmalloc-192</code> slab cache.</p>
+<p>Meanwhile, Thread A is still executing <code>__ep_remove()</code>. It reaches:</p>
+<pre><code class="language-c">hlist_del_rcu(&amp;epi-&gt;fllink);  // Writes to inner_epoll-&gt;refs at offset 160
+</code></pre>
+<p>This writes an <strong>8-byte NULL</strong> to offset <code>0xa0</code> (160) of the <strong>already-freed</strong> <code>struct eventpoll</code>. This is the Use-After-Free.</p>
+<h3>Diagram 1: Attack Surface — Userspace to Kernel UAF</h3>
+<p><img alt="Diagram 1: Attack Surface — Userspace to Kernel UAF" src="https://raw.githubusercontent.com/Aayushbankar/bad_epoll_ab_tier2/publish/clean-and-writeup-2026-08-29/article/assets/diagram-01.png" /></p>
+<hr />
+<h2>struct eventpoll: The Victim Object</h2>
+<p><code>struct eventpoll</code> is 176 bytes, placing it in the kernel's <code>kmalloc-192</code> slab cache. The field at offset 160 (<code>refs</code>, a <code>struct hlist_head</code>) is the UAF write target:</p>
+<pre><code>struct eventpoll (176 bytes → kmalloc-192)
+┌──────────────────────────────────────────────────┐
+│  0x00: wait_queue_head_t wq            (24 B)    │
+│  0x18: wait_queue_head_t poll_wait     (24 B)    │
+│  0x30: struct list_head rdllist        (16 B)    │
+│  0x40: struct rb_root_cached rbr       (16 B)    │
+│  0x50: struct epitem *ovflist          (8  B)    │
+│  0x58: struct wakeup_source *ws        (8  B)    │
+│  0x60: struct user_struct *user        (8  B)    │
+│  0x68: struct file *file               (8  B)    │
+│  0x70: ... (misc fields)               (48 B)    │
+│  0xa0: struct hlist_head refs ← ████ UAF WRITE █│ ← offset 160
+│  0xa8: ... (remaining)                 (8  B)    │
+│  0xb0: end                             (176 B)   │
+└──────────────────────────────────────────────────┘
+</code></pre>
+<p>When the race succeeds and the memory is freed back to <code>kmalloc-192</code>, an attacker can spray <code>msg_msg</code> objects (via SysV IPC <code>msgsnd</code> with 144 bytes of user data) to reclaim the slot. The <code>msg_msg</code> header occupies offsets 0x00–0x2F (48 bytes), and the attacker's payload fills offsets 0x30–0xBF. The UAF NULL write at offset 0xA0 lands <strong>inside the attacker's payload data</strong> — zeroing 8 bytes of their own message, not corrupting any kernel pointer.</p>
+<h3>Diagram 2: Race Timeline — Alloc → Free → Reclaim → UAF</h3>
+<p><img alt="Diagram 2: Race Timeline — Alloc → Free → Reclaim → UAF" src="https://raw.githubusercontent.com/Aayushbankar/bad_epoll_ab_tier2/publish/clean-and-writeup-2026-08-29/article/assets/diagram-02.png" /></p>
+<hr />
+<h2>Tier 1: Root on x86_64</h2>
+<p><strong>Environment:</strong> Fedora 44, Linux 6.12.67 (compiled from source, GCC 16.1.1), QEMU with SMEP/SMAP/KPTI enabled.</p>
+<p>The original kernelCTF exploit authored by Jaeyoung Chung uses a different approach than the ARM64 analysis above — on x86_64, the exploit targets <code>struct epitem</code> (120 bytes, in <code>eventpoll_epi</code> cache on newer kernels, but cross-cacheable on the COS target) and <code>struct file</code>, not <code>struct eventpoll</code>. The chain:</p>
+<h3>Diagram 3: Tier 1 Exploitation Chain</h3>
+<p><img alt="Diagram 3: Tier 1 Exploitation Chain" src="https://raw.githubusercontent.com/Aayushbankar/bad_epoll_ab_tier2/publish/clean-and-writeup-2026-08-29/article/assets/diagram-03.png" /></p>
+<p><strong>Stage 1 — Race trigger:</strong> Two threads race <code>close()</code> on nested epoll FDs. False-sharing and timer interrupts widen the window. Success rate: ~99% after tuning timing constants for QEMU latency.</p>
+<p><strong>Stage 2 — Cross-cache reclaim:</strong> The freed <code>struct file</code> is reclaimed by spraying <code>pipe_buffer</code> objects, placing attacker-controlled data over the file's <code>f_op</code> and <code>f_inode</code> pointers.</p>
+<p><strong>Stage 3 — Arbitrary Address Read:</strong> By forging <code>f_inode</code>, the exploit uses <code>/proc/self/fdinfo</code> (which calls <code>seq_file</code> operations) to read arbitrary kernel memory, leaking <code>task_struct</code> addresses and computing the KASLR base.</p>
+<p><strong>Stage 4 — RIP control:</strong> The exploit overwrites <code>file-&gt;f_op-&gt;poll</code> with a chosen gadget address. Calling <code>poll()</code> from userspace triggers the hijacked function pointer.</p>
+<p><strong>Stage 5 — JOP/ROP chain:</strong> Four stack pivots progressively manipulate registers through <code>__x86_indirect_call_thunk_rdi</code>, landing RSP onto an mmap'd payload page. The ROP chain calls <code>commit_creds(&amp;init_cred)</code>, then returns to userspace via <code>SWAPGS_RESTORE_REGS_AND_RETURN_TO_USERMODE</code>.</p>
+<p><strong>Result:</strong></p>
+<pre><code>cross-cache ok
+kernel_base=ffffffff81000000
+task=ffff8880...
+READY_FOR_GDB
+Win! UID: 0, GID: 0, EUID: 0
+</code></pre>
+<h3>The Offset Desynchronization Breakthrough</h3>
+<p>The exploit initially crashed with a Supervisor Write Fault at <code>0xffffffff810001bd</code> — dead padding space. The root cause: the upstream <code>target_db.kxdb</code> gadget database was built for Google's COS kernel. Compiling the same kernel version with a different compiler (GCC 16 vs Clang 12) shifts every gadget offset. The fix was regenerating the database by running <code>rp++</code> and <code>angrop</code> against our local <code>vmlinux</code> — which itself required patching a <code>PicklingError</code> in angrop's multiprocessing code (a nested class <code>SpecialMem</code> couldn't be serialized across processes).</p>
+<p><strong>Remaining issue:</strong> The userland return from kernel space leaves RSP misaligned, causing <code>execve("/bin/sh")</code> to SIGSEGV. Since the exploit runs as PID 1 (<code>/init</code>), this panics the kernel. The privilege escalation itself is proven (UID 0 achieved), but the shell is unstable. This is a post-exploitation cleanup problem, not a primitive failure.</p>
+<hr />
+<h2>Tier 2: The Android ARM64 Assessment</h2>
+<p><strong>Environment:</strong> Android 14 GKI, kernel 6.1.23 (base commit <code>7e35917775b8</code>), running under QEMU <code>aarch64</code> with GDB. <strong>Important:</strong> stock GKI 6.1.23 is <em>not</em> vulnerable to CVE-2026-46242 (the introducing commit <code>58c9b016e128</code>, v6.4-rc1, is absent). To create a test target, we cherry-picked the 6.1.y backport <code>a1f93804449d</code> into this tree, producing a <strong>deliberately backported-vulnerable build</strong>. All Tier 2 results below describe that synthetic build, not any production Android device.</p>
+<p>The Tier 2 goal was a <em>hypothetical</em> assessment: <strong>if</strong> Bad Epoll were present on a GKI 6.1 kernel, could it achieve privilege escalation? — i.e., whether the vulnerability (had it existed on 6.1) could collapse the traditional multi-stage Android exploit chain (sandbox escape → kernel exploit → SELinux bypass → root) into a single step. This is a portability / mitigation study of a synthetic vulnerable kernel, <strong>not a claim that any production Android device is affected</strong>.</p>
+<h3>The Slab Cache Journey</h3>
+<p>The first major discovery was a slab cache correction that invalidated weeks of work. The initial assumption — that <code>struct epitem</code> (120 bytes) lived in <code>kmalloc-128</code> or a mergeable cache — was wrong. On the target kernel:</p>
+<ul>
+<li><code>struct epitem</code> resides in a <strong>dedicated</strong> <code>eventpoll_epi</code> slab cache, created with <code>SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_ACCOUNT</code> at <code>eventpoll.c:2555</code></li>
+<li>The <code>SLAB_ACCOUNT</code> flag prevents merging with <code>kmalloc-128</code> (verified: <code>slab_common.c:173-215</code>)</li>
+<li><code>CONFIG_MEMCG=n</code> means <code>kmalloc-cg-128</code> doesn't exist</li>
+<li>Cross-cache reclaim from generic kmalloc caches is <strong>impossible</strong></li>
+</ul>
+<p>This killed the <code>pipe_buffer</code> → <code>struct file</code> cross-cache strategy that worked on x86_64. It also killed <code>snd_timer_user</code> and every other <code>kmalloc-192</code> spray object for reclaiming <code>epitem</code>.</p>
+<p>The breakthrough came from recognizing the <strong>real</strong> UAF victim: not <code>struct epitem</code>, but <code>struct eventpoll</code> itself (176 bytes, in generic <code>kmalloc-192</code>). The multi-threaded race (Thread A clears <code>f_ep</code>, Thread B frees the inner eventpoll) puts a freed <code>struct eventpoll</code> back on the <code>kmalloc-192</code> freelist, where <code>msg_msg</code> objects (48-byte header + user payload) can reclaim it.</p>
+<h3>msg_msg Reclaim Mechanics</h3>
+<p>SysV IPC <code>msgsnd()</code> with 144 bytes of user data allocates a <code>msg_msg</code> struct in <code>kmalloc-192</code>:</p>
+<pre><code>msg_msg in kmalloc-192 (reclaiming freed eventpoll slot)
+┌─────────────────────────────────────────────────────┐
+│  0x00–0x2F: msg_msg header (m_list, m_type, m_ts)   │  ← kernel-controlled
+│  0x30–0xBF: user payload (144 bytes)                 │  ← attacker-controlled
+│  0xA0: ████ UAF NULL write lands HERE ████           │  ← inside payload
+│  0xC0: end (192 byte slab slot)                      │
+└─────────────────────────────────────────────────────┘
+</code></pre>
+<p>Verified via GDB memory dump: marker <code>0xdead000000000000</code> placed at user byte 88 (slab offset 136) appeared correctly. The reclaim is reliable — <strong>under GDB assistance</strong>. The GDB infinite-loop patch creates a 2–3 second spray window that does not exist naturally.</p>
+<hr />
+<h2>The 21 Dead Ends: Why Every Exploitation Chain Failed</h2>
+<h3>Diagram 4: Exploitation Decision Tree</h3>
+<p><img alt="Diagram 4: Exploitation Decision Tree" src="https://raw.githubusercontent.com/Aayushbankar/bad_epoll_ab_tier2/publish/clean-and-writeup-2026-08-29/article/assets/diagram-04.png" /></p>
+<h3>Chain 0 — Controlled Crash via <code>percpu_counter_dec</code></h3>
+<p><strong>Hypothesis:</strong> After reclaiming the freed eventpoll with a <code>msg_msg</code> containing a fake <code>user_struct</code> pointer at offset 136, <code>__ep_remove()</code> would call <code>percpu_counter_dec(&amp;ep-&gt;user-&gt;epoll_watches)</code> and dereference the attacker-controlled pointer, enabling a controlled crash or write.</p>
+<p><strong>Killing evidence (VER-028, EXP-019):</strong> GDB trace showed <code>percpu_counter_dec</code> operates on the <strong>outer</strong> eventpoll's <code>user</code> field (which is valid), not the freed inner eventpoll. The <code>ep</code> parameter in <code>__ep_remove(ep, epi)</code> is always the outer epoll. The attacker-controlled marker at offset 136 was placed but never read by the kernel.</p>
+<h3>Chain 1 — KASLR Leak via Dual-Watch Topology</h3>
+<p><strong>Hypothesis:</strong> Register the inner epoll on two outer epolls (creating two epitems in <code>inner_epoll-&gt;refs</code>). When the race fires, <code>hlist_del_rcu</code> would write <code>epi2</code>'s kernel heap address (not NULL) to offset 160. Read it back via <code>msgrcv</code> → KASLR defeated.</p>
+<p><strong>Killing evidence (VER-033, EXP-024):</strong> The condition for the UAF (single epitem: <code>f_ep = NULL</code> path at <code>eventpoll.c:826</code>) and the condition for a kernel pointer write (multi-epitem: <code>hlist_del_rcu</code> writes the next node's address) are <strong>mutually exclusive</strong>. With 2+ epitems, <code>WRITE_ONCE(f_ep, NULL)</code> never executes → the lockless bypass never triggers → the inner eventpoll is never freed → <code>hlist_del_rcu</code> writes to <strong>live</strong> memory. Hardware watchpoint confirmed: <code>ep_free_inner_seen=False</code> at write time.</p>
+<h3>Chain 2 — Arbitrary Decrement via Fake <code>user_struct</code></h3>
+<p><strong>Hypothesis:</strong> Craft a fake <code>user_struct</code> at a known address, overwrite <code>ep-&gt;user</code> (offset 136) via msg_msg spray, then <code>percpu_counter_dec</code> decrements the attacker's chosen counter — potentially <code>modprobe_path</code> or credential counters.</p>
+<p><strong>Killing evidence (VER-031, EXP-023b):</strong> Same structural impossibility as Chain 0. Breakpoint at <code>percpu_counter_add_batch</code> showed <code>fbc = root_user+8</code> — the outer epoll's user, unchanged by the spray. The <code>ep</code> parameter is never the freed object.</p>
+<h3>Chain 3 — Full LPE</h3>
+<p><strong>Hypothesis:</strong> Combine Chain 1 (KASLR defeat) and Chain 2 (arbitrary decrement) to achieve credential or <code>modprobe_path</code> corruption.</p>
+<p><strong>Killing evidence:</strong> Both prerequisites are dead.</p>
+<h3>Additional Dead Ends</h3>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Why Dead</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rb_erase_cached</code> arbitrary write at offset 104</td>
+<td>Operates on outer epoll's <code>rbr</code> (valid)</td>
+</tr>
+<tr>
+<td><code>spin_lock_irq</code> corruption at offset 96</td>
+<td>Operates on outer epoll's <code>lock</code> (valid)</td>
+</tr>
+<tr>
+<td><code>struct file</code> type confusion via <code>ep_item_poll</code></td>
+<td><code>ep-&gt;mtx</code> prevents concurrent access to stale epitem</td>
+</tr>
+<tr>
+<td><code>pipe_buffer</code> → <code>struct file</code> cross-cache</td>
+<td><code>SLAB_TYPESAFE_BY_RCU</code> + size mismatch</td>
+</tr>
+<tr>
+<td><code>epitem</code> same-cache reclaim</td>
+<td><code>list_del_init</code> before <code>call_rcu</code> — corruption doesn't survive</td>
+</tr>
+<tr>
+<td><code>snd_timer_user</code> reclaim</td>
+<td>Different slab cache entirely</td>
+</tr>
+<tr>
+<td><code>eventpoll_epi</code> → <code>kmalloc-128</code> merge</td>
+<td><code>SLAB_ACCOUNT</code> prevents merge</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>The Schedulability Wall</h2>
+<p>Even if a useful primitive existed, there's a harder problem: the race never fires without GDB assistance.</p>
+<h3>Natural Race Attempts</h3>
+<table>
+<thead>
+<tr>
+<th>Experiment</th>
+<th>Iterations</th>
+<th>Hits</th>
+<th>Optimizations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NAT-001</td>
+<td>10,000</td>
+<td><strong>0</strong></td>
+<td>Baseline, 2 CPUs</td>
+</tr>
+<tr>
+<td>NAT-005</td>
+<td>92,740</td>
+<td><strong>0</strong></td>
+<td><code>isolcpus=1</code>, 4MB cache eviction sweeper, 10-cycle delay steps, closed-loop calibration</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>102,740</strong></td>
+<td><strong>0</strong></td>
+<td>Best alignment error: 1 cycle (~16 ns) at delay=2,360</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Root cause analysis:</strong></p>
+<ol>
+<li><code>cond_resched()</code> at <code>eventpoll.c:888/903</code> is a <strong>no-op</strong>: the <code>dynamic_cond_resched</code> static key is <code>FALSE</code> under <code>CONFIG_PREEMPT_DYNAMIC</code> default <code>PREEMPT_VOLUNTARY</code>; <code>TIF_NEED_RESCHED</code> is never set on the pinned CPU (VER-035)</li>
+<li><code>__ep_remove</code> contains <strong>zero</strong> preemption points (disassembly-confirmed)</li>
+<li>The vulnerable sequence runs atomically with respect to scheduling</li>
+<li>Real window: ~250–550 cycles (~125–275 ns at 2 GHz) — below scheduling granularity</li>
+</ol>
+<h3>Diagram 5: Why 0/102,740 Is Conclusive</h3>
+<pre><code>                    Natural Race Hit Rate (QEMU TCG)
+    ┌────────────────────────────────────────────────────────┐
+    │                                                        │
+    │  NAT-001:  0 / 10,000   (CI upper bound: 0.0384%)     │
+    │  ██████████████████████████████████████████ 0%         │
+    │                                                        │
+    │  NAT-005:  0 / 92,740   (with extreme optimization)   │
+    │  ██████████████████████████████████████████ 0%         │
+    │                                                        │
+    │  Combined: 0 / 102,740                                 │
+    │  ██████████████████████████████████████████ 0%         │
+    │                                                        │
+    │  95% CI upper bound: &lt; 0.003%                          │
+    │  Required for exploitation: ≥ 0.01% (conservative)     │
+    │                                                        │
+    │  ─── Race window anatomy ───                           │
+    │                                                        │
+    │  WRITE_ONCE(f_ep,NULL) ──── 250–550 cycles ────► UAF   │
+    │          ↑                        ↑                    │
+    │    Thread A writes           Thread B must             │
+    │    then continues            see NULL, free,           │
+    │    WITHOUT pause             and Thread A              │
+    │                              must resume               │
+    │                              in this window            │
+    │                                                        │
+    │  Scheduling granularity:  ~4,000,000 cycles            │
+    │  Race window:             ~400 cycles                  │
+    │  Ratio:                   1 : 10,000                   │
+    │                                                        │
+    │  Best alignment achieved: 1 cycle error (~16 ns)       │
+    │  Still: 0 hits                                         │
+    └────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>Hardware caveat:</strong> QEMU TCG (software CPU translation) does not model real cache-coherency latency, store buffer propagation delays, or asymmetric core clock drift. On physical ARM64 silicon (e.g., Cortex-X4 at 3.2 GHz + Cortex-A520 at 1.8 GHz), these hardware effects create natural phase shifts that could theoretically widen the window. A first-principles analysis (detailed in the repo) concludes the race is <strong>physically viable</strong> on real silicon — but the primitive remains capped at DoS regardless.</p>
+<hr />
+<h2>Why Android's Mitigations Worked</h2>
+<p>Even if an attacker could achieve 100% reliable race triggering on physical hardware, the mitigation stack blocks escalation from multiple angles:</p>
+<h3>Control-Flow Integrity</h3>
+<table>
+<thead>
+<tr>
+<th>Mitigation</th>
+<th>What It Blocks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PAC (Pointer Authentication)</strong></td>
+<td>Function pointers are cryptographically signed with hardware keys. Forging <code>f_op-&gt;poll</code> → hardware translation fault. While micro-architectural side-channels like <strong>PACMAN</strong> (<em>MIT CSAIL, 2022</em>) demonstrate speculative verification oracles in isolated userland environments, an operational GKI kernel with an unguided NULL-write primitive lacks the arbitrary read oracle required to synthesize valid pointer signatures.</td>
+</tr>
+<tr>
+<td><strong>kCFI (Kernel Control Flow Integrity)</strong></td>
+<td>Clang validates 32-bit type hashes before every indirect <code>blr</code> call. Even a valid kernel address fails if the hash doesn't match.</td>
+</tr>
+<tr>
+<td><strong>BTI (Branch Target Identification)</strong></td>
+<td>Indirect branches must land on <code>bti c</code> instruction landing pads. Random code gadgets are unreachable.</td>
+</tr>
+</tbody>
+</table>
+<h3>Memory Safety</h3>
+<table>
+<thead>
+<tr>
+<th>Mitigation</th>
+<th>What It Blocks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MTE (Memory Tagging Extension)</strong></td>
+<td>4-bit physical tags on every 16-byte granule. Accessing freed memory with mismatched tags → synchronous hardware fault. While speculative leakage of tags has been explored academically (<strong>TikTag</strong>, <em>2024</em>), asynchronous multicore system noise prevents reliable tag recovery in an unguided race, turning stale UAF access into an immediate hardware exception.</td>
+</tr>
+<tr>
+<td><strong>SLAB_TYPESAFE_BY_RCU</strong></td>
+<td><code>filp_cachep</code> (struct file cache) cannot be reclaimed by objects from different caches.</td>
+</tr>
+<tr>
+<td><strong>SLAB_ACCOUNT</strong></td>
+<td><code>eventpoll_epi</code> cache is fully isolated from generic kmalloc caches.</td>
+</tr>
+</tbody>
+</table>
+<h3>Scheduling</h3>
+<table>
+<thead>
+<tr>
+<th>Mitigation</th>
+<th>What It Blocks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PREEMPT_VOLUNTARY</strong></td>
+<td><code>__ep_remove</code> has zero preemption points. The vulnerable instruction sequence runs atomically.</td>
+</tr>
+<tr>
+<td><strong>No <code>cond_resched</code> effect</strong></td>
+<td>Static key <code>dynamic_cond_resched</code> is FALSE; <code>TIF_NEED_RESCHED</code> never set on pinned CPUs.</td>
+</tr>
+</tbody>
+</table>
+<p>The x86_64 exploit bypasses KASLR, SMEP, SMAP, and KPTI through AAR, JOP/ROP, and <code>SWAPGS</code> return tricks. ARM64 Android adds PAC, BTI, kCFI, MTE, and slab isolation on top of that baseline — and in this case, they held.</p>
+<hr />
+<h2>Lessons and Takeaways</h2>
+<p><strong>1. A vulnerability is not an exploit.</strong> CVE-2026-46242 is real, verified, and mechanically reproducible. On x86_64 it grants root. On the backported-vulnerable GKI 6.1 build it's a kernel panic at best. The gap between "the bug exists" and "the bug is exploitable" is the entire story — and importantly, stock Android GKI 6.1 was never exposed to this bug at all (it was introduced in v6.4).</p>
+<p><strong>2. The mitigation stack works in depth.</strong> No single Android mitigation killed this exploit — they all contributed. PAC blocks function pointer forgery. kCFI blocks indirect call hijacking. SLAB isolation blocks cross-cache reclaim. MTE detects stale access. PREEMPT_VOLUNTARY closes the scheduling window. Each layer removes options until nothing viable remains.</p>
+<p><strong>3. Negative results are scientifically valuable.</strong> 21 dead ends, 3 retracted claims, and 0/102,740 race hits tell you something definitive: this is what a vulnerability looks like when modern mitigations are actually working. Too much security research only publishes successes. The failures are where the signal is.</p>
+<p><strong>4. Evidence discipline prevents confirmation bias.</strong> The adversarial self-review at Phase 3 (EVO-009) discovered that <strong>every</strong> prior race demonstration was GDB-assisted — an artificial preemption point that doesn't exist in the real kernel. Without the verification ledger tracking <em>how</em> each claim was proven, this would have gone unnoticed. Track your methodology, not just your results.</p>
+<p><strong>5. Compiler changes break exploit portability.</strong> The Tier 1 exploit failed initially because GCC 16 shifted every gadget offset compared to Google's Clang build. Same kernel version, same source — different binary layout. Exploit databases (<code>target_db.kxdb</code>) must match the exact executing binary.</p>
+<p><strong>6. The attack surface is shifting to drivers.</strong> When core kernel subsystems are well-mitigated, the remaining attack surface is vendor drivers — GPU, camera, audio — which often lack the same level of hardening. Vendor GPU drivers frequently present deterministic page-level UAFs (rather than schedulable races) and direct physical memory manipulation that inherently sidesteps PAC, BTI, and kCFI without needing function pointer forgery.</p>
+<hr />
+<h2>What's Next: Open Questions</h2>
+<p>The Bad Epoll research concludes with a <strong>DoS-only verdict for the deliberately backported-vulnerable GKI 6.1.23 build we tested</strong> (stock Android GKI 6.1 is unaffected). But several questions remain open:</p>
+<ol>
+<li>
+<p><strong>Physical ARM64 validation:</strong> Would the race fire naturally on real silicon (Cortex-X4 + Cortex-A520 big.LITTLE)? The first-principles analysis says yes, but at what rate? A 2-week hardware timebox with ~1M iterations would settle this definitively.</p>
+</li>
+<li>
+<p><strong>Alternative kmalloc-192 victims:</strong> The EXP-016 audit covered <code>fib6_info</code>, <code>snd_timer_user</code>, <code>packet_fanout</code>, <code>urb</code>, and <code>wakeup_source</code>. Are there other kmalloc-192 structs where NULL at offset 160 could corrupt something more useful than a crash-inducing pointer? I'd genuinely like to hear from anyone who's done deep slab cross-referencing on (vulnerable) GKI 6.1 builds.</p>
+</li>
+<li>
+<p><strong>Different kernel configs:</strong> Our assessment is on <code>PREEMPT_VOLUNTARY</code> with <code>PREEMPT_DYNAMIC</code> defaulting to voluntary. Would <code>PREEMPT_FULL</code> (or a vendor kernel with different preemption settings) add schedulable points inside <code>__ep_remove</code>?</p>
+</li>
+<li>
+<p><strong>Data-only attacks:</strong> With control-flow hijacking fully blocked by PAC/BTI/kCFI, is there a data-only escalation path from a fixed NULL write that we missed? The constraint is brutal — 8 bytes, fixed value (0x0), fixed offset (160), single write — but data-only attacks have surprised us before.</p>
+</li>
+</ol>
+<p><strong>If you have ideas on any of these, I'd love to hear them.</strong> This vulnerability is public, the repos are linked above, and the evidence chain is fully documented. A fresh pair of eyes on the kmalloc-192 landscape or the scheduling analysis could change the Tier 2 verdict.</p>
+<hr />
+<h2>Links &amp; Repositories</h2>
+<ul>
+<li><strong>This Medium article:</strong> <code>&lt;&lt;MEDIUM_URL_PENDING&gt;&gt;</code> (distilled narrative; technical depth preserved)</li>
+<li><strong>📄 Complete Technical Writeup (PDF, 26 pages):</strong> <strong><a href="https://github.com/Aayushbankar/bad_epoll_ab_tier2/blob/publish/clean-and-writeup-2026-08-29/article/CVE-2026-46242_Technical_Writeup.pdf">CVE-2026-46242_Technical_Writeup.pdf</a></strong> — full dossier with executive summary, environment &amp; reproducibility (Tier-1 offsets/gadgets at <code>03_offsets_layout.md</code>, Tier-2 build at <code>7e35917775b8</code> + <code>a1f93804449d</code>), expanded Tier-1 chain, 21 dead ends, schedulability analysis, mitigations, and Appendices A–F (verification ledger, experiment index, glossary). Ping for direct download.</li>
+<li><strong>Tier-1 / Tier-2 repo:</strong> <a href="https://github.com/Aayushbankar/bad_epoll_ab_tier2">github.com/Aayushbankar/bad_epoll_ab_tier2</a> @ <code>publish/clean-and-writeup-2026-08-29</code></li>
+<li><strong>Tier-2 repo:</strong> <a href="https://github.com/Aayushbankar/bad_epoll_ab_tier2">github.com/Aayushbankar/bad_epoll_ab_tier2</a> @ <code>main</code></li>
+<li><strong>Evidence ledgers:</strong> <code>tier2/docs/VERIFICATION_LEDGER.md</code> (42 entries), <code>DEAD_ENDS_REGISTER.md</code> (21), <code>ASSUMPTIONS_REGISTER.md</code> (42), <code>EXPERIMENT_INDEX.md</code></li>
+</ul>
+<hr />
+<h2>Disclosure &amp; Attribution Note</h2>
+<ul>
+<li><strong>Original Vulnerability &amp; Exploit</strong>: CVE-2026-46242 was discovered and exploited by security researcher <strong>Jaeyoung Chung</strong>, submitted to Google's kernelCTF program with a public proof-of-concept at <a href="https://github.com/J-jaeyoung/bad-epoll">github.com/J-jaeyoung/bad-epoll</a>.</li>
+<li><strong>Upstream Patch</strong>: The vulnerability is publicly disclosed and patched upstream in Linux kernel commit <code>a6dc643c693</code> (v6.11 / v7.1-rc1).</li>
+<li><strong>This Research</strong>: Represents an independent reproduction of the Tier 1 x86_64 exploit and original Tier 2 portability/exploitability research evaluating mitigation boundaries on a deliberately backported-vulnerable Android 14 ARM64 GKI 6.1.23 build. Stock Android GKI 6.1 is <strong>not</strong> affected by CVE-2026-46242 (introducing commit <code>58c9b016e128</code>, v6.4-rc1, is absent); the Tier 2 test kernel was reconstructed by cherry-picking the 6.1.y backport <code>a1f93804449d</code>. No unpatched 0-day primitives or undisclosed flaws are presented.</li>
+</ul>
+<hr />
+<h2>About the Author</h2>
+<p><strong>Aayush Bankar</strong> is an Independent Security Researcher focused on low-level systems security, kernel internals, and vulnerability research. The research workflow integrates AI-assisted agentic coding tools (local LLM orchestration) for code comprehension, hypothesis generation, and evidence organization — with all engineering decisions and runtime evidence verified manually. The AI-augmented workflow is documented transparently in the Tier 1 Final Writeup.</p>
+<p><strong>Connect:</strong> <a href="https://github.com/Aayushbankar">GitHub</a> · <a href="https://linkedin.com/in/aayushbankar">LinkedIn</a></p>
+<hr />
+<p><em>Thanks for reading. If you work in kernel exploitation, Android security, or mitigation engineering, I'd appreciate your perspective — especially on the open questions above. The best outcomes in security research come from collaborative scrutiny, not solo claims.</em></p>
+</body>
+</html>
