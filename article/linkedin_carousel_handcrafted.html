@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+@page {
+    size: 1080px 1350px;
+    margin: 0;
+}
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: "SF Mono", "JetBrains Mono", "Source Code Pro", Menlo, Monaco, Consolas, monospace;
+    background-color: #0D1117;
+    color: #C9D1D9;
+    -webkit-font-smoothing: antialiased;
+}
+.slide {
+    width: 1080px;
+    height: 1350px;
+    page-break-after: always;
+    position: relative;
+    padding: 70px 75px;
+    background-color: #0D1117;
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 12px solid #161B22;
+}
+
+/* Blueprint Header */
+.bp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px dashed #30363D;
+    padding-bottom: 18px;
+}
+.bp-title {
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: #58A6FF;
+    font-weight: 700;
+}
+.bp-stamp {
+    font-size: 13px;
+    color: #8B949E;
+    border: 1px solid #30363D;
+    padding: 3px 8px;
+    border-radius: 3px;
+}
+
+/* Big Typography */
+h1.main-title {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", sans-serif;
+    font-size: 68px;
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    color: #F0F6FC;
+    margin: 20px 0 16px 0;
+}
+h2.section-title {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", sans-serif;
+    font-size: 46px;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -1px;
+    color: #F0F6FC;
+    margin-bottom: 20px;
+}
+
+/* Rubber Stamp */
+.verdict-stamp {
+    display: inline-block;
+    border: 3px solid #F85149;
+    color: #F85149;
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    padding: 8px 18px;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+    margin: 15px 0 25px 0;
+    background: rgba(248, 81, 73, 0.08);
+}
+
+/* Technical Terminal Windows */
+.terminal-window {
+    background: #010409;
+    border: 1px solid #30363D;
+    border-radius: 6px;
+    padding: 24px;
+    margin: 16px 0;
+}
+.term-bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot-red { background: #FF5F56; }
+.dot-yellow { background: #FFBD2E; }
+.dot-green { background: #27C93F; }
+
+/* ASCII Diagram Boxes */
+.ascii-box {
+    font-family: "SF Mono", monospace;
+    font-size: 17px;
+    line-height: 1.45;
+    color: #79C0FF;
+    white-space: pre;
+    overflow: hidden;
+}
+
+/* Metric Display */
+.metric-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 18px 0;
+}
+.metric-tile {
+    background: #161B22;
+    border: 1px solid #30363D;
+    padding: 20px 24px;
+    border-radius: 6px;
+}
+.metric-val-big {
+    font-size: 42px;
+    font-weight: 800;
+    color: #F0F6FC;
+    line-height: 1;
+    margin-bottom: 6px;
+}
+.metric-val-red { color: #F85149; }
+.metric-val-green { color: #56D364; }
+.metric-caption {
+    font-size: 13px;
+    color: #8B949E;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Handcrafted Timeline */
+.timeline-step {
+    border-left: 2px solid #30363D;
+    padding-left: 20px;
+    margin-left: 10px;
+    margin-bottom: 20px;
+    position: relative;
+}
+.timeline-step::before {
+    content: "";
+    position: absolute;
+    left: -7px;
+    top: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #58A6FF;
+}
+.timeline-step.fail::before {
+    background: #F85149;
+}
+.step-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #F0F6FC;
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+    margin-bottom: 4px;
+}
+.step-desc {
+    font-size: 16px;
+    color: #8B949E;
+    line-height: 1.4;
+}
+
+/* Footer */
+.bp-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 2px dashed #30363D;
+    padding-top: 18px;
+    font-size: 13px;
+    color: #8B949E;
+}
+.bp-author {
+    color: #F0F6FC;
+    font-weight: 700;
+}
+</style>
+</head>
+<body>
+
+<!-- SLIDE 1: INCIDENT REPORT COVER -->
+<div class="slide">
+    <div class="bp-header">
+        <div class="bp-title">CYPHERMATRIX LABS // EXPLOITABILITY DOSSIER // CVE-2026-46242</div>
+        <div class="bp-stamp">STAGE: ARCHIVED</div>
+    </div>
+
+    <div>
+        <div style="font-size: 15px; color: #8B949E; letter-spacing: 2px; margin-top: 10px;">
+            VULNERABILITY RESEARCH REPORT
+        </div>
+        <h1 class="main-title">
+            ROOT ON LINUX.<br>
+            <span style="color: #F85149;">DEAD ON ANDROID.</span>
+        </h1>
+
+        <div class="verdict-stamp">VERDICT: DoS-ONLY (0/102k RUNS)</div>
+
+        <div class="terminal-window">
+            <div class="term-bar"><div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div></div>
+            <div class="ascii-box" style="color: #58A6FF;">
++-------------------------------------------------------------+
+| TARGET : CVE-2026-46242 ("Bad Epoll" - fs/eventpoll.c UAF)  |
+| DISCOV : Jaeyoung Chung (Google kernelCTF)                 |
+| TESTED : x86_64 Linux VM vs ARM64 Android GKI 6.1 (testbed) |
+| RESULT : 102,740 Race Runs -> 0 Hits -> 21 Dead Ends Killed |
++-------------------------------------------------------------+
+            </div>
+        </div>
+    </div>
+
+    <div class="bp-footer">
+        <div>RESEARCH BY: <span class="bp-author">AAYUSH BANKAR · CYPHERMATRIX</span></div>
+        <div style="color: #58A6FF; font-weight: 700;">PAGE 01 / 08 [SWIPE &rarr;]</div>
+    </div>
+</div>
+
+<!-- SLIDE 2: THE ANATOMY OF BAD EPOLL -->
+<div class="slide">
+    <div class="bp-header">
+        <div class="bp-title">CYPHERMATRIX LABS // PRIMITIVE SCHEMATIC // fs/eventpoll.c</div>
+        <div class="bp-stamp">STRUCT: epitem</div>
+    </div>
+
+    <div>
+        <h2 class="section-title">The Concurrency Flaw</h2>
+        
+        <div class="terminal-window">
+            <div class="term-bar"><div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div></div>
+            <div class="ascii-box" style="color: #7EE787;">
+THREAD A: epoll_ctl(EPOLL_CTL_DEL)     THREAD B: ep_free() / teardown
+-----------------------------------    -----------------------------------
+1. ep_remove() called                  1. ep_free() loops item list
+2. unlinks epitem from rbtree          2. frees epitem -> kmalloc-192
+3. writes NULL to f_ep_links           3. SLUB marks chunk FREE
+   [RACE WINDOW: ~125ns]                  
+4. writes to FREED MEMORY (UAF!) <===== RACE COLLISION POINT
+            </div>
+        </div>
+
+        <div class="metric-grid">
+            <div class="metric-tile">
+                <div class="metric-val-big metric-val-green">99%</div>
+                <div class="metric-caption">x86_64 VM Reliability</div>
+            </div>
+            <div class="metric-tile">
+                <div class="metric-val-big metric-val-red">0 / 102,740</div>
+                <div class="metric-caption">ARM64 GKI Race Hits</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bp-footer">
+        <div>PRIMITIVE: USE-AFTER-FREE</div>
+        <div style="color: #58A6FF; font-weight: 700;">PAGE 02 / 08</div>
+    </div>
+</div>
+
+<!-- SLIDE 3: TIER 1 x86_64 CHAIN -->
+<div class="slide">
+    <div class="bp-header">
+        <div class="bp-title">CYPHERMATRIX LABS // TIER 1 // x86_64 EXPLOIT PIPELINE</div>
+        <div class="bp-stamp">RESULT: UID 0 ROOT</div>
+    </div>
+
+    <div>
+        <h2 class="section-title">How Root Was Won on x86</h2>
+
+        <div class="timeline-step">
+            <div class="step-title">01. Heap Reclamation (msg_msg)</div>
+            <div class="step-desc">Sprayed msg_msg queues in kmalloc-192 to reclaim the dangling epitem immediately upon free.</div>
+        </div>
+
+        <div class="timeline-step">
+            <div class="step-title">02. KASLR Leak via OOB Read</div>
+            <div class="step-desc">Corrupted m_ts field allowed reading uninitialized kernel heap memory, leaking kernel text base.</div>
+        </div>
+
+        <div class="timeline-step">
+            <div class="step-title">03. ROP Payload & Privilege Escalation</div>
+            <div class="step-desc">Stack pivot gadget executed commit_creds(&init_cred), popping clean root shell (UID 0).</div>
+        </div>
+
+        <div class="terminal-window" style="border-color: #238636;">
+            <div class="ascii-box" style="color: #56D364;">
+# id
+uid=0(root) gid=0(root) groups=0(root)
+[+] Exploit reliability verified: 99/100 runs succeeded.
+            </div>
+        </div>
+    </div>
+
+    <div class="bp-footer">
+        <div>TIER 1 VERIFIED</div>
+        <div style="color: #58A6FF; font-weight: 700;">PAGE 03 / 08</div>
+    </div>
+</div>
+
+<!-- SLIDE 4: THE 125NS TIMING TRAP -->
+<div class="slide">
+    <div class="bp-header">
+        <div class="bp-title">CYPHERMATRIX LABS // SCHEDULING BARRIER // ARM64 GKI</div>
+        <div class="bp-stamp">CONFIG_PREEMPT_DYNAMIC</div>
+    </div>
+
+    <div>
+        <h2 class="section-title">The 125ns Timing Wall</h2>
+
+        <div class="terminal-window" style="border-color: #DA3633;">
+            <div class="term-bar"><div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div></div>
+            <div class="ascii-box" style="color: #FFA657;">
+EXECUTION WINDOW MEASUREMENT (GKI 6.1 ARM64):
+-------------------------------------------------------------
+__ep_remove() instruction count:  ~250 - 550 CPU cycles
+At 2.0 GHz clock frequency:       ~125 - 275 nanoseconds
+cond_resched() state:             NO-OP (Voluntary Preemption)
+
+RESULT: Thread B can NEVER interrupt Thread A in this window
+        without artificial hardware breakpoints or GDB traps.
+            </div>
+        </div>
+
+        <div class="metric-tile" style="margin-top: 15px; border-left: 4px solid #F85149;">
+            <div class="metric-val-big metric-val-red">0 Hits in 102k Runs</div>
+            <div style="font-size: 16px; color: #C9D1D9; margin-top: 6px; line-height: 1.4;">
+                GDB watchpoints created a false illusion of exploitability that completely vanished during raw un-halted kernel execution.
+            </div>
+        </div>
+    </div>
+
+    <div class="bp-footer">
+        <div>TIMING PHYSICS</div>
+        <div style="color: #58A6FF; font-weight: 700;">PAGE 04 / 08</div>
+    </div>
+</div>
+
+<!-- SLIDE 5: 4 KILLED CHAINS -->
+<div class="slide">
+    <div class="bp-header">
+        <div class="bp-title">CYPHERMATRIX LABS // ATTACK VECTOR AUDIT</div>
+        <div class="bp-stamp">ALL 21 KILLED</div>
+    </div>
+
+    <div>
+        <h2 class="section-title">4 Escalation Paths. All Dead.</h2>
+
+        <div class="timeline-step fail">
+            <div class="step-title" style="color: #F85149;">Chain 0: Refcount Decrement (EXP-004)</div>
+            <div class="step-desc">percpu_counter_dec always decremented the valid outer epoll, not the freed inner structure.</div>
+        </div>
+
+        <div class="timeline-step fail">
+            <div class="step-title" style="color: #F85149;">Chain 1: Dual-Watch KASLR Leak (EXP-008)</div>
+            <div class="step-desc">Mathematically impossible: multi-epitem pointer writes and single-epitem UAFs are mutually exclusive.</div>
+        </div>
+
+        <div class="timeline-step fail">
+            <div class="step-title" style="color: #F85149;">Chain 2 & 3: Arbitrary Decrement -> LPE (EXP-012)</div>
+            <div class="step-desc">Reclaiming with msg_msg locked decrement onto root_user, leaving only a fixed NULL write at offset 160.</div>
+        </div>
+    </div>
+
+    <div class="bp-footer">
+        <div>FORENSIC LOG: 21 DEAD ENDS</div>
+        <div style="color: #58A6FF; font-weight: 700;">PAGE 05 / 08</div>
+    </div>
+</div>
+
+<!-- SLIDE 6: SLAB STRUCT AUDIT (EXP-016) -->
+<div class="slide">
+    <div class="bp-header">
+        <div class="bp-title">CYPHERMATRIX LABS // SLAB CORRUPTION MATRIX</div>
+        <div class="bp-stamp">CACHE: kmalloc-192</div>
+    </div>
+
+    <div>
+        <h2 class="section-title">Offset 160 Corruption Audit</h2>
+        
+        <div class="terminal-window">
+            <div class="term-bar"><div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div></div>
+            <div class="ascii-box" style="color: #C9D1D9;">
+STRUCT            OFFSET 160 FIELD       OBSERVED RUNTIME BEHAVIOR
+----------------  ---------------------  -------------------------
+fib6_info         fib6_metrics pointer   [PANIC] NULL route deref
+snd_timer_user    queue list_head        [PANIC] Corrupt list walk
+packet_fanout     next member pointer    [PANIC] Teardown null deref
+            </div>
+        </div>
+
+        <div class="metric-tile" style="margin-top: 15px; border-left: 4px solid #F85149;">
+            <div style="font-size: 20px; font-weight: 700; color: #F0F6FC; margin-bottom: 6px;">
+                Audit Conclusion:
+            </div>
+            <div style="font-size: 16px; color: #8B949E; line-height: 1.45;">
+                There is zero reachable kmalloc-192 structure in the GKI tree where zeroing 8 bytes at offset 160 results in anything other than an immediate kernel panic.
+            </div>
+        </div>
+    </div>
+
+    <div class="bp-footer">
+        <div>EXP-016: VERIFIED</div>
+        <div style="color: #58A6FF; font-weight: 700;">PAGE 06 / 08</div>
+    </div>
+</div>
+
+<!-- SLIDE 7: SILICON MITIGATION STACK -->
+<div class="slide">
+    <div class="bp-header">
+        <div class="bp-title">CYPHERMATRIX LABS // DEFENSE-IN-DEPTH</div>
+        <div class="bp-stamp">SILICON DEFENSE</div>
+    </div>
+
+    <div>
+        <h2 class="section-title">Why Mobile Hardening Won</h2>
+
+        <div class="terminal-window">
+            <div class="ascii-box" style="color: #79C0FF;">
+[+] PAC (Pointer Auth)
+    --> Neutralized function pointer forgery & return address hijacking.
+
+[+] kCFI & BTI (Control Flow Integrity)
+    --> Enforced forward-edge indirect branch validation across kernel.
+
+[+] Slab Isolation & Memory Latency
+    --> Physical ARM64 bus contention & SLUB freelist hardening 
+        broke heap grooming determinism.
+            </div>
+        </div>
+
+        <div style="font-size: 17px; color: #8B949E; line-height: 1.5; margin-top: 10px;">
+            Modern Android mitigations performed as designed. Even with a high-severity primitive, defense-in-depth reduced a 99% root exploit to a local DoS.
+        </div>
+    </div>
+
+    <div class="bp-footer">
+        <div>DEFENSE VERIFICATION</div>
+        <div style="color: #58A6FF; font-weight: 700;">PAGE 07 / 08</div>
+    </div>
+</div>
+
+<!-- SLIDE 8: THE WHITEPAPER & CTA -->
+<div class="slide">
+    <div class="bp-header">
+        <div class="bp-title">CYPHERMATRIX LABS // 26-PAGE REPORT</div>
+        <div class="bp-stamp">OPEN RESEARCH</div>
+    </div>
+
+    <div>
+        <h2 class="section-title">The Complete 26-Page Post-Mortem</h2>
+
+        <div class="terminal-window" style="border-color: #58A6FF;">
+            <div class="ascii-box" style="color: #F0F6FC;">
+INCLUDED IN FULL TECHNICAL REPORT:
+-------------------------------------------------------------
+* Full Verification Ledger (VER-001 through VER-039)
+* 21 Dead Ends documented with killing disassembly & traces
+* Tier 1 x86_64 ROP gadget chains & offset tables
+* Android GKI synthetic build & debugging harness
+            </div>
+        </div>
+
+        <div class="metric-tile" style="margin-top: 16px; border: 2px solid #58A6FF; background: rgba(88, 166, 255, 0.05);">
+            <div style="font-size: 22px; font-weight: 800; color: #58A6FF; margin-bottom: 6px;">
+                WANT THE 26-PAGE PDF?
+            </div>
+            <div style="font-size: 17px; color: #C9D1D9; line-height: 1.4;">
+                Drop <strong style="color: #FFA657;">"EPOLL"</strong> in the LinkedIn comments and I'll send the direct report straight to your DMs.
+            </div>
+        </div>
+    </div>
+
+    <div class="bp-footer">
+        <div>AAYUSH BANKAR · CYPHERMATRIX LABS · SEPT 2026</div>
+        <div style="color: #58A6FF; font-weight: 700;">GITHUB & MEDIUM LINKED</div>
+    </div>
+</div>
+
+</body>
+</html>

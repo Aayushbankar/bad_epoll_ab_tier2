@@ -1,13 +1,15 @@
-# LinkedIn Post — CVE-2026-46242 ("Bad Epoll") Launch
+# LinkedIn Launch Copy — CVE-2026-46242 ("Bad Epoll")
+**Target Posting Slot:** Tuesday, September 1, 2026 @ 5:30 PM IST  
+**Author:** Aayush Bankar (Cybersecurity Analyst @ CypherMatrix)
 
 ---
 
-## 🚀 Final Master LinkedIn Post (2,632 Characters)
+## 🏆 Option 1: Master Technical Narrative (Recommended — 2,680 Characters)
 
 ```markdown
 Hey guys, it’s been quite a while since my last post.
 
-I was recently struck with a lot of things all at once, but here is the first real update on what I’ve been obsessing over since mid-June.
+I was recently struck with a lot of things all at once, but here is the first real update on what I’ve been obsessing over since mid-June as part of my research work at CypherMatrix.
 
 I decided to jump straight into the deep end of Linux kernel exploitation.
 
@@ -16,7 +18,7 @@ The target was CVE-2026-46242 ("Bad Epoll", found by Jaeyoung Chung via Google k
 In an x86_64 Linux VM:
 Rebuilt the original exploit chain. Heap spray with msg_msg, bypass KASLR, ROP chain, and popped a UID 0 root shell. 99% reliable. Everything felt clean.
 
-So I asked myself: can I make this work on an ARM64 Android kernel?
+So we asked the obvious question at CypherMatrix Labs: can we port this primitive to an ARM64 Android kernel?
 
 10 weeks and 102,740 test runs later, the answer was a brutal NO.
 
@@ -43,8 +45,42 @@ Instead of sweeping the failures under the rug, I spent the last few weeks writi
 If you see an alternate angle or have ideas on either of these, drop your take below. 👇
 (Or comment "EPOLL" if you’d like the full 26-page technical PDF sent straight to your DMs!)
 
-#LinuxKernel #AndroidSecurity #ExploitDevelopment #VulnerabilityResearch #InfoSec
+#LinuxKernel #AndroidSecurity #ExploitDevelopment #VulnerabilityResearch #CypherMatrix #InfoSec
 ```
+
+---
+
+## ⚡ Option 2: High-Authority Lab Teardown (2,450 Characters)
+
+```markdown
+On x86_64, this kernel bug pops a 99% reliable root shell.
+On ARM64 Android GKI, it resulted in 102,740 failed race attempts and 21 dead ends.
+
+Over the past 10 weeks at CypherMatrix Labs, I conducted an in-depth empirical exploitability study on CVE-2026-46242 ("Bad Epoll", discovered by Jaeyoung Chung via Google kernelCTF)—a Use-After-Free race condition inside fs/eventpoll.c.
+
+The goal: Determine if a high-severity desktop kernelCTF primitive could survive the modern mobile defense-in-depth stack.
+
+The autopsy results:
+1. The 125ns Wall: Under CONFIG_PREEMPT_DYNAMIC=voluntary, cond_resched() is a no-op. The race window inside __ep_remove is ~250–550 CPU cycles (~125–275 ns). Natural scheduling scored 0 hits in 102,740 automated attempts.
+2. The Fixed NULL Write: Even under forced race conditions, the refcount decrement locked onto root_user, leaving only an 8-byte NULL write at offset 160 of kmalloc-192.
+3. Struct Auditing (EXP-016): Auditing reachable kmalloc-192 structures (fib6_info, snd_timer_user, packet_fanout) showed that zeroing offset 160 causes immediate kernel panics with zero path to privilege escalation.
+4. Silicon Mitigations: PAC, kCFI, BTI, and SLUB isolation neutralized every alternative control flow hijack.
+
+Final Verdict: Denial of Service (DoS) only on the synthetic GKI testbed.
+
+Rather than only publishing positive root shells, we are releasing the complete 26-page negative result dossier documenting every verification entry and failed chain.
+
+📖 Medium Deep Dive: <<MEDIUM_URL_PENDING>>
+📄 26-Page Technical PDF: https://github.com/Aayushbankar/bad_epoll_ab_tier2/blob/publish/clean-and-writeup-2026-08-29/article/CVE-2026-46242_Technical_Writeup.pdf
+
+To kernel researchers & exploit devs:
+Have you found any reachable GKI struct in kmalloc-192 where an offset-160 NULL write yields a useful data-only primitive?
+
+Drop your thoughts below, or comment "EPOLL" to get the 26-page report sent to your DMs! 💬
+
+#LinuxKernel #AndroidSecurity #ExploitDevelopment #VulnerabilityResearch #CypherMatrix #InfoSec
+```
+
 
 
 ---
