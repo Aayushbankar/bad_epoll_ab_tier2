@@ -9,7 +9,7 @@
 ```markdown
 Hey guys, it’s been quite a while since my last post.
 
-I was recently struck with a lot of things all at once, but here is the first real update on what I’ve been obsessing over since mid-June as part of my research work at CypherMatrix.
+I was recently struck with a lot of things all at once—including starting my role at CypherMatrix—but here is the first real update on what I’ve been obsessing over in vulnerability research since mid-June.
 
 I decided to jump straight into the deep end of Linux kernel exploitation.
 
@@ -18,7 +18,7 @@ The target was CVE-2026-46242 ("Bad Epoll", found by Jaeyoung Chung via Google k
 In an x86_64 Linux VM:
 Rebuilt the original exploit chain. Heap spray with msg_msg, bypass KASLR, ROP chain, and popped a UID 0 root shell. 99% reliable. Everything felt clean.
 
-So we asked the obvious question at CypherMatrix Labs: can we port this primitive to an ARM64 Android kernel?
+So the obvious next question was: can this primitive be ported to an ARM64 Android kernel?
 
 10 weeks and 102,740 test runs later, the answer was a brutal NO.
 
@@ -50,13 +50,13 @@ If you see an alternate angle or have ideas on either of these, drop your take b
 
 ---
 
-## ⚡ Option 2: High-Authority Lab Teardown (2,450 Characters)
+## ⚡ Option 2: High-Authority Research Teardown (2,420 Characters)
 
 ```markdown
 On x86_64, this kernel bug pops a 99% reliable root shell.
 On ARM64 Android GKI, it resulted in 102,740 failed race attempts and 21 dead ends.
 
-Over the past 10 weeks at CypherMatrix Labs, I conducted an in-depth empirical exploitability study on CVE-2026-46242 ("Bad Epoll", discovered by Jaeyoung Chung via Google kernelCTF)—a Use-After-Free race condition inside fs/eventpoll.c.
+Alongside starting my cybersecurity role at CypherMatrix, I spent the past 10 weeks conducting an in-depth empirical exploitability study on CVE-2026-46242 ("Bad Epoll", discovered by Jaeyoung Chung via Google kernelCTF)—a Use-After-Free race condition inside fs/eventpoll.c.
 
 The goal: Determine if a high-severity desktop kernelCTF primitive could survive the modern mobile defense-in-depth stack.
 
@@ -79,6 +79,7 @@ Have you found any reachable GKI struct in kmalloc-192 where an offset-160 NULL 
 Drop your thoughts below, or comment "EPOLL" to get the 26-page report sent to your DMs! 💬
 
 #LinuxKernel #AndroidSecurity #ExploitDevelopment #VulnerabilityResearch #CypherMatrix #InfoSec
+
 ```
 
 
