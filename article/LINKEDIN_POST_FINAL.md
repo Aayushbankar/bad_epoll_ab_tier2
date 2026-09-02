@@ -34,7 +34,7 @@ It turns out modern Android kernel defenses are remarkably resilient against thi
 
 Instead of sweeping the failures under the rug, I spent the last few weeks writing down all 26 pages of the autopsy—every dead end, memory offset, and verification log.
 
-📖 Medium Deep Dive: <<MEDIUM_URL_PENDING>>
+📖 Medium Deep Dive: https://aayushbankar42.medium.com/cve-2026-46242-deep-dive-a-working-root-exploit-on-linux-21-dead-ends-on-android-eb09b838d264
 📄 Full 26-Page Technical Writeup (PDF): https://github.com/Aayushbankar/bad_epoll_ab_tier2/blob/publish/clean-and-writeup-2026-08-29/article/CVE-2026-46242_Technical_Writeup.pdf
 
 🔍 Two open questions for kernel exploit devs & security researchers:
@@ -70,7 +70,7 @@ Final Verdict: Denial of Service (DoS) only on the synthetic GKI testbed.
 
 Rather than only publishing positive root shells, we are releasing the complete 26-page negative result dossier documenting every verification entry and failed chain.
 
-📖 Medium Deep Dive: <<MEDIUM_URL_PENDING>>
+📖 Medium Deep Dive: https://aayushbankar42.medium.com/cve-2026-46242-deep-dive-a-working-root-exploit-on-linux-21-dead-ends-on-android-eb09b838d264
 📄 26-Page Technical PDF: https://github.com/Aayushbankar/bad_epoll_ab_tier2/blob/publish/clean-and-writeup-2026-08-29/article/CVE-2026-46242_Technical_Writeup.pdf
 
 To kernel researchers & exploit devs:

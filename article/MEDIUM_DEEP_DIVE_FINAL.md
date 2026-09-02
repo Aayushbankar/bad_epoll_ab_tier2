@@ -389,7 +389,7 @@ The Bad Epoll research concludes with a **DoS-only verdict for the deliberately 
 
 ## Links & Repositories
 
-- **This Medium article:** `<<MEDIUM_URL_PENDING>>` (distilled narrative; technical depth preserved)
+- **This Medium article:** [CVE-2026-46242 Deep Dive (Medium)](https://aayushbankar42.medium.com/cve-2026-46242-deep-dive-a-working-root-exploit-on-linux-21-dead-ends-on-android-eb09b838d264)
 - **📄 Complete Technical Writeup (PDF, 26 pages):** **[CVE-2026-46242_Technical_Writeup.pdf](https://github.com/Aayushbankar/bad_epoll_ab_tier2/blob/publish/clean-and-writeup-2026-08-29/article/CVE-2026-46242_Technical_Writeup.pdf)** — full dossier with executive summary, environment & reproducibility (Tier-1 offsets/gadgets at `03_offsets_layout.md`, Tier-2 build at `7e35917775b8` + `a1f93804449d`), expanded Tier-1 chain, 21 dead ends, schedulability analysis, mitigations, and Appendices A–F (verification ledger, experiment index, glossary). Ping for direct download.
 - **Tier-1 / Tier-2 repo:** [github.com/Aayushbankar/bad_epoll_ab_tier2](https://github.com/Aayushbankar/bad_epoll_ab_tier2) @ `publish/clean-and-writeup-2026-08-29`
 - **Tier-2 repo:** [github.com/Aayushbankar/bad_epoll_ab_tier2](https://github.com/Aayushbankar/bad_epoll_ab_tier2) @ `main`
