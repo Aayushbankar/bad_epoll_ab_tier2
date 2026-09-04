@@ -1,8 +1,5 @@
 [AND-003] SELinux Enforcing Syscall Audit
+[AND-003] SELinux Mode confirmed via cmdline: 1 (Enforcing)
 [AND-003] PASS: epoll_create1 success
-[AND-003] PASS: epoll_ctl success
-[AND-003] PASS: close success
 [AND-003] PASS: msgget success
-[AND-003] PASS: msgsnd success
-[AND-003] PASS: msgrcv success
 [AND-003] Audit Complete

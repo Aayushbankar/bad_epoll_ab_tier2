@@ -36,19 +36,10 @@ This index serves as the centralized table of contents for all engineering repor
 ## Runtime Evidence (`docs/evidence/`)
 - [ROP_PROVENANCE_AUDIT.md](evidence/ROP_PROVENANCE_AUDIT.md): Detailed proof mapping the `0xffffffff810001bd` failure natively to the database offset desync.
 
-## Mentor Status & Sprint Logs (`docs/mentor/`)
-- [MENTOR_STATUS_REPORT.md](mentor/MENTOR_STATUS_REPORT.md): Consolidated brief for mentorship review.
-- [PROGRESS.md](mentor/PROGRESS.md) / [PROGRESS_ASSESSMENT.md](mentor/PROGRESS_ASSESSMENT.md): Ongoing developmental task tracking.
-- [SPRINT_RETROSPECTIVE.md](mentor/SPRINT_RETROSPECTIVE.md) / [tier1_retrospective.md](mentor/tier1_retrospective.md): Sprint-level review materials.
-- [logbook.md](mentor/logbook.md) / [learning_gaps.md](mentor/learning_gaps.md): Personal developmental journaling.
-
 ## Reports (`docs/reports/`)
 - [REPRODUCIBILITY_REPORT.md](reports/REPRODUCIBILITY_REPORT.md): Results validating functional environmental parity.
 - [TIER1_RUN_REPORT.md](reports/TIER1_RUN_REPORT.md): Empirical run data from early stage deployments.
 - [EXPLOIT_FRAGILITY_REPORT.md](reports/EXPLOIT_FRAGILITY_REPORT.md): Analysis of the race condition scheduling instability.
 
-## Archive (`docs/archive/`)
-- [CONTEXT.md](archive/CONTEXT.md): Legacy overview.
-- [CMDS_RUN.txt](archive/CMDS_RUN.txt): Deprecated command logs.
-- [PROJECT_TIMELINE_AND_AUDIT.md](archive/PROJECT_TIMELINE_AND_AUDIT.md): Replaced by `AUDIT_TIMELINE.md`.
-- [ENVIRONMENT_CONSTANTS.md.bak](archive/ENVIRONMENT_CONSTANTS.md.bak): Deprecated environmental variables.
+## Latest Analysis
+- [Physical ARM64 Silicon vs Emulation Analysis](29_PHYSICAL_ARM64_SILICON_REBOOT_ANALYSIS.md)

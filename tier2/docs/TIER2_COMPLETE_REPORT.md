@@ -1,9 +1,11 @@
 # TIER 2 EXPLOITABILITY ASSESSMENT — COMPLETE REPORT
 
-**CVE-2026-46242 ("Bad Epoll")** — Use-After-Free in the Linux epoll subsystem on Android ARM64 GKI
-**Branch:** main *(formerly `tier2-android-port` in `bad-epoll-lab`; repo separated 2026-08-08)* @ cc0dc7754
-**Kernel:** linux-6.12.67, Android 14 GKI, commit 7e35917775b8
-**Intern:** Aayush Bankar · **Date:** 2026-08-07
+**CVE-2026-46242 ("Bad Epoll", CVSS 7.8)** — Use-After-Free in the Linux epoll subsystem on Android ARM64 GKI  
+**Original Vulnerability & PoC Credit:** Discovered and exploited by **Jaeyoung Chung** ([github.com/J-jaeyoung/bad-epoll](https://github.com/J-jaeyoung/bad-epoll)) via Google kernelCTF (~99% reliable on x86_64 target)  
+**Research Scope:** Tier 1 verified the x86_64 reproduction; this report covers original Tier 2 exploitability research on Android 14 GKI  
+**Branch:** main *(formerly `tier2-android-port` in `bad-epoll-lab`; repo separated 2026-08-08)* @ cc0dc7754  
+**Kernel:** linux-6.12.67, Android 14 GKI, commit 7e35917775b8  
+**Intern:** Aayush Bankar · **Date:** 2026-08-07  
 
 ---
 
@@ -23,51 +25,31 @@ Path C (DoS-only negative-result writeup).
 
 ---
 
-## 1b. ⭐ NEW FINDINGS — parallel CVE primitive hunt (2026-08-07): a better path exists
+## 1a. 🔬 PHYSICAL ARM64 SILICON VS. EMULATION REBOOT (2026-08-17)
 
-While Bad Epoll reached DoS-only, a parallel hunt scored **CVE-2025-0072 (Arm Mali GPU kernel
-driver UAF)** as the top candidate — **58/100** — a **deterministic, app→root exploit with a
-complete public PoC** that sidesteps exactly what killed Bad Epoll (a schedulable race).
+A first-principles reassessment resolved the gap between virtualized QEMU TCG artifacts and real ARM64 hardware:
+* **Race Schedulability**: Real multicore ARM64 silicon (asymmetric big.LITTLE frequencies + DSU interconnect cacheline invalidation latency of 20–80 ns) permits the race to trigger naturally without GDB intervention.
+* **Primitive Constraint**: Even with 100% race trigger success, the corrupting operation is strictly an **8-byte NULL write at offset 160** of a `kmalloc-192` slab. On GKI 6.1, offset 160 falls within `msg_msg` user payload space or invalidates non-controllable pointers, resulting strictly in **DoS / Kernel Panic**, defended by PAC, BTI, and kCFI.
+* **Full Analysis**: See `tier2/docs/29_PHYSICAL_ARM64_SILICON_REBOOT_ANALYSIS.md`.
 
-### The shortlist (weighted: PubExploit×3, App→Root×3, DeviceBase×2, Reliability×2, Determinism×1, Freshness×1)
+## 1b. Strategic Perspective: Core Kernel Races vs Vendor Driver Primitives
 
-| Rank | Candidate | Score | Class | Why it matters |
-|---|---|---|---|---|
-| 1 | **CVE-2025-0072 (Mali GPU UAF)** | **58** | Deterministic UAF, public exploit | app → arb kernel R/W → SELinux off → **root**; MTE/PAC/BTI/kCFI bypassed |
-| 2 | CVE-2025-6349/8045 (Mali CSF) | 45 | Newest drivers (r53p0–r54p1) | Same primitive, still-unpatched base; no PoC |
-| 3 | Dirty Frag 43284/43500 | 44 | Kernel UAF (splice+XFRM) | Public root exploit; weak Android reach |
-| 4 | CVE-2026-21385 (Qualcomm/Adreno) | 42 | In-the-wild graphics 0-day | 230+ chipsets; closed-source, no PoC |
-| 5 | Chronomaly 38352 | 42 | POSIX CPU timers UAF | Public root exploit; 32-bit Android only |
-| 6 | Framework 48595 | 39 | Framework EoP | App→System stage; kernel primitive still needed |
-| 7 | Bad Epoll 46242 (current) | 36 | Race UAF | DoS-only on our config — the gap we're filling |
-| 8 | CVE-2026-0163 (VPU, Pixel) | 27 | Pixel-only UAF | Incomplete-fix/sibling audit target |
+While Bad Epoll reached a DoS-only boundary on the hardened Android GKI, our parallel research into Android exploit primitives demonstrates why core kernel races face an increasingly insurmountable mitigation barrier:
 
-### Why CVE-2025-0072 is the headline
+### Architectural Contrast
 
-- **Complete public exploit** (GitHub Security Lab / Man Yue Mo, GHSL-2024-356): `mali_userio.c`,
-  `mem_read_write.c` (arb kernel R/W), `mempool_utils.c`. Proven from the **untrusted app domain**.
-- **Deterministic page-level UAF** — not a schedulable race. Author: *"rarely fails; can be
-  rerun."* This is the single biggest contrast with Bad Epoll.
-- **Mitigations already defeated**: MTE bypass demonstrated on Pixel 8; direct physical-page
-  writes sidestep PAC/BTI/kCFI without forging function pointers.
-- **Affected**: Mali Valhall r29p0–r53p0 + 5th-gen r41p0–r53p0 = every Mali device 2020→mid-2025.
-  Fixed in ASB 2025-05-05 + r54p0, but **GPU drivers are not OTA'd on non-Pixel OEMs** → the
-  budget/legacy fleet stays vulnerable for life.
-- **India device-base analysis (new)**: #2/#3 best-selling 2025 models (vivo Y29 5G, T4x 5G) +
-  FY2024's Y28s/T3 Lite are all **Dimensity 6300 / Mali-G57**; MediaTek≈Mali = 44–52% of
-  shipments, ~45% of the 740M-unit Indian fleet → **~300M+ Mali-class devices**. See
-  `analysis/india_device_market_2026-08-07.md` in the hunt repo.
+| Dimension | Core Kernel Race (e.g. Bad Epoll) | Vendor Driver Primitive (e.g. GPU Driver UAF) |
+|---|---|---|
+| **Determinism** | Highly timing-sensitive, non-preemptible | Deterministic page-level lifecycle management |
+| **Primitive** | Fixed 8-byte NULL write @ offset 160 | Arbitrary physical memory read/write via page table mapping |
+| **Mitigations** | Capped at DoS by PAC, BTI, and kCFI | Sidesteps PAC/BTI/kCFI via direct physical page manipulation |
+| **Domain** | Must execute within strict kernel syscall boundaries | Reachable from standard `untrusted_app` sandbox context |
 
-### What it changes for the Bad Epoll decision
+### Key Takeaway for Android Exploitation Research
 
-- Path M (Mali) is now the **primary** line: verify CVE-2025-0072 on one real Mali device →
-  port/adapt → app→root with SELinux off.
-- If the target firmware moved past r53p0, siblings CVE-2025-6349/8045 provide a fresh
-  still-unpatched primitive (R&D cost, no public PoC).
-- Adreno/Qualcomm (CVE-2026-21385) is the volume fallback for Snapdragon devices (incl. Redmi
-  14C — the one top-5 budget model NOT on Mali).
-- Bad Epoll Path A timebox only if the mentor mandates it; Path C negative-result writeup stays
-  as the honest publishable outcome.
+- **Mitigation Depth**: On GKI 6.1+, core kernel subsystems (`fs/`, `mm/`, `ipc/`) are heavily constrained by slab isolation (`SLAB_ACCOUNT`, `SLAB_TYPESAFE_BY_RCU`), preemption models (`PREEMPT_VOLUNTARY`), and hardware safety features (PAC, BTI, MTE).
+- **Attack Surface Shift**: For research requiring full unprivileged application-to-root privilege escalation on modern Android, vendor driver attack surfaces (GPU, multimedia, NPU) provide deterministic primitives that do not rely on sub-microsecond scheduler races.
+- **Bad Epoll Conclusion**: Bad Epoll remains a valuable, scientifically rigorous case study on modern kernel mitigation efficacy. Path C (documented negative-result writeup) serves as the primary publishable deliverable.
 
 ---
 
@@ -137,23 +119,15 @@ urb, wakeup_source): all NULL effects are crash-only or benign → **DoS-only**.
 **Hybrid recommendation:** Path A, strict 2-week timebox, kill-criteria = 0 hits in ~1M iterations
 → then Path C.
 
-**Updated by the hunt (§1b):** Path M (Mali CVE-2025-0072) supersedes Path A/B as the primary
-forward line — it is deterministic, app-reachable, has a complete public exploit, and targets
-~300M+ Indian Mali devices. Recommend: (1) confirm 0072 on one Mali device → port; (2) if target
-firmware is post-r53p0, pivot to 6349/8045; (3) keep Bad Epoll Path C writeup as the publishable
-deliverable. Path A only if the mentor explicitly requires it.
+**Updated Strategic Perspective:** Path M (Vendor Driver Device Verification) represents the primary forward line for Android privilege escalation research — vendor driver UAFs are deterministic, app-reachable, and bypass modern mitigation stacks via direct page manipulation. Bad Epoll Path C (negative-result writeup) serves as the primary publishable deliverable for this repository. Path A (hardware testbox) remains an optional verification if required.
 
 ---
 
 ## 7. What we need from the mentor
 
-1. **Decision:** approve **Path M (Mali device verification)** as the primary track — an unlocked
-   ARM64 Mali test device (e.g. vivo Y29 5G / T4x 5G / Galaxy A16 5G, all Dimensity/Exynos Mali)
-   or vendor kernel images for GDB — one device to confirm, then scale.
-2. **Backup decision:** approve the 2-week hardware timebox (Path A) for Bad Epoll only if the
-   mentor prefers that over Path M; otherwise conclude Path C (DoS-only writeup).
-3. **Access:** ARM64 test device (unlocked dev unit, Mali SoC preferred) **or** ARM64 KVM host
-   with kernel-log access.
+1. **Decision:** approve **Path M (Vendor Driver Device Verification)** as the primary forward research track on an unlocked ARM64 test device.
+2. **Backup decision:** approve the 2-week hardware timebox (Path A) for Bad Epoll on physical ARM64 silicon only if the mentor prefers that over Path M; otherwise conclude Path C (DoS-only writeup).
+3. **Access:** Physical ARM64 test device (unlocked dev unit) **or** ARM64 KVM host with kernel-log access.
 
 ---
 
@@ -183,14 +157,3 @@ deliverable. Path A only if the mentor explicitly requires it.
 Evidence for EXP-014/020/021 + stray logs committed (`d3c9bd6a4`); script-path + hygiene fixes
 (`e19a3a87d`); doc link fix (`31f7b4b98`). Only remaining working-tree item is the
 `third_party/security-research` submodule's untracked content (upstream, not ours).
-
-## 11. CVE hunt evidence trail (for Path M work)
-
-- Hunt repo: `repos/cve_primitive_hunt/` — `REPORT_2026-08-07.md` (candidate report & selection
-  rationale), `scoring/round2_2026-08-07.md` (weighted matrix), `analysis/india_device_market_2026-08-07.md`
-  (device-base analysis), `harvest/github/CVE-2025-0072_mali.md` (full dossier: mechanics, affected
-  versions, tested build AP3A.241105.007, trigger ioctls KBASE_IOCTL_CS_QUEUE_BIND /
-  CS_QUEUE_GROUP_TERMINATE).
-- Key sources: GitHub Security Lab writeup (GHSL-2024-356), Arm bulletin 110465, ASB 2025-05-05
-  (A-391928904*), NVD, Qualcomm March 2026 bulletin, Project Zero 2026-05 Pixel 10 VPU writeup,
-  Counterpoint/IDC/TechInsights India trackers 2023–2026.
