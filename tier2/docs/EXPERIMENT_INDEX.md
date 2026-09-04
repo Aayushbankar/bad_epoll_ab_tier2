@@ -39,3 +39,4 @@ This index logs all test reproducers, GDB automation scripts, and experimental e
 | AND-003 | 2026-08-02 | SELinux Policy Audit for Exploit Syscalls | test_and003.c | exp_and003_gdb.py | run_and003.sh | **PASSED** (All 6 syscalls allowed) | `tier2/evidence/AND-003_RESULTS.md`, `tier2/evidence/AND-003_raw_enforcing.log` |
 | AND-004 | 2026-08-02 | MTE/KASAN_HW_TAGS Impact on UAF Primitive | test_nat001.c | (none) | run_and004.sh | **PLANNED** | `tier2/evidence/AND-004_raw_*.log` |
 | EXP-025 | 2026-08-17 | CVE-2025-38616 TLS UAF Exploit Test (kernelctf lts-6.12.41) | exploit (from kernelctf) | (none) | run_exp025.sh | **RUNNING** | `tier2/evidence/EXP-025/` |
+| EXP-026 | 2026-09-04 | sweetsky123 Dangling-File Topology Verification: Can the lockless fast-path race keep the waiter epoll alive and produce a dangling `struct file`? | (pending) | (pending) | (pending) | **PLANNED** | (pending) |

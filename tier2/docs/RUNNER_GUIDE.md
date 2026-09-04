@@ -543,3 +543,21 @@ For EVERY experiment, create the results doc in this exact format:
 - [ ] `git status` is clean
 - [ ] `git push origin main` succeeded
 - [ ] `git ls-remote origin main` output shown with commit hash
+
+### ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+### EXP-026: Dangling File Topology PoC (sweetsky123 Lead)
+### ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+**Objective**: Determine if the lockless fast-path race in `__ep_remove` can be used to keep an epoll object alive while the watched `struct file` is freed, resulting in a dangling `epi->ffd.file` pointer. This is the foundation of the sweetsky123 exploit chain.
+
+**Prerequisites**:
+- Review `tier2/evidence/sweetsky123_analysis.md` (if available in artifacts) or the EVO-010 entry.
+- Identify the call paths to `__ep_remove` that do NOT originate from `ep_free()` / `ep_clear_and_put()`. We need the outer epoll to survive.
+
+**What to build**:
+1. Static analysis of `__ep_remove` call sites to find a trigger that leaves the epoll alive.
+2. A C harness that sets up the required topology (e.g., epoll watching a timerfd, race `close(timerfd)`).
+3. A GDB script to trap the race and check if the `epitem` survives with a dangling `file` pointer.
+
+**Evidence required**:
+- GDB trace confirming the `struct file` was freed but the `epitem` is still linked in the live eventpoll's tree.
