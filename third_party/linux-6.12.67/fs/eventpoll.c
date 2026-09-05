@@ -39,6 +39,15 @@
 #include <linux/rculist.h>
 #include <linux/capability.h>
 #include <net/busy_poll.h>
+#include <linux/debugfs.h>
+
+/*
+ * HYP-002: Kernel-side UAF race detection counters.
+ * Exposed via /sys/kernel/debug/epoll_uaf/
+ */
+static atomic_t ep_dbg_fep_cleared = ATOMIC_INIT(0);   /* Thread A cleared f_ep for epoll file */
+static atomic_t ep_dbg_uaf_detected = ATOMIC_INIT(0);  /* hlist_del_rcu on freed ep detected   */
+static atomic_t ep_dbg_epfree_called = ATOMIC_INIT(0); /* ep_free() called                     */
 
 /*
  * LOCKING:
@@ -239,6 +248,11 @@ struct eventpoll {
 #ifdef CONFIG_DEBUG_LOCK_ALLOC
 	/* tracks wakeup nests for lockdep validation */
 	u8 nests;
+#endif
+
+#ifdef CONFIG_DEBUG_FS
+	/* HYP-002: set to 0xDEADFEED by ep_free() before kfree() */
+	u32 debug_freed;
 #endif
 };
 
@@ -790,6 +804,11 @@ static void ep_free(struct eventpoll *ep)
 	mutex_destroy(&ep->mtx);
 	free_uid(ep->user);
 	wakeup_source_unregister(ep->ws);
+#ifdef CONFIG_DEBUG_FS
+	/* HYP-002: mark as freed so __ep_remove can detect UAF */
+	WRITE_ONCE(ep->debug_freed, 0xDEADFEED);
+	atomic_inc(&ep_dbg_epfree_called);
+#endif
 	kfree(ep);
 }
 
@@ -826,6 +845,24 @@ static bool __ep_remove(struct eventpoll *ep, struct epitem *epi, bool force)
 	if (head->first == &epi->fllink && !epi->fllink.next) {
 		/* See eventpoll_release() for details. */
 		WRITE_ONCE(file->f_ep, NULL);
+#ifdef CONFIG_DEBUG_FS
+		/* HYP-002: detect if inner epoll was freed between
+		 * WRITE_ONCE(f_ep, NULL) and hlist_del_rcu.
+		 * For epoll files, file->private_data == inner_ep.
+		 * After ep_free(), debug_freed == 0xDEADFEED.
+		 */
+		if (is_file_epoll(file)) {
+			struct eventpoll *inner_ep = file->private_data;
+			atomic_inc(&ep_dbg_fep_cleared);
+			/* Barrier: ensure we see inner_ep state from other CPU */
+			smp_rmb();
+			if (READ_ONCE(inner_ep->debug_freed) == 0xDEADFEED) {
+				atomic_inc(&ep_dbg_uaf_detected);
+				pr_warn("epoll_uaf: UAF DETECTED in __ep_remove! inner_ep=%px freed before hlist_del_rcu\n",
+					inner_ep);
+			}
+		}
+#endif
 		if (!is_file_epoll(file)) {
 			struct epitems_head *v;
 			v = container_of(head, struct epitems_head, epitems);
@@ -2533,6 +2570,43 @@ COMPAT_SYSCALL_DEFINE6(epoll_pwait2, int, epfd,
 
 #endif
 
+#ifdef CONFIG_DEBUG_FS
+/*
+ * HYP-002: debugfs interface for epoll UAF race counters.
+ * /sys/kernel/debug/epoll_uaf/{fep_cleared,uaf_detected,epfree_called,reset}
+ */
+static ssize_t ep_dbg_reset_write(struct file *file, const char __user *buf,
+				  size_t count, loff_t *ppos)
+{
+	atomic_set(&ep_dbg_fep_cleared, 0);
+	atomic_set(&ep_dbg_uaf_detected, 0);
+	atomic_set(&ep_dbg_epfree_called, 0);
+	pr_info("epoll_uaf: counters reset\n");
+	return count;
+}
+
+static const struct file_operations ep_dbg_reset_fops = {
+	.write = ep_dbg_reset_write,
+	.llseek = noop_llseek,
+};
+
+static void __init ep_debugfs_init(void)
+{
+	struct dentry *dir;
+
+	dir = debugfs_create_dir("epoll_uaf", NULL);
+	if (IS_ERR_OR_NULL(dir))
+		return;
+
+	debugfs_create_atomic_t("fep_cleared", 0444, dir, &ep_dbg_fep_cleared);
+	debugfs_create_atomic_t("uaf_detected", 0444, dir, &ep_dbg_uaf_detected);
+	debugfs_create_atomic_t("epfree_called", 0444, dir, &ep_dbg_epfree_called);
+	debugfs_create_file("reset", 0200, dir, NULL, &ep_dbg_reset_fops);
+}
+#else
+static inline void ep_debugfs_init(void) {}
+#endif
+
 static int __init eventpoll_init(void)
 {
 	struct sysinfo si;
@@ -2562,6 +2636,8 @@ static int __init eventpoll_init(void)
 
 	ephead_cache = kmem_cache_create("ep_head",
 		sizeof(struct epitems_head), 0, SLAB_PANIC|SLAB_ACCOUNT, NULL);
+
+	ep_debugfs_init();
 
 	return 0;
 }

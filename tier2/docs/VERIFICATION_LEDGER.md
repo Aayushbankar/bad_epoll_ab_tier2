@@ -67,6 +67,7 @@ This document serves as the authoritative, machine-parseable Single Source of Tr
 | VER-042 | 2026-08-09 | AND-002: KASLR does not alter the underlying race mechanics (alignment error ~0-3 cycles) and hit rate remains 0 whether KASLR is enabled or disabled. | `__ep_remove` / `kmalloc-192` | RUNTIME (KASLR on vs off) | `tier2/evidence/AND-002_raw_kaslr_on.log` | **VERIFIED** |
 | VER-040 | 2026-08-08 | AND-003: SELinux enforcing allows exploit syscalls (`epoll`, `msgget`, `msgsnd`, `msgrcv`) | `epoll_create1` / `msgget` / etc. | RUNTIME (SELinux audit) | `tier2/evidence/AND-003_raw_enforcing.log` | **VERIFIED** |
 | VER-041 | 2026-08-02 | AND-004: MTE/KASAN_HW_TAGS does not prevent UAF detection | `hlist_del_rcu` / MTE tags | RUNTIME (kasan=on + MTE) | `tier2/evidence/AND-004_raw_*.log` | **PLANNED** |
+| VER-043 | 2026-09-05 | HYP-002: Kernel-side debugfs counters confirm natural race produces exactly 0 hits under QEMU TCG over 5000 iterations. Userspace oracle is completely accurate; race is genuinely failing. | `__ep_remove` / `ep_free` / `hlist_del_rcu` | RUNTIME (Kernel Custom Counters) | `tier2/evidence/HYP-002/HYP-002_raw_serial.log` | **VERIFIED** |
 
 ---
 
