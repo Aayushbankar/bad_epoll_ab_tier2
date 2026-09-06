@@ -1,0 +1,675 @@
+Dump of assembler code for function __ep_remove:
+290	static inline void free_ephead(struct epitems_head *head)
+
+291	{
+292		if (head)
+   0xffffffc00839b5dc <+540>:	cbz	x19, 0xffffffc00839b48c <__ep_remove+204>
+
+293			kmem_cache_free(ephead_cache, head);
+   0xffffffc00839b5e0 <+544>:	adrp	x0, 0xffffffc00a0cc000 <mm_slots_hash+5672>
+   0xffffffc00839b5e4 <+548>:	mov	x1, x19
+   0xffffffc00839b5e8 <+552>:	ldr	x0, [x0, #3392]
+   0xffffffc00839b5ec <+556>:	bl	0xffffffc00830a220 <kmem_cache_free>
+
+294	}
+   0xffffffc00839b5f0 <+560>:	b	0xffffffc00839b48c <__ep_remove+204>
+
+295	
+296	static void list_file(struct file *file)
+297	{
+298		struct epitems_head *head;
+299	
+300		head = container_of(file->f_ep, struct epitems_head, epitems);
+301		if (!head->next) {
+302			head->next = tfile_check_list;
+303			tfile_check_list = head;
+304		}
+305	}
+306	
+307	static void unlist_file(struct epitems_head *head)
+308	{
+309		struct epitems_head *to_free = head;
+310		struct hlist_node *p = rcu_dereference(hlist_first_rcu(&head->epitems));
+311		if (p) {
+312			struct epitem *epi= container_of(p, struct epitem, fllink);
+313			spin_lock(&epi->ffd.file->f_lock);
+314			if (!hlist_empty(&head->epitems))
+315				to_free = NULL;
+316			head->next = NULL;
+317			spin_unlock(&epi->ffd.file->f_lock);
+318		}
+319		free_ephead(to_free);
+320	}
+321	
+322	#ifdef CONFIG_SYSCTL
+323	
+324	#include <linux/sysctl.h>
+325	
+326	static long long_zero;
+327	static long long_max = LONG_MAX;
+328	
+329	static struct ctl_table epoll_table[] = {
+330		{
+331			.procname	= "max_user_watches",
+332			.data		= &max_user_watches,
+333			.maxlen		= sizeof(max_user_watches),
+334			.mode		= 0644,
+335			.proc_handler	= proc_doulongvec_minmax,
+336			.extra1		= &long_zero,
+337			.extra2		= &long_max,
+338		},
+339		{ }
+340	};
+341	
+342	static void __init epoll_sysctls_init(void)
+343	{
+344		register_sysctl("fs/epoll", epoll_table);
+345	}
+346	#else
+347	#define epoll_sysctls_init() do { } while (0)
+348	#endif /* CONFIG_SYSCTL */
+349	
+350	static const struct file_operations eventpoll_fops;
+351	
+352	static inline int is_file_epoll(struct file *f)
+
+353	{
+354		return f->f_op == &eventpoll_fops;
+
+355	}
+356	
+357	/* Setup the structure that is used as key for the RB tree */
+358	static inline void ep_set_ffd(struct epoll_filefd *ffd,
+359				      struct file *file, int fd)
+360	{
+361		ffd->file = file;
+362		ffd->fd = fd;
+363	}
+364	
+365	/* Compare RB tree keys */
+366	static inline int ep_cmp_ffd(struct epoll_filefd *p1,
+367				     struct epoll_filefd *p2)
+368	{
+369		return (p1->file > p2->file ? +1:
+370		        (p1->file < p2->file ? -1 : p1->fd - p2->fd));
+371	}
+372	
+373	/* Tells us if the item is currently linked */
+374	static inline int ep_is_linked(struct epitem *epi)
+375	{
+376		return !list_empty(&epi->rdllink);
+   0xffffffc00839b4bc <+252>:	add	x19, x20, #0x18
+
+377	}
+378	
+379	static inline struct eppoll_entry *ep_pwq_from_wait(wait_queue_entry_t *p)
+380	{
+381		return container_of(p, struct eppoll_entry, wait);
+382	}
+383	
+384	/* Get the "struct epitem" from a wait queue pointer */
+385	static inline struct epitem *ep_item_from_wait(wait_queue_entry_t *p)
+386	{
+387		return container_of(p, struct eppoll_entry, wait)->base;
+388	}
+389	
+390	/**
+391	 * ep_events_available - Checks if ready events might be available.
+392	 *
+393	 * @ep: Pointer to the eventpoll context.
+394	 *
+395	 * Return: a value different than %zero if ready events are available,
+396	 *          or %zero otherwise.
+397	 */
+398	static inline int ep_events_available(struct eventpoll *ep)
+399	{
+400		return !list_empty_careful(&ep->rdllist) ||
+401			READ_ONCE(ep->ovflist) != EP_UNACTIVE_PTR;
+402	}
+403	
+404	#ifdef CONFIG_NET_RX_BUSY_POLL
+405	static bool ep_busy_loop_end(void *p, unsigned long start_time)
+406	{
+407		struct eventpoll *ep = p;
+408	
+409		return ep_events_available(ep) || busy_loop_timeout(start_time);
+410	}
+411	
+412	/*
+413	 * Busy poll if globally on and supporting sockets found && no events,
+414	 * busy loop will return if need_resched or ep_events_available.
+415	 *
+416	 * we must do our busy polling with irqs enabled
+417	 */
+418	static bool ep_busy_loop(struct eventpoll *ep, int nonblock)
+419	{
+420		unsigned int napi_id = READ_ONCE(ep->napi_id);
+421	
+422		if ((napi_id >= MIN_NAPI_ID) && net_busy_loop_on()) {
+423			napi_busy_loop(napi_id, nonblock ? NULL : ep_busy_loop_end, ep, false,
+424				       BUSY_POLL_BUDGET);
+425			if (ep_events_available(ep))
+426				return true;
+427			/*
+428			 * Busy poll timed out.  Drop NAPI ID for now, we can add
+429			 * it back in when we have moved a socket with a valid NAPI
+430			 * ID onto the ready list.
+431			 */
+432			ep->napi_id = 0;
+433			return false;
+434		}
+435		return false;
+436	}
+437	
+438	/*
+439	 * Set epoll busy poll NAPI ID from sk.
+440	 */
+441	static inline void ep_set_busy_poll_napi_id(struct epitem *epi)
+442	{
+443		struct eventpoll *ep;
+444		unsigned int napi_id;
+445		struct socket *sock;
+446		struct sock *sk;
+447	
+448		if (!net_busy_loop_on())
+449			return;
+450	
+451		sock = sock_from_file(epi->ffd.file);
+452		if (!sock)
+453			return;
+454	
+455		sk = sock->sk;
+456		if (!sk)
+457			return;
+458	
+459		napi_id = READ_ONCE(sk->sk_napi_id);
+460		ep = epi->ep;
+461	
+462		/* Non-NAPI IDs can be rejected
+463		 *	or
+464		 * Nothing to do if we already have this ID
+465		 */
+466		if (napi_id < MIN_NAPI_ID || napi_id == ep->napi_id)
+467			return;
+468	
+469		/* record NAPI ID for use in next busy poll */
+470		ep->napi_id = napi_id;
+471	}
+472	
+473	#else
+474	
+475	static inline bool ep_busy_loop(struct eventpoll *ep, int nonblock)
+476	{
+477		return false;
+478	}
+479	
+480	static inline void ep_set_busy_poll_napi_id(struct epitem *epi)
+481	{
+482	}
+483	
+484	#endif /* CONFIG_NET_RX_BUSY_POLL */
+485	
+486	/*
+487	 * As described in commit 0ccf831cb lockdep: annotate epoll
+488	 * the use of wait queues used by epoll is done in a very controlled
+489	 * manner. Wake ups can nest inside each other, but are never done
+490	 * with the same locking. For example:
+491	 *
+492	 *   dfd = socket(...);
+493	 *   efd1 = epoll_create();
+494	 *   efd2 = epoll_create();
+495	 *   epoll_ctl(efd1, EPOLL_CTL_ADD, dfd, ...);
+496	 *   epoll_ctl(efd2, EPOLL_CTL_ADD, efd1, ...);
+497	 *
+498	 * When a packet arrives to the device underneath "dfd", the net code will
+499	 * issue a wake_up() on its poll wake list. Epoll (efd1) has installed a
+500	 * callback wakeup entry on that queue, and the wake_up() performed by the
+501	 * "dfd" net code will end up in ep_poll_callback(). At this point epoll
+502	 * (efd1) notices that it may have some event ready, so it needs to wake up
+503	 * the waiters on its poll wait list (efd2). So it calls ep_poll_safewake()
+504	 * that ends up in another wake_up(), after having checked about the
+505	 * recursion constraints. That are, no more than EP_MAX_POLLWAKE_NESTS, to
+506	 * avoid stack blasting.
+507	 *
+508	 * When CONFIG_DEBUG_LOCK_ALLOC is enabled, make sure lockdep can handle
+509	 * this special case of epoll.
+510	 */
+511	#ifdef CONFIG_DEBUG_LOCK_ALLOC
+512	
+513	static void ep_poll_safewake(struct eventpoll *ep, struct epitem *epi,
+514				     unsigned pollflags)
+515	{
+516		struct eventpoll *ep_src;
+517		unsigned long flags;
+518		u8 nests = 0;
+519	
+520		/*
+521		 * To set the subclass or nesting level for spin_lock_irqsave_nested()
+522		 * it might be natural to create a per-cpu nest count. However, since
+523		 * we can recurse on ep->poll_wait.lock, and a non-raw spinlock can
+524		 * schedule() in the -rt kernel, the per-cpu variable are no longer
+525		 * protected. Thus, we are introducing a per eventpoll nest field.
+526		 * If we are not being call from ep_poll_callback(), epi is NULL and
+527		 * we are at the first level of nesting, 0. Otherwise, we are being
+528		 * called from ep_poll_callback() and if a previous wakeup source is
+529		 * not an epoll file itself, we are at depth 1 since the wakeup source
+530		 * is depth 0. If the wakeup source is a previous epoll file in the
+531		 * wakeup chain then we use its nests value and record ours as
+532		 * nests + 1. The previous epoll file nests value is stable since its
+533		 * already holding its own poll_wait.lock.
+534		 */
+535		if (epi) {
+536			if ((is_file_epoll(epi->ffd.file))) {
+537				ep_src = epi->ffd.file->private_data;
+538				nests = ep_src->nests;
+539			} else {
+540				nests = 1;
+541			}
+542		}
+543		spin_lock_irqsave_nested(&ep->poll_wait.lock, flags, nests);
+544		ep->nests = nests + 1;
+545		wake_up_locked_poll(&ep->poll_wait, EPOLLIN | pollflags);
+546		ep->nests = 0;
+547		spin_unlock_irqrestore(&ep->poll_wait.lock, flags);
+548	}
+549	
+550	#else
+551	
+552	static void ep_poll_safewake(struct eventpoll *ep, struct epitem *epi,
+553				     unsigned pollflags)
+554	{
+555		wake_up_poll(&ep->poll_wait, EPOLLIN | pollflags);
+556	}
+557	
+558	#endif
+559	
+560	static void ep_remove_wait_queue(struct eppoll_entry *pwq)
+561	{
+562		wait_queue_head_t *whead;
+563	
+564		rcu_read_lock();
+565		/*
+566		 * If it is cleared by POLLFREE, it should be rcu-safe.
+567		 * If we read NULL we need a barrier paired with
+568		 * smp_store_release() in ep_poll_callback(), otherwise
+569		 * we rely on whead->lock.
+570		 */
+571		whead = smp_load_acquire(&pwq->whead);
+   0xffffffc00839b404 <+68>:	add	x0, x19, #0x38
+   0xffffffc00839b408 <+72>:	ldar	x0, [x0]
+
+572		if (whead)
+   0xffffffc00839b40c <+76>:	cbz	x0, 0xffffffc00839b418 <__ep_remove+88>
+
+573			remove_wait_queue(whead, &pwq->wait);
+   0xffffffc00839b410 <+80>:	add	x1, x19, #0x10
+   0xffffffc00839b414 <+84>:	bl	0xffffffc0080fefc0 <remove_wait_queue>
+
+574		rcu_read_unlock();
+575	}
+576	
+577	/*
+578	 * This function unregisters poll callbacks from the associated file
+579	 * descriptor.  Must be called with "mtx" held.
+580	 */
+581	static void ep_unregister_pollwait(struct eventpoll *ep, struct epitem *epi)
+
+582	{
+583		struct eppoll_entry **p = &epi->pwqlist;
+584		struct eppoll_entry *pwq;
+585	
+586		while ((pwq = *p) != NULL) {
+   0xffffffc00839b3e8 <+40>:	ldr	x19, [x1, #64]
+   0xffffffc00839b3ec <+44>:	add	x23, x23, #0xd28
+   0xffffffc00839b3f4 <+52>:	cbz	x19, 0xffffffc00839b430 <__ep_remove+112>
+   0xffffffc00839b428 <+104>:	ldr	x19, [x20, #64]
+   0xffffffc00839b42c <+108>:	cbnz	x19, 0xffffffc00839b3f8 <__ep_remove+56>
+
+587			*p = pwq->next;
+   0xffffffc00839b3f8 <+56>:	ldr	x1, [x19]
+   0xffffffc00839b3fc <+60>:	str	x1, [x20, #64]
+
+588			ep_remove_wait_queue(pwq);
+589			kmem_cache_free(pwq_cache, pwq);
+   0xffffffc00839b41c <+92>:	ldr	x0, [x23, #8]
+   0xffffffc00839b420 <+96>:	mov	x1, x19
+   0xffffffc00839b424 <+100>:	bl	0xffffffc00830a220 <kmem_cache_free>
+
+590		}
+591	}
+592	
+593	/* call only when ep->mtx is held */
+594	static inline struct wakeup_source *ep_wakeup_source(struct epitem *epi)
+
+595	{
+596		return rcu_dereference_check(epi->ws, lockdep_is_held(&epi->ep->mtx));
+   0xffffffc00839b4fc <+316>:	ldr	x0, [x20, #96]
+
+597	}
+598	
+599	/* call only when ep->mtx is held */
+600	static inline void ep_pm_stay_awake(struct epitem *epi)
+601	{
+602		struct wakeup_source *ws = ep_wakeup_source(epi);
+603	
+604		if (ws)
+605			__pm_stay_awake(ws);
+606	}
+607	
+608	static inline bool ep_has_wakeup_source(struct epitem *epi)
+609	{
+610		return rcu_access_pointer(epi->ws) ? true : false;
+611	}
+612	
+613	/* call when ep->mtx cannot be held (ep_poll_callback) */
+614	static inline void ep_pm_stay_awake_rcu(struct epitem *epi)
+615	{
+616		struct wakeup_source *ws;
+617	
+618		rcu_read_lock();
+619		ws = rcu_dereference(epi->ws);
+620		if (ws)
+621			__pm_stay_awake(ws);
+622		rcu_read_unlock();
+623	}
+624	
+625	
+626	/*
+627	 * ep->mutex needs to be held because we could be hit by
+628	 * eventpoll_release_file() and epoll_ctl().
+629	 */
+630	static void ep_start_scan(struct eventpoll *ep, struct list_head *txlist)
+631	{
+632		/*
+633		 * Steal the ready list, and re-init the original one to the
+634		 * empty list. Also, set ep->ovflist to NULL so that events
+635		 * happening while looping w/out locks, are not lost. We cannot
+636		 * have the poll callback to queue directly on ep->rdllist,
+637		 * because we want the "sproc" callback to be able to do it
+638		 * in a lockless way.
+639		 */
+640		lockdep_assert_irqs_enabled();
+641		write_lock_irq(&ep->lock);
+642		list_splice_init(&ep->rdllist, txlist);
+643		WRITE_ONCE(ep->ovflist, NULL);
+644		write_unlock_irq(&ep->lock);
+645	}
+646	
+647	static void ep_done_scan(struct eventpoll *ep,
+648				 struct list_head *txlist)
+649	{
+650		struct epitem *epi, *nepi;
+651	
+652		write_lock_irq(&ep->lock);
+653		/*
+654		 * During the time we spent inside the "sproc" callback, some
+655		 * other events might have been queued by the poll callback.
+656		 * We re-insert them inside the main ready-list here.
+657		 */
+658		for (nepi = READ_ONCE(ep->ovflist); (epi = nepi) != NULL;
+659		     nepi = epi->next, epi->next = EP_UNACTIVE_PTR) {
+660			/*
+661			 * We need to check if the item is already in the list.
+662			 * During the "sproc" callback execution time, items are
+663			 * queued into ->ovflist but the "txlist" might already
+664			 * contain them, and the list_splice() below takes care of them.
+665			 */
+666			if (!ep_is_linked(epi)) {
+667				/*
+668				 * ->ovflist is LIFO, so we have to reverse it in order
+669				 * to keep in FIFO.
+670				 */
+671				list_add(&epi->rdllink, &ep->rdllist);
+672				ep_pm_stay_awake(epi);
+673			}
+674		}
+675		/*
+676		 * We need to set back ep->ovflist to EP_UNACTIVE_PTR, so that after
+677		 * releasing the lock, events will be queued in the normal way inside
+678		 * ep->rdllist.
+679		 */
+680		WRITE_ONCE(ep->ovflist, EP_UNACTIVE_PTR);
+681	
+682		/*
+683		 * Quickly re-inject items left on "txlist".
+684		 */
+685		list_splice(txlist, &ep->rdllist);
+686		__pm_relax(ep->ws);
+687	
+688		if (!list_empty(&ep->rdllist)) {
+689			if (waitqueue_active(&ep->wq))
+690				wake_up(&ep->wq);
+691		}
+692	
+693		write_unlock_irq(&ep->lock);
+694	}
+695	
+696	static void epi_rcu_free(struct rcu_head *head)
+697	{
+698		struct epitem *epi = container_of(head, struct epitem, rcu);
+699		kmem_cache_free(epi_cache, epi);
+700	}
+701	
+702	static void ep_get(struct eventpoll *ep)
+703	{
+704		refcount_inc(&ep->refcount);
+705	}
+706	
+707	/*
+708	 * Returns true if the event poll can be disposed
+709	 */
+710	static bool ep_refcount_dec_and_test(struct eventpoll *ep)
+711	{
+712		if (!refcount_dec_and_test(&ep->refcount))
+713			return false;
+714	
+715		WARN_ON_ONCE(!RB_EMPTY_ROOT(&ep->rbr.rb_root));
+716		return true;
+717	}
+718	
+719	static void ep_free(struct eventpoll *ep)
+720	{
+721		mutex_destroy(&ep->mtx);
+722		free_uid(ep->user);
+723		wakeup_source_unregister(ep->ws);
+724	#ifdef CONFIG_DEBUG_FS
+725		/* HYP-002: mark as freed so __ep_remove can detect UAF */
+726		WRITE_ONCE(ep->debug_freed, 0xDEADFEED);
+727		atomic_inc(&ep_dbg_epfree_called);
+728	#endif
+729		kfree(ep);
+730	}
+731	
+732	/*
+733	 * Removes a "struct epitem" from the eventpoll RB tree and deallocates
+734	 * all the associated resources. Must be called with "mtx" held.
+735	 * If the dying flag is set, do the removal only if force is true.
+736	 * This prevents ep_clear_and_put() from dropping all the ep references
+737	 * while running concurrently with eventpoll_release_file().
+738	 * Returns true if the eventpoll can be disposed.
+739	 */
+740	static bool __ep_remove(struct eventpoll *ep, struct epitem *epi, bool force)
+741	{
+   0xffffffc00839b3c0 <+0>:	paciasp
+   0xffffffc00839b3c4 <+4>:	stp	x29, x30, [sp, #-64]!
+   0xffffffc00839b3c8 <+8>:	mov	x29, sp
+   0xffffffc00839b3cc <+12>:	stp	x19, x20, [sp, #16]
+   0xffffffc00839b3d0 <+16>:	mov	x20, x1
+   0xffffffc00839b3d4 <+20>:	stp	x21, x22, [sp, #32]
+   0xffffffc00839b3d8 <+24>:	mov	x21, x0
+   0xffffffc00839b3dc <+28>:	stp	x23, x24, [sp, #48]
+   0xffffffc00839b3e0 <+32>:	adrp	x23, 0xffffffc00a0cc000 <mm_slots_hash+5672>
+   0xffffffc00839b3e4 <+36>:	and	w24, w2, #0xff
+
+742		struct file *file = epi->ffd.file;
+   0xffffffc00839b3f0 <+48>:	ldr	x22, [x1, #48]
+
+743		struct epitems_head *to_free;
+
+744		struct hlist_head *head;
+
+745	
+746		lockdep_assert_irqs_enabled();
+
+747	
+748		/*
+749		 * Removes poll wait queue hooks.
+750		 */
+751		ep_unregister_pollwait(ep, epi);
+
+752	
+753		/* Remove the current item from the list of epoll hooks */
+754		spin_lock(&file->f_lock);
+755		if (epi->dying && !force) {
+   0xffffffc00839b43c <+124>:	ldrb	w1, [x20, #60]
+   0xffffffc00839b440 <+128>:	eor	w1, w1, #0x1
+   0xffffffc00839b444 <+132>:	orr	w1, w24, w1
+   0xffffffc00839b448 <+136>:	ands	w19, w1, #0xff
+   0xffffffc00839b44c <+140>:	b.eq	0xffffffc00839b594 <__ep_remove+468>  // b.none
+
+756			spin_unlock(&file->f_lock);
+757			return false;
+
+758		}
+759	
+760		to_free = NULL;
+
+761		head = file->f_ep;
+   0xffffffc00839b450 <+144>:	ldr	x19, [x22, #208]
+
+762		if (head->first == &epi->fllink && !epi->fllink.next) {
+   0xffffffc00839b454 <+148>:	mov	x0, x20
+   0xffffffc00839b458 <+152>:	ldr	x2, [x19]
+   0xffffffc00839b45c <+156>:	ldr	x1, [x0, #80]!
+   0xffffffc00839b460 <+160>:	cmp	x2, x0
+   0xffffffc00839b464 <+164>:	b.eq	0xffffffc00839b554 <__ep_remove+404>  // b.none
+   0xffffffc00839b554 <+404>:	cbz	x1, 0xffffffc00839b564 <__ep_remove+420>
+
+763			file->f_ep = NULL;
+   0xffffffc00839b570 <+432>:	str	xzr, [x22, #208]
+
+764	#ifdef CONFIG_DEBUG_FS
+765			/* HYP-002: detect if inner epoll was freed between
+766			 * WRITE_ONCE(f_ep, NULL) and hlist_del_rcu.
+767			 * For epoll files, file->private_data == inner_ep.
+768			 * After ep_free(), debug_freed == 0xDEADFEED.
+769			 */
+770			if (is_file_epoll(file)) {
+   0xffffffc00839b564 <+420>:	ldr	x1, [x22, #40]
+   0xffffffc00839b568 <+424>:	adrp	x24, 0xffffffc00935c000 <proc_mounts_operations+224>
+   0xffffffc00839b56c <+428>:	add	x24, x24, #0x1a0
+   0xffffffc00839b574 <+436>:	add	x0, x24, #0x18
+   0xffffffc00839b578 <+440>:	cmp	x1, x0
+   0xffffffc00839b57c <+444>:	b.eq	0xffffffc00839b5f4 <__ep_remove+564>  // b.none
+
+771				struct eventpoll *inner_ep = file->private_data;
+   0xffffffc00839b5f4 <+564>:	ldr	x1, [x22, #200]
+
+772				atomic_inc(&ep_dbg_fep_cleared);
+773				/* Barrier: ensure we see inner_ep state from other CPU */
+774				smp_rmb();
+   0xffffffc00839b610 <+592>:	dmb	ishld
+
+775				if (READ_ONCE(inner_ep->debug_freed) == 0xDEADFEED) {
+   0xffffffc00839b614 <+596>:	ldr	w3, [x1, #176]
+   0xffffffc00839b618 <+600>:	mov	w2, #0xfeed                	// #65261
+   0xffffffc00839b61c <+604>:	movk	w2, #0xdead, lsl #16
+   0xffffffc00839b620 <+608>:	cmp	w3, w2
+   0xffffffc00839b624 <+612>:	b.eq	0xffffffc00839b664 <__ep_remove+676>  // b.none
+
+776					atomic_inc(&ep_dbg_uaf_detected);
+777					pr_warn("epoll_uaf: UAF DETECTED in __ep_remove! inner_ep=%px freed before hlist_del_rcu\n",
+   0xffffffc00839b674 <+692>:	adrp	x0, 0xffffffc0096fd000
+   0xffffffc00839b678 <+696>:	add	x0, x0, #0x628
+   0xffffffc00839b67c <+700>:	bl	0xffffffc008ec07c4 <_printk>
+   0xffffffc00839b680 <+704>:	b	0xffffffc00839b628 <__ep_remove+616>
+
+778						inner_ep);
+779				}
+780			}
+781	#endif
+782			if (!is_file_epoll(file)) {
+   0xffffffc00839b628 <+616>:	ldr	x0, [x22, #40]
+   0xffffffc00839b62c <+620>:	add	x24, x24, #0x18
+   0xffffffc00839b630 <+624>:	cmp	x0, x24
+   0xffffffc00839b634 <+628>:	b.ne	0xffffffc00839b580 <__ep_remove+448>  // b.any
+
+783				struct epitems_head *v;
+
+784				v = container_of(head, struct epitems_head, epitems);
+
+785				if (!smp_load_acquire(&v->next))
+   0xffffffc00839b580 <+448>:	add	x0, x19, #0x8
+   0xffffffc00839b584 <+452>:	ldar	x0, [x0]
+   0xffffffc00839b588 <+456>:	cbz	x0, 0xffffffc00839b5b8 <__ep_remove+504>
+
+786					to_free = v;
+787			}
+788		}
+789		hlist_del_rcu(&epi->fllink);
+790		spin_unlock(&file->f_lock);
+791		free_ephead(to_free);
+
+792	
+793		rb_erase_cached(&epi->rbn, &ep->rbr);
+   0xffffffc00839b48c <+204>:	ldr	x0, [x21, #112]
+   0xffffffc00839b490 <+208>:	add	x19, x21, #0x68
+
+794	
+795		write_lock_irq(&ep->lock);
+   0xffffffc00839b4b0 <+240>:	add	x22, x21, #0x60
+   0xffffffc00839b4b8 <+248>:	mov	x0, x22
+   0xffffffc00839b4c0 <+256>:	bl	0xffffffc008ee11c0 <_raw_write_lock_irq>
+
+796		if (ep_is_linked(epi))
+   0xffffffc00839b4c8 <+264>:	cmp	x19, x0
+   0xffffffc00839b4cc <+268>:	b.eq	0xffffffc00839b4f4 <__ep_remove+308>  // b.none
+
+797			list_del_init(&epi->rdllink);
+798		write_unlock_irq(&ep->lock);
+   0xffffffc00839b4f4 <+308>:	mov	x0, x22
+   0xffffffc00839b4f8 <+312>:	bl	0xffffffc008ee0a50 <_raw_write_unlock_irq>
+
+799	
+800		wakeup_source_unregister(ep_wakeup_source(epi));
+   0xffffffc00839b500 <+320>:	bl	0xffffffc008829420 <wakeup_source_unregister>
+
+801		/*
+802		 * At this point it is safe to free the eventpoll item. Use the union
+803		 * field epi->rcu, since we are trying to minimize the size of
+804		 * 'struct epitem'. The 'rbn' field is no longer in use. Protected by
+805		 * ep->mtx. The rcu read side, reverse_path_check_proc(), does not make
+806		 * use of the rbn field.
+807		 */
+808		call_rcu(&epi->rcu, epi_rcu_free);
+   0xffffffc00839b504 <+324>:	mov	x0, x20
+   0xffffffc00839b508 <+328>:	adrp	x1, 0xffffffc00839a000 <inotify_read+672>
+   0xffffffc00839b50c <+332>:	add	x1, x1, #0xa80
+   0xffffffc00839b510 <+336>:	bl	0xffffffc008141384 <call_rcu>
+
+809	
+810		percpu_counter_dec(&ep->user->epoll_watches);
+   0xffffffc00839b51c <+348>:	ldr	x0, [x21, #136]
+
+811		return ep_refcount_dec_and_test(ep);
+   0xffffffc00839b52c <+364>:	mov	x0, x21
+   0xffffffc00839b530 <+368>:	bl	0xffffffc00839af54 <ep_refcount_dec_and_test>
+   0xffffffc00839b534 <+372>:	and	w19, w0, #0xff
+
+812	}
+   0xffffffc00839b538 <+376>:	mov	w0, w19
+   0xffffffc00839b53c <+380>:	ldp	x19, x20, [sp, #16]
+   0xffffffc00839b540 <+384>:	ldp	x21, x22, [sp, #32]
+   0xffffffc00839b544 <+388>:	ldp	x23, x24, [sp, #48]
+   0xffffffc00839b548 <+392>:	ldp	x29, x30, [sp], #64
+   0xffffffc00839b54c <+396>:	autiasp
+   0xffffffc00839b550 <+400>:	ret
+   0xffffffc00839b59c <+476>:	mov	w0, w19
+   0xffffffc00839b5a0 <+480>:	ldp	x19, x20, [sp, #16]
+   0xffffffc00839b5a4 <+484>:	ldp	x21, x22, [sp, #32]
+   0xffffffc00839b5a8 <+488>:	ldp	x23, x24, [sp, #48]
+   0xffffffc00839b5ac <+492>:	ldp	x29, x30, [sp], #64
+   0xffffffc00839b5b0 <+496>:	autiasp
+   0xffffffc00839b5b4 <+500>:	ret
+
+End of assembler dump.
