@@ -56,3 +56,40 @@ The UAF race condition relies on precise context switching and multi-processor i
 
 ## Next Steps
 Proceed with testing Hypothesis 1 (`QEMU timerfd test`) to investigate the impact of QEMU emulation on the race timing.
+
+---
+
+## Update: Execution on Android GKI 6.1.23
+
+### Context
+The initial HYP-002 run was performed on `linux-6.12.67` (the kernelCTF target). However, Jaeyoung's hypothesis about nesting-depth differences applies specifically to the Android GKI 6.1 target. The experiment was thus repeated natively against the `android14-6.1` branch (`linux-6.1.23`).
+
+### Validation of Target
+1. Located the Android 14 GKI `6.1.23` source at `tier2/android/source/common/`.
+2. Verified that `fs/eventpoll.c` contains the legacy `nested` fast-path optimizations relevant to Jaeyoung's hypothesis.
+3. Successfully recompiled the GKI kernel `Image` natively with the same debugfs hooks applied.
+
+### Execution Output (GKI 6.1.23)
+```
+[*] Progress: 3500/5000 | kernel_fep_cleared=3500 | kernel_uaf=0 | oracle=0 | setup_fail=0
+[*] Progress: 4000/5000 | kernel_fep_cleared=4000 | kernel_uaf=0 | oracle=0 | setup_fail=0
+[*] Progress: 4500/5000 | kernel_fep_cleared=4500 | kernel_uaf=0 | oracle=0 | setup_fail=0
+[*] Progress: 5000/5000 | kernel_fep_cleared=5000 | kernel_uaf=0 | oracle=0 | setup_fail=0
+
+========================================
+HYP-002 FINAL RESULTS
+========================================
+Iterations:              5000
+Setup failures:          0
+Kernel fep_cleared:      5000
+Kernel uaf_detected:     0
+Kernel epfree_called:    10000
+Userspace oracle_hits:   0
+
+>>> HYPOTHESIS 2 REJECTED: Race not firing under QEMU TCG.
+>>> Both kernel and oracle agree: 0 hits.
+```
+
+### Final Conclusion
+The result on the official GKI 6.1.23 Android kernel is identical to the 6.12.67 target: **0 hits**.
+Jaeyoung's hypothesis regarding nesting semantics does not bypass the fundamental timing issue. The race condition definitively requires highly precise context switching that QEMU TCG emulation currently fails to simulate. Hypothesis 2 remains completely REJECTED across both environments.

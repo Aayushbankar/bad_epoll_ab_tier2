@@ -27,7 +27,7 @@ chmod +x init harness
 find . -print0 | cpio --null -ov --format=newc > "${TIER2_DIR}/initramfs.cpio" 2>/dev/null
 
 # 4. Copy patched kernel Image (if rebuilt)
-KERNEL_IMAGE="${PROJECT_ROOT}/third_party/linux-6.12.67/arch/arm64/boot/Image"
+KERNEL_IMAGE="${TIER2_DIR}/android/source/common/arch/arm64/boot/Image"
 ARTIFACT_IMAGE="${TIER2_DIR}/android/artifacts/Image"
 if [ "${KERNEL_IMAGE}" -nt "${ARTIFACT_IMAGE}" ]; then
     echo "[*] Copying rebuilt kernel Image..."
