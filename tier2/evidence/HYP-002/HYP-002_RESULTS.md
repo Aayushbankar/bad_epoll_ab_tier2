@@ -68,32 +68,31 @@ The initial HYP-002 run was performed on `linux-6.12.67` (the kernelCTF target) 
 1. Verified that `ep_alloc()` uses `kzalloc()` to allocate `struct eventpoll`. Explicit zeroing (`ep->debug_freed = 0;`) was confirmed to be redundant but harmless.
 2. Executed 3 independent reproduction trials (3 × 5,000 = 15,000 iterations) on Android GKI 6.1.23 under QEMU TCG using `tier2/scripts/run_hyp002_repro.sh`.
 
+3. Executed a clean, continuous 20,000-iteration batch via `tier2/scripts/run_hyp002_batch20k.sh` to establish a tight confidence interval.
+
 ```
 ==============================================
 HYP-002 REPRODUCTION SUMMARY
 ==============================================
-Runs completed: 3
-Total kernel_uaf_detected: 0
-
-  Run 1: kernel_uaf=0, oracle=0 (5,000 iter)
-  Run 2: kernel_uaf=0, oracle=0 (5,000 iter)
-  Run 3: kernel_uaf=0, oracle=0 (5,000 iter)
-
->>> REPRODUCTION OUTCOME: 0 UAF hits across 3 runs (15,000 total iterations).
->>> Cumulative on GKI 6.1.23: 1 hit in 20,000 total iterations (~0.005%).
+Phase 1 (3x5k): 15,000 iter, 0 UAF hits
+Phase 2 (20k continuous): 20,000 iter, 0 UAF hits
+Total reproduction iterations: 35,000 (0 UAF hits)
+Cumulative on GKI 6.1.23: 1 hit in 40,000 total iterations (~0.0025%)
+Rule of Three 95% Upper Bound: <0.00857% (less than 1 in 11,600)
 ==============================================
 ```
 
 ### Final Reconciled Conclusion
 1. **The race CAN fire on GKI 6.1.23 under QEMU TCG**: One genuine kernel detection was captured in the original run (`inner_ep=ffffff8004a99600 freed before hlist_del_rcu`).
-2. **The race is extremely rare**: It could not be reproduced across 15,000 additional iterations (0 hits in 15,000 reproduction attempts; 1 in 20,000 total).
-3. **Hypothesis 2 Status on GKI 6.1.23**: **INCONCLUSIVE** — the race was detected once, demonstrating that the race window can align under emulation, but it is too rare to be reliably reproduced or measured under QEMU TCG. (On `linux-6.12.67`, it remains REJECTED at 0/5,000).
+2. **The race is extremely rare**: Zero hits occurred across 35,000 consecutive reproduction attempts (1 in 40,000 total; 95% upper bound <0.00857%).
+3. **Hypothesis 2 Status on GKI 6.1.23**: **INCONCLUSIVE (LOW-CONFIDENCE FINDING)** — the race was detected once, demonstrating that the race window can align under emulation, but it is too rare to be reliably reproduced or measured under QEMU TCG without synthetic delays. (On `linux-6.12.67`, it remains REJECTED at 0/5,000).
 
 ### Raw Evidence References
 - Original 1-hit run: Commit `cf24bd6` (`tier2/evidence/HYP-002/HYP-002_raw_serial.log`)
 - Repro Run 1: `tier2/evidence/HYP-002/HYP-002_repro_run1.log` (5,000 iterations, 0 UAF hits)
 - Repro Run 2: `tier2/evidence/HYP-002/HYP-002_repro_run2.log` (5,000 iterations, 0 UAF hits)
 - Repro Run 3: `tier2/evidence/HYP-002/HYP-002_repro_run3.log` (5,000 iterations, 0 UAF hits)
+- Repro Batch 20k: `tier2/evidence/HYP-002/HYP-002_repro_batch20k.log` (20,000 iterations, 0 UAF hits)
 - Detailed GKI report: `tier2/evidence/HYP-002/HYP-002_RESULTS_GKI.md`
 - Patch artifact: `tier2/scripts/hyp002_gki_kernel.patch`
 

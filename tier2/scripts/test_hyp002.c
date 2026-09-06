@@ -19,7 +19,9 @@
 #include <sys/mount.h>
 #include <sys/stat.h>
 
+#ifndef ITERATIONS
 #define ITERATIONS       5000
+#endif
 #define MSG_PAYLOAD_SIZE 144   /* 48B header + 144B user = 192B → kmalloc-192 */
 #define SPRAY_COUNT      200
 #define MARKER_BYTE      0x42
