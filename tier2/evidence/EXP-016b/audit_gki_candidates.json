@@ -1,0 +1,2677 @@
+[
+  {
+    "struct": "cred",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 4,
+        "class": "INTEGER/SCALAR",
+        "field": "int                non_rcu;",
+        "raw": "int                non_rcu;              /*   160     4 */"
+      },
+      {
+        "offset": 160,
+        "field_size": 16,
+        "class": "OTHER/STRUCT",
+        "field": "struct callback_head rcu __attribute__((__aligned__(8)));",
+        "raw": "struct callback_head rcu __attribute__((__aligned__(8))); /*   160    16 */"
+      },
+      {
+        "offset": 160,
+        "field_size": 16,
+        "class": "OTHER/STRUCT",
+        "field": "} __attribute__((__aligned__(8)));",
+        "raw": "} __attribute__((__aligned__(8)));               /*   160    16 */"
+      }
+    ]
+  },
+  {
+    "struct": "pipe_inode_info",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "struct user_struct *       user;",
+        "raw": "struct user_struct *       user;                 /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "lru_gen_mm_walk",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 152,
+        "field_size": 24,
+        "class": "INTEGER/SCALAR",
+        "field": "int                        mm_stats[6];",
+        "raw": "int                        mm_stats[6];          /*   152    24 */"
+      }
+    ]
+  },
+  {
+    "struct": "dentry",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 16,
+        "class": "OTHER/STRUCT",
+        "field": "struct list_head           d_subdirs;",
+        "raw": "struct list_head           d_subdirs;            /*   160    16 */"
+      }
+    ]
+  },
+  {
+    "struct": "qc_state",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 8,
+        "field_size": 168,
+        "class": "FLAG/STATE",
+        "field": "struct qc_type_state       s_state[3];",
+        "raw": "struct qc_type_state       s_state[3];           /*     8   168 */"
+      }
+    ]
+  },
+  {
+    "struct": "inode_operations",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "int                        (*set_acl)(struct user_namespace *, struct inode *, struct posix_acl *, int);",
+        "raw": "int                        (*set_acl)(struct user_namespace *, struct inode *, struct posix_acl *, int); /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "dev_pm_ops",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "int                        (*runtime_suspend)(struct device *);",
+        "raw": "int                        (*runtime_suspend)(struct device *); /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "wakeup_source",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "COUNTER/INDEX",
+        "field": "long unsigned int          expire_count;",
+        "raw": "long unsigned int          expire_count;         /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "bus_type",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "const struct iommu_ops  *  iommu_ops;",
+        "raw": "const struct iommu_ops  *  iommu_ops;            /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "fwnode_operations",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "int                        (*irq_get)(const struct fwnode_handle  *, unsigned int);",
+        "raw": "int                        (*irq_get)(const struct fwnode_handle  *, unsigned int); /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "hw_perf_event",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "COUNTER/INDEX",
+        "field": "u64                        interrupts_seq;",
+        "raw": "u64                        interrupts_seq;       /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "page_counter",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "struct page_counter *      parent;",
+        "raw": "struct page_counter *      parent;               /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "inet_frag_queue",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 16,
+        "class": "OTHER/STRUCT",
+        "field": "struct callback_head       rcu __attribute__((__aligned__(8)));",
+        "raw": "struct callback_head       rcu __attribute__((__aligned__(8))); /*   160    16 */"
+      }
+    ]
+  },
+  {
+    "struct": "dst_ops",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 128,
+        "field_size": 40,
+        "class": "COUNTER/INDEX",
+        "field": "struct percpu_counter      pcpuc_entries __attribute__((__aligned__(64)));",
+        "raw": "struct percpu_counter      pcpuc_entries __attribute__((__aligned__(64))); /*   128    40 */"
+      }
+    ]
+  },
+  {
+    "struct": "netns_sysctl_ipv6",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 4,
+        "class": "INTEGER/SCALAR",
+        "field": "int                        seg6_flowlabel;",
+        "raw": "int                        seg6_flowlabel;       /*   160     4 */"
+      },
+      {
+        "offset": 164,
+        "field_size": 4,
+        "class": "INTEGER/SCALAR",
+        "field": "u32                        ioam6_id;",
+        "raw": "u32                        ioam6_id;             /*   164     4 */"
+      }
+    ]
+  },
+  {
+    "struct": "nf_ip_net",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 124,
+        "field_size": 40,
+        "class": "OTHER/STRUCT",
+        "field": "struct nf_sctp_net         sctp;",
+        "raw": "struct nf_sctp_net         sctp;                 /*   124    40 */"
+      }
+    ]
+  },
+  {
+    "struct": "tty_driver",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "const struct tty_operations  * ops;",
+        "raw": "const struct tty_operations  * ops;              /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "fib_rules_ops",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 16,
+        "class": "OTHER/STRUCT",
+        "field": "struct callback_head       rcu __attribute__((__aligned__(8)));",
+        "raw": "struct callback_head       rcu __attribute__((__aligned__(8))); /*   160    16 */"
+      }
+    ]
+  },
+  {
+    "struct": "net_device_stats",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "INTEGER/SCALAR",
+        "field": "long unsigned int  tx_window_errors;",
+        "raw": "long unsigned int  tx_window_errors;     /*   160     8 */"
+      },
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "REFCOUNT/ATOMIC_COUNTER",
+        "field": "atomic_long_t      __tx_window_errors;",
+        "raw": "atomic_long_t      __tx_window_errors;   /*   160     8 */"
+      },
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "OTHER/STRUCT",
+        "field": "};",
+        "raw": "};                                               /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "freq_constraints",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 136,
+        "field_size": 56,
+        "class": "OTHER/STRUCT",
+        "field": "struct blocking_notifier_head max_freq_notifiers;",
+        "raw": "struct blocking_notifier_head max_freq_notifiers; /*   136    56 */"
+      }
+    ]
+  },
+  {
+    "struct": "kretprobe",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "OTHER/STRUCT",
+        "field": "struct freelist_head       freelist;",
+        "raw": "struct freelist_head       freelist;             /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "bpf_trampoline",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 152,
+        "field_size": 12,
+        "class": "COUNTER/INDEX",
+        "field": "int                        progs_cnt[3];",
+        "raw": "int                        progs_cnt[3];         /*   152    12 */"
+      }
+    ]
+  },
+  {
+    "struct": "Qdisc_ops",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "u32                        (*egress_block_get)(struct Qdisc *);",
+        "raw": "u32                        (*egress_block_get)(struct Qdisc *); /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "tcf_proto_ops",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "int                        (*terse_dump)(struct net *, struct tcf_proto *, void *, struct sk_buff *, struct tcmsg *, bool);",
+        "raw": "int                        (*terse_dump)(struct net *, struct tcf_proto *, void *, struct sk_buff *, struct tcmsg *, bool); /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "crypto_template",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 40,
+        "field_size": 128,
+        "class": "OTHER/STRUCT",
+        "field": "char                       name[128];",
+        "raw": "char                       name[128];            /*    40   128 */"
+      }
+    ]
+  },
+  {
+    "struct": "uclamp_rq",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 8,
+        "field_size": 160,
+        "class": "OTHER/STRUCT",
+        "field": "struct uclamp_bucket       bucket[20];",
+        "raw": "struct uclamp_bucket       bucket[20];           /*     8   160 */"
+      }
+    ]
+  },
+  {
+    "struct": "sd_lb_stats",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 120,
+        "field_size": 72,
+        "class": "OTHER/STRUCT",
+        "field": "struct sg_lb_stats         local_stat;",
+        "raw": "struct sg_lb_stats         local_stat;           /*   120    72 */"
+      }
+    ]
+  },
+  {
+    "struct": "tracing_log_err",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 40,
+        "field_size": 128,
+        "class": "OTHER/STRUCT",
+        "field": "char                       loc[128];",
+        "raw": "char                       loc[128];             /*    40   128 */"
+      }
+    ]
+  },
+  {
+    "struct": "hist_field",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "INTEGER/SCALAR",
+        "field": "u64                        div_multiplier;",
+        "raw": "u64                        div_multiplier;       /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "bpf_local_storage",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 4,
+        "class": "OTHER/STRUCT",
+        "field": "raw_spinlock_t             lock;",
+        "raw": "raw_spinlock_t             lock;                 /*   160     4 */"
+      }
+    ]
+  },
+  {
+    "struct": "__sk_buff",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 4,
+        "class": "INTEGER/SCALAR",
+        "field": "__u32                      wire_len;",
+        "raw": "__u32                      wire_len;             /*   160     4 */"
+      },
+      {
+        "offset": 164,
+        "field_size": 4,
+        "class": "INTEGER/SCALAR",
+        "field": "__u32                      gso_segs;",
+        "raw": "__u32                      gso_segs;             /*   164     4 */"
+      }
+    ]
+  },
+  {
+    "struct": "ndisc_options",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 152,
+        "field_size": 24,
+        "class": "POINTER",
+        "field": "struct nd_opt_hdr *        nd_802154_opt_array[3];",
+        "raw": "struct nd_opt_hdr *        nd_802154_opt_array[3]; /*   152    24 */"
+      }
+    ]
+  },
+  {
+    "struct": "xdp_dev_bulk_queue",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "struct bpf_prog *          xdp_prog;",
+        "raw": "struct bpf_prog *          xdp_prog;             /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "key_type",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 152,
+        "field_size": 16,
+        "class": "OTHER/STRUCT",
+        "field": "struct list_head           link;",
+        "raw": "struct list_head           link;                 /*   152    16 */"
+      }
+    ]
+  },
+  {
+    "struct": "blk_mq_tags",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 16,
+        "class": "OTHER/STRUCT",
+        "field": "struct list_head           page_list;",
+        "raw": "struct list_head           page_list;            /*   160    16 */"
+      }
+    ]
+  },
+  {
+    "struct": "blk_mq_tag_set",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 152,
+        "field_size": 16,
+        "class": "OTHER/STRUCT",
+        "field": "struct list_head           tag_list;",
+        "raw": "struct list_head           tag_list;             /*   152    16 */"
+      }
+    ]
+  },
+  {
+    "struct": "proc_dir_entry",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "char *                     name;",
+        "raw": "char *                     name;                 /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "eventpoll",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "OTHER/STRUCT",
+        "field": "struct hlist_head          refs;",
+        "raw": "struct hlist_head          refs;                 /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "aio_kiocb",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 4,
+        "class": "REFCOUNT/ATOMIC_COUNTER",
+        "field": "refcount_t                 ki_refcnt;",
+        "raw": "refcount_t                 ki_refcnt;            /*   160     4 */"
+      }
+    ]
+  },
+  {
+    "struct": "fscrypt_nokey_name",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 157,
+        "field_size": 32,
+        "class": "INTEGER/SCALAR",
+        "field": "u8                         sha256[32];",
+        "raw": "u8                         sha256[32];           /*   157    32 */"
+      }
+    ]
+  },
+  {
+    "struct": "crypto_ahash",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 128,
+        "field_size": 64,
+        "class": "OTHER/STRUCT",
+        "field": "struct crypto_tfm          base __attribute__((__aligned__(64)));",
+        "raw": "struct crypto_tfm          base __attribute__((__aligned__(64))); /*   128    64 */"
+      }
+    ]
+  },
+  {
+    "struct": "elf_thread_core_info",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 16,
+        "field_size": 148,
+        "class": "FLAG/STATE",
+        "field": "struct compat_elf_prstatus prstatus;",
+        "raw": "struct compat_elf_prstatus prstatus;             /*    16   148 */"
+      }
+    ]
+  },
+  {
+    "struct": "iomap_iter",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 112,
+        "field_size": 72,
+        "class": "OTHER/STRUCT",
+        "field": "struct iomap               srcmap;",
+        "raw": "struct iomap               srcmap;               /*   112    72 */"
+      }
+    ]
+  },
+  {
+    "struct": "iomap_ioend",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 64,
+        "field_size": 128,
+        "class": "OTHER/STRUCT",
+        "field": "struct bio                 io_inline_bio;",
+        "raw": "struct bio                 io_inline_bio;        /*    64   128 */"
+      }
+    ]
+  },
+  {
+    "struct": "mem_size_stats",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "INTEGER/SCALAR",
+        "field": "u64                        swap_pss;",
+        "raw": "u64                        swap_pss;             /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "configfs_subsystem",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 136,
+        "field_size": 32,
+        "class": "OTHER/STRUCT",
+        "field": "struct mutex               su_mutex;",
+        "raw": "struct mutex               su_mutex;             /*   136    32 */"
+      }
+    ]
+  },
+  {
+    "struct": "ext4_es_stats",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 144,
+        "field_size": 40,
+        "class": "COUNTER/INDEX",
+        "field": "struct percpu_counter      es_stats_shk_cnt;",
+        "raw": "struct percpu_counter      es_stats_shk_cnt;     /*   144    40 */"
+      }
+    ]
+  },
+  {
+    "struct": "fsmap_head",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 64,
+        "field_size": 128,
+        "class": "OTHER/STRUCT",
+        "field": "struct fsmap               fmh_keys[2];",
+        "raw": "struct fsmap               fmh_keys[2];          /*    64   128 */"
+      }
+    ]
+  },
+  {
+    "struct": "ext4_fs_context",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "OTHER/STRUCT",
+        "field": "ext4_fsblk_t               s_sb_block;",
+        "raw": "ext4_fsblk_t               s_sb_block;           /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "exfat_entry_set_cache",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 4,
+        "class": "COUNTER/INDEX",
+        "field": "unsigned int               num_entries;",
+        "raw": "unsigned int               num_entries;          /*   160     4 */"
+      }
+    ]
+  },
+  {
+    "struct": "fuse_args",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "struct path *              canonical_path;",
+        "raw": "struct path *              canonical_path;       /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "fuse_args_pages",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 0,
+        "field_size": 168,
+        "class": "OTHER/STRUCT",
+        "field": "struct fuse_args           args;",
+        "raw": "struct fuse_args           args;                 /*     0   168 */"
+      }
+    ]
+  },
+  {
+    "struct": "fuse_lookup_io",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 128,
+        "field_size": 48,
+        "class": "OTHER/STRUCT",
+        "field": "struct fuse_entry_bpf      feb;",
+        "raw": "struct fuse_entry_bpf      feb;                  /*   128    48 */"
+      }
+    ]
+  },
+  {
+    "struct": "fuse_setattr_io",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 88,
+        "field_size": 104,
+        "class": "OTHER/STRUCT",
+        "field": "struct fuse_attr_out       fao;",
+        "raw": "struct fuse_attr_out       fao;                  /*    88   104 */"
+      }
+    ]
+  },
+  {
+    "struct": "ovl_fs",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "REFCOUNT/ATOMIC_COUNTER",
+        "field": "atomic_long_t              last_ino;",
+        "raw": "atomic_long_t              last_ino;             /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "f2fs_checkpoint",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 4,
+        "class": "OTHER/STRUCT",
+        "field": "__le32                     nat_ver_bitmap_bytesize;",
+        "raw": "__le32                     nat_ver_bitmap_bytesize; /*   160     4 */"
+      },
+      {
+        "offset": 164,
+        "field_size": 4,
+        "class": "OTHER/STRUCT",
+        "field": "__le32                     checksum_offset;",
+        "raw": "__le32                     checksum_offset;      /*   164     4 */"
+      }
+    ]
+  },
+  {
+    "struct": "dirty_seglist_info",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 4,
+        "class": "COUNTER/INDEX",
+        "field": "unsigned int               pinned_secmap_cnt;",
+        "raw": "unsigned int               pinned_secmap_cnt;    /*   160     4 */"
+      },
+      {
+        "offset": 164,
+        "field_size": 1,
+        "class": "INTEGER/SCALAR",
+        "field": "bool                       enable_pin_section;",
+        "raw": "bool                       enable_pin_section;   /*   164     1 */"
+      }
+    ]
+  },
+  {
+    "struct": "iostat_lat_info",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 144,
+        "field_size": 36,
+        "class": "COUNTER/INDEX",
+        "field": "unsigned int               bio_cnt[3][3];",
+        "raw": "unsigned int               bio_cnt[3][3];        /*   144    36 */"
+      }
+    ]
+  },
+  {
+    "struct": "ethtool_rx_flow_spec",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 4,
+        "class": "INTEGER/SCALAR",
+        "field": "__u32                      location;",
+        "raw": "__u32                      location;             /*   160     4 */"
+      }
+    ]
+  },
+  {
+    "struct": "ethtool_rxnfc",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 16,
+        "field_size": 168,
+        "class": "OTHER/STRUCT",
+        "field": "struct ethtool_rx_flow_spec fs;",
+        "raw": "struct ethtool_rx_flow_spec fs;                  /*    16   168 */"
+      }
+    ]
+  },
+  {
+    "struct": "ethtool_eth_mac_stats",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "INTEGER/SCALAR",
+        "field": "u64                        OutOfRangeLengthField;",
+        "raw": "u64                        OutOfRangeLengthField; /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "ethtool_rmon_stats",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 112,
+        "field_size": 80,
+        "class": "INTEGER/SCALAR",
+        "field": "u64                        hist_tx[10];",
+        "raw": "u64                        hist_tx[10];          /*   112    80 */"
+      }
+    ]
+  },
+  {
+    "struct": "fib6_info",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "struct nexthop *           nh;",
+        "raw": "struct nexthop *           nh;                   /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "rtable",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 152,
+        "field_size": 16,
+        "class": "OTHER/STRUCT",
+        "field": "struct list_head           rt_uncached;",
+        "raw": "struct list_head           rt_uncached;          /*   152    16 */"
+      }
+    ]
+  },
+  {
+    "struct": "sctp_signed_cookie",
+    "size": 180,
+    "fields": [
+      {
+        "offset": 36,
+        "field_size": 144,
+        "class": "OTHER/STRUCT",
+        "field": "struct sctp_cookie         c;",
+        "raw": "struct sctp_cookie         c;                    /*    36   144 */"
+      }
+    ]
+  },
+  {
+    "struct": "xts_instance_ctx",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 48,
+        "field_size": 128,
+        "class": "OTHER/STRUCT",
+        "field": "char                       name[128];",
+        "raw": "char                       name[128];            /*    48   128 */"
+      }
+    ]
+  },
+  {
+    "struct": "crypto_rfc3686_req_ctx",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 64,
+        "field_size": 128,
+        "class": "OTHER/STRUCT",
+        "field": "struct skcipher_request    subreq __attribute__((__aligned__(64)));",
+        "raw": "struct skcipher_request    subreq __attribute__((__aligned__(64))); /*    64   128 */"
+      }
+    ]
+  },
+  {
+    "struct": "adiantum_request_ctx",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 64,
+        "field_size": 128,
+        "class": "OTHER/STRUCT",
+        "field": "struct skcipher_request streamcipher_req __attribute__((__aligned__(64)));",
+        "raw": "struct skcipher_request streamcipher_req __attribute__((__aligned__(64))); /*    64   128 */"
+      },
+      {
+        "offset": 64,
+        "field_size": 128,
+        "class": "OTHER/STRUCT",
+        "field": "} u __attribute__((__aligned__(64)));",
+        "raw": "} u __attribute__((__aligned__(64)));            /*    64   128 */"
+      }
+    ]
+  },
+  {
+    "struct": "poly_req",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 64,
+        "field_size": 128,
+        "class": "OTHER/STRUCT",
+        "field": "struct ahash_request       req __attribute__((__aligned__(64)));",
+        "raw": "struct ahash_request       req __attribute__((__aligned__(64))); /*    64   128 */"
+      }
+    ]
+  },
+  {
+    "struct": "chacha_req",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 64,
+        "field_size": 128,
+        "class": "OTHER/STRUCT",
+        "field": "struct skcipher_request    req __attribute__((__aligned__(64)));",
+        "raw": "struct skcipher_request    req __attribute__((__aligned__(64))); /*    64   128 */"
+      }
+    ]
+  },
+  {
+    "struct": "deflate_ctx",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 96,
+        "field_size": 96,
+        "class": "OTHER/STRUCT",
+        "field": "struct z_stream_s          decomp_stream;",
+        "raw": "struct z_stream_s          decomp_stream;        /*    96    96 */"
+      }
+    ]
+  },
+  {
+    "struct": "x509_certificate",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 1,
+        "class": "INTEGER/SCALAR",
+        "field": "bool                       blacklisted;",
+        "raw": "bool                       blacklisted;          /*   160     1 */"
+      }
+    ]
+  },
+  {
+    "struct": "blkdev_dio",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 64,
+        "field_size": 128,
+        "class": "OTHER/STRUCT",
+        "field": "struct bio                 bio __attribute__((__aligned__(64)));",
+        "raw": "struct bio                 bio __attribute__((__aligned__(64))); /*    64   128 */"
+      }
+    ]
+  },
+  {
+    "struct": "blk_mq_ctx",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 120,
+        "field_size": 64,
+        "class": "OTHER/STRUCT",
+        "field": "struct kobject             kobj;",
+        "raw": "struct kobject             kobj;                 /*   120    64 */"
+      }
+    ]
+  },
+  {
+    "struct": "elevator_mq_ops",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "void                       (*init_icq)(struct io_cq *);",
+        "raw": "void                       (*init_icq)(struct io_cq *); /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "disk_events",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 88,
+        "field_size": 88,
+        "class": "OTHER/STRUCT",
+        "field": "struct delayed_work        dwork;",
+        "raw": "struct delayed_work        dwork;                /*    88    88 */"
+      }
+    ]
+  },
+  {
+    "struct": "bsg_set",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 0,
+        "field_size": 168,
+        "class": "OTHER/STRUCT",
+        "field": "struct blk_mq_tag_set      tag_set;",
+        "raw": "struct blk_mq_tag_set      tag_set;              /*     0   168 */"
+      }
+    ]
+  },
+  {
+    "struct": "kyber_cpu_latency",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 0,
+        "field_size": 192,
+        "class": "REFCOUNT/ATOMIC_COUNTER",
+        "field": "atomic_t                   buckets[3][2][8];",
+        "raw": "atomic_t                   buckets[3][2][8];     /*     0   192 */"
+      }
+    ]
+  },
+  {
+    "struct": "bfq_sched_data",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "INTEGER/SCALAR",
+        "field": "long unsigned int          bfq_class_idle_last_service;",
+        "raw": "long unsigned int          bfq_class_idle_last_service; /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "blk_crypto_profile",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 4,
+        "class": "OTHER/STRUCT",
+        "field": "spinlock_t                 idle_slots_lock;",
+        "raw": "spinlock_t                 idle_slots_lock;      /*   160     4 */"
+      }
+    ]
+  },
+  {
+    "struct": "io_rw_state",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 64,
+        "field_size": 128,
+        "class": "OTHER/STRUCT",
+        "field": "struct iovec               fast_iov[8];",
+        "raw": "struct iovec               fast_iov[8];          /*    64   128 */"
+      }
+    ]
+  },
+  {
+    "struct": "io_worker",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 144,
+        "field_size": 32,
+        "class": "OTHER/STRUCT",
+        "field": "struct work_struct work;",
+        "raw": "struct work_struct work;                 /*   144    32 */"
+      },
+      {
+        "offset": 144,
+        "field_size": 32,
+        "class": "OTHER/STRUCT",
+        "field": "} __attribute__((__aligned__(8)));",
+        "raw": "} __attribute__((__aligned__(8)));               /*   144    32 */"
+      }
+    ]
+  },
+  {
+    "struct": "ZSTD_CCtx_params_s",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 144,
+        "field_size": 24,
+        "class": "OTHER/STRUCT",
+        "field": "ZSTD_customMem             customMem;",
+        "raw": "ZSTD_customMem             customMem;            /*   144    24 */"
+      }
+    ]
+  },
+  {
+    "struct": "pinctrl_dev",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 152,
+        "field_size": 32,
+        "class": "OTHER/STRUCT",
+        "field": "struct mutex               mutex;",
+        "raw": "struct mutex               mutex;                /*   152    32 */"
+      }
+    ]
+  },
+  {
+    "struct": "amba_driver",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "void                       (*shutdown)(struct amba_device *);",
+        "raw": "void                       (*shutdown)(struct amba_device *); /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "pci_config_window",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "struct device *            parent;",
+        "raw": "struct device *            parent;               /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "qcom_pcie_resources_2_4_0",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "struct reset_control *     phy_ahb_reset;",
+        "raw": "struct reset_control *     phy_ahb_reset;        /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "fb_ops",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "void                       (*fb_destroy)(struct fb_info *);",
+        "raw": "void                       (*fb_destroy)(struct fb_info *); /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "regulator_irq",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 96,
+        "field_size": 88,
+        "class": "OTHER/STRUCT",
+        "field": "struct delayed_work        isr_work;",
+        "raw": "struct delayed_work        isr_work;             /*    96    88 */"
+      }
+    ]
+  },
+  {
+    "struct": "scmi_driver",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 32,
+        "field_size": 144,
+        "class": "OTHER/STRUCT",
+        "field": "struct device_driver       driver;",
+        "raw": "struct device_driver       driver;               /*    32   144 */"
+      }
+    ]
+  },
+  {
+    "struct": "uart_ops",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "int                        (*request_port)(struct uart_port *);",
+        "raw": "int                        (*request_port)(struct uart_port *); /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "cn10k_rng",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "struct pci_dev *           pdev;",
+        "raw": "struct pci_dev *           pdev;                 /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "arm_v7s_io_pgtable",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 4,
+        "class": "OTHER/STRUCT",
+        "field": "spinlock_t                 split_lock;",
+        "raw": "spinlock_t                 split_lock;           /*   160     4 */"
+      }
+    ]
+  },
+  {
+    "struct": "arm_lpae_io_pgtable",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "void *                     pgd;",
+        "raw": "void *                     pgd;                  /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "drm_mm_node",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "FLAG/STATE",
+        "field": "long unsigned int          flags;",
+        "raw": "long unsigned int          flags;                /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "drm_vma_offset_node",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 8,
+        "field_size": 168,
+        "class": "OTHER/STRUCT",
+        "field": "struct drm_mm_node         vm_node __attribute__((__aligned__(8)));",
+        "raw": "struct drm_mm_node         vm_node __attribute__((__aligned__(8))); /*     8   168 */"
+      }
+    ]
+  },
+  {
+    "struct": "drm_display_info",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 1,
+        "class": "INTEGER/SCALAR",
+        "field": "bool                       non_desktop;",
+        "raw": "bool                       non_desktop;          /*   160     1 */"
+      },
+      {
+        "offset": 162,
+        "field_size": 4,
+        "class": "OTHER/STRUCT",
+        "field": "struct drm_monitor_range_info monitor_range;",
+        "raw": "struct drm_monitor_range_info monitor_range;     /*   162     4 */"
+      }
+    ]
+  },
+  {
+    "struct": "drm_crtc_funcs",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "u32                        (*get_vblank_counter)(struct drm_crtc *);",
+        "raw": "u32                        (*get_vblank_counter)(struct drm_crtc *); /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "mipi_dsi_driver",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "void                       (*shutdown)(struct mipi_dsi_device *);",
+        "raw": "void                       (*shutdown)(struct mipi_dsi_device *); /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "regmap_irq_chip",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "void *                     irq_drv_data;",
+        "raw": "void *                     irq_drv_data;         /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "nd_device_driver",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "void                       (*remove)(struct device *);",
+        "raw": "void                       (*remove)(struct device *); /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "dax_device_driver",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 4,
+        "class": "INTEGER/SCALAR",
+        "field": "int                        match_always;",
+        "raw": "int                        match_always;         /*   160     4 */"
+      }
+    ]
+  },
+  {
+    "struct": "dma_heap",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "struct device *            heap_dev;",
+        "raw": "struct device *            heap_dev;             /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "scsi_driver",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "void                       (*uninit_command)(struct scsi_cmnd *);",
+        "raw": "void                       (*uninit_command)(struct scsi_cmnd *); /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "spi_driver",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 32,
+        "field_size": 144,
+        "class": "OTHER/STRUCT",
+        "field": "struct device_driver       driver;",
+        "raw": "struct device_driver       driver;               /*    32   144 */"
+      }
+    ]
+  },
+  {
+    "struct": "spmi_driver",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "void                       (*shutdown)(struct spmi_device *);",
+        "raw": "void                       (*shutdown)(struct spmi_device *); /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "macsec_context",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 33,
+        "field_size": 128,
+        "class": "INTEGER/SCALAR",
+        "field": "u8                 key[128];",
+        "raw": "u8                 key[128];             /*    33   128 */"
+      },
+      {
+        "offset": 32,
+        "field_size": 144,
+        "class": "OTHER/STRUCT",
+        "field": "} sa;",
+        "raw": "} sa;                                            /*    32   144 */"
+      }
+    ]
+  },
+  {
+    "struct": "fib6_config",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "struct nlattr *            fc_encap;",
+        "raw": "struct nlattr *            fc_encap;             /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "ipv6_stub",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "struct neigh_table *       nd_tbl;",
+        "raw": "struct neigh_table *       nd_tbl;               /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "mdio_driver",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "void                       (*remove)(struct mdio_device *);",
+        "raw": "void                       (*remove)(struct mdio_device *); /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "wpan_phy_supported",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "INTEGER/SCALAR",
+        "field": "size_t                     cca_ed_levels_size;",
+        "raw": "size_t                     cca_ed_levels_size;   /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "urb",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 4,
+        "class": "INTEGER/SCALAR",
+        "field": "int                        interval;",
+        "raw": "int                        interval;             /*   160     4 */"
+      },
+      {
+        "offset": 164,
+        "field_size": 4,
+        "class": "COUNTER/INDEX",
+        "field": "int                        error_count;",
+        "raw": "int                        error_count;          /*   164     4 */"
+      }
+    ]
+  },
+  {
+    "struct": "rtl8150",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 1,
+        "class": "INTEGER/SCALAR",
+        "field": "u8                         phy;",
+        "raw": "u8                         phy;                  /*   160     1 */"
+      }
+    ]
+  },
+  {
+    "struct": "dwc3_request",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "struct dwc3_trb *          trb;",
+        "raw": "struct dwc3_trb *          trb;                  /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "dwc3_qcom",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "struct icc_path *          icc_path_ddr;",
+        "raw": "struct icc_path *          icc_path_ddr;         /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "ehci_itd",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 152,
+        "field_size": 32,
+        "class": "COUNTER/INDEX",
+        "field": "unsigned int               index[8];",
+        "raw": "unsigned int               index[8];             /*   152    32 */"
+      }
+    ]
+  },
+  {
+    "struct": "ehci_platform_priv",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 88,
+        "field_size": 88,
+        "class": "OTHER/STRUCT",
+        "field": "struct delayed_work        poll_work;",
+        "raw": "struct delayed_work        poll_work;            /*    88    88 */"
+      }
+    ]
+  },
+  {
+    "struct": "usb_os_desc",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 40,
+        "field_size": 136,
+        "class": "OTHER/STRUCT",
+        "field": "struct config_group        group;",
+        "raw": "struct config_group        group;                /*    40   136 */"
+      }
+    ]
+  },
+  {
+    "struct": "usb_function_instance",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "struct usb_function *      f;",
+        "raw": "struct usb_function *      f;                    /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "gadget_config_name",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 40,
+        "field_size": 136,
+        "class": "OTHER/STRUCT",
+        "field": "struct config_group        group;",
+        "raw": "struct config_group        group;                /*    40   136 */"
+      }
+    ]
+  },
+  {
+    "struct": "f_serial_opts",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 0,
+        "field_size": 184,
+        "class": "OTHER/STRUCT",
+        "field": "struct usb_function_instance func_inst;",
+        "raw": "struct usb_function_instance func_inst;          /*     0   184 */"
+      }
+    ]
+  },
+  {
+    "struct": "eth_dev",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "INTEGER/SCALAR",
+        "field": "long unsigned int          todo;",
+        "raw": "long unsigned int          todo;                 /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "snd_aes_iec958",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 24,
+        "field_size": 147,
+        "class": "OTHER/STRUCT",
+        "field": "unsigned char              subcode[147];",
+        "raw": "unsigned char              subcode[147];         /*    24   147 */"
+      }
+    ]
+  },
+  {
+    "struct": "v4l2_ctrl_vp9_frame",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 1,
+        "class": "FLAG/STATE",
+        "field": "__u8                       reference_mode;",
+        "raw": "__u8                       reference_mode;       /*   160     1 */"
+      },
+      {
+        "offset": 161,
+        "field_size": 7,
+        "class": "INTEGER/SCALAR",
+        "field": "__u8                       reserved[7];",
+        "raw": "__u8                       reserved[7];          /*   161     7 */"
+      }
+    ]
+  },
+  {
+    "struct": "v4l2_pix_format_mplane",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 20,
+        "field_size": 160,
+        "class": "OTHER/STRUCT",
+        "field": "struct v4l2_plane_pix_format plane_fmt[8];",
+        "raw": "struct v4l2_plane_pix_format plane_fmt[8];       /*    20   160 */"
+      }
+    ]
+  },
+  {
+    "struct": "v4l2_kevent",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "INTEGER/SCALAR",
+        "field": "u64                        ts;",
+        "raw": "u64                        ts;                   /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "uvcg_format",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 4,
+        "class": "COUNTER/INDEX",
+        "field": "unsigned int               num_frames;",
+        "raw": "unsigned int               num_frames;           /*   160     4 */"
+      },
+      {
+        "offset": 164,
+        "field_size": 1,
+        "class": "INTEGER/SCALAR",
+        "field": "__u8                       bmaControls[1];",
+        "raw": "__u8                       bmaControls[1];       /*   164     1 */"
+      }
+    ]
+  },
+  {
+    "struct": "uvcg_mjpeg",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 0,
+        "field_size": 168,
+        "class": "OTHER/STRUCT",
+        "field": "struct uvcg_format         fmt;",
+        "raw": "struct uvcg_format         fmt;                  /*     0   168 */"
+      }
+    ]
+  },
+  {
+    "struct": "acc_instance",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 0,
+        "field_size": 184,
+        "class": "OTHER/STRUCT",
+        "field": "struct usb_function_instance func_inst;",
+        "raw": "struct usb_function_instance func_inst;          /*     0   184 */"
+      }
+    ]
+  },
+  {
+    "struct": "typec_altmode_driver",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 24,
+        "field_size": 144,
+        "class": "OTHER/STRUCT",
+        "field": "struct device_driver       driver;",
+        "raw": "struct device_driver       driver;               /*    24   144 */"
+      }
+    ]
+  },
+  {
+    "struct": "tcpc_dev",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "int                        (*set_auto_vbus_discharge_threshold)(struct tcpc_dev *, enum typec_pwr_opmode, bool, u32);",
+        "raw": "int                        (*set_auto_vbus_discharge_threshold)(struct tcpc_dev *, enum typec_pwr_opmode, bool, u32); /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "i3c_driver",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "const struct i3c_device_id  * id_table;",
+        "raw": "const struct i3c_device_id  * id_table;          /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "uvc_fh",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 4,
+        "class": "COUNTER/INDEX",
+        "field": "enum uvc_handle_state      state;",
+        "raw": "enum uvc_handle_state      state;                /*   160     4 */"
+      }
+    ]
+  },
+  {
+    "struct": "ptp_clock_info",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "int                        (*enable)(struct ptp_clock_info *, struct ptp_clock_request *, int);",
+        "raw": "int                        (*enable)(struct ptp_clock_info *, struct ptp_clock_request *, int); /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "kvm_ptp_clock",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 8,
+        "field_size": 184,
+        "class": "OTHER/STRUCT",
+        "field": "struct ptp_clock_info      caps;",
+        "raw": "struct ptp_clock_info      caps;                 /*     8   184 */"
+      }
+    ]
+  },
+  {
+    "struct": "devfreq_cooling_device",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 104,
+        "field_size": 72,
+        "class": "OTHER/STRUCT",
+        "field": "struct dev_pm_qos_request  req_max_freq;",
+        "raw": "struct dev_pm_qos_request  req_max_freq;         /*   104    72 */"
+      }
+    ]
+  },
+  {
+    "struct": "watchdog_device",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "struct watchdog_core_data * wd_data;",
+        "raw": "struct watchdog_core_data * wd_data;             /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "dm_target_io",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 40,
+        "field_size": 128,
+        "class": "OTHER/STRUCT",
+        "field": "struct bio                 clone;",
+        "raw": "struct bio                 clone;                /*    40   128 */"
+      }
+    ]
+  },
+  {
+    "struct": "policy_dbs_info",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 1,
+        "class": "INTEGER/SCALAR",
+        "field": "bool                       is_shared;",
+        "raw": "bool                       is_shared;            /*   160     1 */"
+      },
+      {
+        "offset": 161,
+        "field_size": 1,
+        "class": "INTEGER/SCALAR",
+        "field": "bool                       work_in_progress;",
+        "raw": "bool                       work_in_progress;     /*   161     1 */"
+      }
+    ]
+  },
+  {
+    "struct": "cs_policy_dbs_info",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 0,
+        "field_size": 168,
+        "class": "OTHER/STRUCT",
+        "field": "struct policy_dbs_info     policy_dbs;",
+        "raw": "struct policy_dbs_info     policy_dbs;           /*     0   168 */"
+      }
+    ]
+  },
+  {
+    "struct": "teo_cpu",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 144,
+        "field_size": 36,
+        "class": "COUNTER/INDEX",
+        "field": "int                        recent_idx[9];",
+        "raw": "int                        recent_idx[9];        /*   144    36 */"
+      }
+    ]
+  },
+  {
+    "struct": "mmc_ext_csd",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 1,
+        "class": "INTEGER/SCALAR",
+        "field": "u8                         pre_eol_info;",
+        "raw": "u8                         pre_eol_info;         /*   160     1 */"
+      },
+      {
+        "offset": 161,
+        "field_size": 1,
+        "class": "INTEGER/SCALAR",
+        "field": "u8                         device_life_time_est_typ_a;",
+        "raw": "u8                         device_life_time_est_typ_a; /*   161     1 */"
+      },
+      {
+        "offset": 162,
+        "field_size": 1,
+        "class": "INTEGER/SCALAR",
+        "field": "u8                         device_life_time_est_typ_b;",
+        "raw": "u8                         device_life_time_est_typ_b; /*   162     1 */"
+      },
+      {
+        "offset": 164,
+        "field_size": 4,
+        "class": "INTEGER/SCALAR",
+        "field": "unsigned int               feature_support;",
+        "raw": "unsigned int               feature_support;      /*   164     4 */"
+      }
+    ]
+  },
+  {
+    "struct": "mmc_host_ops",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "void                       (*card_hw_reset)(struct mmc_host *);",
+        "raw": "void                       (*card_hw_reset)(struct mmc_host *); /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "mmc_driver",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "void                       (*shutdown)(struct mmc_card *);",
+        "raw": "void                       (*shutdown)(struct mmc_card *); /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "sdio_driver",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 32,
+        "field_size": 144,
+        "class": "OTHER/STRUCT",
+        "field": "struct device_driver       drv;",
+        "raw": "struct device_driver       drv;                  /*    32   144 */"
+      }
+    ]
+  },
+  {
+    "struct": "ufs_clk_scaling",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 136,
+        "field_size": 32,
+        "class": "OTHER/STRUCT",
+        "field": "struct work_struct         resume_work;",
+        "raw": "struct work_struct         resume_work;          /*   136    32 */"
+      }
+    ]
+  },
+  {
+    "struct": "scpi_chan",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 1,
+        "class": "INTEGER/SCALAR",
+        "field": "u8                         token;",
+        "raw": "u8                         token;                /*   160     1 */"
+      }
+    ]
+  },
+  {
+    "struct": "apple_sc",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "struct apple_sc_backlight * backlight;",
+        "raw": "struct apple_sc_backlight * backlight;           /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "dj_receiver_dev",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 144,
+        "field_size": 24,
+        "class": "OTHER/STRUCT",
+        "field": "struct kfifo               notif_fifo;",
+        "raw": "struct kfifo               notif_fifo;           /*   144    24 */"
+      }
+    ]
+  },
+  {
+    "struct": "picolcd_data",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "struct picolcd_pending *   pending;",
+        "raw": "struct picolcd_pending *   pending;              /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "ps_device",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 4,
+        "class": "INTEGER/SCALAR",
+        "field": "uint32_t                   hw_version;",
+        "raw": "uint32_t                   hw_version;           /*   160     4 */"
+      },
+      {
+        "offset": 164,
+        "field_size": 4,
+        "class": "INTEGER/SCALAR",
+        "field": "uint32_t                   fw_version;",
+        "raw": "uint32_t                   fw_version;           /*   164     4 */"
+      }
+    ]
+  },
+  {
+    "struct": "rproc_vdev",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 88,
+        "field_size": 80,
+        "class": "OTHER/STRUCT",
+        "field": "struct rproc_vring         vring[2];",
+        "raw": "struct rproc_vring         vring[2];             /*    88    80 */"
+      }
+    ]
+  },
+  {
+    "struct": "rpmsg_driver",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "void                       (*remove)(struct rpmsg_device *);",
+        "raw": "void                       (*remove)(struct rpmsg_device *); /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "binder_device",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 4,
+        "class": "REFCOUNT/ATOMIC_COUNTER",
+        "field": "refcount_t                 ref;",
+        "raw": "refcount_t                 ref;                  /*   160     4 */"
+      }
+    ]
+  },
+  {
+    "struct": "snd_timer_user",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 144,
+        "field_size": 32,
+        "class": "OTHER/STRUCT",
+        "field": "struct mutex               ioctl_lock;",
+        "raw": "struct mutex               ioctl_lock;           /*   144    32 */"
+      }
+    ]
+  },
+  {
+    "struct": "snd_compr_stream",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 136,
+        "field_size": 56,
+        "class": "OTHER/STRUCT",
+        "field": "struct snd_dma_buffer      dma_buffer;",
+        "raw": "struct snd_dma_buffer      dma_buffer;           /*   136    56 */"
+      }
+    ]
+  },
+  {
+    "struct": "usb_mixer_interface",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "void                       (*private_free)(struct usb_mixer_interface *);",
+        "raw": "void                       (*private_free)(struct usb_mixer_interface *); /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "usb_mixer_elem_info",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 100,
+        "field_size": 64,
+        "class": "INTEGER/SCALAR",
+        "field": "int                        cache_val[16];",
+        "raw": "int                        cache_val[16];        /*   100    64 */"
+      },
+      {
+        "offset": 164,
+        "field_size": 1,
+        "class": "INTEGER/SCALAR",
+        "field": "u8                         initialized;",
+        "raw": "u8                         initialized;          /*   164     1 */"
+      },
+      {
+        "offset": 165,
+        "field_size": 1,
+        "class": "INTEGER/SCALAR",
+        "field": "u8                         min_mute;",
+        "raw": "u8                         min_mute;             /*   165     1 */"
+      }
+    ]
+  },
+  {
+    "struct": "snd_seq_port_info",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 109,
+        "field_size": 59,
+        "class": "OTHER/STRUCT",
+        "field": "char                       reserved[59];",
+        "raw": "char                       reserved[59];         /*   109    59 */"
+      }
+    ]
+  },
+  {
+    "struct": "snd_soc_dai_ops",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "snd_pcm_sframes_t          (*delay)(struct snd_pcm_substream *, struct snd_soc_dai *);",
+        "raw": "snd_pcm_sframes_t          (*delay)(struct snd_pcm_substream *, struct snd_soc_dai *); /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "snd_soc_jack_gpio",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "struct gpio_desc *         desc;",
+        "raw": "struct gpio_desc *         desc;                 /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "net_device_path_stack",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 8,
+        "field_size": 160,
+        "class": "OTHER/STRUCT",
+        "field": "struct net_device_path     path[5];",
+        "raw": "struct net_device_path     path[5];              /*     8   160 */"
+      }
+    ]
+  },
+  {
+    "struct": "skb_array",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 0,
+        "field_size": 192,
+        "class": "OTHER/STRUCT",
+        "field": "struct ptr_ring            ring __attribute__((__aligned__(64)));",
+        "raw": "struct ptr_ring            ring __attribute__((__aligned__(64))); /*     0   192 */"
+      }
+    ]
+  },
+  {
+    "struct": "htb_class_inner",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 0,
+        "field_size": 192,
+        "class": "OTHER/STRUCT",
+        "field": "struct htb_prio            clprio[8];",
+        "raw": "struct htb_prio            clprio[8];            /*     0   192 */"
+      }
+    ]
+  },
+  {
+    "struct": "tbf_sched_data",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 104,
+        "field_size": 80,
+        "class": "OTHER/STRUCT",
+        "field": "struct qdisc_watchdog      watchdog __attribute__((__aligned__(8)));",
+        "raw": "struct qdisc_watchdog      watchdog __attribute__((__aligned__(8))); /*   104    80 */"
+      }
+    ]
+  },
+  {
+    "struct": "prio_sched_data",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 40,
+        "field_size": 128,
+        "class": "POINTER",
+        "field": "struct Qdisc *             queues[16];",
+        "raw": "struct Qdisc *             queues[16];           /*    40   128 */"
+      }
+    ]
+  },
+  {
+    "struct": "tc_u_knode",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 112,
+        "field_size": 56,
+        "class": "OTHER/STRUCT",
+        "field": "struct rcu_work            rwork __attribute__((__aligned__(8)));",
+        "raw": "struct rcu_work            rwork __attribute__((__aligned__(8))); /*   112    56 */"
+      }
+    ]
+  },
+  {
+    "struct": "cls_bpf_prog",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 120,
+        "field_size": 56,
+        "class": "OTHER/STRUCT",
+        "field": "struct rcu_work            rwork __attribute__((__aligned__(8)));",
+        "raw": "struct rcu_work            rwork __attribute__((__aligned__(8))); /*   120    56 */"
+      }
+    ]
+  },
+  {
+    "struct": "xdp_test_data",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "OTHER/STRUCT",
+        "field": "struct xdp_mem_info        mem;",
+        "raw": "struct xdp_mem_info        mem;                  /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "nat_net",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 0,
+        "field_size": 176,
+        "class": "OTHER/STRUCT",
+        "field": "struct nf_nat_hooks_net    nat_proto_net[11];",
+        "raw": "struct nf_nat_hooks_net    nat_proto_net[11];    /*     0   176 */"
+      }
+    ]
+  },
+  {
+    "struct": "xt_pernet",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 0,
+        "field_size": 176,
+        "class": "OTHER/STRUCT",
+        "field": "struct list_head           tables[11];",
+        "raw": "struct list_head           tables[11];           /*     0   176 */"
+      }
+    ]
+  },
+  {
+    "struct": "ip6t_entry",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 152,
+        "field_size": 16,
+        "class": "COUNTER/INDEX",
+        "field": "struct xt_counters         counters;",
+        "raw": "struct xt_counters         counters;             /*   152    16 */"
+      }
+    ]
+  },
+  {
+    "struct": "xt_conntrack_mtinfo3",
+    "size": 164,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 2,
+        "class": "INTEGER/SCALAR",
+        "field": "__u16                      repldst_port_high;",
+        "raw": "__u16                      repldst_port_high;    /*   160     2 */"
+      }
+    ]
+  },
+  {
+    "struct": "ulog_packet_msg",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 105,
+        "field_size": 80,
+        "class": "OTHER/STRUCT",
+        "field": "unsigned char              mac[80];",
+        "raw": "unsigned char              mac[80];              /*   105    80 */"
+      }
+    ]
+  },
+  {
+    "struct": "xt_u32_test",
+    "size": 180,
+    "fields": [
+      {
+        "offset": 88,
+        "field_size": 88,
+        "class": "INTEGER/SCALAR",
+        "field": "struct xt_u32_value_element value[11];",
+        "raw": "struct xt_u32_value_element value[11];           /*    88    88 */"
+      }
+    ]
+  },
+  {
+    "struct": "ip_tunnel",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 8,
+        "class": "POINTER",
+        "field": "struct ip_tunnel_prl_entry * prl;",
+        "raw": "struct ip_tunnel_prl_entry * prl;                /*   160     8 */"
+      }
+    ]
+  },
+  {
+    "struct": "fib4_rule",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 4,
+        "class": "FLAG/STATE",
+        "field": "__be32                     srcmask;",
+        "raw": "__be32                     srcmask;              /*   160     4 */"
+      },
+      {
+        "offset": 164,
+        "field_size": 4,
+        "class": "OTHER/STRUCT",
+        "field": "__be32                     dst;",
+        "raw": "__be32                     dst;                  /*   164     4 */"
+      }
+    ]
+  },
+  {
+    "struct": "ipt_error",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 112,
+        "field_size": 64,
+        "class": "OTHER/STRUCT",
+        "field": "struct xt_error_target     target;",
+        "raw": "struct xt_error_target     target;               /*   112    64 */"
+      }
+    ]
+  },
+  {
+    "struct": "arpt_arp",
+    "size": 164,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 2,
+        "class": "FLAG/STATE",
+        "field": "__u16                      invflags;",
+        "raw": "__u16                      invflags;             /*   160     2 */"
+      }
+    ]
+  },
+  {
+    "struct": "arpt_entry",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 0,
+        "field_size": 164,
+        "class": "OTHER/STRUCT",
+        "field": "struct arpt_arp            arp;",
+        "raw": "struct arpt_arp            arp;                  /*     0   164 */"
+      },
+      {
+        "offset": 164,
+        "field_size": 2,
+        "class": "INTEGER/SCALAR",
+        "field": "__u16                      target_offset;",
+        "raw": "__u16                      target_offset;        /*   164     2 */"
+      },
+      {
+        "offset": 166,
+        "field_size": 2,
+        "class": "INTEGER/SCALAR",
+        "field": "__u16                      next_offset;",
+        "raw": "__u16                      next_offset;          /*   166     2 */"
+      }
+    ]
+  },
+  {
+    "struct": "compat_arpt_entry",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 0,
+        "field_size": 164,
+        "class": "OTHER/STRUCT",
+        "field": "struct arpt_arp            arp;",
+        "raw": "struct arpt_arp            arp;                  /*     0   164 */"
+      },
+      {
+        "offset": 164,
+        "field_size": 2,
+        "class": "INTEGER/SCALAR",
+        "field": "__u16                      target_offset;",
+        "raw": "__u16                      target_offset;        /*   164     2 */"
+      },
+      {
+        "offset": 166,
+        "field_size": 2,
+        "class": "INTEGER/SCALAR",
+        "field": "__u16                      next_offset;",
+        "raw": "__u16                      next_offset;          /*   166     2 */"
+      }
+    ]
+  },
+  {
+    "struct": "tls_sw_context_tx",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 152,
+        "field_size": 16,
+        "class": "OTHER/STRUCT",
+        "field": "struct list_head           tx_list;",
+        "raw": "struct list_head           tx_list;              /*   152    16 */"
+      }
+    ]
+  },
+  {
+    "struct": "xfrm_userpolicy_info",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 160,
+        "field_size": 1,
+        "class": "INTEGER/SCALAR",
+        "field": "__u8                       dir;",
+        "raw": "__u8                       dir;                  /*   160     1 */"
+      },
+      {
+        "offset": 161,
+        "field_size": 1,
+        "class": "INTEGER/SCALAR",
+        "field": "__u8                       action;",
+        "raw": "__u8                       action;               /*   161     1 */"
+      },
+      {
+        "offset": 162,
+        "field_size": 1,
+        "class": "FLAG/STATE",
+        "field": "__u8                       flags;",
+        "raw": "__u8                       flags;                /*   162     1 */"
+      },
+      {
+        "offset": 163,
+        "field_size": 1,
+        "class": "INTEGER/SCALAR",
+        "field": "__u8                       share;",
+        "raw": "__u8                       share;                /*   163     1 */"
+      }
+    ]
+  },
+  {
+    "struct": "xfrm_user_polexpire",
+    "size": 176,
+    "fields": [
+      {
+        "offset": 0,
+        "field_size": 168,
+        "class": "OTHER/STRUCT",
+        "field": "struct xfrm_userpolicy_info pol;",
+        "raw": "struct xfrm_userpolicy_info pol;                 /*     0   168 */"
+      }
+    ]
+  },
+  {
+    "struct": "frag_queue",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 0,
+        "field_size": 176,
+        "class": "OTHER/STRUCT",
+        "field": "struct inet_frag_queue     q __attribute__((__aligned__(8)));",
+        "raw": "struct inet_frag_queue     q __attribute__((__aligned__(8))); /*     0   176 */"
+      }
+    ]
+  },
+  {
+    "struct": "mfc6_cache",
+    "size": 184,
+    "fields": [
+      {
+        "offset": 152,
+        "field_size": 16,
+        "class": "OTHER/STRUCT",
+        "field": "struct in6_addr mf6c_mcastgrp;",
+        "raw": "struct in6_addr mf6c_mcastgrp;   /*   152    16 */"
+      },
+      {
+        "offset": 152,
+        "field_size": 32,
+        "class": "OTHER/STRUCT",
+        "field": "};",
+        "raw": "};                                       /*   152    32 */"
+      },
+      {
+        "offset": 152,
+        "field_size": 32,
+        "class": "OTHER/STRUCT",
+        "field": "struct mfc6_cache_cmp_arg cmparg;",
+        "raw": "struct mfc6_cache_cmp_arg cmparg;        /*   152    32 */"
+      },
+      {
+        "offset": 152,
+        "field_size": 32,
+        "class": "OTHER/STRUCT",
+        "field": "};",
+        "raw": "};                                               /*   152    32 */"
+      }
+    ]
+  },
+  {
+    "struct": "compat_ip6t_entry",
+    "size": 168,
+    "fields": [
+      {
+        "offset": 152,
+        "field_size": 16,
+        "class": "COUNTER/INDEX",
+        "field": "struct compat_xt_counters  counters;",
+        "raw": "struct compat_xt_counters  counters;             /*   152    16 */"
+      }
+    ]
+  },
+  {
+    "struct": "cfg80211_sched_scan_request",
+    "size": 192,
+    "fields": [
+      {
+        "offset": 152,
+        "field_size": 16,
+        "class": "OTHER/STRUCT",
+        "field": "struct callback_head       callback_head __attribute__((__aligned__(8)));",
+        "raw": "struct callback_head       callback_head __attribute__((__aligned__(8))); /*   152    16 */"
+      }
+    ]
+  }
+]
