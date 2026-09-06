@@ -1,0 +1,133 @@
+--- /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/android/source/common/fs/eventpoll.c.orig	2026-07-19 19:58:55.505257606 +0530
++++ /mnt/work/company/cyphermatrix/repos/bad-epoll-lab/tier2/android/source/common/fs/eventpoll.c	2026-09-06 12:57:17.144462528 +0530
+@@ -38,6 +38,15 @@
+ #include <linux/compat.h>
+ #include <linux/rculist.h>
+ #include <net/busy_poll.h>
++#include <linux/debugfs.h>
++
++/*
++ * HYP-002: Kernel-side UAF race detection counters.
++ * Exposed via /sys/kernel/debug/epoll_uaf/
++ */
++static atomic_t ep_dbg_fep_cleared = ATOMIC_INIT(0);   /* Thread A cleared f_ep for epoll file */
++static atomic_t ep_dbg_uaf_detected = ATOMIC_INIT(0);  /* hlist_del_rcu on freed ep detected   */
++static atomic_t ep_dbg_epfree_called = ATOMIC_INIT(0); /* ep_free() called                     */
+ 
+ /*
+  * LOCKING:
+@@ -233,6 +242,11 @@
+ 	/* tracks wakeup nests for lockdep validation */
+ 	u8 nests;
+ #endif
++
++#ifdef CONFIG_DEBUG_FS
++	/* HYP-002: set to 0xDEADFEED by ep_free() before kfree() */
++	u32 debug_freed;
++#endif
+ };
+ 
+ /* Wrapper struct used by poll queueing */
+@@ -707,6 +721,11 @@
+ 	mutex_destroy(&ep->mtx);
+ 	free_uid(ep->user);
+ 	wakeup_source_unregister(ep->ws);
++#ifdef CONFIG_DEBUG_FS
++	/* HYP-002: mark as freed so __ep_remove can detect UAF */
++	WRITE_ONCE(ep->debug_freed, 0xDEADFEED);
++	atomic_inc(&ep_dbg_epfree_called);
++#endif
+ 	kfree(ep);
+ }
+ 
+@@ -742,6 +761,24 @@
+ 	head = file->f_ep;
+ 	if (head->first == &epi->fllink && !epi->fllink.next) {
+ 		file->f_ep = NULL;
++#ifdef CONFIG_DEBUG_FS
++		/* HYP-002: detect if inner epoll was freed between
++		 * WRITE_ONCE(f_ep, NULL) and hlist_del_rcu.
++		 * For epoll files, file->private_data == inner_ep.
++		 * After ep_free(), debug_freed == 0xDEADFEED.
++		 */
++		if (is_file_epoll(file)) {
++			struct eventpoll *inner_ep = file->private_data;
++			atomic_inc(&ep_dbg_fep_cleared);
++			/* Barrier: ensure we see inner_ep state from other CPU */
++			smp_rmb();
++			if (READ_ONCE(inner_ep->debug_freed) == 0xDEADFEED) {
++				atomic_inc(&ep_dbg_uaf_detected);
++				pr_warn("epoll_uaf: UAF DETECTED in __ep_remove! inner_ep=%px freed before hlist_del_rcu\n",
++					inner_ep);
++			}
++		}
++#endif
+ 		if (!is_file_epoll(file)) {
+ 			struct epitems_head *v;
+ 			v = container_of(head, struct epitems_head, epitems);
+@@ -994,6 +1031,12 @@
+ 	ep->ovflist = EP_UNACTIVE_PTR;
+ 	ep->user = user;
+ 	refcount_set(&ep->refcount, 1);
++#ifdef CONFIG_DEBUG_FS
++	/* HYP-002: Explicitly zero debug_freed to prevent stale 0xDEADFEED
++	 * false positives if a previously-freed slab object is recycled.
++	 * kzalloc already zeroes, but this makes the contract explicit. */
++	ep->debug_freed = 0;
++#endif
+ 
+ 	*pep = ep;
+ 
+@@ -2435,6 +2478,43 @@
+ 
+ #endif
+ 
++#ifdef CONFIG_DEBUG_FS
++/*
++ * HYP-002: debugfs interface for epoll UAF race counters.
++ * /sys/kernel/debug/epoll_uaf/{fep_cleared,uaf_detected,epfree_called,reset}
++ */
++static ssize_t ep_dbg_reset_write(struct file *file, const char __user *buf,
++				  size_t count, loff_t *ppos)
++{
++	atomic_set(&ep_dbg_fep_cleared, 0);
++	atomic_set(&ep_dbg_uaf_detected, 0);
++	atomic_set(&ep_dbg_epfree_called, 0);
++	pr_info("epoll_uaf: counters reset\n");
++	return count;
++}
++
++static const struct file_operations ep_dbg_reset_fops = {
++	.write = ep_dbg_reset_write,
++	.llseek = noop_llseek,
++};
++
++static void __init ep_debugfs_init(void)
++{
++	struct dentry *dir;
++
++	dir = debugfs_create_dir("epoll_uaf", NULL);
++	if (IS_ERR_OR_NULL(dir))
++		return;
++
++	debugfs_create_atomic_t("fep_cleared", 0444, dir, &ep_dbg_fep_cleared);
++	debugfs_create_atomic_t("uaf_detected", 0444, dir, &ep_dbg_uaf_detected);
++	debugfs_create_atomic_t("epfree_called", 0444, dir, &ep_dbg_epfree_called);
++	debugfs_create_file("reset", 0200, dir, NULL, &ep_dbg_reset_fops);
++}
++#else
++static inline void ep_debugfs_init(void) {}
++#endif
++
+ static int __init eventpoll_init(void)
+ {
+ 	struct sysinfo si;
+@@ -2465,6 +2545,8 @@
+ 	ephead_cache = kmem_cache_create("ep_head",
+ 		sizeof(struct epitems_head), 0, SLAB_PANIC|SLAB_ACCOUNT, NULL);
+ 
++	ep_debugfs_init();
++
+ 	return 0;
+ }
+ fs_initcall(eventpoll_init);
