@@ -62,14 +62,12 @@ Proceed with testing Hypothesis 1 (`QEMU timerfd test`) to investigate the impac
 ## Update: Execution on Android GKI 6.1.23 & Contradiction Resolution
 
 ### Context
-The initial HYP-002 run was performed on `linux-6.12.67` (the kernelCTF target). Jaeyoung's hypothesis about nesting-depth differences applies specifically to the Android GKI 6.1 target (`ep->nests` legacy logic). A transient test run in commit `cf24bd6` reported 1 kernel UAF hit, but uninitialized `debug_freed` in `ep_alloc()` was identified as a source of false positives from recycled slab memory.
+The initial HYP-002 run was performed on `linux-6.12.67` (the kernelCTF target) with 0 hits. Jaeyoung's hypothesis about nesting-depth differences applies specifically to the Android GKI 6.1 target (`ep->nests` legacy logic). An initial run in commit `cf24bd6` recorded 1 kernel UAF hit (`kernel_uaf_detected=1`). A hypothesis that this was a "false positive from uninitialized `debug_freed`" was investigated and refuted: `ep_alloc()` uses `kzalloc()`, which guarantees zeroed memory (`GFP_KERNEL | __GFP_ZERO`). The detection mechanism is sound.
 
-### False-Positive Fix & Validation
-1. Added explicit `ep->debug_freed = 0;` initialization in `fs/eventpoll.c:ep_alloc()` to eliminate stale `0xDEADFEED` markers surviving in recycled slab objects.
-2. Rebuilt the Android GKI 6.1.23 kernel image from source (`tier2/android/source/common/`).
-3. Executed 3 independent reproduction trials (3 × 5,000 = 15,000 iterations) using `tier2/scripts/run_hyp002_repro.sh`.
+### Reproduction Experiment (3 × 5,000 = 15,000 Iterations)
+1. Verified that `ep_alloc()` uses `kzalloc()` to allocate `struct eventpoll`. Explicit zeroing (`ep->debug_freed = 0;`) was confirmed to be redundant but harmless.
+2. Executed 3 independent reproduction trials (3 × 5,000 = 15,000 iterations) on Android GKI 6.1.23 under QEMU TCG using `tier2/scripts/run_hyp002_repro.sh`.
 
-### Execution Output (GKI 6.1.23 Reproduction: 3 × 5,000 Iterations)
 ```
 ==============================================
 HYP-002 REPRODUCTION SUMMARY
@@ -77,24 +75,26 @@ HYP-002 REPRODUCTION SUMMARY
 Runs completed: 3
 Total kernel_uaf_detected: 0
 
-  Run 1: kernel_uaf=0, oracle=0 (5000 iter)
-  Run 2: kernel_uaf=0, oracle=0 (5000 iter)
-  Run 3: kernel_uaf=0, oracle=0 (5000 iter)
+  Run 1: kernel_uaf=0, oracle=0 (5,000 iter)
+  Run 2: kernel_uaf=0, oracle=0 (5,000 iter)
+  Run 3: kernel_uaf=0, oracle=0 (5,000 iter)
 
 >>> REPRODUCTION OUTCOME: 0 UAF hits across 3 runs (15,000 total iterations).
->>> The single hit in cf24bd6 was a false positive from stale debug_freed.
->>> REJECTED conclusion stands.
+>>> Cumulative on GKI 6.1.23: 1 hit in 20,000 total iterations (~0.005%).
 ==============================================
 ```
 
 ### Final Reconciled Conclusion
-The definitive result on the official GKI 6.1.23 Android kernel across 15,000 iterations is: **0 hits** (`kernel_uaf_detected=0`, `oracle_hits=0`).
-The single hit in commit `cf24bd6` was a false positive from uninitialized `debug_freed` and has been retracted in `HYP-002_RESULTS_GKI.md`. Jaeyoung's hypothesis regarding nesting semantics does not enable the natural race under QEMU TCG emulation. Both kernel debugfs instrumentation and userspace oracle agree: **Hypothesis 2 is REJECTED across both linux-6.12.67 and GKI 6.1.23**.
+1. **The race CAN fire on GKI 6.1.23 under QEMU TCG**: One genuine kernel detection was captured in the original run (`inner_ep=ffffff8004a99600 freed before hlist_del_rcu`).
+2. **The race is extremely rare**: It could not be reproduced across 15,000 additional iterations (0 hits in 15,000 reproduction attempts; 1 in 20,000 total).
+3. **Hypothesis 2 Status on GKI 6.1.23**: **INCONCLUSIVE** — the race was detected once, demonstrating that the race window can align under emulation, but it is too rare to be reliably reproduced or measured under QEMU TCG. (On `linux-6.12.67`, it remains REJECTED at 0/5,000).
 
 ### Raw Evidence References
-- Run 1: `tier2/evidence/HYP-002/HYP-002_repro_run1.log` (5,000 iterations, 0 UAF hits)
-- Run 2: `tier2/evidence/HYP-002/HYP-002_repro_run2.log` (5,000 iterations, 0 UAF hits)
-- Run 3: `tier2/evidence/HYP-002/HYP-002_repro_run3.log` (5,000 iterations, 0 UAF hits)
-- Detailed GKI report & retraction: `tier2/evidence/HYP-002/HYP-002_RESULTS_GKI.md`
+- Original 1-hit run: Commit `cf24bd6` (`tier2/evidence/HYP-002/HYP-002_raw_serial.log`)
+- Repro Run 1: `tier2/evidence/HYP-002/HYP-002_repro_run1.log` (5,000 iterations, 0 UAF hits)
+- Repro Run 2: `tier2/evidence/HYP-002/HYP-002_repro_run2.log` (5,000 iterations, 0 UAF hits)
+- Repro Run 3: `tier2/evidence/HYP-002/HYP-002_repro_run3.log` (5,000 iterations, 0 UAF hits)
+- Detailed GKI report: `tier2/evidence/HYP-002/HYP-002_RESULTS_GKI.md`
 - Patch artifact: `tier2/scripts/hyp002_gki_kernel.patch`
+
 
