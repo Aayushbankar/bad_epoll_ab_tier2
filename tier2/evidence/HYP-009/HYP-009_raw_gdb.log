@@ -1,0 +1,38 @@
+[HYP-009-GDB] Connected to QEMU on :1234
+Breakpoint 1 at 0xffffffc00833ef90: file fs/file_table.c, line 308.Breakpoint 2 at 0xffffffc00839ab00: file fs/eventpoll.c, line 969.[HYP-009-GDB] Breakpoints installed. Continuing execution...
+[HYP-009-GDB] =================================================================
+[HYP-009-GDB] [STEP 1-3] Thread B entered __fput(file=0xffffff80061af600)
+[HYP-009-GDB]   Current state: f_count=0, f_ep=0xffffff8004a9b3a0, f_inode=0xffffff8002c59758, f_version=0x0
+[HYP-009-GDB] --- [MECHANISM ADJUDICATION: HYPOTHESIS H-b vs JAEYOUNG 2-STAGE] ---
+[HYP-009-GDB] 1. Hypothesis H-b Adjudication:
+[HYP-009-GDB]    Source analysis in fs/eventpoll.c:1016-1036 (eventpoll_release_file) and
+[HYP-009-GDB]    fs/eventpoll.c:780-838 (__ep_remove):
+[HYP-009-GDB]    - In eventpoll_release_file(), file->f_lock is taken and epi->dying is set to true.
+[HYP-009-GDB]    - In __ep_remove(force=false), line 781 checks `if (epi->dying && !force) return false;`
+[HYP-009-GDB]    - Therefore, a direct race between eventpoll_release_file and ep_clear_and_put
+[HYP-009-GDB]      NEVER strands an epitem; the dying flag ensures serialized removal.
+[HYP-009-GDB] 2. Genuine Survivor Creation Mechanism (Jaeyoung x86 PoC Topology):
+[HYP-009-GDB]    - Stage 1: Single-watch close-vs-close fast-path race creates UAF write-0 at
+[HYP-009-GDB]      offset 160 of reclaimed kmalloc-192 eventpoll (epoll_uaf_target->refs.first = 0).
+[HYP-009-GDB]    - Stage 2: When ep_uaf_target is closed, eventpoll_release_file sees refs.first == NULL
+[HYP-009-GDB]      and performs 0 loop iterations, leaving ep_uaf_waiter's epitem in ep_uaf_waiter->rbr.
+[HYP-009-GDB]    - Result: file_uaf_target is freed while ep_uaf_waiter survives holding dangling epi->ffd.file.
+[HYP-009-GDB] Simulating Stage 2 fast-path bypass on victim inner_file...
+[HYP-009-GDB]   [SIMULATION SUCCESS] file->f_ep is now 0x0
+[HYP-009-GDB]   __fput skips eventpoll_release_file(); Thread B frees struct file while epA retains dangling epiA.
+[HYP-009-GDB] =================================================================
+[HYP-009-GDB] -----------------------------------------------------------------
+[HYP-009-GDB] [STEP 4/5] Hit ep_show_fdinfo (invocation #1)
+[HYP-009-GDB]   ep_file=0xffffff80061ad900, eventpoll=0xffffff8004a9b900
+[HYP-009-GDB]   ep->rbr.rb_root=0xffffff8005b7ab00, rb_leftmost=0xffffff8005b7ab00
+[HYP-009-GDB]   [SURVIVOR CONFIRMED] epitem=0xffffff8005b7ab00 in epA rbtree!
+[HYP-009-GDB]     epi->ffd.fd=21
+[HYP-009-GDB]     epi->ffd.file=0xffffff80061af600 (matches target_inner_file: True)
+[HYP-009-GDB]     watched file: f_inode=0xffffff8002c59758, f_pos=0, f_version=0xdeadf11e
+[HYP-009-GDB]     dereferenced inode: i_ino=0x3e, i_sb=0xffffff800295d800
+[HYP-009-GDB]     [*] fdinfo read executed non-crash: ino=0x3e
+[HYP-009-GDB] Execution completed. Inspecting final state...
+[HYP-009-GDB] =================================================================
+[HYP-009-GDB] Summary of invocations: fdinfo_count=1
+[HYP-009-GDB] Read inode values: ['0x3e']
+[HYP-009-GDB] =================================================================
