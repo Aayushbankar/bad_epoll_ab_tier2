@@ -1,0 +1,43 @@
+[HYP-010-GDB] Connected to QEMU on :1234
+Breakpoint 1 at 0xffffffc00833ef90: file fs/file_table.c, line 308.Breakpoint 2 at 0xffffffc00839ab00: file fs/eventpoll.c, line 969.[HYP-010-GDB] Breakpoints installed. Continuing execution...
+[HYP-010-GDB] =================================================================
+[HYP-010-GDB] [HYP-010] Thread B entered __fput(file=0xffffff8005251500)
+[HYP-010-GDB]   Current state: f_count=0, f_ep=0xffffff8004a9a460, f_inode=0xffffff8002c587c8, f_version=0x0
+[HYP-010-GDB]   Simulating Stage-2 fast-path bypass on victim inner_file...
+[HYP-010-GDB]   [SIMULATION SUCCESS] file->f_ep is now 0x0
+[HYP-010-GDB]   __fput skips eventpoll_release_file(); Thread B frees struct file while epA retains dangling epiA.
+[HYP-010-GDB] =================================================================
+[HYP-010-GDB] -----------------------------------------------------------------
+[HYP-010-GDB] [HYP-010] Hit ep_show_fdinfo (invocation #1)
+[HYP-010-GDB]   ep_file=0xffffff800524f200, eventpoll=0xffffff8004a9a600
+[HYP-010-GDB]   ep->rbr.rb_root=0xffffff8005254d80, rb_leftmost=0xffffff8005254d80
+[HYP-010-GDB]   [SURVIVOR CONFIRMED] epitem=0xffffff8005254d80 in epA rbtree!
+[HYP-010-GDB]     epi->ffd.fd=4036
+[HYP-010-GDB]     epi->ffd.file=0xffffff8005251500 (matches target_inner_file: True)
+[HYP-010-GDB]     watched file: f_inode=0xffffff8002c587c8, f_pos=0, f_version=0xdeadf11e
+[HYP-010-GDB]     dereferenced inode: i_ino=0x3e, i_sb=0xffffff8002958800
+[HYP-010-GDB]     [*] fdinfo read executed non-crash: ino=0x3e
+[HYP-010-GDB] -----------------------------------------------------------------
+[HYP-010-GDB] [HYP-010] Hit ep_show_fdinfo (invocation #2)
+[HYP-010-GDB]   ep_file=0xffffff800524f200, eventpoll=0xffffff8004a9a600
+[HYP-010-GDB]   ep->rbr.rb_root=0xffffff8005254d80, rb_leftmost=0xffffff8005254d80
+[HYP-010-GDB]   [SURVIVOR CONFIRMED] epitem=0xffffff8005254d80 in epA rbtree!
+[HYP-010-GDB]     epi->ffd.fd=4036
+[HYP-010-GDB]     epi->ffd.file=0xffffff8005251500 (matches target_inner_file: True)
+[HYP-010-GDB]     watched file: f_inode=0xffffff8002c587c8, f_pos=0, f_version=0xdeadf11e
+[HYP-010-GDB]     dereferenced inode: i_ino=0x3e, i_sb=0xffffff8002958800
+[HYP-010-GDB]     [*] fdinfo read executed non-crash: ino=0x3e
+[HYP-010-GDB] -----------------------------------------------------------------
+[HYP-010-GDB] [HYP-010] Hit ep_show_fdinfo (invocation #3)
+[HYP-010-GDB]   ep_file=0xffffff800524f200, eventpoll=0xffffff8004a9a600
+[HYP-010-GDB]   ep->rbr.rb_root=0xffffff8005254d80, rb_leftmost=0xffffff8005254d80
+[HYP-010-GDB]   [SURVIVOR CONFIRMED] epitem=0xffffff8005254d80 in epA rbtree!
+[HYP-010-GDB]     epi->ffd.fd=4036
+[HYP-010-GDB]     epi->ffd.file=0xffffff8005251500 (matches target_inner_file: True)
+[HYP-010-GDB]     watched file: f_inode=0xe800006bb61f43, f_pos=65302196404006723, f_version=0xe800006bb74f43
+[HYP-010-GDB]     Error reading inode fields: Cannot access memory at address 0xe800006bb61f83
+[HYP-010-GDB] Execution completed. Inspecting final state...
+[HYP-010-GDB] =================================================================
+[HYP-010-GDB] Summary of invocations: fdinfo_count=3
+[HYP-010-GDB] Read inode values: ['0x3e', '0x3e']
+[HYP-010-GDB] =================================================================
