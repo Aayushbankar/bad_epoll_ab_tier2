@@ -1,0 +1,31 @@
+[HYP-011-GDB] Connected to QEMU on :1234
+Breakpoint 1 at 0xffffffc00833ef90: file fs/file_table.c, line 308.Breakpoint 2 at 0xffffffc0080bb590: file kernel/sys.c, line 2355.[HYP-011-GDB] Breakpoints installed. Continuing execution...
+[HYP-011-GDB] =================================================================
+[HYP-011-GDB] [HYP-011] Thread B entered __fput(file=0xffffff8005250e00)
+[HYP-011-GDB]   Current state: f_count=0, f_ep=0xffffff8004a9dbe0, f_inode=0xffffff8002c579f0, f_version=0x0
+[HYP-011-GDB]   Simulating Stage-2 fast-path bypass on victim inner_file...
+[HYP-011-GDB]   [SIMULATION SUCCESS] file->f_ep is now 0x0
+[HYP-011-GDB]   __fput skips eventpoll_release_file(); Thread B frees struct file while epA retains dangling epiA.
+[HYP-011-GDB] =================================================================
+[HYP-011-GDB] =================================================================
+[HYP-011-GDB] [HYP-011 PART 0 DISCRIMINATOR] marker prctl(0x1337) intercepted!
+[HYP-011-GDB]   Target victim file: 0xffffff8005250e00
+[HYP-011-GDB]   Memory Geometry Derivation:
+[HYP-011-GDB]     PAGE_OFFSET    = 0xffffff8000000000
+[HYP-011-GDB]     VMEMMAP_START  = 0xfffffffe00000000
+[HYP-011-GDB]     Victim File    = 0xffffff8005250e00
+[HYP-011-GDB]     Slab Page Base = 0xffffff8005250000
+[HYP-011-GDB]     PFN Index      = 21072 (0x5250)
+[HYP-011-GDB]     struct slab *  = 0xfffffffe00149400
+[HYP-011-GDB]   struct slab/page dump at 0xfffffffe00149400:
+[HYP-011-GDB]     flags:      0x0
+[HYP-011-GDB]     slab_cache: 0x0
+[HYP-011-GDB]     freelist:   0x0
+[HYP-011-GDB]     counters:   0x100000 (inuse=0, objects=16, frozen=0)
+[HYP-011-GDB]     _refcount:  0
+[HYP-011-GDB]     memcg_data: 0x0
+[HYP-011-GDB]   [DISCRIMINATOR RESULT] slab_cache is NULL (0x0)!
+[HYP-011-GDB]   --> Page was FULLY FREED back to the buddy allocator!
+[HYP-011-GDB]   --> Hypothesis H-c (migratetype segregation / buddy free-list behavior) STANDS.
+[HYP-011-GDB] =================================================================
+[HYP-011-GDB] Execution completed or breakpoint hit.

@@ -1,0 +1,32 @@
+[HYP-011-GDB] Connected to QEMU on :1234
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.archlinux.org>
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+Breakpoint 1 at 0xffffffc00839ffe8: file out/android14-6.1/common/fs/file_table.c, line 309.Breakpoint 2 at 0xffffffc008408eb4: file out/android14-6.1/common/fs/eventpoll.c, line 969.[HYP-011-GDB] Breakpoints installed. Continuing execution...
+[HYP-011-GDB] =================================================================
+[HYP-011-GDB] [HYP-011] Thread B entered __fput(file=0xffffff80044aea00)
+[HYP-011-GDB]   Current state: f_count=0, f_ep=0xffffff8003df16a0, f_inode=0xffffff8002058a60, f_version=0x0
+[HYP-011-GDB]   Simulating Stage-2 fast-path bypass on victim inner_file...
+[HYP-011-GDB]   [SIMULATION SUCCESS] file->f_ep is now 0x0
+[HYP-011-GDB]   __fput skips eventpoll_release_file(); Thread B frees struct file while epA retains dangling epiA.
+[HYP-011-GDB] =================================================================
+[HYP-011-GDB] -----------------------------------------------------------------
+[HYP-011-GDB] [HYP-011] Hit ep_show_fdinfo (invocation #1)
+[HYP-011-GDB]   ep_file=0xffffff80044ace00, eventpoll=0xffffff8003df1e40
+[HYP-011-GDB]   ep->rbr.rb_root=0xffffff80044b1800, rb_leftmost=0xffffff80044b1800
+[HYP-011-GDB]   [SURVIVOR CONFIRMED] epitem=0xffffff80044b1800 in epA rbtree!
+[HYP-011-GDB]     epi->ffd.fd=4036
+[HYP-011-GDB]     epi->ffd.file=0xffffff80044aea00 (matches target_inner_file: True)
+[HYP-011-GDB]     watched file: f_inode=0xffffffc00973e218, f_pos=0, f_version=0x0
+[HYP-011-GDB]     slot dump:
+0xffffff80044aea00:	0x0000000000000000	0x0000000000000000
+0xffffff80044aea10:	0x0000000000000000	0x0000000000000000
+[HYP-011-GDB]     dereferenced inode: i_ino=0x2f72657070617773, i_sb=0xffffffc0097511c8
+[HYP-011-GDB]     [*] fdinfo read executed non-crash: ino=0x2f72657070617773
+[HYP-011-GDB] Execution completed. Inspecting final state...
+[HYP-011-GDB] =================================================================
+[HYP-011-GDB] Summary of invocations: fdinfo_count=1
+[HYP-011-GDB] Read inode values: ['0x2f72657070617773']
+[HYP-011-GDB] =================================================================
