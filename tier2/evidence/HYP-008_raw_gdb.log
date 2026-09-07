@@ -1,0 +1,53 @@
+[HYP-008-GDB] Connected to QEMU on :1234
+Breakpoint 1 at 0xffffffc00839c8a0: file fs/eventpoll.c, line 2173.Breakpoint 2 at 0xffffffc00833ef90: file fs/file_table.c, line 308.Breakpoint 3 at 0xffffffc00839ab00: file fs/eventpoll.c, line 969.[HYP-008-GDB] Breakpoints active. Starting kernel execution...
+[HYP-008-GDB] do_epoll_ctl called: epfd=3, op=1, target_fd=4
+[HYP-008-GDB] =================================================================
+[HYP-008-GDB] [STEP 1-3] Thread B entered __fput(file=0xffffff800306be00)
+[HYP-008-GDB]   Current state: f_count=0, f_ep=0xffffff8004a9a9a0, f_inode=0xffffff80036a1c88, f_version=0x0
+[HYP-008-GDB] --- [MECHANISM EVALUATION] ---
+[HYP-008-GDB] Reviewer Hypothesis H-a: In __ep_remove(), file->f_ep = NULL executes ONLY when
+[HYP-008-GDB]   head->first == &epi->fllink && !epi->fllink.next (single epitem on file).
+[HYP-008-GDB]   With epA watching inner_file, __ep_remove cannot clear f_ep without unlinking epiA.
+[HYP-008-GDB]   Scheduling-forced race (Variant A) cannot clear f_ep while keeping epiA linked.
+[HYP-008-GDB] Executing Variant B (GDB State Injection):
+[HYP-008-GDB]   Injecting file->f_ep = NULL at offset 208 (0xffffff800306bed0) to simulate fast-path bypass...
+[HYP-008-GDB]   [INJECTION SUCCESS] file->f_ep is now 0x0
+[HYP-008-GDB]   __fput will evaluate `if (file->f_ep)` as FALSE and skip eventpoll_release_file().
+[HYP-008-GDB]   Thread B will proceed to file_free_rcu() while epA retains dangling epiA!
+[HYP-008-GDB] =================================================================
+[HYP-008-GDB] -----------------------------------------------------------------
+[HYP-008-GDB] [STEP 4/5] Hit ep_show_fdinfo (invocation #1)
+[HYP-008-GDB]   ep_file=0xffffff800306b400, eventpoll=0xffffff8004a9a6c0
+[HYP-008-GDB]   ep->rbr.rb_root=0xffffff8004b08080, rb_leftmost=0xffffff8004b08080
+[HYP-008-GDB]   [SURVIVOR CONFIRMED] epitem=0xffffff8004b08080 in epA rbtree!
+[HYP-008-GDB]     epi->ffd.fd=4
+[HYP-008-GDB]     epi->ffd.file=0xffffff800306be00 (matches target_inner_file: True)
+[HYP-008-GDB]     watched file: f_inode=0xffffff8002c636e8, f_pos=0, f_version=0x0
+[HYP-008-GDB]     dereferenced inode: i_ino=0x1f84, i_sb=0xffffff8004931800
+[HYP-008-GDB]     [*] fdinfo read executed non-crash: ino=0x1f84
+[HYP-008-GDB] -----------------------------------------------------------------
+[HYP-008-GDB] -----------------------------------------------------------------
+[HYP-008-GDB] [STEP 4/5] Hit ep_show_fdinfo (invocation #2)
+[HYP-008-GDB]   ep_file=0xffffff800306b400, eventpoll=0xffffff8004a9a6c0
+[HYP-008-GDB]   ep->rbr.rb_root=0xffffff8004b08080, rb_leftmost=0xffffff8004b08080
+[HYP-008-GDB]   [SURVIVOR CONFIRMED] epitem=0xffffff8004b08080 in epA rbtree!
+[HYP-008-GDB]     epi->ffd.fd=4
+[HYP-008-GDB]     epi->ffd.file=0xffffff800306be00 (matches target_inner_file: True)
+[HYP-008-GDB]     watched file: f_inode=0xffffff8004bcf280, f_pos=0, f_version=0x0
+[HYP-008-GDB]     dereferenced inode: i_ino=0x65, i_sb=0xffffff8002817000
+[HYP-008-GDB]     [*] fdinfo read executed non-crash: ino=0x65
+[HYP-008-GDB] -----------------------------------------------------------------
+[HYP-008-GDB] =================================================================
+[HYP-008-GDB] === Kernel / QEMU Exited Normally ===
+[HYP-008-GDB] Summary:
+[HYP-008-GDB]   target_inner_file: 0xffffff800306be00
+[HYP-008-GDB]   epA struct:        0xffffff8004a9a6c0
+[HYP-008-GDB]   survivor epitem:   0xffffff8004b08080
+[HYP-008-GDB]   fdinfo invocations:2
+[HYP-008-GDB]   read inos:         ['0x1f84', '0x65']
+[HYP-008-GDB] =================================================================
+[HYP-008-GDB] Dumping init_task.comm reference:
+[HYP-008-GDB] 0xffffffc00a0cc718 <init_task+1944>:	0x0072657070617773	0x0000000000000000
+0xffffffc00a0cc728 <init_task+1960>:	0x0000000000000000	0x0000000000000000
+
+[HYP-008-GDB] Exiting GDB.
