@@ -59,3 +59,4 @@ This index logs all test reproducers, GDB automation scripts, and experimental e
 
 
 
+| HYP-013 | 2026-09-07 | Unassisted end-to-end chain (no GDB, race to uid 0) | test_hyp013_poc.c | (none) | run_hyp013_poc.sh | **VERIFIED**: E2E exploit achieved natural Stage-1 race but missed Stage-2 reclaim, panicking during cleanup. | `tier2/evidence/HYP-013/HYP-013_RESULTS.md`, `tier2/evidence/HYP-013/HYP-013_raw_serial.log` |
