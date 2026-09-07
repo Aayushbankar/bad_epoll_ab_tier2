@@ -1,0 +1,57 @@
+[*] Packaging initramfs...
+.
+./test_exp015
+./race_timerfd
+./test_exp011
+./sys
+./test_pipe_reclaim
+./cve_2026_46242_trigger
+./test_smp
+./harness
+./trigger
+./race_dbg
+./test_epoll
+./proc
+./bin
+./bin/sh
+./bin/busybox
+./bin/test_timer_write
+./bin/cve_trigger
+./exp025_exploit
+./test_print
+./test_snd_timer
+./test_exp009
+./print_slabinfo
+./init.c
+./test_exp015.c
+./init
+./exp013
+./race_verbose
+./dev
+./etc
+./test_timer_write
+./cve_trigger
+28360 blocks
+[*] Launching QEMU...
+[*] Connecting GDB...
+0x0000000040000000 in ?? ()
+[HYP-012-GDB] Connected to QEMU on :1234
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.archlinux.org>
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+Breakpoint 1 at 0xffffffc00839ffe8: file out/android14-6.1/common/fs/file_table.c, line 309.
+Breakpoint 2 at 0xffffffc008408eb4: file out/android14-6.1/common/fs/eventpoll.c, line 969.
+[HYP-012-GDB] Breakpoints installed. Continuing execution...
+[HYP-012-GDB] =================================================================
+[HYP-012-GDB] [HYP-012] Thread B entered __fput(file=0xffffff8003f80d00)
+[HYP-012-GDB]   Simulating Stage-2 fast-path bypass on victim inner_file...
+[HYP-012-GDB]   [SIMULATION SUCCESS] file->f_ep zeroed.
+[HYP-012-GDB] =================================================================
+[HYP-012-GDB]   [HYP-012] ep_show_fdinfo: ep_struct=0xffffff8003f9d240
+[HYP-012-GDB]             ep->rdllist.next = 0xffffff8003fa0698
+[HYP-012-GDB]             ep->rbr.rb_root = 0xffffff8003fa0680
+[HYP-012-GDB]   [+] SUCCESS: ep->rdllist is NOT empty (dangling epitem armed!)
+[Inferior 1 (process 1) exited normally]
+[*] Stopping QEMU...
