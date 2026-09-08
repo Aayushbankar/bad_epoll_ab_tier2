@@ -54,5 +54,5 @@ echo "    To exit QEMU at any time, press: Ctrl-a then x"
 echo "=========================================================="
 echo ""
 
-stdbuf -o0 -e0 qemu-system-aarch64 "${QEMU_ARGS[@]}"
+stdbuf -o0 -e0 qemu-system-aarch64 "${QEMU_ARGS[@]}" "$@"
 

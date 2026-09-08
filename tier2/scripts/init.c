@@ -6,18 +6,34 @@
 #include <linux/reboot.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/klog.h>
 #include <sys/stat.h>
 #include <sys/sysmacros.h>
+#include <string.h>
 
 int main() {
     mount("proc", "/proc", "proc", 0, NULL);
     mount("sysfs", "/sys", "sysfs", 0, NULL);
     mount("devtmpfs", "/dev", "devtmpfs", 0, NULL);
     
+    // Parse /proc/devices to find dma_heap major
+    FILE *f = fopen("/proc/devices", "r");
+    char line[256];
+    int major = 0;
+    if (f) {
+        while (fgets(line, sizeof(line), f)) {
+            if (strstr(line, "dma_heap")) {
+                sscanf(line, "%d", &major);
+                break;
+            }
+        }
+        fclose(f);
+    }
+    
     // Ensure DMA heap is created
     mkdir("/dev/dma_heap", 0755);
-    mknod("/dev/dma_heap/system", S_IFCHR | 0600, makedev(254, 0));
+    if (major > 0) {
+        mknod("/dev/dma_heap/system", S_IFCHR | 0600, makedev(major, 0));
+    }
     
     // LAB-IMAGE DEVIATION (EVO-034): chmod files to allow unprivileged test harness telemetry
     chmod("/sys/kernel/slab/filp/slabs", 0444);
