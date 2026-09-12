@@ -60,3 +60,5 @@ This index logs all test reproducers, GDB automation scripts, and experimental e
 
 
 | HYP-013 | 2026-09-07 | Unassisted end-to-end chain (no GDB, race to uid 0) | test_hyp013_poc.c | (none) | run_hyp013_poc.sh | **VERIFIED**: E2E exploit achieved natural Stage-1 race but missed Stage-2 reclaim, panicking during cleanup. | `tier2/evidence/HYP-013/HYP-013_RESULTS.md`, `tier2/evidence/HYP-013/HYP-013_raw_serial.log` |
+| EXP-028 | 2026-09-12 | Fix alignment bug in test_m7_spray.c: read object_size from /sys/kernel/slab/filp at runtime, use correct spacing for struct file layout spray | test_m7_spray.c | exp_m7_gdb.py | run_m7.sh | RUNNING | `tier2/evidence/EXP-028/` |
+| EXP-029 | 2026-09-12 | M7 alignment fix + unassisted E2E: runtime slab_size/objs_per_slab stride, EVO-036 safe layout at all slots, explicit priv verification (anti-VER-064), safe cleanup on miss | test_exp029_e2e.c | (none) | run_exp029.sh | **VERIFIED**: E2E reached 150k limit with 30 race wins. Reclaim failed. Terminated in wait_queue list_del panic on process exit. | `tier2/evidence/EXP-029/` |
