@@ -10,7 +10,9 @@ Module.symvers
 
 # Kernel source and third party repos (too large for git)
 third_party/linux-*/
+third_party/android15-*/
 third_party/security-research/
+tier2/scratch/
 
 # Compiled binaries
 # --- Migration Note (2026-08-08) ---
