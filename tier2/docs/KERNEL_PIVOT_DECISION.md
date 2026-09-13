@@ -85,15 +85,21 @@ Over 20 distinct kernel structural offsets were empirically derived, verified ag
 ### 2.1 Vulnerable Android 15 (6.6 GKI) Release Builds
 According to Google's official AOSP GKI release build records (`https://source.android.com/docs/core/architecture/kernel/gki-android15-6_6-release-builds`):
 
-| GKI Release Branch | Sublevel Version | Release Date | Vulnerability Status |
-| :--- | :--- | :--- | :--- |
-| `android15-6.6-2025-09` | Linux 6.6.98 | September 2025 | **VULNERABLE** (native in-tree) |
-| `android15-6.6-2025-10` | **Linux 6.6.102** | October 2025 | **VULNERABLE** (Targeted by guysrd on Pixel 10 "frankel") |
-| `android15-6.6-2026-01` | Linux 6.6.118 | January 2026 | **VULNERABLE** (native in-tree) |
-| `android15-6.6-2026-04` | Linux 6.6.127 | April 2026 | **VULNERABLE** (predates upstream patch `a6dc643c6931`) |
-| `android15-6.6-2026-07` | Linux 6.6.139 | July 2026 | **VULNERABLE** (predates LTS integration `6.6.144`) |
+| GKI Release Branch | Sublevel Version | Release Date | Vulnerability Status | Fix Introduction Respin | Fix Commit Date |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `android15-6.6-2025-09` | Linux 6.6.98 | September 2025 | **VULNERABLE** (r1–r20) | `android15-6.6-2025-09_r21` | Apr 18, 2026 |
+| `android15-6.6-2025-10` | **Linux 6.6.102** | October 2025 | **VULNERABLE** (r1–r31) | `android15-6.6-2025-10_r32` | Apr 18, 2026 |
+| `android15-6.6-2026-01` | Linux 6.6.118 | January 2026 | **VULNERABLE** (r1–r36) | `android15-6.6-2026-01_r37` | Jun 11, 2026 |
+| `android15-6.6-2026-04` | Linux 6.6.127 | April 2026 | **VULNERABLE** (r1–r22) | `android15-6.6-2026-04_r23` | Jun 16, 2026 |
+| `android15-6.6-2026-07` | Linux 6.6.139 | July 2026 | **VULNERABLE** (r1 only) | `android15-6.6-2026-07_r2` | Jul 03, 2026 |
 
-Upstream patch `a6dc643c6931` (*"eventpoll: fix ep_remove struct eventpoll / struct file UAF"*) landed in mainline on April 24, 2026, and was backported to the `linux-6.6.y` LTS branch in **Linux 6.6.144**. Consequently, **all Android 15 6.6 GKI release builds through `android15-6.6-2026-07` are natively vulnerable**.
+#### Post-VER-071 Amendment: Narrowed Real-World Vulnerability Scope
+Upstream patch `a6dc643c6931` (*"eventpoll: fix ep_remove struct eventpoll / struct file UAF"*) landed in mainline on April 24, 2026, and was backported to the `linux-6.6.y` LTS branch in **Linux 6.6.144**. However, as established by our rigorous respin audit (**VER-071**), Google **did not wait for LTS 6.6.144**; instead, Google cherry-picked the complete 8-commit `ep_remove` fix series directly into every `android15-6.6` branch out-of-band between April and July 2026.
+
+Consequently:
+- **Devices frozen on pre-fix respins remain vulnerable** (e.g., devices running `android15-6.6-2025-10_r1` through `_r31`, or devices where OEMs have not deployed mid-2026 GKI updates).
+- **Devices receiving current monthly/quarterly GKI updates are PATCHED**. We must NOT claim all `android15-6.6` devices are vulnerable.
+- Our lab target **`android15-6.6-2025-10_r1`** (commit `3dff304da0a6`, Linux 6.6.102) is verified natively vulnerable and free of the fix commits (VER-070 / VER-071).
 
 ### 2.2 Struct Offsets Comparison: 6.1 vs 6.6
 Cross-referencing our GKI 6.1.23 measurements against the published Pixel 10 "frankel" (`6.6.102-android15`) exploit data reveals high architectural consistency, with exactly two major shifts:
@@ -188,8 +194,9 @@ A fundamental principle of Google's Generic Kernel Image (GKI) and Google Requir
 1. **The 6.1 Installed Base (~40–50% of 2024–2025 sales)**: 
    - Attack surface for CVE-2026-46242 is **exactly 0%**. No vendor OTA patch is needed because the vulnerable epoll refcount code was never backported to standard ACK 6.1.
 2. **The 6.6 Installed Base (Flagships launched in late 2024 / 2025)**:
-   - Devices shipped with GKI builds prior to `6.6.144` were vulnerable out of the box.
-   - Patch lag in India: While Google Pixel devices receive monthly day-1 ASB updates, third-party OEMs (Xiaomi, OnePlus, Samsung) experience a **30 to 90-day patch window** between Google's upstream bulletin and carrier/regional OTA delivery. Unpatched 6.6 firmware images represent a genuine, active attack surface during this window.
+   - **Devices frozen on pre-fix respins remain vulnerable** (e.g., `android15-6.6-2025-10_r1` through `_r31`, or devices lacking mid-2026 GKI security updates).
+   - Devices actively receiving current monthly/quarterly GKI updates are **patched** via out-of-band cherry-picks (VER-071).
+   - Real-world attack surface is defined by **OTA patch lag** (30–90 day vendor delay) and **unserviced/abandoned devices** frozen on vulnerable pre-fix respins, rather than permanent indefinite vulnerability across all 6.6 devices.
 
 ---
 

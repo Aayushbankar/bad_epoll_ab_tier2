@@ -1,0 +1,187 @@
+
+tier3/artifacts/vmlinux:     file format elf64-littleaarch64
+
+
+Disassembly of section .kernel:
+
+ffffffc0804c1530 <__ep_remove>:
+ffffffc0804c1530:	d503201f 	nop
+ffffffc0804c1534:	d503201f 	nop
+ffffffc0804c1538:	d503233f 	paciasp
+ffffffc0804c153c:	a9bc7bfd 	stp	x29, x30, [sp, #-64]!
+ffffffc0804c1540:	a9015ff8 	stp	x24, x23, [sp, #16]
+ffffffc0804c1544:	a90257f6 	stp	x22, x21, [sp, #32]
+ffffffc0804c1548:	a9034ff4 	stp	x20, x19, [sp, #48]
+ffffffc0804c154c:	910003fd 	mov	x29, sp
+ffffffc0804c1550:	f000fa28 	adrp	x8, ffffffc082408000 <sysctl_io_uring_group>
+ffffffc0804c1554:	f9401838 	ldr	x24, [x1, #48]
+ffffffc0804c1558:	2a0203f6 	mov	w22, w2
+ffffffc0804c155c:	b9400508 	ldr	w8, [x8, #4]
+ffffffc0804c1560:	aa0103f3 	mov	x19, x1
+ffffffc0804c1564:	aa0003f4 	mov	x20, x0
+ffffffc0804c1568:	340003c8 	cbz	w8, ffffffc0804c15e0 <__ep_remove+0xb0>
+ffffffc0804c156c:	d5384115 	mrs	x21, sp_el0
+ffffffc0804c1570:	b94012a8 	ldr	w8, [x21, #16]
+ffffffc0804c1574:	b000f7a9 	adrp	x9, ffffffc0823b6000 <system_group_pcpu+0x40>
+ffffffc0804c1578:	91040129 	add	x9, x9, #0x100
+ffffffc0804c157c:	11000508 	add	w8, w8, #0x1
+ffffffc0804c1580:	b90012a8 	str	w8, [x21, #16]
+ffffffc0804c1584:	d538d088 	mrs	x8, tpidr_el1
+ffffffc0804c1588:	b8696917 	ldr	w23, [x8, x9]
+ffffffc0804c158c:	f9400aa8 	ldr	x8, [x21, #16]
+ffffffc0804c1590:	f1000508 	subs	x8, x8, #0x1
+ffffffc0804c1594:	b90012a8 	str	w8, [x21, #16]
+ffffffc0804c1598:	54001280 	b.eq	ffffffc0804c17e8 <__ep_remove+0x2b8>  // b.none
+ffffffc0804c159c:	f9400aa8 	ldr	x8, [x21, #16]
+ffffffc0804c15a0:	b4001248 	cbz	x8, ffffffc0804c17e8 <__ep_remove+0x2b8>
+ffffffc0804c15a4:	350001f7 	cbnz	w23, ffffffc0804c15e0 <__ep_remove+0xb0>
+ffffffc0804c15a8:	b94012a8 	ldr	w8, [x21, #16]
+ffffffc0804c15ac:	9000f7a9 	adrp	x9, ffffffc0823b5000 <kvm_host_data+0x450>
+ffffffc0804c15b0:	91374129 	add	x9, x9, #0xdd0
+ffffffc0804c15b4:	11000508 	add	w8, w8, #0x1
+ffffffc0804c15b8:	b90012a8 	str	w8, [x21, #16]
+ffffffc0804c15bc:	d538d088 	mrs	x8, tpidr_el1
+ffffffc0804c15c0:	b8696917 	ldr	w23, [x8, x9]
+ffffffc0804c15c4:	f9400aa8 	ldr	x8, [x21, #16]
+ffffffc0804c15c8:	f1000508 	subs	x8, x8, #0x1
+ffffffc0804c15cc:	b90012a8 	str	w8, [x21, #16]
+ffffffc0804c15d0:	54001120 	b.eq	ffffffc0804c17f4 <__ep_remove+0x2c4>  // b.none
+ffffffc0804c15d4:	f9400aa8 	ldr	x8, [x21, #16]
+ffffffc0804c15d8:	b40010e8 	cbz	x8, ffffffc0804c17f4 <__ep_remove+0x2c4>
+ffffffc0804c15dc:	34001117 	cbz	w23, ffffffc0804c17fc <__ep_remove+0x2cc>
+ffffffc0804c15e0:	aa1303e0 	mov	x0, x19
+ffffffc0804c15e4:	94000787 	bl	ffffffc0804c3400 <ep_unregister_pollwait>
+ffffffc0804c15e8:	91004315 	add	x21, x24, #0x10
+ffffffc0804c15ec:	aa1503e0 	mov	x0, x21
+ffffffc0804c15f0:	943558d2 	bl	ffffffc081217938 <_raw_spin_lock>
+ffffffc0804c15f4:	3940f268 	ldrb	w8, [x19, #60]
+ffffffc0804c15f8:	7100011f 	cmp	w8, #0x0
+ffffffc0804c15fc:	1a9f17e8 	cset	w8, eq  // eq = none
+ffffffc0804c1600:	2a160117 	orr	w23, w8, w22
+ffffffc0804c1604:	360001b7 	tbz	w23, #0, ffffffc0804c1638 <__ep_remove+0x108>
+ffffffc0804c1608:	f940e708 	ldr	x8, [x24, #456]
+ffffffc0804c160c:	9101426a 	add	x10, x19, #0x50
+ffffffc0804c1610:	f9400109 	ldr	x9, [x8]
+ffffffc0804c1614:	eb0a013f 	cmp	x9, x10
+ffffffc0804c1618:	54000160 	b.eq	ffffffc0804c1644 <__ep_remove+0x114>  // b.none
+ffffffc0804c161c:	aa1f03f6 	mov	x22, xzr
+ffffffc0804c1620:	aa1303e8 	mov	x8, x19
+ffffffc0804c1624:	f8458d0a 	ldr	x10, [x8, #88]!
+ffffffc0804c1628:	f85f8109 	ldur	x9, [x8, #-8]
+ffffffc0804c162c:	f9000149 	str	x9, [x10]
+ffffffc0804c1630:	b5000169 	cbnz	x9, ffffffc0804c165c <__ep_remove+0x12c>
+ffffffc0804c1634:	1400000b 	b	ffffffc0804c1660 <__ep_remove+0x130>
+ffffffc0804c1638:	aa1503e0 	mov	x0, x21
+ffffffc0804c163c:	9435593a 	bl	ffffffc081217b24 <_raw_spin_unlock>
+ffffffc0804c1640:	14000047 	b	ffffffc0804c175c <__ep_remove+0x22c>
+ffffffc0804c1644:	f9400129 	ldr	x9, [x9]
+ffffffc0804c1648:	b4000989 	cbz	x9, ffffffc0804c1778 <__ep_remove+0x248>
+ffffffc0804c164c:	aa1303e8 	mov	x8, x19
+ffffffc0804c1650:	aa1f03f6 	mov	x22, xzr
+ffffffc0804c1654:	f8458d0a 	ldr	x10, [x8, #88]!
+ffffffc0804c1658:	f9000149 	str	x9, [x10]
+ffffffc0804c165c:	f900052a 	str	x10, [x9, #8]
+ffffffc0804c1660:	d2802449 	mov	x9, #0x122                 	// #290
+ffffffc0804c1664:	aa1503e0 	mov	x0, x21
+ffffffc0804c1668:	f2fbd5a9 	movk	x9, #0xdead, lsl #48
+ffffffc0804c166c:	f9000109 	str	x9, [x8]
+ffffffc0804c1670:	9435592d 	bl	ffffffc081217b24 <_raw_spin_unlock>
+ffffffc0804c1674:	b40000b6 	cbz	x22, ffffffc0804c1688 <__ep_remove+0x158>
+ffffffc0804c1678:	d000fa28 	adrp	x8, ffffffc082407000 <mm_slots_hash+0x1628>
+ffffffc0804c167c:	aa1603e1 	mov	x1, x22
+ffffffc0804c1680:	f946d500 	ldr	x0, [x8, #3496]
+ffffffc0804c1684:	97fd003a 	bl	ffffffc08040176c <kmem_cache_free>
+ffffffc0804c1688:	f940ce88 	ldr	x8, [x20, #408]
+ffffffc0804c168c:	91064295 	add	x21, x20, #0x190
+ffffffc0804c1690:	eb13011f 	cmp	x8, x19
+ffffffc0804c1694:	54000081 	b.ne	ffffffc0804c16a4 <__ep_remove+0x174>  // b.any
+ffffffc0804c1698:	aa1303e0 	mov	x0, x19
+ffffffc0804c169c:	9434ae85 	bl	ffffffc0811ed0b0 <rb_next>
+ffffffc0804c16a0:	f900ce80 	str	x0, [x20, #408]
+ffffffc0804c16a4:	aa1303e0 	mov	x0, x19
+ffffffc0804c16a8:	aa1503e1 	mov	x1, x21
+ffffffc0804c16ac:	9434ad40 	bl	ffffffc0811ecbac <rb_erase>
+ffffffc0804c16b0:	91054295 	add	x21, x20, #0x150
+ffffffc0804c16b4:	aa1503e0 	mov	x0, x21
+ffffffc0804c16b8:	94355b3a 	bl	ffffffc0812183a0 <_raw_write_lock_irq>
+ffffffc0804c16bc:	aa1303e9 	mov	x9, x19
+ffffffc0804c16c0:	f8418d28 	ldr	x8, [x9, #24]!
+ffffffc0804c16c4:	eb09011f 	cmp	x8, x9
+ffffffc0804c16c8:	540001a0 	b.eq	ffffffc0804c16fc <__ep_remove+0x1cc>  // b.none
+ffffffc0804c16cc:	f940126a 	ldr	x10, [x19, #32]
+ffffffc0804c16d0:	f940014b 	ldr	x11, [x10]
+ffffffc0804c16d4:	eb09017f 	cmp	x11, x9
+ffffffc0804c16d8:	54000821 	b.ne	ffffffc0804c17dc <__ep_remove+0x2ac>  // b.any
+ffffffc0804c16dc:	f940050b 	ldr	x11, [x8, #8]
+ffffffc0804c16e0:	eb09017f 	cmp	x11, x9
+ffffffc0804c16e4:	540007c1 	b.ne	ffffffc0804c17dc <__ep_remove+0x2ac>  // b.any
+ffffffc0804c16e8:	f900050a 	str	x10, [x8, #8]
+ffffffc0804c16ec:	f9000148 	str	x8, [x10]
+ffffffc0804c16f0:	91006268 	add	x8, x19, #0x18
+ffffffc0804c16f4:	f9000e68 	str	x8, [x19, #24]
+ffffffc0804c16f8:	f9001269 	str	x9, [x19, #32]
+ffffffc0804c16fc:	aa1503e0 	mov	x0, x21
+ffffffc0804c1700:	94355ba2 	bl	ffffffc081218588 <_raw_write_unlock_irq>
+ffffffc0804c1704:	f9403275 	ldr	x21, [x19, #96]
+ffffffc0804c1708:	943514fc 	bl	ffffffc081206af8 <debug_lockdep_rcu_enabled>
+ffffffc0804c170c:	34000100 	cbz	w0, ffffffc0804c172c <__ep_remove+0x1fc>
+ffffffc0804c1710:	f9402668 	ldr	x8, [x19, #72]
+ffffffc0804c1714:	12800001 	mov	w1, #0xffffffff            	// #-1
+ffffffc0804c1718:	9101a100 	add	x0, x8, #0x68
+ffffffc0804c171c:	9435140e 	bl	ffffffc081206754 <lock_is_held_type>
+ffffffc0804c1720:	35000060 	cbnz	w0, ffffffc0804c172c <__ep_remove+0x1fc>
+ffffffc0804c1724:	97f344f3 	bl	ffffffc080192af0 <rcu_read_lock_held>
+ffffffc0804c1728:	340003e0 	cbz	w0, ffffffc0804c17a4 <__ep_remove+0x274>
+ffffffc0804c172c:	aa1503e0 	mov	x0, x21
+ffffffc0804c1730:	9415c56a 	bl	ffffffc080a32cd8 <wakeup_source_unregister>
+ffffffc0804c1734:	d0000001 	adrp	x1, ffffffc0804c3000 <__arm64_sys_epoll_pwait2+0x30>
+ffffffc0804c1738:	9114c021 	add	x1, x1, #0x530
+ffffffc0804c173c:	aa1303e0 	mov	x0, x19
+ffffffc0804c1740:	97f36e3f 	bl	ffffffc08019d03c <call_rcu>
+ffffffc0804c1744:	f940da88 	ldr	x8, [x20, #432]
+ffffffc0804c1748:	f000fa29 	adrp	x9, ffffffc082408000 <sysctl_io_uring_group>
+ffffffc0804c174c:	92800001 	mov	x1, #0xffffffffffffffff    	// #-1
+ffffffc0804c1750:	b9400d22 	ldr	w2, [x9, #12]
+ffffffc0804c1754:	91002100 	add	x0, x8, #0x8
+ffffffc0804c1758:	940ebacd 	bl	ffffffc08087028c <percpu_counter_add_batch>
+ffffffc0804c175c:	120002e0 	and	w0, w23, #0x1
+ffffffc0804c1760:	a9434ff4 	ldp	x20, x19, [sp, #48]
+ffffffc0804c1764:	a94257f6 	ldp	x22, x21, [sp, #32]
+ffffffc0804c1768:	a9415ff8 	ldp	x24, x23, [sp, #16]
+ffffffc0804c176c:	a8c47bfd 	ldp	x29, x30, [sp], #64
+ffffffc0804c1770:	d50323bf 	autiasp
+ffffffc0804c1774:	d65f03c0 	ret
+ffffffc0804c1778:	f900e71f 	str	xzr, [x24, #456]
+ffffffc0804c177c:	d0006eea 	adrp	x10, ffffffc08129f000 <inotify_fops+0x40>
+ffffffc0804c1780:	9103214a 	add	x10, x10, #0xc8
+ffffffc0804c1784:	f940d709 	ldr	x9, [x24, #424]
+ffffffc0804c1788:	eb0a013f 	cmp	x9, x10
+ffffffc0804c178c:	54fff480 	b.eq	ffffffc0804c161c <__ep_remove+0xec>  // b.none
+ffffffc0804c1790:	91002109 	add	x9, x8, #0x8
+ffffffc0804c1794:	c8dffd29 	ldar	x9, [x9]
+ffffffc0804c1798:	f100013f 	cmp	x9, #0x0
+ffffffc0804c179c:	9a9f0116 	csel	x22, x8, xzr, eq  // eq = none
+ffffffc0804c17a0:	17ffffa0 	b	ffffffc0804c1620 <__ep_remove+0xf0>
+ffffffc0804c17a4:	943514d5 	bl	ffffffc081206af8 <debug_lockdep_rcu_enabled>
+ffffffc0804c17a8:	34fffc20 	cbz	w0, ffffffc0804c172c <__ep_remove+0x1fc>
+ffffffc0804c17ac:	d00108e8 	adrp	x8, ffffffc0825df000 <fsnotify_next_mark.__warned>
+ffffffc0804c17b0:	39401909 	ldrb	w9, [x8, #6]
+ffffffc0804c17b4:	3707fbc9 	tbnz	w9, #0, ffffffc0804c172c <__ep_remove+0x1fc>
+ffffffc0804c17b8:	52800029 	mov	w9, #0x1                   	// #1
+ffffffc0804c17bc:	d0009500 	adrp	x0, ffffffc081763000 <task_index_to_char.state_char+0x154f4>
+ffffffc0804c17c0:	91220800 	add	x0, x0, #0x882
+ffffffc0804c17c4:	90009322 	adrp	x2, ffffffc081725000 <linux_banner+0x2afd98>
+ffffffc0804c17c8:	91348042 	add	x2, x2, #0xd20
+ffffffc0804c17cc:	52804921 	mov	w1, #0x249                 	// #585
+ffffffc0804c17d0:	39001909 	strb	w9, [x8, #6]
+ffffffc0804c17d4:	97f26277 	bl	ffffffc08015a1b0 <lockdep_rcu_suspicious>
+ffffffc0804c17d8:	17ffffd5 	b	ffffffc0804c172c <__ep_remove+0x1fc>
+ffffffc0804c17dc:	aa0903e0 	mov	x0, x9
+ffffffc0804c17e0:	94350359 	bl	ffffffc081202544 <__list_del_entry_valid_or_report>
+ffffffc0804c17e4:	17ffffc3 	b	ffffffc0804c16f0 <__ep_remove+0x1c0>
+ffffffc0804c17e8:	943528a8 	bl	ffffffc08120ba88 <preempt_schedule_notrace>
+ffffffc0804c17ec:	35ffefb7 	cbnz	w23, ffffffc0804c15e0 <__ep_remove+0xb0>
+ffffffc0804c17f0:	17ffff6e 	b	ffffffc0804c15a8 <__ep_remove+0x78>
+ffffffc0804c17f4:	943528a5 	bl	ffffffc08120ba88 <preempt_schedule_notrace>
+ffffffc0804c17f8:	35ffef57 	cbnz	w23, ffffffc0804c15e0 <__ep_remove+0xb0>
+ffffffc0804c17fc:	d4210000 	brk	#0x800

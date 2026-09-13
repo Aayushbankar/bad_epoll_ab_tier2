@@ -103,6 +103,11 @@ tier2/rootfs/
 # Ignore the tier2/android kernel source tree entirely
 tier2/android/
 
+# Tier 3 (Phase 3) large artifacts and built binaries
+tier3/artifacts/
+tier3/rootfs/
+tier3/initramfs.cpio
+
 # Internal mentor/sprint logs and archive — never public (moved to private repo)
 docs/mentor/
 docs/archive/
