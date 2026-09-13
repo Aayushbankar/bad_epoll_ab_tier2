@@ -151,3 +151,8 @@ VER-068 | `swaps_poll` Primitive Execution | The `swaps_poll` dispatch path was 
 - **Evidence:** Disassembly analysis of `__ep_remove` confirms the window is 11 instructions (down from 18). `tier3/scripts/test_exp031_stage1.c` execution yields 0 hits over 1000+ iterations.
 - **Status:** **VERIFIED** (See `tier3/evidence/EXP-031_RESULTS.md`)
 
+
+### VER-075: 6.6.102 Certified struct file Offsets
+- **Claim:** The layout of `struct file` on the `android15-6.6-2025-10_r1` certified kernel has `private_data` at `+216` and `f_ep` at `+224`.
+- **Evidence:** Extracted empirically from the raw binary `Image`. Found `__ep_remove` via `kallsyms` at `0x42d958`, disassembled to find `str xzr, [x24, #224]`. Found `ep_show_fdinfo` at `0x42f234`, disassembled to find `ldr x19, [x1, #216]`. 
+- **Status:** **VERIFIED**
