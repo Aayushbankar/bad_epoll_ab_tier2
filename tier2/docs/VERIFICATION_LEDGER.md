@@ -140,3 +140,14 @@ VER-068 | `swaps_poll` Primitive Execution | The `swaps_poll` dispatch path was 
 | VER-070 | 2026-09-13 | STATIC (Source Audit) | STEP 0: Direct source verification of `android15-6.6-2025-10_r1` (commit `3dff304da0a6`, Linux 6.6.102). Confirmed vulnerable pattern: `eventpoll_release` fast path (`include/linux/eventpoll.h:45`), unpinned `epi->ffd.file` load (`__ep_remove:726`), `WRITE_ONCE(file->f_ep, NULL)` (`__ep_remove:748`) preceding `hlist_del_rcu` (`__ep_remove:756`). Fix commit `a6dc643c6931` is 100% absent (no `epi_fget` in `__ep_remove`). | `__ep_remove` / `eventpoll_release` | STATIC | `tier2/evidence/STEP0_SOURCE_VERIFICATION_6.6.102.md` | **VERIFIED (Vulnerable)** — Note: applies to r1 only; see VER-071 |
 | VER-071 | 2026-09-13 | STATIC (Gitiles API, 130 tags) | CVE-2026-46242 fix cherry-picked into latest respin of ALL 5 android15-6.6 branches: 2025-09_r21, 2025-10_r32, 2026-01_r37, 2026-04_r23, 2026-07_r2. Full 8-commit fix series present (hlist_is_singular_node, __ep_remove→ep_remove rename, epi_fget inside ep_remove, RAII fput). NO branch reaches 6.6.144 LTS — Google cherry-picked out-of-band. KERNEL_PIVOT_DECISION.md "indefinitely vulnerable" premise is WRONG. | all `ep_remove` variants | STATIC (Gitiles) | `tier2/evidence/VER-071_RESPIN_FIX_AUDIT.md` | **VERIFIED (Fix Present in Latest Respins)** |
 | VER-072 | 2026-09-13 | RUNTIME & STATIC (QEMU ARM64) | Phase 3 Day 1 Environment Initialization: Booted android15-6.6-2025-10_r1 (Linux 6.6.102-android15-8-g3dff304da0a6-ab14202157-4k) in QEMU. Disassembly of __ep_remove confirms unpinned epi->ffd.file load at +0x24 (no epi_fget pin); hlist_is_singular_node, ep_remove_file, and ep_remove split are completely ABSENT. Empirical disassembly of certified_boot kernel confirms swaps_poll write offset is private_data + 0x70 (112) (str w8, [x19, #112]). Unprivileged priv-drop to uid=2000 confirmed; reading /proc/self/fdinfo/<epfd> confirmed ino: field in live serial log. | `__ep_remove` / `swaps_poll` / `fdinfo` | RUNTIME + STATIC | `tier3/evidence/PHASE3_DAY1_SETUP_RESULTS.md` | **VERIFIED** |
+
+### VER-073: 6.6 filp Slab Geometry
+- **Claim:** The slab stride for `filp` (struct file) on `android15-6.6-2025-10_r1` certified kernel is 320 bytes.
+- **Evidence:** Tested empirically via `tier3/scripts/slab_stride_test.c` (reading sysfs). `object_size: 264`, `align: 64`. 264 aligned to 64 is 320 bytes.
+- **Status:** **VERIFIED**
+
+### VER-074: 6.6 Stage 1 Race Viability (QEMU TCG)
+- **Claim:** The Stage-1 race is structurally present but operationally blocked in the QEMU TCG environment due to a tightened 11-instruction window and lack of kernel build environment for debugfs calibration.
+- **Evidence:** Disassembly analysis of `__ep_remove` confirms the window is 11 instructions (down from 18). `tier3/scripts/test_exp031_stage1.c` execution yields 0 hits over 1000+ iterations.
+- **Status:** **VERIFIED** (See `tier3/evidence/EXP-031_RESULTS.md`)
+
