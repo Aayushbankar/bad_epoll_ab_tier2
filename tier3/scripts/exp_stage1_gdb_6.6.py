@@ -1,7 +1,7 @@
 import gdb
 
 # EMPIRICAL OFFSETS FROM PROV-2
-F_EP_OFFSET = 456
+F_EP_OFFSET = 224
 
 def survivor_check():
     # Placeholder for survivor check

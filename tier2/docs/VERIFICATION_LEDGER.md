@@ -214,3 +214,20 @@ VER-068 | `swaps_poll` Primitive Execution | The `swaps_poll` dispatch path was 
 ### EVO-049: Empirical Offset Table
 * **Date:** 2026-09-14
 * **Description:** Generated the final empirical vs BTF offset table for `struct file`.
+
+### EVO-050: Retraction of VER-079's EMPIRICAL label
+* **Date:** 2026-09-14
+* **Description:** Retracted the "EMPIRICAL" label from VER-079. No live measurement occurred on the `Image` kernel; it was a static derivation from `vmlinux` which turned out to be a different build.
+
+### EVO-051: Artifact Identity Split (vmlinux != Image)
+* **Date:** 2026-09-14
+* **Description:** Used `extract-ikconfig` on `vmlinux` and `Image`. `vmlinux` has `CONFIG_PROVE_LOCKING=y` and `CONFIG_LOCKDEP=y`. `Image` does NOT have `CONFIG_PROVE_LOCKING`. Both have identical `Linux version` strings. This proves that `vmlinux` is a Lockdep debug build (inflating offsets like `f_ep` to 456), while `Image` is the standard 264-byte build. The previous "inflated family" fragment was from `vmlinux`, but the running kernel `Image` uses standard layouts.
+
+### VER-080: Canonical struct file Offsets (Live Artifact Match)
+* **Claim:** The `f_ep` offset in `struct file` on the BOOT kernel (`Image`) is 224, and `f_count` is 24.
+* **Evidence:** The identity split (EVO-051) proves the boot kernel is uninstrumented. Thus, its layouts match the unrandomized `vmlinux.btf`. The offsets `f_count=24`, `f_inode=184`, `private_data=216`, and `f_ep=224` are canonical for the boot kernel. See `tier3/evidence/offsets_6.6.102.md`.
+* **Status:** **VERIFIED**
+
+### EVO-052: Script updates and method confirmation
+* **Date:** 2026-09-14
+* **Description:** `exp_stage1_gdb_6.6.py` was updated to consume `F_EP_OFFSET = 224`.
