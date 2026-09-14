@@ -8,7 +8,7 @@ RAMDISK="${TIER3_DIR}/initramfs.cpio"
 
 CPUS=${CPUS:-2}
 RAM=${RAM:-2048}
-CMDLINE="console=ttyAMA0 root=/dev/ram0 rw"
+CMDLINE="console=ttyAMA0 root=/dev/ram0 rw nokaslr"
 
 QEMU_ARGS=(
     -M virt

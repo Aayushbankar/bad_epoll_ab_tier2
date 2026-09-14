@@ -1,0 +1,4 @@
+0xffffffc081053d98 in arp_req_set ()
+--- EMPIRICAL SCANNER LOG ---
+add symbol table from file "tier3/rootfs/scanner"
+Breakpoint 1 at 0x7dc: file tier3/scripts/scanner_harness.c, line 29.
