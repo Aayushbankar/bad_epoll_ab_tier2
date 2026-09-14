@@ -1,0 +1,247 @@
+Dump of assembler code for function __ep_remove:
+   0xffffffc008407478 <+0>:	bti	c
+   0xffffffc00840747c <+4>:	str	x30, [x18], #8
+   0xffffffc008407480 <+8>:	paciasp
+   0xffffffc008407484 <+12>:	stp	x29, x30, [sp, #-80]!
+   0xffffffc008407488 <+16>:	str	x25, [sp, #16]
+   0xffffffc00840748c <+20>:	stp	x24, x23, [sp, #32]
+   0xffffffc008407490 <+24>:	stp	x22, x21, [sp, #48]
+   0xffffffc008407494 <+28>:	stp	x20, x19, [sp, #64]
+   0xffffffc008407498 <+32>:	mov	x29, sp
+   0xffffffc00840749c <+36>:	mov	w23, w2
+   0xffffffc0084074a0 <+40>:	mov	x20, x1
+   0xffffffc0084074a4 <+44>:	mov	x19, x0
+   0xffffffc0084074a8 <+48>:	ldr	x22, [x1, #64]
+   0xffffffc0084074ac <+52>:	ldr	x21, [x1, #48]
+   0xffffffc0084074b0 <+56>:	cbz	x22, 0xffffffc0084074f8 <__ep_remove+128>
+   0xffffffc0084074b4 <+60>:	adrp	x24, 0xffffffc00972c000 <mm_slots_hash+5840>
+   0xffffffc0084074b8 <+64>:	b	0xffffffc0084074d4 <__ep_remove+92>
+   0xffffffc0084074bc <+68>:	bl	0xffffffc00816a9dc <__rcu_read_unlock>
+   0xffffffc0084074c0 <+72>:	ldr	x0, [x24, #3200]
+   0xffffffc0084074c4 <+76>:	mov	x1, x22
+   0xffffffc0084074c8 <+80>:	bl	0xffffffc00835cca4 <kmem_cache_free>
+   0xffffffc0084074cc <+84>:	ldr	x22, [x20, #64]
+   0xffffffc0084074d0 <+88>:	cbz	x22, 0xffffffc0084074f8 <__ep_remove+128>
+   0xffffffc0084074d4 <+92>:	mov	x25, x22
+   0xffffffc0084074d8 <+96>:	ldr	x8, [x25], #56
+   0xffffffc0084074dc <+100>:	str	x8, [x20, #64]
+   0xffffffc0084074e0 <+104>:	bl	0xffffffc00816a9bc <__rcu_read_lock>
+   0xffffffc0084074e4 <+108>:	ldar	x0, [x25]
+   0xffffffc0084074e8 <+112>:	cbz	x0, 0xffffffc0084074bc <__ep_remove+68>
+   0xffffffc0084074ec <+116>:	add	x1, x22, #0x10
+   0xffffffc0084074f0 <+120>:	bl	0xffffffc0081296f8 <remove_wait_queue>
+   0xffffffc0084074f4 <+124>:	b	0xffffffc0084074bc <__ep_remove+68>
+   0xffffffc0084074f8 <+128>:	cbz	x21, 0xffffffc008407534 <__ep_remove+188>
+   0xffffffc0084074fc <+132>:	dmb	ishld
+   0xffffffc008407500 <+136>:	ldr	x8, [x21, #56]
+   0xffffffc008407504 <+140>:	cmp	x8, #0x0
+   0xffffffc008407508 <+144>:	b.gt	0xffffffc008407520 <__ep_remove+168>
+   0xffffffc00840750c <+148>:	b	0xffffffc0084077bc <__ep_remove+836>
+   0xffffffc008407510 <+152>:	mov	w8, #0x1                   	// #1
+   0xffffffc008407514 <+156>:	adrp	x9, 0xffffffc00994e000 <in_lookup_hashtable+6560>
+   0xffffffc008407518 <+160>:	add	x9, x9, #0x918
+   0xffffffc00840751c <+164>:	stadd	w8, [x9]
+   0xffffffc008407520 <+168>:	ldr	x8, [x21, #184]
+   0xffffffc008407524 <+172>:	mov	w9, #0xf11e                	// #61726
+   0xffffffc008407528 <+176>:	movk	w9, #0xdead, lsl #16
+   0xffffffc00840752c <+180>:	cmp	x8, x9
+   0xffffffc008407530 <+184>:	b.eq	0xffffffc008407700 <__ep_remove+648>  // b.none
+   0xffffffc008407534 <+188>:	add	x22, x21, #0x30
+   0xffffffc008407538 <+192>:	mov	x0, x22
+   0xffffffc00840753c <+196>:	bl	0xffffffc009040bf0 <_raw_spin_lock>
+   0xffffffc008407540 <+200>:	ldrb	w8, [x20, #60]
+   0xffffffc008407544 <+204>:	cbz	w8, 0xffffffc008407558 <__ep_remove+224>
+   0xffffffc008407548 <+208>:	tbnz	w23, #0, 0xffffffc008407558 <__ep_remove+224>
+   0xffffffc00840754c <+212>:	mov	x0, x22
+   0xffffffc008407550 <+216>:	bl	0xffffffc009040e88 <_raw_spin_unlock>
+   0xffffffc008407554 <+220>:	b	0xffffffc00840778c <__ep_remove+788>
+   0xffffffc008407558 <+224>:	ldr	x23, [x21, #208]
+   0xffffffc00840755c <+228>:	add	x9, x20, #0x50
+   0xffffffc008407560 <+232>:	ldr	x8, [x23]
+   0xffffffc008407564 <+236>:	cmp	x8, x9
+   0xffffffc008407568 <+240>:	b.eq	0xffffffc008407588 <__ep_remove+272>  // b.none
+   0xffffffc00840756c <+244>:	mov	x21, xzr
+   0xffffffc008407570 <+248>:	mov	x8, x20
+   0xffffffc008407574 <+252>:	ldr	x10, [x8, #88]!
+   0xffffffc008407578 <+256>:	ldur	x9, [x8, #-8]
+   0xffffffc00840757c <+260>:	str	x9, [x10]
+   0xffffffc008407580 <+264>:	cbnz	x9, 0xffffffc0084075a0 <__ep_remove+296>
+   0xffffffc008407584 <+268>:	b	0xffffffc0084075a4 <__ep_remove+300>
+   0xffffffc008407588 <+272>:	ldr	x9, [x8]
+   0xffffffc00840758c <+276>:	cbz	x9, 0xffffffc008407698 <__ep_remove+544>
+   0xffffffc008407590 <+280>:	mov	x8, x20
+   0xffffffc008407594 <+284>:	mov	x21, xzr
+   0xffffffc008407598 <+288>:	ldr	x10, [x8, #88]!
+   0xffffffc00840759c <+292>:	str	x9, [x10]
+   0xffffffc0084075a0 <+296>:	str	x10, [x9, #8]
+   0xffffffc0084075a4 <+300>:	mov	x9, #0x122                 	// #290
+   0xffffffc0084075a8 <+304>:	mov	x0, x22
+   0xffffffc0084075ac <+308>:	movk	x9, #0xdead, lsl #48
+   0xffffffc0084075b0 <+312>:	str	x9, [x8]
+   0xffffffc0084075b4 <+316>:	bl	0xffffffc009040e88 <_raw_spin_unlock>
+   0xffffffc0084075b8 <+320>:	cbz	x21, 0xffffffc0084075cc <__ep_remove+340>
+   0xffffffc0084075bc <+324>:	adrp	x8, 0xffffffc00972c000 <mm_slots_hash+5840>
+   0xffffffc0084075c0 <+328>:	mov	x1, x21
+   0xffffffc0084075c4 <+332>:	ldr	x0, [x8, #3208]
+   0xffffffc0084075c8 <+336>:	bl	0xffffffc00835cca4 <kmem_cache_free>
+   0xffffffc0084075cc <+340>:	ldr	x8, [x19, #112]
+   0xffffffc0084075d0 <+344>:	add	x21, x19, #0x68
+   0xffffffc0084075d4 <+348>:	cmp	x8, x20
+   0xffffffc0084075d8 <+352>:	b.ne	0xffffffc0084075e8 <__ep_remove+368>  // b.any
+   0xffffffc0084075dc <+356>:	mov	x0, x20
+   0xffffffc0084075e0 <+360>:	bl	0xffffffc009019980 <rb_next>
+   0xffffffc0084075e4 <+364>:	str	x0, [x19, #112]
+   0xffffffc0084075e8 <+368>:	mov	x0, x20
+   0xffffffc0084075ec <+372>:	mov	x1, x21
+   0xffffffc0084075f0 <+376>:	bl	0xffffffc009019450 <rb_erase>
+   0xffffffc0084075f4 <+380>:	add	x22, x19, #0x60
+   0xffffffc0084075f8 <+384>:	mov	x0, x22
+   0xffffffc0084075fc <+388>:	bl	0xffffffc009041750 <_raw_write_lock_irq>
+   0xffffffc008407600 <+392>:	mov	x23, x20
+   0xffffffc008407604 <+396>:	ldr	x8, [x23, #24]!
+   0xffffffc008407608 <+400>:	cmp	x8, x23
+   0xffffffc00840760c <+404>:	b.eq	0xffffffc008407634 <__ep_remove+444>  // b.none
+   0xffffffc008407610 <+408>:	mov	x0, x23
+   0xffffffc008407614 <+412>:	bl	0xffffffc008707d10 <__list_del_entry_valid>
+   0xffffffc008407618 <+416>:	tbz	w0, #0, 0xffffffc008407628 <__ep_remove+432>
+   0xffffffc00840761c <+420>:	ldp	x9, x8, [x20, #24]
+   0xffffffc008407620 <+424>:	str	x8, [x9, #8]
+   0xffffffc008407624 <+428>:	str	x9, [x8]
+   0xffffffc008407628 <+432>:	add	x8, x20, #0x18
+   0xffffffc00840762c <+436>:	str	x8, [x20, #24]
+   0xffffffc008407630 <+440>:	str	x23, [x20, #32]
+   0xffffffc008407634 <+444>:	mov	x0, x22
+   0xffffffc008407638 <+448>:	bl	0xffffffc009041934 <_raw_write_unlock_irq>
+   0xffffffc00840763c <+452>:	ldr	x0, [x20, #96]
+   0xffffffc008407640 <+456>:	bl	0xffffffc0088fd590 <wakeup_source_unregister>
+   0xffffffc008407644 <+460>:	adrp	x1, 0xffffffc008408000 <ep_insert+680>
+   0xffffffc008407648 <+464>:	add	x1, x1, #0xdf8
+   0xffffffc00840764c <+468>:	mov	x0, x20
+   0xffffffc008407650 <+472>:	bl	0xffffffc008163f9c <call_rcu>
+   0xffffffc008407654 <+476>:	ldr	x8, [x19, #136]
+   0xffffffc008407658 <+480>:	adrp	x9, 0xffffffc00972c000 <mm_slots_hash+5840>
+   0xffffffc00840765c <+484>:	mov	x1, #0xffffffffffffffff    	// #-1
+   0xffffffc008407660 <+488>:	add	x0, x8, #0x8
+   0xffffffc008407664 <+492>:	ldr	w2, [x9, #3812]
+   0xffffffc008407668 <+496>:	bl	0xffffffc0087606ac <percpu_counter_add_batch>
+   0xffffffc00840766c <+500>:	add	x0, x19, #0xa8
+   0xffffffc008407670 <+504>:	b	0xffffffc008407760 <__ep_remove+744>
+   0xffffffc008407674 <+508>:	mov	w8, #0xffffffff            	// #-1
+   0xffffffc008407678 <+512>:	ldaddl	w8, w8, [x0]
+   0xffffffc00840767c <+516>:	cmp	w8, #0x1
+   0xffffffc008407680 <+520>:	b.ne	0xffffffc008407784 <__ep_remove+780>  // b.any
+   0xffffffc008407684 <+524>:	dmb	ishld
+   0xffffffc008407688 <+528>:	ldr	x8, [x21]
+   0xffffffc00840768c <+532>:	cbnz	x8, 0xffffffc008407754 <__ep_remove+732>
+   0xffffffc008407690 <+536>:	mov	w0, #0x1                   	// #1
+   0xffffffc008407694 <+540>:	b	0xffffffc008407790 <__ep_remove+792>
+   0xffffffc008407698 <+544>:	ldr	x8, [x21, #40]
+   0xffffffc00840769c <+548>:	adrp	x24, 0xffffffc009127000 <proc_mountinfo_operations+216>
+   0xffffffc0084076a0 <+552>:	add	x24, x24, #0x2f0
+   0xffffffc0084076a4 <+556>:	str	xzr, [x21, #208]
+   0xffffffc0084076a8 <+560>:	cmp	x8, x24
+   0xffffffc0084076ac <+564>:	b.ne	0xffffffc0084076ec <__ep_remove+628>  // b.any
+   0xffffffc0084076b0 <+568>:	ldr	x1, [x21, #200]
+   0xffffffc0084076b4 <+572>:	b	0xffffffc008407804 <__ep_remove+908>
+   0xffffffc0084076b8 <+576>:	mov	w8, #0x1                   	// #1
+   0xffffffc0084076bc <+580>:	adrp	x9, 0xffffffc00994e000 <in_lookup_hashtable+6560>
+   0xffffffc0084076c0 <+584>:	add	x9, x9, #0x920
+   0xffffffc0084076c4 <+588>:	stadd	w8, [x9]
+   0xffffffc0084076c8 <+592>:	dmb	ishld
+   0xffffffc0084076cc <+596>:	mov	w9, #0xfeed                	// #65261
+   0xffffffc0084076d0 <+600>:	ldr	w8, [x1, #176]
+   0xffffffc0084076d4 <+604>:	movk	w9, #0xdead, lsl #16
+   0xffffffc0084076d8 <+608>:	cmp	w8, w9
+   0xffffffc0084076dc <+612>:	b.eq	0xffffffc008407730 <__ep_remove+696>  // b.none
+   0xffffffc0084076e0 <+616>:	ldr	x8, [x21, #40]
+   0xffffffc0084076e4 <+620>:	cmp	x8, x24
+   0xffffffc0084076e8 <+624>:	b.eq	0xffffffc00840756c <__ep_remove+244>  // b.none
+   0xffffffc0084076ec <+628>:	add	x8, x23, #0x8
+   0xffffffc0084076f0 <+632>:	ldar	x8, [x8]
+   0xffffffc0084076f4 <+636>:	cmp	x8, #0x0
+   0xffffffc0084076f8 <+640>:	csel	x21, x23, xzr, eq	// eq = none
+   0xffffffc0084076fc <+644>:	b	0xffffffc008407570 <__ep_remove+248>
+   0xffffffc008407700 <+648>:	b	0xffffffc0084077e0 <__ep_remove+872>
+   0xffffffc008407704 <+652>:	mov	w8, #0x1                   	// #1
+   0xffffffc008407708 <+656>:	adrp	x9, 0xffffffc00994e000 <in_lookup_hashtable+6560>
+   0xffffffc00840770c <+660>:	add	x9, x9, #0x91c
+   0xffffffc008407710 <+664>:	stadd	w8, [x9]
+   0xffffffc008407714 <+668>:	ldr	x2, [x21, #56]
+   0xffffffc008407718 <+672>:	adrp	x0, 0xffffffc00949e000
+   0xffffffc00840771c <+676>:	add	x0, x0, #0xa0f
+   0xffffffc008407720 <+680>:	ldr	x3, [x21, #184]
+   0xffffffc008407724 <+684>:	mov	x1, x21
+   0xffffffc008407728 <+688>:	bl	0xffffffc009029124 <_printk>
+   0xffffffc00840772c <+692>:	b	0xffffffc008407534 <__ep_remove+188>
+   0xffffffc008407730 <+696>:	b	0xffffffc008407828 <__ep_remove+944>
+   0xffffffc008407734 <+700>:	mov	w8, #0x1                   	// #1
+   0xffffffc008407738 <+704>:	adrp	x9, 0xffffffc00994e000 <in_lookup_hashtable+6560>
+   0xffffffc00840773c <+708>:	add	x9, x9, #0x924
+   0xffffffc008407740 <+712>:	stadd	w8, [x9]
+   0xffffffc008407744 <+716>:	adrp	x0, 0xffffffc009524000
+   0xffffffc008407748 <+720>:	add	x0, x0, #0x6ae
+   0xffffffc00840774c <+724>:	bl	0xffffffc009029124 <_printk>
+   0xffffffc008407750 <+728>:	b	0xffffffc0084076e0 <__ep_remove+616>
+   0xffffffc008407754 <+732>:	mov	w0, #0x1                   	// #1
+   0xffffffc008407758 <+736>:	brk	#0x800
+   0xffffffc00840775c <+740>:	b	0xffffffc008407790 <__ep_remove+792>
+   0xffffffc008407760 <+744>:	bti	j
+   0xffffffc008407764 <+748>:	mov	w9, #0x1                   	// #1
+   0xffffffc008407768 <+752>:	prfm	pstl1strm, [x0]
+   0xffffffc00840776c <+756>:	ldxr	w8, [x0]
+   0xffffffc008407770 <+760>:	sub	w10, w8, w9
+   0xffffffc008407774 <+764>:	stlxr	w11, w10, [x0]
+   0xffffffc008407778 <+768>:	cbnz	w11, 0xffffffc00840776c <__ep_remove+756>
+   0xffffffc00840777c <+772>:	cmp	w8, #0x1
+   0xffffffc008407780 <+776>:	b.eq	0xffffffc008407684 <__ep_remove+524>  // b.none
+   0xffffffc008407784 <+780>:	cmp	w8, #0x0
+   0xffffffc008407788 <+784>:	b.le	0xffffffc0084077b0 <__ep_remove+824>
+   0xffffffc00840778c <+788>:	mov	w0, wzr
+   0xffffffc008407790 <+792>:	ldp	x20, x19, [sp, #64]
+   0xffffffc008407794 <+796>:	ldp	x22, x21, [sp, #48]
+   0xffffffc008407798 <+800>:	ldp	x24, x23, [sp, #32]
+   0xffffffc00840779c <+804>:	ldr	x25, [sp, #16]
+   0xffffffc0084077a0 <+808>:	ldp	x29, x30, [sp], #80
+   0xffffffc0084077a4 <+812>:	autiasp
+   0xffffffc0084077a8 <+816>:	ldr	x30, [x18, #-8]!
+   0xffffffc0084077ac <+820>:	ret
+   0xffffffc0084077b0 <+824>:	mov	w1, #0x3                   	// #3
+   0xffffffc0084077b4 <+828>:	bl	0xffffffc0086ef0e8 <refcount_warn_saturate>
+   0xffffffc0084077b8 <+832>:	b	0xffffffc00840778c <__ep_remove+788>
+   0xffffffc0084077bc <+836>:	bti	j
+   0xffffffc0084077c0 <+840>:	adrp	x8, 0xffffffc00994e000 <in_lookup_hashtable+6560>
+   0xffffffc0084077c4 <+844>:	add	x8, x8, #0x918
+   0xffffffc0084077c8 <+848>:	prfm	pstl1strm, [x8]
+   0xffffffc0084077cc <+852>:	ldxr	w9, [x8]
+   0xffffffc0084077d0 <+856>:	add	w9, w9, #0x1
+   0xffffffc0084077d4 <+860>:	stxr	w10, w9, [x8]
+   0xffffffc0084077d8 <+864>:	cbnz	w10, 0xffffffc0084077cc <__ep_remove+852>
+   0xffffffc0084077dc <+868>:	b	0xffffffc008407520 <__ep_remove+168>
+   0xffffffc0084077e0 <+872>:	bti	j
+   0xffffffc0084077e4 <+876>:	adrp	x8, 0xffffffc00994e000 <in_lookup_hashtable+6560>
+   0xffffffc0084077e8 <+880>:	add	x8, x8, #0x91c
+   0xffffffc0084077ec <+884>:	prfm	pstl1strm, [x8]
+   0xffffffc0084077f0 <+888>:	ldxr	w9, [x8]
+   0xffffffc0084077f4 <+892>:	add	w9, w9, #0x1
+   0xffffffc0084077f8 <+896>:	stxr	w10, w9, [x8]
+   0xffffffc0084077fc <+900>:	cbnz	w10, 0xffffffc0084077f0 <__ep_remove+888>
+   0xffffffc008407800 <+904>:	b	0xffffffc008407714 <__ep_remove+668>
+   0xffffffc008407804 <+908>:	bti	j
+   0xffffffc008407808 <+912>:	adrp	x8, 0xffffffc00994e000 <in_lookup_hashtable+6560>
+   0xffffffc00840780c <+916>:	add	x8, x8, #0x920
+   0xffffffc008407810 <+920>:	prfm	pstl1strm, [x8]
+   0xffffffc008407814 <+924>:	ldxr	w9, [x8]
+   0xffffffc008407818 <+928>:	add	w9, w9, #0x1
+   0xffffffc00840781c <+932>:	stxr	w10, w9, [x8]
+   0xffffffc008407820 <+936>:	cbnz	w10, 0xffffffc008407814 <__ep_remove+924>
+   0xffffffc008407824 <+940>:	b	0xffffffc0084076c8 <__ep_remove+592>
+   0xffffffc008407828 <+944>:	bti	j
+   0xffffffc00840782c <+948>:	adrp	x8, 0xffffffc00994e000 <in_lookup_hashtable+6560>
+   0xffffffc008407830 <+952>:	add	x8, x8, #0x924
+   0xffffffc008407834 <+956>:	prfm	pstl1strm, [x8]
+   0xffffffc008407838 <+960>:	ldxr	w9, [x8]
+   0xffffffc00840783c <+964>:	add	w9, w9, #0x1
+   0xffffffc008407840 <+968>:	stxr	w10, w9, [x8]
+   0xffffffc008407844 <+972>:	cbnz	w10, 0xffffffc008407838 <__ep_remove+960>
+   0xffffffc008407848 <+976>:	b	0xffffffc008407744 <__ep_remove+716>
+End of assembler dump.

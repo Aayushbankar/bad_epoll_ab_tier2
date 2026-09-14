@@ -1,0 +1,1 @@
+sed -i 's/for (int iter = 1; iter <= TOTAL_TRIALS; iter++) {/for (int iter = 1; iter <= TOTAL_TRIALS; iter++) { \n if (iter % 1000 == 0) { prf("[*] Iter %d\\n", iter); } \n if (iter % 5000 == 0) { launch_ahead_ns += 500; if (launch_ahead_ns > 8000) launch_ahead_ns = 500; prf("[*] Switching launch_ahead_ns to %lu\\n", launch_ahead_ns); }/' tier3/scripts/test_exp031_stage1.c

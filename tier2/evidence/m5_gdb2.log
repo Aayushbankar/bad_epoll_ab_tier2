@@ -1,0 +1,16 @@
+0x0000000040000000 in ?? ()
+[M5-GDB] Connected to QEMU on :1234
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.archlinux.org>
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+Breakpoint 1 at 0xffffffc00839ffe8: file out/android14-6.1/common/fs/file_table.c, line 309.
+Breakpoint 2 at 0xffffffc0080da138: file out/android14-6.1/common/kernel/sys.c, line 944.
+Breakpoint 3 at 0xffffffc0080da1f4: file out/android14-6.1/common/kernel/sys.c, line 973.
+[M5-GDB] Breakpoints installed. Continuing...
+[M5-GDB] Intercepted getpid. Enabling __fput hook.
+[M5-GDB] Intercepted __fput for target (file=0xffffff800281de00). Saving address and zeroing f_ep.
+[M5-GDB] Intercepted getuid. Injecting layout into target=0xffffff800281de00
+[M5-GDB] Using swaps_poll_addr = 0xffffffc0083585f8
+[Inferior 1 (process 1) exited normally]

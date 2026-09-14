@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+@page {
+    size: 1080px 1350px;
+    margin: 0;
+}
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Source Serif 4", "Georgia", serif;
+    background-color: #F4EFEB; /* Warm unbleached paper / linen cream */
+    color: #1C1917; /* Warm carbon ink */
+    -webkit-font-smoothing: antialiased;
+}
+.slide {
+    width: 1080px;
+    height: 1350px;
+    page-break-after: always;
+    position: relative;
+    padding: 90px 90px;
+    background-color: #F4EFEB;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+/* Top Meta */
+.top-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #1C1917;
+    padding-bottom: 20px;
+    margin-bottom: 50px;
+}
+.meta-tag {
+    font-family: "SF Mono", "Source Code Pro", "JetBrains Mono", Menlo, monospace;
+    font-size: 16px;
+    letter-spacing: 2.5px;
+    color: #78350F; /* warm bronze */
+    text-transform: uppercase;
+    font-weight: 700;
+}
+.page-index {
+    font-family: "SF Mono", monospace;
+    font-size: 16px;
+    color: #78716C;
+    font-weight: 600;
+}
+
+/* Typography */
+h1.hero-title {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+    font-size: 78px;
+    font-weight: 900;
+    line-height: 0.98;
+    letter-spacing: -2.5px;
+    color: #1C1917;
+    margin-bottom: 28px;
+}
+h2.slide-title {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+    font-size: 50px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1.2px;
+    color: #1C1917;
+    margin-bottom: 24px;
+}
+p.hero-subtitle {
+    font-size: 27px;
+    line-height: 1.4;
+    color: #57534E;
+    font-weight: 400;
+    max-width: 850px;
+    margin-bottom: 44px;
+}
+p.body-text {
+    font-size: 23px;
+    line-height: 1.5;
+    color: #44403C;
+    margin-bottom: 28px;
+}
+
+/* Data Callout */
+.hero-stat-block {
+    background: #EBE4DC;
+    border-radius: 6px;
+    padding: 36px 40px;
+    border-left: 6px solid #1C1917;
+    margin-bottom: 30px;
+}
+.stat-row {
+    display: flex;
+    gap: 40px;
+    border-bottom: 1px solid #D6CEBE;
+    padding-bottom: 28px;
+    margin-bottom: 28px;
+}
+.stat-item {
+    flex: 1;
+}
+.stat-big {
+    font-family: "SF Mono", monospace;
+    font-size: 56px;
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1;
+    margin-bottom: 8px;
+    color: #1C1917;
+}
+.stat-sub {
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #78716C;
+}
+
+/* Panels */
+.panel {
+    border-top: 1px solid #D6CEBE;
+    padding: 22px 0;
+    margin-bottom: 6px;
+}
+.panel-num {
+    font-family: "SF Mono", monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: #78350F;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+}
+.panel-heading {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+    font-size: 25px;
+    font-weight: 700;
+    color: #1C1917;
+    margin-bottom: 6px;
+    letter-spacing: -0.4px;
+}
+.panel-body {
+    font-size: 20px;
+    line-height: 1.45;
+    color: #57534E;
+}
+
+/* Giant Focal Point */
+.giant-number {
+    font-family: "SF Mono", monospace;
+    font-size: 125px;
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -5px;
+    color: #1C1917;
+    margin: 16px 0;
+}
+.giant-label {
+    font-size: 30px;
+    font-weight: 700;
+    color: #991B1B; /* Oxblood */
+    letter-spacing: -0.5px;
+    margin-bottom: 20px;
+}
+
+/* Code & Assembly */
+.code-block {
+    background: #1C1917;
+    color: #F5F2EB;
+    border-radius: 6px;
+    padding: 22px 26px;
+    font-family: "SF Mono", "Source Code Pro", monospace;
+    font-size: 18px;
+    line-height: 1.45;
+    margin: 18px 0;
+}
+
+/* Table */
+.editorial-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+}
+.editorial-table th {
+    text-align: left;
+    font-family: "SF Mono", monospace;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #78716C;
+    padding: 10px 8px;
+    border-bottom: 2px solid #1C1917;
+}
+.editorial-table td {
+    padding: 18px 8px;
+    border-bottom: 1px solid #D6CEBE;
+    font-size: 19px;
+    color: #1C1917;
+}
+.editorial-table td.mono {
+    font-family: "SF Mono", monospace;
+    font-weight: 600;
+    color: #1C1917;
+}
+
+/* Footer */
+.bottom-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #D6CEBE;
+    padding-top: 20px;
+    font-size: 16px;
+    color: #78716C;
+    font-weight: 500;
+}
+.author-credit {
+    font-weight: 700;
+    color: #1C1917;
+    letter-spacing: -0.2px;
+}
+</style>
+</head>
+<body>
+
+<!-- SLIDE 1: COVER -->
+<div class="slide">
+    <div class="top-meta">
+        <div class="meta-tag">CVE-2026-46242 · Exploitability Study</div>
+        <div class="page-index">01 / 08</div>
+    </div>
+
+    <div>
+        <h1 class="hero-title">
+            Root on Linux.<br>
+            DoS on Android.
+        </h1>
+        <p class="hero-subtitle">
+            What happens when a 99% reliable kernelCTF root exploit meets modern mobile defense-in-depth?
+        </p>
+
+        <div class="hero-stat-block">
+            <div style="font-family: 'SF Mono', monospace; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #78716C; margin-bottom: 10px;">
+                10-Week Empirical Assessment
+            </div>
+            <div style="font-size: 30px; font-weight: 800; line-height: 1.25; color: #1C1917; letter-spacing: -0.5px;">
+                102,740 Automated Race Attempts.<br>
+                21 Dead Ends Documented.<br>
+                0 Root Shells on ARM64 GKI.
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-meta">
+        <div>Research by <span class="author-credit">Aayush Bankar</span></div>
+        <div style="font-family: 'SF Mono', monospace; font-weight: 700; color: #1C1917;">SWIPE &rarr;</div>
+    </div>
+</div>
+
+<!-- SLIDE 2: THE DISSONANCE -->
+<div class="slide">
+    <div class="top-meta">
+        <div class="meta-tag">01 / The Environment Gap</div>
+        <div class="page-index">02 / 08</div>
+    </div>
+
+    <div>
+        <h2 class="slide-title">The Target: Bad Epoll</h2>
+        <p class="body-text">
+            CVE-2026-46242 is a Use-After-Free in <code style="font-family: 'SF Mono'; font-size: 20px; font-weight: 700;">fs/eventpoll.c</code> discovered by Jaeyoung Chung via Google kernelCTF.
+        </p>
+
+        <div class="stat-row">
+            <div class="stat-item">
+                <div class="stat-big">99%</div>
+                <div class="stat-sub">x86_64 VM Root Shell</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-big" style="color: #991B1B;">0 / 102k</div>
+                <div class="stat-sub">Android GKI Race Wins</div>
+            </div>
+        </div>
+
+        <p class="body-text" style="color: #57534E;">
+            The exploit easily pops root on a desktop VM. But when ported to a deliberately backported ARM64 Android GKI 6.1 testbed, every single escalation path collapsed.
+        </p>
+    </div>
+
+    <div class="bottom-meta">
+        <div class="author-credit">Aayush Bankar</div>
+        <div style="font-family: 'SF Mono', monospace; font-weight: 700;">02</div>
+    </div>
+</div>
+
+<!-- SLIDE 3: TIER 1 -->
+<div class="slide">
+    <div class="top-meta">
+        <div class="meta-tag">02 / Tier 1 (x86_64)</div>
+        <div class="page-index">03 / 08</div>
+    </div>
+
+    <div>
+        <h2 class="slide-title">How Root Was Won on x86</h2>
+        <p class="body-text">
+            On unhardened Linux VMs, the exploit chain was fully deterministic.
+        </p>
+
+        <div class="panel">
+            <div class="panel-num">STEP 01</div>
+            <div class="panel-heading">Heap Spray via msg_msg</div>
+            <div class="panel-body">Reclaimed the dangling epitem allocation inside the <code style="font-family: 'SF Mono'; font-weight: 600;">kmalloc-192</code> slab cache.</div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-num">STEP 02</div>
+            <div class="panel-heading">KASLR Defeat</div>
+            <div class="panel-body">Disclosed kernel text base pointers through uninitialized heap layout reads.</div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-num">STEP 03</div>
+            <div class="panel-heading">ROP to UID 0</div>
+            <div class="panel-body">Pivoted kernel stack into <code style="font-family: 'SF Mono'; font-weight: 600;">commit_creds(&init_cred)</code> for instant root execution.</div>
+        </div>
+    </div>
+
+    <div class="bottom-meta">
+        <div class="author-credit">Aayush Bankar</div>
+        <div style="font-family: 'SF Mono', monospace; font-weight: 700;">03</div>
+    </div>
+</div>
+
+<!-- SLIDE 4: THE 125NS WALL -->
+<div class="slide">
+    <div class="top-meta">
+        <div class="meta-tag">03 / Scheduling Physics</div>
+        <div class="page-index">04 / 08</div>
+    </div>
+
+    <div>
+        <h2 class="slide-title">The First Barrier</h2>
+        <div class="giant-number">125ns</div>
+        <div class="giant-label">The Natural Race Execution Window</div>
+
+        <p class="body-text">
+            Under Android's <code style="font-family: 'SF Mono'; font-weight: 700;">CONFIG_PREEMPT_DYNAMIC=voluntary</code>, the <code style="font-family: 'SF Mono'; font-weight: 700;">cond_resched()</code> call inside <code style="font-family: 'SF Mono';">eventpoll.c</code> is a complete no-op.
+        </p>
+
+        <div class="code-block">
+// __ep_remove execution window:
+// 250–550 CPU cycles (~125–275 ns @ 2.0 GHz)
+// Natural thread scheduling: 0 hits in 102,740 attempts
+        </div>
+
+        <p class="body-text" style="color: #78716C;">
+            Debugger watchpoints create an illusion of exploitability that disappears during real-time execution.
+        </p>
+    </div>
+
+    <div class="bottom-meta">
+        <div class="author-credit">Aayush Bankar</div>
+        <div style="font-family: 'SF Mono', monospace; font-weight: 700;">04</div>
+    </div>
+</div>
+
+<!-- SLIDE 5: 4 FAILED CHAINS -->
+<div class="slide">
+    <div class="top-meta">
+        <div class="meta-tag">04 / Escalation Analysis</div>
+        <div class="page-index">05 / 08</div>
+    </div>
+
+    <div>
+        <h2 class="slide-title">4 Chains. 21 Dead Ends.</h2>
+        <p class="body-text">
+            Even under forced synthetic race wins, every single escalation path hit structural dead ends.
+        </p>
+
+        <div class="panel">
+            <div class="panel-num">CHAIN 0</div>
+            <div class="panel-heading">Refcount Decrement</div>
+            <div class="panel-body"><code style="font-family: 'SF Mono'; font-weight: 600;">percpu_counter_dec</code> always locked onto the valid outer epoll structure, never the freed target.</div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-num">CHAIN 1</div>
+            <div class="panel-heading">Dual-Watch KASLR Leak</div>
+            <div class="panel-body">Structurally blocked by multi-watch sanity checks in <code style="font-family: 'SF Mono'; font-weight: 600;">eventpoll.c:826</code>.</div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-num">CHAIN 2 & 3</div>
+            <div class="panel-heading">Fixed NULL Write</div>
+            <div class="panel-body">Reclaiming with <code style="font-family: 'SF Mono'; font-weight: 600;">msg_msg</code> locked the decrement to <code style="font-family: 'SF Mono'; font-weight: 600;">root_user</code>, leaving only an 8-byte NULL write at offset 160.</div>
+        </div>
+    </div>
+
+    <div class="bottom-meta">
+        <div class="author-credit">Aayush Bankar</div>
+        <div style="font-family: 'SF Mono', monospace; font-weight: 700;">05</div>
+    </div>
+</div>
+
+<!-- SLIDE 6: STRUCT AUDIT -->
+<div class="slide">
+    <div class="top-meta">
+        <div class="meta-tag">05 / Experiment EXP-016</div>
+        <div class="page-index">06 / 08</div>
+    </div>
+
+    <div>
+        <h2 class="slide-title">The Offset 160 Audit</h2>
+        <p class="body-text">
+            Can zeroing 8 bytes at offset 160 in <code style="font-family: 'SF Mono'; font-weight: 700;">kmalloc-192</code> yield anything other than an immediate kernel panic?
+        </p>
+
+        <table class="editorial-table">
+            <thead>
+                <tr>
+                    <th>Struct</th>
+                    <th>Target Field</th>
+                    <th>Observed Result</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="mono">fib6_info</td>
+                    <td>fib6_metrics</td>
+                    <td style="color: #991B1B; font-weight: 600;">Panic: NULL route deref</td>
+                </tr>
+                <tr>
+                    <td class="mono">snd_timer_user</td>
+                    <td>queue link</td>
+                    <td style="color: #991B1B; font-weight: 600;">Panic: Broken list traversal</td>
+                </tr>
+                <tr>
+                    <td class="mono">packet_fanout</td>
+                    <td>next member</td>
+                    <td style="color: #991B1B; font-weight: 600;">Panic: Teardown pointer crash</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="background: #EBE4DC; padding: 20px 24px; border-radius: 4px; margin-top: 24px; font-size: 19px; color: #44403C; line-height: 1.4;">
+            <strong>Finding:</strong> Every reachable struct crashes immediately when offset 160 is zeroed. No privilege escalation primitive exists.
+        </div>
+    </div>
+
+    <div class="bottom-meta">
+        <div class="author-credit">Aayush Bankar</div>
+        <div style="font-family: 'SF Mono', monospace; font-weight: 700;">06</div>
+    </div>
+</div>
+
+<!-- SLIDE 7: MITIGATIONS -->
+<div class="slide">
+    <div class="top-meta">
+        <div class="meta-tag">06 / Defense-in-Depth</div>
+        <div class="page-index">07 / 08</div>
+    </div>
+
+    <div>
+        <h2 class="slide-title">Why Mobile Defenses Won</h2>
+        <p class="body-text">
+            Android's hardware and kernel mitigation stack dismantled all remaining fallback paths.
+        </p>
+
+        <div class="panel">
+            <div class="panel-num">DEFENSE 01</div>
+            <div class="panel-heading">PAC (Pointer Authentication)</div>
+            <div class="panel-body">Neutralized function pointer overrides and return address hijacking on physical ARM64 silicon.</div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-num">DEFENSE 02</div>
+            <div class="panel-heading">kCFI & BTI</div>
+            <div class="panel-body">Enforced forward-edge control flow integrity, blocking indirect branch pivots.</div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-num">DEFENSE 03</div>
+            <div class="panel-heading">Slab Isolation & Memory Latency</div>
+            <div class="panel-body">Cross-cache sprays were neutralized; physical memory bus latency broke heap reliability.</div>
+        </div>
+    </div>
+
+    <div class="bottom-meta">
+        <div class="author-credit">Aayush Bankar</div>
+        <div style="font-family: 'SF Mono', monospace; font-weight: 700;">07</div>
+    </div>
+</div>
+
+<!-- SLIDE 8: THE REPORT & CTA -->
+<div class="slide">
+    <div class="top-meta">
+        <div class="meta-tag">07 / Full Documentation</div>
+        <div class="page-index">08 / 08</div>
+    </div>
+
+    <div>
+        <h2 class="slide-title">The Complete 26-Page Report</h2>
+        <p class="body-text">
+            Exploit research isn't just about finding the 1% that pops shells—it's about rigorously proving why the 99% fail.
+        </p>
+
+        <div class="hero-stat-block" style="border-left: 6px solid #1C1917; margin-bottom: 28px;">
+            <div style="font-family: 'SF Mono', monospace; font-size: 14px; font-weight: 700; color: #78716C; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">
+                Included in the Technical Dossier
+            </div>
+            <div style="font-size: 20px; line-height: 1.5; color: #1C1917;">
+                • Full Verification Ledger (VER-001 to VER-039)<br>
+                • 21 Documented Dead Ends with killing evidence<br>
+                • Complete Tier 1 offset tables & ROP chains<br>
+                • Android GKI kernel harness & disassembly
+            </div>
+        </div>
+
+        <p class="body-text" style="font-size: 23px; font-weight: 600; color: #1C1917;">
+            Drop <strong style="text-decoration: underline;">"EPOLL"</strong> in the comments below and I'll DM you the full 26-page PDF.
+        </p>
+    </div>
+
+    <div class="bottom-meta">
+        <div><span class="author-credit">Aayush Bankar</span> · August 2026</div>
+        <div style="font-family: 'SF Mono', monospace; font-weight: 700; color: #1C1917;">MEDIUM & GITHUB LINKED</div>
+    </div>
+</div>
+
+</body>
+</html>

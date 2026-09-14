@@ -156,3 +156,28 @@ VER-068 | `swaps_poll` Primitive Execution | The `swaps_poll` dispatch path was 
 - **Claim:** The layout of `struct file` on the `android15-6.6-2025-10_r1` certified kernel has `private_data` at `+216` and `f_ep` at `+224`.
 - **Evidence:** Extracted empirically from the raw binary `Image`. Found `__ep_remove` via `kallsyms` at `0x42d958`, disassembled to find `str xzr, [x24, #224]`. Found `ep_show_fdinfo` at `0x42f234`, disassembled to find `ldr x19, [x1, #216]`. 
 - **Status:** **VERIFIED**
+
+### VER-076: `epi_fget` Gate Verified (Phase 3)
+* **Date:** 2026-09-14
+* **Method:** Source inspection of `fs/eventpoll.c:899` in 6.6.102 and BTF struct extraction.
+* **Result:** `ep_item_poll` calls `epi_fget` which performs `atomic_long_inc_not_zero(&file->f_count)`. If `f_count` is 0, the poll callback aborts.
+* **Impact:** Exploit write path MUST forge `f_count > 0` in the sprayed fake struct file.
+* **Offset:** `file->f_count` is at `+24` (0x18) on 6.6.102. `f_mode` at `+20`, `f_lock` at `+16`.
+
+### VER-077: `struct cred` Layout Verified from Binary (Phase 3)
+* **Date:** 2026-09-14
+* **Method:** Extracted BTF from 6.6.102 certified vmlinux running in QEMU.
+* **Result:** `usage` is at +0 (8 bytes). `uid` is at +8, `euid` is at +24, `fsuid` is at +32.
+* **Impact:** Confirms the empirical +4 shift vs 6.1 layouts. The source-derived prediction is perfectly accurate on the binary.
+
+### EVO-041: `struct fake_file_6_6` Layout Updates
+* **Date:** 2026-09-14
+* **Description:** Added `f_count`, `f_mode`, and `f_lock` to the payload template to bypass the `epi_fget` check in 6.6's inlined `ep_item_poll`.
+
+### EVO-042: Mitigation Config Audit (Phase 3)
+* **Date:** 2026-09-14
+* **Description:** `CONFIG_BUG_ON_DATA_CORRUPTION=y`, `CONFIG_SHUFFLE_PAGE_ALLOCATOR=y`, `CONFIG_CFI_CLANG=y`, `CONFIG_DMABUF_HEAPS_PAGE_POOL=y`. Notably `CONFIG_INIT_ON_FREE_DEFAULT_ON` is NOT set.
+
+### EVO-043: 6.1 Filp Geometry Verdict (M7 Closure)
+* **Date:** 2026-09-14
+* **Description:** The 6.1 filp geometry was conclusively measured at 256B/16 objs, rejecting the 232 tight-packing theory. M7 is superseded by the Tier 3 pivot.

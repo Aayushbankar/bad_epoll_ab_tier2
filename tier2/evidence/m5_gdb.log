@@ -1,0 +1,10 @@
+Quit
+ GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.archlinux.org>
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+Breakpoint 1 at 0xffffffc00839ffe8: file out/android14-6.1/common/fs/file_table.c, line 309.
+Breakpoint 2 at 0xffffffc008408eb4: file out/android14-6.1/common/fs/eventpoll.c, line 969.
+[M5-GDB] Breakpoints installed. Continuing...
+Python Exception <class 'gdb.error'>: The program is not being run.
+Error occurred in Python: The program is not being run.

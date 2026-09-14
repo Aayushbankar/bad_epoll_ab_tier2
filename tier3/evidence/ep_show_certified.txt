@@ -1,0 +1,71 @@
+
+tier3/evidence/ep_show.bin:     file format binary
+
+
+Disassembly of section .data:
+
+0000000000000000 <.data>:
+   0:	d503233f 	paciasp
+   4:	a9bd7bfd 	stp	x29, x30, [sp, #-48]!
+   8:	a90157f6 	stp	x22, x21, [sp, #16]
+   c:	a9024ff4 	stp	x20, x19, [sp, #32]
+  10:	910003fd 	mov	x29, sp
+  14:	f9406c33 	ldr	x19, [x1, #216]
+  18:	aa0003f4 	mov	x20, x0
+  1c:	aa1303e0 	mov	x0, x19
+  20:	9430ad17 	bl	0xc2b47c
+  24:	f9404275 	ldr	x21, [x19, #128]
+  28:	b40002f5 	cbz	x21, 0x84
+  2c:	d0009036 	adrp	x22, 0x1206000
+  30:	910452d6 	add	x22, x22, #0x114
+  34:	f9401aa8 	ldr	x8, [x21, #48]
+  38:	b9403aa2 	ldr	w2, [x21, #56]
+  3c:	aa1403e0 	mov	x0, x20
+  40:	b9406aa3 	ldr	w3, [x21, #104]
+  44:	f9403aa4 	ldr	x4, [x21, #112]
+  48:	aa1603e1 	mov	x1, x22
+  4c:	f9405d09 	ldr	x9, [x8, #184]
+  50:	f9402905 	ldr	x5, [x8, #80]
+  54:	f940152a 	ldr	x10, [x9, #40]
+  58:	f9402126 	ldr	x6, [x9, #64]
+  5c:	b9401147 	ldr	w7, [x10, #16]
+  60:	97ff41b4 	bl	0xfffffffffffd0730
+  64:	f9400e88 	ldr	x8, [x20, #24]
+  68:	f9400689 	ldr	x9, [x20, #8]
+  6c:	eb09011f 	cmp	x8, x9
+  70:	540000a0 	b.eq	0x84  // b.none
+  74:	aa1503e0 	mov	x0, x21
+  78:	94303446 	bl	0xc0d190
+  7c:	aa0003f5 	mov	x21, x0
+  80:	b5fffda0 	cbnz	x0, 0x34
+  84:	aa1303e0 	mov	x0, x19
+  88:	9430ad3c 	bl	0xc2b578
+  8c:	a9424ff4 	ldp	x20, x19, [sp, #32]
+  90:	a94157f6 	ldp	x22, x21, [sp, #16]
+  94:	a8c37bfd 	ldp	x29, x30, [sp], #48
+  98:	d50323bf 	autiasp
+  9c:	d65f03c0 	ret
+  a0:	d503233f 	paciasp
+  a4:	d10203ff 	sub	sp, sp, #0x80
+  a8:	a9037bfd 	stp	x29, x30, [sp, #48]
+  ac:	a90467fa 	stp	x26, x25, [sp, #64]
+  b0:	a9055ff8 	stp	x24, x23, [sp, #80]
+  b4:	a90657f6 	stp	x22, x21, [sp, #96]
+  b8:	a9074ff4 	stp	x20, x19, [sp, #112]
+  bc:	9100c3fd 	add	x29, sp, #0x30
+  c0:	d5384108 	mrs	x8, sp_el0
+  c4:	2a0203f4 	mov	w20, w2
+  c8:	910063e9 	add	x9, sp, #0x18
+  cc:	f9431108 	ldr	x8, [x8, #1568]
+  d0:	f81f83a8 	stur	x8, [x29, #-8]
+  d4:	12800008 	mov	w8, #0xffffffff            	// #-1
+  d8:	f9406c13 	ldr	x19, [x0, #216]
+  dc:	a901a7e9 	stp	x9, x9, [sp, #24]
+  e0:	a900ffff 	stp	xzr, xzr, [sp, #8]
+  e4:	b90013e8 	str	w8, [sp, #16]
+  e8:	b40001c1 	cbz	x1, 0x120
+  ec:	aa0103e2 	mov	x2, x1
+  f0:	91012261 	add	x1, x19, #0x48
+  f4:	b4000161 	cbz	x1, 0x120
+  f8:	f9400048 	ldr	x8, [x2]
+  fc:	b4000128 	cbz	x8, 0x120

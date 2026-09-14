@@ -1,0 +1,11 @@
+[DUMP] Retry 0: could not connect: Connection timed out.
+[DUMP] Retry 1: could not connect: Connection timed out.
+[DUMP] Retry 2: could not connect: Connection timed out.
+[DUMP] Retry 3: could not connect: Connection timed out.
+[DUMP] Retry 4: could not connect: Connection timed out.
+[DUMP] Retry 5: could not connect: Connection timed out.
+[DUMP] Retry 6: could not connect: Connection timed out.
+[DUMP] Retry 7: could not connect: Connection timed out.
+[DUMP] Retry 8: could not connect: Connection timed out.
+[DUMP] Retry 9: could not connect: Connection timed out.
+[DUMP] Failed to connect

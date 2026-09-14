@@ -1,0 +1,71 @@
+
+tier3/evidence/ep_poll.bin:     file format binary
+
+
+Disassembly of section .data:
+
+0000000000000000 <.data>:
+   0:	d503233f 	paciasp
+   4:	a9bf7bfd 	stp	x29, x30, [sp, #-16]!
+   8:	910003fd 	mov	x29, sp
+   c:	2a1f03e2 	mov	w2, wzr
+  10:	94000038 	bl	0xf0
+  14:	a8c17bfd 	ldp	x29, x30, [sp], #16
+  18:	d50323bf 	autiasp
+  1c:	d65f03c0 	ret
+  20:	8f07ca55 	.inst	0x8f07ca55 ; undefined
+  24:	f9406c20 	ldr	x0, [x1, #216]
+  28:	b40000e0 	cbz	x0, 0x44
+  2c:	d503233f 	paciasp
+  30:	a9bf7bfd 	stp	x29, x30, [sp, #-16]!
+  34:	910003fd 	mov	x29, sp
+  38:	94000119 	bl	0x49c
+  3c:	a8c17bfd 	ldp	x29, x30, [sp], #16
+  40:	d50323bf 	autiasp
+  44:	2a1f03e0 	mov	w0, wzr
+  48:	d65f03c0 	ret
+  4c:	80d48b8b 	.inst	0x80d48b8b ; undefined
+  50:	d503233f 	paciasp
+  54:	a9bd7bfd 	stp	x29, x30, [sp, #-48]!
+  58:	a90157f6 	stp	x22, x21, [sp, #16]
+  5c:	a9024ff4 	stp	x20, x19, [sp, #32]
+  60:	910003fd 	mov	x29, sp
+  64:	f9406c33 	ldr	x19, [x1, #216]
+  68:	aa0003f4 	mov	x20, x0
+  6c:	aa1303e0 	mov	x0, x19
+  70:	9430ad17 	bl	0xc2b4cc
+  74:	f9404275 	ldr	x21, [x19, #128]
+  78:	b40002f5 	cbz	x21, 0xd4
+  7c:	d0009036 	adrp	x22, 0x1206000
+  80:	910452d6 	add	x22, x22, #0x114
+  84:	f9401aa8 	ldr	x8, [x21, #48]
+  88:	b9403aa2 	ldr	w2, [x21, #56]
+  8c:	aa1403e0 	mov	x0, x20
+  90:	b9406aa3 	ldr	w3, [x21, #104]
+  94:	f9403aa4 	ldr	x4, [x21, #112]
+  98:	aa1603e1 	mov	x1, x22
+  9c:	f9405d09 	ldr	x9, [x8, #184]
+  a0:	f9402905 	ldr	x5, [x8, #80]
+  a4:	f940152a 	ldr	x10, [x9, #40]
+  a8:	f9402126 	ldr	x6, [x9, #64]
+  ac:	b9401147 	ldr	w7, [x10, #16]
+  b0:	97ff41b4 	bl	0xfffffffffffd0780
+  b4:	f9400e88 	ldr	x8, [x20, #24]
+  b8:	f9400689 	ldr	x9, [x20, #8]
+  bc:	eb09011f 	cmp	x8, x9
+  c0:	540000a0 	b.eq	0xd4  // b.none
+  c4:	aa1503e0 	mov	x0, x21
+  c8:	94303446 	bl	0xc0d1e0
+  cc:	aa0003f5 	mov	x21, x0
+  d0:	b5fffda0 	cbnz	x0, 0x84
+  d4:	aa1303e0 	mov	x0, x19
+  d8:	9430ad3c 	bl	0xc2b5c8
+  dc:	a9424ff4 	ldp	x20, x19, [sp, #32]
+  e0:	a94157f6 	ldp	x22, x21, [sp, #16]
+  e4:	a8c37bfd 	ldp	x29, x30, [sp], #48
+  e8:	d50323bf 	autiasp
+  ec:	d65f03c0 	ret
+  f0:	d503233f 	paciasp
+  f4:	d10203ff 	sub	sp, sp, #0x80
+  f8:	a9037bfd 	stp	x29, x30, [sp, #48]
+  fc:	a90467fa 	stp	x26, x25, [sp, #64]

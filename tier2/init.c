@@ -14,7 +14,6 @@ int main() {
     mount("proc", "/proc", "proc", 0, NULL);
     mount("sysfs", "/sys", "sysfs", 0, NULL);
     mount("devtmpfs", "/dev", "devtmpfs", 0, NULL);
-    mount("debugfs", "/sys/kernel/debug", "debugfs", 0, NULL);
     
     // Parse /proc/devices to find dma_heap major
     FILE *f = fopen("/proc/devices", "r");
@@ -39,7 +38,6 @@ int main() {
     // LAB-IMAGE DEVIATION (EVO-034): chmod files to allow unprivileged test harness telemetry
     chmod("/sys/kernel/slab/filp/slabs", 0444);
     chmod("/dev/dma_heap/system", 0666);
-    chmod("/sys/kernel/debug/epoll_uaf", 0666);
     
     // Ensure fd 0, 1, 2 are connected to /dev/console
     int console_fd = open("/dev/console", O_RDWR);

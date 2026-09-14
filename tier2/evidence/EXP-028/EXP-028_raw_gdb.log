@@ -1,0 +1,12 @@
+0xffffffc00833e3e8 in free_pages_prepare (page=0xfffffffe00b10000, check_free=true, fpi_flags=<optimized out>, order=<optimized out>) at out/android14-6.1/common/mm/page_alloc.c:1459
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.archlinux.org>
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+warning: 1459	out/android14-6.1/common/mm/page_alloc.c: No such file or directory
+[M7-GDB] Connected to QEMU on :1234
+Breakpoint 1 at 0xffffffc00839ffe8: file out/android14-6.1/common/fs/file_table.c, line 309.
+Breakpoint 2 at 0xffffffc0080da138: file out/android14-6.1/common/kernel/sys.c, line 944.
+[M7-GDB] Breakpoints installed. Continuing...
+[Inferior 1 (process 1) exited normally]

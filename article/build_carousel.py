@@ -1,0 +1,470 @@
+import subprocess
+import os
+
+html_content = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+@page {
+    size: 1080px 1350px;
+    margin: 0;
+}
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #0B0F19;
+    color: #F8FAFC;
+    -webkit-font-smoothing: antialiased;
+}
+.slide {
+    width: 1080px;
+    height: 1350px;
+    page-break-after: always;
+    position: relative;
+    padding: 80px 70px;
+    background: radial-gradient(circle at 80% 20%, #1E293B 0%, #0B0F19 70%);
+    overflow: hidden;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+    border-bottom: 1px solid #1E293B;
+    padding-bottom: 25px;
+}
+.brand {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #38BDF8;
+    text-transform: uppercase;
+}
+.slide-num {
+    font-size: 22px;
+    color: #64748B;
+    font-family: monospace;
+}
+.badge {
+    display: inline-block;
+    padding: 8px 18px;
+    border-radius: 9999px;
+    font-size: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 24px;
+}
+.badge-cyan { background: rgba(56, 189, 248, 0.15); color: #38BDF8; border: 1px solid rgba(56, 189, 248, 0.3); }
+.badge-red { background: rgba(248, 113, 113, 0.15); color: #F87171; border: 1px solid rgba(248, 113, 113, 0.3); }
+.badge-emerald { background: rgba(52, 211, 153, 0.15); color: #34D399; border: 1px solid rgba(52, 211, 153, 0.3); }
+.badge-amber { background: rgba(251, 191, 36, 0.15); color: #FBBF24; border: 1px solid rgba(251, 191, 36, 0.3); }
+.badge-purple { background: rgba(168, 85, 247, 0.15); color: #C084FC; border: 1px solid rgba(168, 85, 247, 0.3); }
+
+h1 {
+    font-size: 54px;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 25px;
+    color: #FFFFFF;
+}
+h2 {
+    font-size: 44px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 25px;
+    color: #FFFFFF;
+}
+p.subtitle {
+    font-size: 26px;
+    line-height: 1.45;
+    color: #94A3B8;
+    margin-bottom: 40px;
+}
+.card {
+    background: #131D2E;
+    border: 1px solid #23354E;
+    border-radius: 20px;
+    padding: 36px;
+    margin-bottom: 30px;
+}
+.card-highlight {
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid #38BDF8;
+}
+.grid-2 {
+    display: flex;
+    gap: 25px;
+    margin-bottom: 30px;
+}
+.grid-2 > div {
+    flex: 1;
+}
+.stat-box {
+    background: #131D2E;
+    border: 1px solid #23354E;
+    border-radius: 18px;
+    padding: 28px;
+    text-align: center;
+}
+.stat-number {
+    font-size: 48px;
+    font-weight: 900;
+    font-family: monospace;
+    margin-bottom: 8px;
+}
+.stat-label {
+    font-size: 20px;
+    color: #94A3B8;
+    font-weight: 500;
+}
+.stat-red { color: #F87171; }
+.stat-emerald { color: #34D399; }
+.stat-cyan { color: #38BDF8; }
+.stat-amber { color: #FBBF24; }
+
+.point-list {
+    list-style: none;
+    margin-top: 20px;
+}
+.point-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    font-size: 24px;
+    line-height: 1.4;
+    color: #E2E8F0;
+}
+.point-icon {
+    font-size: 24px;
+    margin-right: 18px;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+.code-box {
+    background: #070A10;
+    border: 1px solid #1E293B;
+    border-radius: 12px;
+    padding: 20px 24px;
+    font-family: "Source Code Pro", Consolas, monospace;
+    font-size: 20px;
+    color: #38BDF8;
+    margin: 20px 0;
+    line-height: 1.4;
+}
+.footer {
+    position: absolute;
+    bottom: 60px;
+    left: 70px;
+    right: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #1E293B;
+    padding-top: 20px;
+    font-size: 18px;
+    color: #64748B;
+}
+.swipe-hint {
+    color: #38BDF8;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+</style>
+</head>
+<body>
+
+<!-- SLIDE 1: COVER -->
+<div class="slide" style="display: flex; flex-direction: column; justify-content: space-between;">
+    <div>
+        <div class="header">
+            <div class="brand">Vulnerability Research</div>
+            <div class="slide-num">01 / 08</div>
+        </div>
+        <div class="badge badge-red">Linux Kernel Deep Dive</div>
+        <h1 style="font-size: 60px; margin-top: 15px; margin-bottom: 25px;">
+            CVE-2026-46242<br>
+            <span style="color: #38BDF8;">The "Bad Epoll" Autopsy</span>
+        </h1>
+        <p class="subtitle" style="font-size: 28px; line-height: 1.4; color: #CBD5E1;">
+            Porting a 99% reliable x86_64 kernelCTF root exploit to ARM64 Android GKI.
+        </p>
+
+        <div class="card" style="border-left: 6px solid #F87171; margin-top: 40px;">
+            <div style="font-size: 22px; color: #94A3B8; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">The Headline Outcome</div>
+            <div style="font-size: 32px; font-weight: 800; color: #F8FAFC; line-height: 1.3;">
+                0 Hits in 102,740 Race Runs.<br>
+                21 Dead Ends. 0 Root Shells.<br>
+                <span style="color: #F87171;">Definitive DoS-Only Verdict.</span>
+            </div>
+        </div>
+    </div>
+    
+    <div style="margin-bottom: 60px;">
+        <div style="font-size: 22px; color: #94A3B8;">Research by <strong style="color: #FFFFFF;">Aayush Bankar</strong></div>
+        <div style="font-size: 18px; color: #64748B; margin-top: 5px;">Based on Jaeyoung Chung's kernelCTF discovery</div>
+    </div>
+    <div class="footer">
+        <div>CypherMatrix Labs</div>
+        <div class="swipe-hint">Swipe left to inspect &rarr;</div>
+    </div>
+</div>
+
+<!-- SLIDE 2: THE EXPERIMENT -->
+<div class="slide">
+    <div class="header">
+        <div class="brand">CVE-2026-46242</div>
+        <div class="slide-num">02 / 08</div>
+    </div>
+    <div class="badge badge-cyan">The Core Hypothesis</div>
+    <h2>The 10-Week Experiment</h2>
+    <p class="subtitle">
+        What happens when an exploit that easily achieves UID 0 root on x86_64 hits real-world Android hardening?
+    </p>
+
+    <div class="grid-2">
+        <div class="stat-box" style="border-color: #10B981;">
+            <div class="stat-number stat-emerald">99%</div>
+            <div class="stat-label">x86_64 Root Reliability</div>
+        </div>
+        <div class="stat-box" style="border-color: #EF4444;">
+            <div class="stat-number stat-red">0 / 102k</div>
+            <div class="stat-label">ARM64 GKI Race Hits</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div style="font-size: 22px; font-weight: 700; color: #38BDF8; margin-bottom: 12px;">The Vulnerability Primitive</div>
+        <p style="font-size: 22px; line-height: 1.5; color: #CBD5E1;">
+            A race condition in <code style="color: #FBBF24; font-family: monospace;">fs/eventpoll.c</code> leading to a Use-After-Free (UAF) during concurrent <code style="color: #FBBF24; font-family: monospace;">epoll_ctl(EPOLL_CTL_DEL)</code> and epoll teardown.
+        </p>
+    </div>
+
+    <div class="footer">
+        <div>Setup & Scope</div>
+        <div class="swipe-hint">Swipe &rarr;</div>
+    </div>
+</div>
+
+<!-- SLIDE 3: TIER 1 - x86_64 SUCCESS -->
+<div class="slide">
+    <div class="header">
+        <div class="brand">Tier 1 Architecture</div>
+        <div class="slide-num">03 / 08</div>
+    </div>
+    <div class="badge badge-emerald">Tier 1: x86_64 Linux VM</div>
+    <h2>Reconstructing the Root Exploit</h2>
+    <p class="subtitle">On unhardened desktop Linux, the exploit chain was textbook perfection.</p>
+
+    <div class="card" style="border-left: 6px solid #10B981;">
+        <ul class="point-list" style="margin-top: 0;">
+            <li class="point-item">
+                <span class="point-icon" style="color: #34D399;">✓</span>
+                <div><strong>Heap Grooming:</strong> Stable cross-cache allocation using classic <code style="color: #38BDF8; font-family: monospace;">msg_msg</code> spray in <code style="color: #38BDF8; font-family: monospace;">kmalloc-192</code>.</div>
+            </li>
+            <li class="point-item">
+                <span class="point-icon" style="color: #34D399;">✓</span>
+                <div><strong>KASLR Leak:</strong> Clean kernel address disclosure via leaked struct pointers.</div>
+            </li>
+            <li class="point-item">
+                <span class="point-icon" style="color: #34D399;">✓</span>
+                <div><strong>ROP Execution:</strong> Stack pivot into commit_creds(&init_cred) chain.</div>
+            </li>
+            <li class="point-item">
+                <span class="point-icon" style="color: #34D399;">✓</span>
+                <div><strong>Outcome:</strong> 99% deterministic UID 0 root shell.</div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <div>Tier 1 Reproduction</div>
+        <div class="swipe-hint">Swipe &rarr;</div>
+    </div>
+</div>
+
+<!-- SLIDE 4: TIER 2 - THE COLLAPSE -->
+<div class="slide">
+    <div class="header">
+        <div class="brand">Tier 2 Architecture</div>
+        <div class="slide-num">04 / 08</div>
+    </div>
+    <div class="badge badge-red">Tier 2: ARM64 Android GKI</div>
+    <h2>The Android Brick Wall</h2>
+    <p class="subtitle">Porting the exact same primitive to Android 14 GKI (vulnerable testbed) led to total failure.</p>
+
+    <div class="grid-2">
+        <div class="stat-box">
+            <div class="stat-number stat-red">102,740</div>
+            <div class="stat-label">Automated Race Runs</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-number stat-amber">21</div>
+            <div class="stat-label">Killed Hypotheses</div>
+        </div>
+    </div>
+
+    <div class="card" style="border-left: 6px solid #EF4444;">
+        <div style="font-size: 24px; font-weight: 700; color: #F87171; margin-bottom: 12px;">Why did it fail so completely?</div>
+        <p style="font-size: 22px; line-height: 1.5; color: #CBD5E1;">
+            Under GDB hardware watchpoints, the race looked 100% deterministic. But in real-time execution without debugger halts, the bug was completely unreachable.
+        </p>
+    </div>
+
+    <div class="footer">
+        <div>The Porting Breakdown</div>
+        <div class="swipe-hint">Swipe &rarr;</div>
+    </div>
+</div>
+
+<!-- SLIDE 5: TIMING & SCHEDULING -->
+<div class="slide">
+    <div class="header">
+        <div class="brand">Root Cause 1</div>
+        <div class="slide-num">05 / 08</div>
+    </div>
+    <div class="badge badge-amber">The Timing Illusion</div>
+    <h2>The 125ns Execution Window</h2>
+    <p class="subtitle">Why voluntary preemption kills sub-microsecond kernel races.</p>
+
+    <div class="card">
+        <div style="font-size: 22px; font-weight: 700; color: #FBBF24; margin-bottom: 10px;">CONFIG_PREEMPT_DYNAMIC (Voluntary)</div>
+        <p style="font-size: 22px; line-height: 1.5; color: #CBD5E1;">
+            In CTF VMs, preemption points yield easily. But on Android GKI:
+        </p>
+        <div class="code-box">
+            // cond_resched() inside eventpoll.c was a total no-op.<br>
+            // Execution window: 250–550 CPU cycles (~125–275 ns).
+        </div>
+        <p style="font-size: 22px; line-height: 1.5; color: #CBD5E1;">
+            Natural thread scheduling simply cannot land in a 125 nanosecond window without synthetic delays or debugger traps.
+        </p>
+    </div>
+
+    <div class="footer">
+        <div>Scheduling Physics</div>
+        <div class="swipe-hint">Swipe &rarr;</div>
+    </div>
+</div>
+
+<!-- SLIDE 6: 4 FAILED CHAINS -->
+<div class="slide">
+    <div class="header">
+        <div class="brand">Root Cause 2</div>
+        <div class="slide-num">06 / 08</div>
+    </div>
+    <div class="badge badge-red">Primitive Analysis</div>
+    <h2>4 Dead-End Chains</h2>
+    <p class="subtitle">Even when forcing synthetic race wins, every escalation path died.</p>
+
+    <div class="card">
+        <ul class="point-list" style="margin-top: 0;">
+            <li class="point-item">
+                <span class="point-icon" style="color: #F87171;">✕</span>
+                <div><strong>Refcount Corruptions:</strong> <code style="color: #F87171; font-family: monospace;">percpu_counter_dec</code> operated on the valid outer object, not the freed inner struct.</div>
+            </li>
+            <li class="point-item">
+                <span class="point-icon" style="color: #F87171;">✕</span>
+                <div><strong>Dual-Watch KASLR Leak:</strong> Structurally impossible under checks in <code style="color: #F87171; font-family: monospace;">eventpoll.c:826</code>.</div>
+            </li>
+            <li class="point-item">
+                <span class="point-icon" style="color: #F87171;">✕</span>
+                <div><strong>Fixed NULL Write:</strong> Decrement locked onto <code style="color: #38BDF8; font-family: monospace;">root_user</code>, leaving only a fixed NULL write at offset 160.</div>
+            </li>
+            <li class="point-item">
+                <span class="point-icon" style="color: #F87171;">✕</span>
+                <div><strong>Struct Audit:</strong> Reachable <code style="color: #38BDF8; font-family: monospace;">kmalloc-192</code> objects (<code style="color: #CBD5E1; font-family: monospace;">fib6_info</code>, <code style="color: #CBD5E1; font-family: monospace;">snd_timer_user</code>) panic on NULL write.</div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <div>Exploitability Wall</div>
+        <div class="swipe-hint">Swipe &rarr;</div>
+    </div>
+</div>
+
+<!-- SLIDE 7: MITIGATION WALL -->
+<div class="slide">
+    <div class="header">
+        <div class="brand">Defense-in-Depth</div>
+        <div class="slide-num">07 / 08</div>
+    </div>
+    <div class="badge badge-purple">Hardware & Kernel Defenses</div>
+    <h2>The Mitigation Stack Won</h2>
+    <p class="subtitle">Modern mobile security features worked exactly as designed.</p>
+
+    <div class="grid-2">
+        <div class="card" style="margin-bottom: 0;">
+            <div style="font-size: 22px; font-weight: 700; color: #C084FC; margin-bottom: 8px;">PAC (Pointer Auth)</div>
+            <p style="font-size: 19px; color: #94A3B8; line-height: 1.4;">Blocks function pointer hijacking and forged return addresses.</p>
+        </div>
+        <div class="card" style="margin-bottom: 0;">
+            <div style="font-size: 22px; font-weight: 700; color: #38BDF8; margin-bottom: 8px;">kCFI & BTI</div>
+            <p style="font-size: 19px; color: #94A3B8; line-height: 1.4;">Enforces forward-edge control flow integrity across all indirect jumps.</p>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top: 25px;">
+        <div style="font-size: 22px; font-weight: 700; color: #34D399; margin-bottom: 8px;">Slab Isolation & Memory Latency</div>
+        <p style="font-size: 20px; color: #CBD5E1; line-height: 1.45;">
+            Cross-cache sprays were neutralized. Physical ARM64 memory bus contention and cache coherence fundamentally altered heap grooming reliability compared to x86 QEMU VMs.
+        </p>
+    </div>
+
+    <div class="footer">
+        <div>Mitigation Verification</div>
+        <div class="swipe-hint">Swipe &rarr;</div>
+    </div>
+</div>
+
+<!-- SLIDE 8: THE CONCLUSION & CTA -->
+<div class="slide" style="display: flex; flex-direction: column; justify-content: space-between;">
+    <div>
+        <div class="header">
+            <div class="brand">Conclusion & Resources</div>
+            <div class="slide-num">08 / 08</div>
+        </div>
+        <div class="badge badge-cyan">Full Technical Report</div>
+        <h2>Want the Full 26-Page Paper?</h2>
+        <p class="subtitle" style="font-size: 24px; margin-bottom: 30px;">
+            Includes raw offset tables, GDB watchpoint scripts, 21 killing evidence traces, and full verification ledgers (VER-001 to VER-039).
+        </p>
+
+        <div class="card card-highlight">
+            <div style="font-size: 26px; font-weight: 800; color: #38BDF8; margin-bottom: 12px;">Get the Whitepaper:</div>
+            <p style="font-size: 22px; line-height: 1.5; color: #F8FAFC;">
+                💬 Drop <strong style="color: #FBBF24;">"EPOLL"</strong> in the LinkedIn comments and I'll send the direct 26-page PDF straight to your DMs!
+            </p>
+        </div>
+
+        <div class="card" style="margin-top: 20px;">
+            <div style="font-size: 20px; font-weight: 700; color: #94A3B8; margin-bottom: 6px;">Also Available:</div>
+            <div style="font-size: 20px; color: #CBD5E1;">
+                • Medium Distilled Deep Dive<br>
+                • GitHub Repository & Ledger
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div>Aayush Bankar · CypherMatrix Labs</div>
+        <div style="color: #38BDF8; font-weight: 700;">Drop your thoughts below 👇</div>
+    </div>
+</div>
+
+</body>
+</html>
+"""
+
+with open("/mnt/work/company/cyphermatrix/repos/bad-epoll-lab/article/linkedin_carousel.html", "w") as f:
+    f.write(html_content)
+
+print("HTML written successfully.")

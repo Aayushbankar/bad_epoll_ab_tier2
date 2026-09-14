@@ -1,0 +1,15 @@
+0x0000000040000000 in ?? ()
+[M4-GDB] Connected to QEMU on :1234
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.archlinux.org>
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+Breakpoint 1 at 0xffffffc00839ffe8: file out/android14-6.1/common/fs/file_table.c, line 309.
+Breakpoint 2 at 0xffffffc0084074a8: file out/android14-6.1/common/fs/eventpoll.c, line 758.
+Breakpoint 3 at 0xffffffc008408eb4: file out/android14-6.1/common/fs/eventpoll.c, line 969.
+[M4-GDB] Breakpoints installed. Continuing...
+[M4-GDB] Intercepted __fput for epB (file=0xffffff8002452900). Saving address.
+[M4-GDB] Intercepted ep_show_fdinfo. Injecting layout for Mode A
+[M4-GDB] Intercepted __ep_remove. Injecting layout for Mode A
+[Inferior 1 (process 1) exited normally]
