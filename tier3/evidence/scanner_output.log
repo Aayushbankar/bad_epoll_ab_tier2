@@ -1,0 +1,25 @@
+--- EMPIRICAL SCANNER LOG ---
+0xffffffc081053d98 in arp_req_set ()
+Waiting for MARKER1...
+[Switching to thread 1 (Thread 1.1)]
+#0  0xffffffc081053d98 in arp_req_set ()
+[Switching to thread 2 (Thread 1.2)]
+#0  0x0000007f85040538 in ?? ()
+[Inferior 1 (process 1) detached]
+Waiting for MARKER2...
+0xffffffc081053d98 in arp_req_set ()
+[Switching to thread 1 (Thread 1.1)]
+#0  0xffffffc081053d98 in arp_req_set ()
+[Switching to thread 2 (Thread 1.2)]
+#0  0x0000007f85040580 in ?? ()
+*** f_count OFFSET MEASURED: 24 ***
+[Inferior 1 (process 1) detached]
+Waiting for MARKER3...
+0xffffffc081053d98 in arp_req_set ()
+*** f_ep OFFSET MEASURED: 224 ***
+A debugging session is active.
+
+	Inferior 1 [process 1] will be detached.
+
+Quit anyway? (y or n) [answered Y; input not from terminal]
+[Inferior 1 (process 1) detached]

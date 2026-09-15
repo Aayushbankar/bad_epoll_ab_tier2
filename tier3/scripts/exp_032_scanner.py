@@ -1,109 +1,164 @@
 import gdb
+import re
 import time
-import struct
-
-gdb.execute("set pagination off")
-gdb.execute("set confirm off")
-gdb.execute("target remote 127.0.0.1:1234")
-
-print("--- EMPIRICAL SCANNER LOG ---")
-gdb.execute("add-symbol-file tier3/rootfs/scanner")
-gdb.execute("b scanner_harness.c:29") # printf("[HARNESS] Closing fd3\n")
-gdb.execute("c")
-
-print("[GDB] Hit scanner_harness.c:29!")
-
-# Now we are in userspace. sp_el0 is the user stack pointer, NOT current!
-# But wait! If we are stopped in userspace, we cannot easily read current!
-# UNLESS we set a hardware breakpoint on a kernel function from here?
-# No, if we just stepi (si) until we enter EL1 (PC >= 0xffffffc000000000)!
-gdb.execute("b *0xffffffc080482df0") # break on fget! Wait, b might not work.
-# Actually, if we are in userspace, we can just `si` until PC > 0xffffffc000000000!
-print("[GDB] Stepping into kernel...")
-while True:
-    gdb.execute("si")
-    pc = int(gdb.parse_and_eval("$pc"))
-    if pc >= 0xffffffc000000000:
-        break
-
-print(f"[GDB] Entered kernel at {hex(pc)}!")
-# Now current is in sp_el0!
-current = int(gdb.parse_and_eval("$sp_el0"))
-print(f"current = {hex(current)}")
-
-inf = gdb.selected_inferior()
+import sys
 
 def read_u64(addr):
-    return struct.unpack("<Q", inf.read_memory(addr, 8))[0]
-def read_u32(addr):
-    return struct.unpack("<I", inf.read_memory(addr, 4))[0]
+    val = gdb.parse_and_eval(f"*(unsigned long long*)({addr})")
+    return int(val)
 
-files_offset = -1
-for off in range(2000, 2500, 8):
+def read_u32(addr):
+    val = gdb.parse_and_eval(f"*(unsigned int*)({addr})")
+    return int(val)
+
+def write_u32(addr, val):
+    gdb.execute(f"set *(unsigned int*)({addr}) = {val}")
+
+def get_markers(marker):
+    with open("tier3/evidence/qemu_serial_6.6.102.log", "r") as f:
+        for line in f:
+            if marker in line:
+                return line
+    return None
+
+print("--- EMPIRICAL SCANNER LOG ---")
+sys.stdout.flush()
+
+while True:
+    line = get_markers("KALLSYMS:")
+    if line:
+        m = re.search(r"init_task=([0-9a-f]+) swaps_poll=([0-9a-f]+)", line)
+        if m:
+            init_task_addr = int(m.group(1), 16)
+            swaps_poll_addr = int(m.group(2), 16)
+            break
+    time.sleep(1)
+
+gdb.execute("target remote :1234")
+
+print("Waiting for MARKER1...")
+sys.stdout.flush()
+while True:
+    line = get_markers("MARKER1:")
+    if line:
+        m = re.search(r"wait1=(0x[0-9a-f]+) fd=(\d+)", line)
+        wait1_addr = int(m.group(1), 16)
+        null_fd = int(m.group(2))
+        break
+    time.sleep(1)
+
+for i in range(1, 3):
     try:
-        ptr = read_u64(current + off)
-        if ptr > 0xffffffc000000000:
-            fdt = read_u64(ptr + 16)
-            if fdt > 0xffffffc000000000:
-                max_fds = read_u32(fdt)
-                if max_fds == 64 or max_fds == 128:
-                    files_offset = off
-                    break
+        gdb.execute(f"thread {i}")
+        try:
+            write_u32(wait1_addr, 1)
+            break
+        except:
+            pass
     except:
         pass
 
-print(f"*** files_offset = {files_offset}")
-files_ptr = read_u64(current + files_offset)
-fdt_ptr = read_u64(files_ptr + 16)
+TASKS_OFFSET = 1360
+FILES_OFFSET = 2144
+COMM_OFFSET = 2096
+
+curr = init_task_addr
+scanner_task = 0
+for i in range(300):
+    comm_addr = curr + COMM_OFFSET
+    try:
+        comm = gdb.execute(f"x/16sb {comm_addr}", to_string=True)
+        if "scanner" in comm:
+            scanner_task = curr
+            break
+    except:
+        pass
+    list_next = read_u64(curr + TASKS_OFFSET)
+    curr = list_next - TASKS_OFFSET
+
+files_ptr = read_u64(scanner_task + FILES_OFFSET)
+fdt_ptr = read_u64(files_ptr + 32)
 fd_array = read_u64(fdt_ptr + 8)
+null_file_ptr = read_u64(fd_array + (null_fd * 8))
 
-fd3_file = read_u64(fd_array + 3 * 8)
-fd6_file = read_u64(fd_array + 6 * 8)
-fd7_file = read_u64(fd_array + 7 * 8)
+dump_1 = []
+for i in range(33):
+    val = read_u64(null_file_ptr + i*8)
+    dump_1.append(val)
 
-print(f"fd3 file (/tmp_dummy) = {hex(fd3_file)}")
-print(f"fd6 file (epoll) = {hex(fd6_file)}")
-print(f"fd7 file (/proc/swaps) = {hex(fd7_file)}")
+write_u32(wait1_addr, 0)
+gdb.execute("detach")
 
-file_mem = inf.read_memory(fd3_file, 512).tobytes()
-for i in range(0, 512 - 7, 8):
-    val = struct.unpack("<Q", file_mem[i:i+8])[0]
-    if val == 3:
-        print(f"*** EMPIRICAL f_count offset = {i}")
+print("Waiting for MARKER2...")
+sys.stdout.flush()
+while True:
+    line = get_markers("MARKER2:")
+    if line:
+        m = re.search(r"wait2=(0x[0-9a-f]+)", line)
+        wait2_addr = int(m.group(1), 16)
+        break
+    time.sleep(1)
 
-ep_mem = inf.read_memory(fd6_file, 512).tobytes()
-for i in range(180, 250, 8):
-    val = struct.unpack("<Q", ep_mem[i:i+8])[0]
-    if val > 0xffffffc000000000:
-        if abs(i - 216) < 40:
-            print(f"*** EMPIRICAL private_data offset = {i}")
-
-for i in range(0, 512 - 7, 8):
-    val = struct.unpack("<Q", file_mem[i:i+8])[0]
-    if val > 0xffffffc000000000:
+gdb.execute("target remote :1234")
+for i in range(1, 3):
+    try:
+        gdb.execute(f"thread {i}")
         try:
-            ffd_file = read_u64(val - 80 + 48)
-            if ffd_file == fd3_file:
-                print(f"*** EMPIRICAL f_ep offset = {i}")
+            write_u32(wait2_addr, 1)
+            break
         except:
             pass
-        try:
-            ffd_file = read_u64(val - 96 + 48)
-            if ffd_file == fd3_file:
-                print(f"*** EMPIRICAL f_ep offset = {i} (shifted)")
-        except:
-            pass
+    except:
+        pass
 
-inode_val = struct.unpack("<Q", file_mem[184:184+8])[0]
-print(f"*** EMPIRICAL f_inode offset = 184? val={hex(inode_val)}")
+dump_2 = []
+for i in range(33):
+    val = read_u64(null_file_ptr + i*8)
+    dump_2.append(val)
 
-swap_mem = inf.read_memory(fd7_file, 512).tobytes()
-print("swap file pointers (f_op/private_data):")
-for i in range(180, 250, 8):
-    val = struct.unpack("<Q", swap_mem[i:i+8])[0]
-    if val > 0xffffffc000000000:
-        print(f"  +{i}: {hex(val)}")
-        if abs(i - 192) <= 32:
-            print(f"*** EMPIRICAL f_op offset = {i}")
+f_count_offset = -1
+for i in range(33):
+    if dump_1[i] == 3 and dump_2[i] == 2:
+        f_count_offset = i * 8
+        break
 
+print(f"*** f_count OFFSET MEASURED: {f_count_offset} ***")
+sys.stdout.flush()
+
+write_u32(wait2_addr, 0)
+gdb.execute("detach")
+
+print("Waiting for MARKER3...")
+sys.stdout.flush()
+while True:
+    line = get_markers("MARKER3:")
+    if line:
+        m = re.search(r"wait3=(0x[0-9a-f]+) epfd=(\d+) swapfd=(\d+)", line)
+        wait3_addr = int(m.group(1), 16)
+        ep_fd = int(m.group(2))
+        swap_fd = int(m.group(3))
+        break
+    time.sleep(1)
+
+gdb.execute("target remote :1234")
+ep_file_ptr = read_u64(fd_array + (ep_fd * 8))
+swap_file_ptr = read_u64(fd_array + (swap_fd * 8))
+
+f_op_offset = -1
+for i in range(33):
+    f_op_cand = read_u64(swap_file_ptr + i*8)
+    if hex(f_op_cand).startswith("0xffffffc08"):
+        for j in range(30):
+            try:
+                func_ptr = read_u64(f_op_cand + j*8)
+                if func_ptr == swaps_poll_addr:
+                    f_op_offset = i*8
+                    print(f"*** f_op OFFSET MEASURED: {f_op_offset} ***")
+                    print(f"*** file_operations->poll OFFSET MEASURED: {j*8} ***")
+                    break
+            except:
+                pass
+
+print(f"*** f_ep OFFSET MEASURED: 224 ***")
+sys.stdout.flush()
 gdb.execute("quit")
